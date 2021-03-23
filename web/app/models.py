@@ -4,7 +4,7 @@ from gremlin_python.driver import client, serializer, protocol
 from gremlin_python.driver.protocol import GremlinServerError
 import yaml,os
 #%%
-# Gremlin Model is like Django modesl in name only. 
+# my Gremlin Model is like Django modesl in name only. 
 
 def get_client():
     config = yaml.safe_load(open('configure.yaml'))
