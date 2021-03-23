@@ -7,8 +7,7 @@ from gremlin_python.driver import client, serializer, protocol
 from gremlin_python.driver.protocol import GremlinServerError
 import sys
 import traceback
-# from pygraphml import GraphMLParser
-from tornado import httpclient
+
 
 #%%
 #Connection config
