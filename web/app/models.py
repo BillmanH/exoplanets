@@ -11,7 +11,6 @@ def get_client():
     endpoint = config['endpoint']
     username = config['username']
     password = config['password']
-    traversal_source = config['traversal_source']
     client_g = client.Client(endpoint, 'g',
                             username=username,
                             password=password,
