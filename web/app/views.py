@@ -7,4 +7,5 @@ client = get_client()
 
 def index(request):
     res = run_query(client,query="g.V().count()")
-    return HttpResponse(f"the model has {res} objects in it")
+    context={'node_cnt':res}
+    return render(request, 'app/index.html', context)
