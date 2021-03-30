@@ -9,3 +9,9 @@ def index(request):
     res = run_query(client,query="g.V().count()")
     context={'node_cnt':res}
     return render(request, 'app/index.html', context)
+
+
+def explore(request):
+    res = run_query(client,query="g.V().count()")
+    context={'node_cnt':res}
+    return render(request, 'app/index.html', context)
