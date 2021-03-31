@@ -37,8 +37,9 @@ print(callback.result().all().result())
 # Loading the Dataframe
 import os
 os.listdir()
-df = pd.read_csv('../data/parsed_planets.csv')
-
+df = (pd.read_csv('../data/parsed_planets.csv')
+    .drop_duplicates(subset='hostname'))
+df = df[[c for c in df.columns if 'pl_' not in c]]
 
 #%%
 
@@ -55,10 +56,12 @@ def create_vertex(labelV,node):
     gaddv += f".property('objid','{uuid()}')"
     return gaddv
 
-# Upload Planets
+# Upload systems
 for i in df.index:
     node = df.loc[i].dropna().to_dict()
-    addstr = create_vertex('planet',node)
+    addstr = create_vertex('system',node)
     callback = client_g.submitAsync(addstr)
     res = callback.result().all().result()
-    print(node['pl_name'], i ,i/len(df.index))
+    print(node['hostname'], i ,i/len(df.index))
+
+# Assuming planets and systems. 
