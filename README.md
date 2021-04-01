@@ -8,6 +8,8 @@ Planet Data is gathered from here.
 * [Dataset column definitions](https://exoplanetarchive.ipac.caltech.edu/applications/DocSet/index.html?doctree=/docs/docmenu.xml&startdoc=item_1_01)
 * [Data from this table](https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS)
 
+* uploading that data to cosmos (once parsed) with `python scripts/upload_systems.py`
+
 ### Database (Cosmos DB)
 The connection info is in the `configure.yaml` and looks like this. It is in `.gitignore` so you will need to add that file. 
 ```
