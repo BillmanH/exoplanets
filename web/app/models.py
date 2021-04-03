@@ -22,3 +22,8 @@ def run_query(client,query="g.V().count()"):
     callback = client.submitAsync(query)
     res = callback.result().all().result()
     return res
+
+
+def get_galaxy_nodes(client,query="g.V().haslabel('system')"):
+    callback = client.submit(query)
+    
