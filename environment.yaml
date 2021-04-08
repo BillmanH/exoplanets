@@ -1,0 +1,15 @@
+name: exoplanets
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python==3.7
+  - ipykernel
+  - altair
+  - pandas
+  - django
+  - black
+  - pip:
+    - nb_black
+    - gremlinpython
+prefix: C:\Users\william.harding\Anaconda3\envs\exoplanets

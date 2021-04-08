@@ -31,3 +31,10 @@ python web/manage.py runserver
 `models.py` has two functions, one that takes a request, and another that runs a query. `run_query` takes the query text string as an imput, with a default of `"g.V().count()"`
 
 
+# Contributing
+Accepting pull requests
+
+Make sure to update the `environment.yaml` if you add python packages:
+```
+conda env export --name exoplanets --from-history > environment.yaml
+```

@@ -4,8 +4,10 @@ from app.models import get_client,run_query
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
+from app.models import get_client,run_query,get_galaxy_nodes
 
 #for this app I'm including the client object as a global
+# I may change this as I'm not sure of the best practice. 
 client = get_client()
 
 
@@ -42,3 +44,8 @@ def new_universe(request):
     res = run_query(client)
     context={'node_cnt':res}
     return render(request, 'app/index.html', context)
+
+def galaxy_map(request):
+    res = get_galaxy_nodes(client)
+    context={'galaxies':res}
+    return render(request, 'app/galaxy_map.html', context)
