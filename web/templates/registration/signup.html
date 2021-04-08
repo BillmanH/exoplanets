@@ -1,0 +1,22 @@
+{% block content %}
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    <button type="submit">Sign up</button>
+  </form>
+  <p>An important note about passwords:</p>
+  <p>I'm using Django's native password management, not my own system (which I think is the more secure choice). That being said, I am the sole owner and super user of the infrastructure so I could, in theory, unhash your password. I've never done this and have no curiosity about it. Also, I'll never ask for money on this site or for any personally identifying information. I just need a user/password system to save content and preferences.</p>
+  <p>Additionally I'll encourage you to read more about <a href="https://docs.djangoproject.com/en/3.0/topics/auth/passwords/">Django's password management process</a></p>
+{% endblock %}

@@ -7,7 +7,7 @@ import yaml,os
 # my Gremlin Model is like Django modesl in name only. 
 
 def get_client():
-    config = yaml.safe_load(open('configure.yaml'))
+    config = yaml.safe_load(open('./configure.yaml'))
     endpoint = config['endpoint']
     username = config['username']
     password = config['password']
