@@ -1,6 +1,9 @@
 # exoplanets
 side project for exploring exoplanet data
 
+# APP
+Exoplanet Game is a strategy game I've been thinking about. Super small design phase right now, but it's a solid side project. 
+
 
 ## Dataset
 Planet Data is gathered from here. 
@@ -32,7 +35,7 @@ python web/manage.py runserver
 
 
 # Contributing
-Accepting pull requests
+Pretty early in the design right now, however I might invite collaborators later.
 
 Make sure to update the `environment.yaml` if you add python packages:
 ```

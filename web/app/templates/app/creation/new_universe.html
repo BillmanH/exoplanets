@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="{% static 'app/main.css' %}">
+    <script type="text/javascript" src="{% static 'app/d3/d3.js' %}"></script>
 </head>
 <body>
     <h1>New Universe Creation</h1>
@@ -11,17 +12,19 @@
         {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
         {% for field in form %}
           <p>
-            {% if field.label_tag != sep %}
                 {{ field.label_tag }} {{ field }}<br>
-                {{ field.help_text }}
-            {% endif %}
-            <!-- TODO Get sections in code -->
-            <!-- {% if field.label_tag == sep %}
-                <h2>Section</h2>
-            {% endif %} -->
-
+                {% if '%' in field.help_text %}
+                    <input type="range" min="0" max="1" value=".5" step=".1" class="culture slider" id="slide_{{ field.name }}" oninput="sliderChange('id_{{ field.name }}',this.value)">
+                    {{ field.help_text }}
+                {% endif %}
           </p>
         {% endfor %}
         <button type="submit">Create Solar System</button>
     </form>
 </body>
+
+<script>
+function sliderChange(i, v) {
+    document.getElementById(i).value = v;
+}
+</script>
