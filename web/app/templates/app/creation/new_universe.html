@@ -1,0 +1,26 @@
+{% load static %}
+
+
+<head>
+    <link rel="stylesheet" href="{% static 'app/main.css' %}">
+</head>
+<body>
+    <h1>New Universe Creation</h1>
+    <form>
+        {% csrf_token %}
+        {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+        {% for field in form %}
+          <p>
+            {% if field.label_tag != sep %}
+                {{ field.label_tag }} {{ field }}<br>
+                {{ field.help_text }}
+            {% endif %}
+            {% if field.label_tag == sep %}
+                <h2>Section</h2>
+            {% endif %}
+
+          </p>
+        {% endfor %}
+        <button type="submit">Create Solar System</button>
+    </form>
+</body>

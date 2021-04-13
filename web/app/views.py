@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from app.models import get_client,run_query
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
-from .forms import SignUpForm
+from .forms import SignUpForm, HomeSystemForm
 from app.models import get_client,run_query,get_galaxy_nodes
 
 #for this app I'm including the client object as a global
@@ -43,7 +43,9 @@ def explore(request):
 def new_universe(request):
     res = run_query(client)
     context={'node_cnt':res}
-    return render(request, 'app/index.html', context)
+    form = HomeSystemForm()
+    context['form']=form
+    return render(request, 'app/creation/new_universe.html', context)
 
 def galaxy_map(request):
     res = get_galaxy_nodes(client)
