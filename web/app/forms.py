@@ -21,6 +21,7 @@ class HomeSystemForm(forms.Form):
     num_planets = forms.IntegerField(max_value=10,min_value=1,initial=6,label='Number of planets',widget=NumberInput,help_text='(not planet-like objects)')
     num_moons = forms.IntegerField(max_value=10,min_value=1,initial=24,label='Number of moons',widget=NumberInput,help_text='(randomly distributed to planets)')
     home_has_moons = forms.BooleanField(initial=True,help_text='ensure that your planet has at least one moon')
-    sep = forms.CharField(label='sep')
+    #TODO : Add separater for fields somehow
+    # sep = forms.CharField(label='sep')
 
 
