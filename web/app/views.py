@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from app.models import get_client, get_galaxy_nodes, run_query
+from app.models import get_client, get_galaxy_nodes, get_system, run_query
 
 from .creators import universe
 from .forms import HomeSystemForm, SignUpForm
@@ -49,11 +49,18 @@ def new_universe(request):
         # Create the new system
         universe.build_homeSystem(form)
         # load the galaxy map, thus starting the game
-        return redirect(galaxy_map)
+        return redirect(system_map)
     if request.method == "GET":
         form = HomeSystemForm()
         context["form"] = form
     return render(request, "app/creation/new_universe.html", context)
+
+
+@login_required
+def system_map():
+    res = get_system(client)
+    context = {"galaxies": res}
+    return render(request, "app/galaxy_map.html", context)
 
 
 @login_required
