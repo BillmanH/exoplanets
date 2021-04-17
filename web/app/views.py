@@ -44,10 +44,11 @@ def explore(request):
 @login_required
 def new_universe(request):
     context = {}
-    if request.method == "POST":
+    form = HomeSystemForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
         form = HomeSystemForm(request.POST)
         # Create the new system
-        universe.build_homeSystem(form)
+        universe.build_homeSystem(request.POST)
         # load the galaxy map, thus starting the game
         return redirect(system_map)
     if request.method == "GET":
