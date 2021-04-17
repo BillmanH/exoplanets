@@ -33,3 +33,9 @@ def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
     callback = client.submit(query)
     res = callback.result().all().result()
     return res
+
+
+def get_system(client, query="g.V().haslabel('system')"):
+    callback = client.submit(query)
+    res = callback.result().all().result()
+    return res
