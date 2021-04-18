@@ -6,10 +6,13 @@ Exoplanet Game is a strategy game I've been thinking about. Super small design p
 
 
 ## Dataset
-Planet Data is gathered from here. 
+Exoplanet data Data is gathered from here. 
 ### Important Links
 * [Dataset column definitions](https://exoplanetarchive.ipac.caltech.edu/applications/DocSet/index.html?doctree=/docs/docmenu.xml&startdoc=item_1_01)
 * [Data from this table](https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS)
+
+### Our solar system data
+* [List of Solar System objects](https://en.wikipedia.org/wiki/List_of_Solar_System_objects_by_size#:~:text=Larger%20than%20400%20km%20%20%20%20Body,%20%202004%20%2013%20more%20rows%20)
 
 * uploading that data to cosmos (once parsed) with `python scripts/upload_systems.py`
 

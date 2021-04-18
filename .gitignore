@@ -134,3 +134,6 @@ dmypy.json
 .pyre/
 
 .vscode/*
+
+# Excel files
+data/~$*.xlsx
