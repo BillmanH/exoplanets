@@ -29,6 +29,14 @@ def run_query(client, query="g.V().count()"):
     return res
 
 
+def upload_nodes(client, query):
+    pass
+
+
+def upload_edges(client, query):
+    pass
+
+
 def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
     callback = client.submit(query)
     res = callback.result().all().result()

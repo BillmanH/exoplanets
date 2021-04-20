@@ -89,13 +89,15 @@ def sort_planets(t):
         return 4
 
 
-def make_planet(t):
+def make_planet(t, orbiting):
     planet = {"planetType": t, "name": make_word(rnd(2, 1))}
     planet["label"] = "planet"
     planet["objid"] = uuid(n=13)
     planet["mass"] = abs(r.normal(pdata[t]["mass_mean"], pdata[t]["mass_std"]))
     planet["radius"] = abs(r.normal(pdata[t]["radius_mean"], pdata[t]["radius_std"]))
     planet["order"] = sort_planets(t)
+    planet["orbitsId"] = orbiting["objid"]
+    planet["orbitsName"] = orbiting["name"]
     return planet
 
 
@@ -124,7 +126,8 @@ def build_homeSystem(data):
     }
     planets = [
         make_planet(
-            r.choice(list(pdata.keys()), p=[pdata[t]["prob"] for t in pdata.keys()])
+            r.choice(list(pdata.keys()), p=[pdata[t]["prob"] for t in pdata.keys()]),
+            star,
         )
         for p in range(int(data["num_planets"]))
     ]
@@ -136,4 +139,15 @@ def build_homeSystem(data):
         for p in range(int(data["num_moons"]))
     ]
     nodes = [system] + [star] + moons + planets
-    return nodes
+    system_edges = [
+        {"node1": p["objid"], "node2": system["objid"], "label": "isInSystem"}
+        for p in nodes
+        if p["label"] != "system"
+    ]
+    orbits = [
+        {"node1": p["objid"], "node2": p["orbitsId"], "label": "orbits"}
+        for p in nodes
+        if p.get("orbitsId")
+    ]
+    edges = system_edges + orbits
+    return nodes, edges

@@ -48,7 +48,9 @@ def new_universe(request):
     if request.method == "POST" and form.is_valid():
         form = HomeSystemForm(request.POST)
         # Create the new system
-        universe.build_homeSystem(request.POST)
+        nodes, edges = universe.build_homeSystem(request.POST)
+        data = {'nodes':nodes,'edges':edges}
+        context['data'] = data
         # load the galaxy map, thus starting the game
         return redirect(system_map)
     if request.method == "GET":
