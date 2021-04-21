@@ -35,6 +35,7 @@ def index(request):
     return render(request, "app/index.html", context)
 
 
+@login_required
 def explore(request):
     res = run_query(client, query="g.V().count()")
     context = {"node_cnt": res}
@@ -48,11 +49,12 @@ def new_universe(request):
     if request.method == "POST" and form.is_valid():
         form = HomeSystemForm(request.POST)
         # Create the new system
-        nodes, edges = universe.build_homeSystem(request.POST)
-        data = {'nodes':nodes,'edges':edges}
-        context['data'] = data
+        username = request.user.username
+        nodes, edges = universe.build_homeSystem(request.POST, username)
+        data = {"nodes": nodes, "edges": edges}
+        upload_data(client, username, data)
         # load the galaxy map, thus starting the game
-        return redirect(system_map)
+        return redirect("system_map")
     if request.method == "GET":
         form = HomeSystemForm()
         context["form"] = form
@@ -60,7 +62,7 @@ def new_universe(request):
 
 
 @login_required
-def system_map():
+def system_map(request):
     res = get_system(client)
     context = {"galaxies": res}
     return render(request, "app/galaxy_map.html", context)

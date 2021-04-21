@@ -1,8 +1,12 @@
 import pickle
 import numpy as np
 from numpy import random as r
+from datetime import datetime
 
-syllables = pickle.load(open("../data/syllables.p", "rb"))
+try:
+    syllables = pickle.load(open("../data/syllables.p", "rb"))
+except:
+    syllables = pickle.load(open("data/syllables.p", "rb"))
 
 
 pdata = {
@@ -113,11 +117,19 @@ def make_moon(t, planets):
     return moon
 
 
-def build_homeSystem(data):
+def build_homeSystem(data, username):
+    accountid = uuid(n=13)
+    user = {
+        "label": "account",
+        "username": "account",
+        "created": datetime.now().strftime("%d-%m-%Y-%H-%M-%S"),
+        "objid": accountid,
+    }
+    systemid = uuid(n=13)
     system = {
         "name": make_word(rnd(2, 1)),
         "label": "system",
-        "objid": uuid(n=13),
+        "objid": systemid,
     }
     star = {
         "name": make_word(rnd(2, 1)),
@@ -138,7 +150,7 @@ def build_homeSystem(data):
         )
         for p in range(int(data["num_moons"]))
     ]
-    nodes = [system] + [star] + moons + planets
+    nodes = [user] + [system] + [star] + moons + planets
     system_edges = [
         {"node1": p["objid"], "node2": system["objid"], "label": "isInSystem"}
         for p in nodes
@@ -149,5 +161,10 @@ def build_homeSystem(data):
         for p in nodes
         if p.get("orbitsId")
     ]
-    edges = system_edges + orbits
+    accountEdge = {
+        "node1": systemid,
+        "node2": accountid,
+        "label": "belongsToUser",
+    }
+    edges = system_edges + orbits + [accountEdge]
     return nodes, edges

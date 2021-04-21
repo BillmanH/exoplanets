@@ -28,13 +28,36 @@ def run_query(client, query="g.V().count()"):
     res = callback.result().all().result()
     return res
 
+def cs(s):
+    #Clean String
+    s = str(s).replace("'","")
+    return s
 
-def upload_nodes(client, query):
-    pass
+def create_vertex(node, username):
+    gaddv = f"g.addV('{node['label']}')"
+    properties = [k for k in node.keys()]
+    for k in properties:
+        substr = f".property('{k}','{cs(node[k])}')"
+        gaddv += substr
+    gaddv += f".property('username','{username}')"
+    return gaddv
+
+def check_vertex(node):
+    gaddv = f"g.V().has('objid',{node['objid']})"
+    return gaddv
+
+def create_edge(labelE, node1, node2, node1L, node2L, node1cl, node2cl):
+    gadde = f"g.V().hasLabel('{node1cl}').has('{cs(node1L)}','{cs(node1)}').addE('{cs(labelE)}').to(g.V().hasLabel('{node2cl}').has('{cs(node2L)}','{cs(node2)}'))"
+    return gadde
 
 
-def upload_edges(client, query):
-    pass
+def upload_data(client, username, data):
+    for node in data["nodes"]:
+        callback = client.submit(create_vertex(node, username))
+    for edge in data["edges"]
+        callback = client.submit(create_edge(edge, username))
+    ## link system to 
+    return
 
 
 def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
