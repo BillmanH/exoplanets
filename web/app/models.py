@@ -46,15 +46,15 @@ def check_vertex(node):
     gaddv = f"g.V().has('objid',{node['objid']})"
     return gaddv
 
-def create_edge(labelE, node1, node2, node1L, node2L, node1cl, node2cl):
-    gadde = f"g.V().hasLabel('{node1cl}').has('{cs(node1L)}','{cs(node1)}').addE('{cs(labelE)}').to(g.V().hasLabel('{node2cl}').has('{cs(node2L)}','{cs(node2)}'))"
+def create_edge(edge,username):
+    gadde = f"g.V().hasLabel('{edge['label']}').has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username',{username}).to(g.V().has('objid','{cs(edge['node2'])}'))"
     return gadde
 
 
 def upload_data(client, username, data):
     for node in data["nodes"]:
         callback = client.submit(create_vertex(node, username))
-    for edge in data["edges"]
+    for edge in data["edges"]:
         callback = client.submit(create_edge(edge, username))
     ## link system to 
     return
@@ -66,7 +66,8 @@ def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
     return res
 
 
-def get_system(client, query="g.V().haslabel('system')"):
+def get_system(client, username):
+    query = f"g.V().hasLabel('system').has('username',{username})"
     callback = client.submit(query)
     res = callback.result().all().result()
     return res

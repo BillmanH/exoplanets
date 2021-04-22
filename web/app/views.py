@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from app.models import get_client, get_galaxy_nodes, get_system, run_query
+from app.models import *
 
 from .creators import universe
 from .forms import HomeSystemForm, SignUpForm
@@ -63,7 +63,7 @@ def new_universe(request):
 
 @login_required
 def system_map(request):
-    res = get_system(client)
+    res = get_system(client,request.user.username)
     context = {"galaxies": res}
     return render(request, "app/galaxy_map.html", context)
 
