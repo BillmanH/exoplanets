@@ -61,13 +61,13 @@ def upload_data(client, username, data):
 
 
 def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
-    callback = client.submit(query)
+    callback = client.submitAsync(query)
     res = callback.result().all().result()
     return res
 
 
 def get_system(client, username):
-    query = f"g.V().hasLabel('system').has('username',{username})"
-    callback = client.submit(query)
+    query = f"g.V().hasLabel('system').has('username','{username}')"
+    callback = client.submitAsync(query)
     res = callback.result().all().result()
     return res
