@@ -12,11 +12,11 @@ import traceback
 #%%
 #Connection config
 
-config = yaml.safe_load(open('../configure.yaml'))
+config = yaml.safe_load(open('configure.yaml'))
 endpoint = config['endpoint']
 username = config['username']
 password = config['password']
-traversal_source = config['traversal_source']
+
 
 #%%
 # Getting the client
