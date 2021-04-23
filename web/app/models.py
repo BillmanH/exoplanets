@@ -47,7 +47,7 @@ def check_vertex(node):
     return gaddv
 
 def create_edge(edge,username):
-    gadde = f"g.V().hasLabel('{edge['label']}').has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username',{username}).to(g.V().has('objid','{cs(edge['node2'])}'))"
+    gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}').to(g.V().has('objid','{cs(edge['node2'])}'))"
     return gadde
 
 
