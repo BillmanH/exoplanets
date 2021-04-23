@@ -67,7 +67,7 @@ def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
 
 
 def get_system(client, username):
-    query = f"g.V().hasLabel('system').has('username','{username}')"
+    query = f"g.V().hasLabel('system').has('username','{username}').in()"
     callback = client.submitAsync(query)
     res = callback.result().all().result()
     return res

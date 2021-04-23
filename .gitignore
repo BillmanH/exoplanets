@@ -137,3 +137,4 @@ dmypy.json
 
 # Excel files
 data/~$*.xlsx
+data/examplesystem.json
