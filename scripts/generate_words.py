@@ -17,7 +17,7 @@ cities["country"] = cities["country"].str.lower()
 ci = cities["name"].drop_duplicates().str.lower().values
 co = cities["country"].drop_duplicates().str.lower().values
 
-# TODO: Bug where blank letter is considered word, causing objects to have name " "
+
 words = pd.concat([pd.DataFrame(ci), pd.DataFrame(co)]).drop_duplicates().values
 words = " ".join(words.flatten())
 
