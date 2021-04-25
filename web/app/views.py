@@ -65,7 +65,7 @@ def new_universe(request):
 def system_map(request):
     res = get_system(client,request.user.username)
     context = {"galaxies": res}
-    return render(request, "app/galaxy_map.html", context)
+    return render(request, "app/system_map.html", context)
 
 
 @login_required
