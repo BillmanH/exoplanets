@@ -1,7 +1,17 @@
+{% load static %}
+<html>
+{% include "app/head.html" %}
+<body>
 <ul>
-    <li>text pipe of the data: {{galaxies}}</li>>
+
 </ul>
 
+</body>
 <script>
-    console.log({{ galaxies|safe }})
+    // https://github.com/d3/d3-force#simulation
+    var data = {{ galaxies|safe }}
+    nodes = data['nodes']
+    {% include "app/charts/nodemap.js" %}
 </script>
+
+</html>
