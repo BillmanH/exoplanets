@@ -13,9 +13,12 @@
     var data = {{ galaxies| safe }}
     nodes = data['nodes']
     links = []
+    for (i in data['nodes']) {
+        // console.log(data['edges'][i])
+        nodes[i]['id'] = nodes[i]['objid'][0]
+    }
     for (i in data['edges']) {
-
-        console.log(data['edges'][i])
+        // console.log(data['edges'][i])
         links.push({
             'source': data['edges'][i]['objects'][0],
             'target': data['edges'][i]['objects'][2],
