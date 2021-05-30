@@ -3,6 +3,7 @@ from django.db import models
 from gremlin_python.driver import client, serializer, protocol
 from gremlin_python.driver.protocol import GremlinServerError
 import yaml, os
+import pickle
 
 #%%
 # my Gremlin Model is like Django modesl in name only.
@@ -79,4 +80,7 @@ def get_system(client, username):
     edges_query = f"g.V().hasLabel('system').has('username','{username}').inE().outV().path().by('objid').by(label())"
     edges_callback = client.submitAsync(edges_query)
     edges = edges_callback.result().all().result()
-    return {"nodes": nodes, "edges": edges}
+    # TODO: Pickling the results here for dev. Delete in Prod.
+    system = {"nodes": nodes, "edges": edges}
+    pickle.dump(system, open("../data/system.p", "wb"))
+    return system
