@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms.widgets import NumberInput, CheckboxInput
+from yaml import nodes
 
 # https://docs.djangoproject.com/en/3.1/ref/forms/widgets/#built-in-widgets
 
@@ -23,6 +24,10 @@ class SignUpForm(UserCreationForm):
             "password1",
             "password2",
         )
+
+
+class QueryForm(forms.Form):
+    queryField = forms.CharField(label="your query", max_length=1000)
 
 
 class HomeSystemForm(forms.Form):

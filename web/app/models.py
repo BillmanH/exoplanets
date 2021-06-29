@@ -71,6 +71,14 @@ def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
     return res
 
 
+def clean_node(x):
+    for k in list(x.keys()):
+        if len(x[k]) == 1:
+            x[k] = x[k][0]
+    x["id"] = x["objid"]
+    return x
+
+
 def get_system(client, username):
     nodes_query = (
         f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
@@ -81,6 +89,6 @@ def get_system(client, username):
     edges_callback = client.submitAsync(edges_query)
     edges = edges_callback.result().all().result()
     # TODO: Pickling the results here for dev. Delete in Prod.
-    system = {"nodes": nodes, "edges": edges}
-    pickle.dump(system, open("../data/system.p", "wb"))
+    # pickle.dump(system, open("../data/system.p", "wb"))
+    system = {"nodes": [clean_node(n) for n in nodes], "edges": edges}
     return system
