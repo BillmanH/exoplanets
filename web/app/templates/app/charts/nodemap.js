@@ -9,7 +9,7 @@ var svg = d3.select('body').append('svg')
 var force = d3.forceSimulation(nodes)
     .force('charge', d3.forceManyBody())
     .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('link', d3.forceLink().links(links))
+    // .force('link', d3.forceLink().links(links))
     .on('tick', ticked);
 
 var point = {}

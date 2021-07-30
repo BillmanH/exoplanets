@@ -12,9 +12,9 @@
     var data = {{ galaxies|safe }}
     nodes = data['nodes']
     links = []
-    for (i in data['edges']){
-        links.push({'source','target','source'})
-    }
+    // for (i in data['edges']){
+    //     links.push({'source','target','source'})
+    // }
     {% include "app/charts/nodemap.js" %}
 </script>
 
