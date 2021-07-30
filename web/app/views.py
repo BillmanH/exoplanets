@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from app.models import *
 
 from .creators import universe
-from .forms import HomeSystemForm, SignUpForm
+from .forms import HomeSystemForm, SignUpForm, QueryForm
 
 # for this app I'm including the client object as a global
 # I may change this as I'm not sure of the best practice.
@@ -37,7 +37,11 @@ def index(request):
 
 @login_required
 def explore(request):
-    res = run_query(client, query="g.V().count()")
+    form = QueryForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        form = HomeSystemForm(request.POST)
+        # TODO: Add query form
+        res = run_query(client, query=query)
     context = {"node_cnt": res}
     return render(request, "app/index.html", context)
 
@@ -63,7 +67,7 @@ def new_universe(request):
 
 @login_required
 def system_map(request):
-    res = get_system(client,request.user.username)
+    res = get_system(client, request.user.username)
     context = {"galaxies": res}
     return render(request, "app/system_map.html", context)
 

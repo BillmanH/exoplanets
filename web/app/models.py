@@ -3,6 +3,7 @@ from django.db import models
 from gremlin_python.driver import client, serializer, protocol
 from gremlin_python.driver.protocol import GremlinServerError
 import yaml, os
+import pickle
 
 #%%
 # my Gremlin Model is like Django modesl in name only.
@@ -28,10 +29,12 @@ def run_query(client, query="g.V().count()"):
     res = callback.result().all().result()
     return res
 
+
 def cs(s):
-    #Clean String
-    s = str(s).replace("'","")
+    # Clean String
+    s = str(s).replace("'", "")
     return s
+
 
 def create_vertex(node, username):
     gaddv = f"g.addV('{node['label']}')"
@@ -42,11 +45,13 @@ def create_vertex(node, username):
     gaddv += f".property('username','{username}')"
     return gaddv
 
+
 def check_vertex(node):
     gaddv = f"g.V().has('objid',{node['objid']})"
     return gaddv
 
-def create_edge(edge,username):
+
+def create_edge(edge, username):
     gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}').to(g.V().has('objid','{cs(edge['node2'])}'))"
     return gadde
 
@@ -56,7 +61,7 @@ def upload_data(client, username, data):
         callback = client.submit(create_vertex(node, username))
     for edge in data["edges"]:
         callback = client.submit(create_edge(edge, username))
-    ## link system to 
+    ## link system to
     return
 
 
@@ -66,11 +71,24 @@ def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
     return res
 
 
+def clean_node(x):
+    for k in list(x.keys()):
+        if len(x[k]) == 1:
+            x[k] = x[k][0]
+    x["id"] = x["objid"]
+    return x
+
+
 def get_system(client, username):
-    nodes_query = f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
+    nodes_query = (
+        f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
+    )
     node_callback = client.submitAsync(nodes_query)
     nodes = node_callback.result().all().result()
-    edges_query = f"g.V().hasLabel('system').has('username','userbill').inE().outV().path().by('objid').by(label())"
+    edges_query = f"g.V().hasLabel('system').has('username','{username}').inE().outV().path().by('objid').by(label())"
     edges_callback = client.submitAsync(edges_query)
     edges = edges_callback.result().all().result()
-    return {'nodes':nodes,'edges':edges}
+    # TODO: Pickling the results here for dev. Delete in Prod.
+    # pickle.dump(system, open("../data/system.p", "wb"))
+    system = {"nodes": [clean_node(n) for n in nodes], "edges": edges}
+    return system
