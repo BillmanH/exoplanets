@@ -20,12 +20,7 @@ function ticked() {
     
     u.enter()
         .append('circle')
-        .attr('r', function(d) {
-
-            r = d.radius || ["0"]
-            return parseFloat(r[0])*defaultNodeSize
-
-            })
+        .attr('r', function(d) {return d.radius*10})
         .merge(u)
         .attr('cx', function(d) {
         return d.x

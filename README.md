@@ -4,6 +4,9 @@ side project for exploring exoplanet data
 # APP
 Exoplanet Game is a strategy game I've been thinking about. Super small design phase right now, but it's a solid side project. 
 
+## Working views now: 
+* `/systemmap`
+
 
 ## Dataset
 Exoplanet data Data is gathered from here. 
@@ -19,7 +22,7 @@ Exoplanet data Data is gathered from here.
 ### Database (Cosmos DB)
 The connection info is in the `configure.yaml` and looks like this. It is in `.gitignore` so you will need to add that file. 
 ```
- # Web location of the cosmos DB:
+# Web location of the cosmos DB:
 endpoint: wss://<the domain of your instance>:443/
 
 # Login Info:
