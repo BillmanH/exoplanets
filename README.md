@@ -30,7 +30,19 @@ You can test your connection with `python scripts/test_connection.py`.
 
 
 ## App
-Running the web app from the root directory. 
+
+### Building the environment
+I'm using anaconda so you should be able to build the environemnt in any system with: 
+```
+conda env create --file=environment.yaml
+```
+
+and update it using:
+```
+conda env update --name exoplanets --file=environment.yaml --prune
+```
+
+### Running the web app from the root directory. 
 ```
 python web/manage.py runserver
 ```
