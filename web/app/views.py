@@ -8,10 +8,10 @@ from app.models import *
 from .creators import universe
 from .forms import HomeSystemForm, SignUpForm, QueryForm
 
-# for this app I'm including the client object as a global
-# I may change this as I'm not sure of the best practice.
-client = get_client()
 
+# managing the connection (sync)
+#   c = get_client()  <- Fetches the client object. 
+#   c.close() closes the connection afterwards, to avoid lingering connections. 
 
 def signup(request):
     if request.method == "POST":
@@ -30,24 +30,29 @@ def signup(request):
 
 
 def index(request):
-    res = run_query(client, query="g.V().count()")
+    c = get_client()
+    res = run_query(c, query="g.V().count()")
     context = {"node_cnt": res}
+    c.close()
     return render(request, "app/index.html", context)
 
 
 @login_required
 def explore(request):
+    c = get_client()
     form = QueryForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         form = HomeSystemForm(request.POST)
         # TODO: Add query form
-        res = run_query(client, query=query)
+        res = run_query(c, query=query)
     context = {"node_cnt": res}
+    c.close()
     return render(request, "app/index.html", context)
 
 
 @login_required
 def new_universe(request):
+    c = get_client()
     context = {}
     form = HomeSystemForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -56,24 +61,29 @@ def new_universe(request):
         username = request.user.username
         nodes, edges = universe.build_homeSystem(request.POST, username)
         data = {"nodes": nodes, "edges": edges}
-        upload_data(client, username, data)
+        upload_data(c, username, data)
         # load the galaxy map, thus starting the game
         return redirect("system_map")
     if request.method == "GET":
         form = HomeSystemForm()
         context["form"] = form
+    c.close()
     return render(request, "app/creation/new_universe.html", context)
 
 
 @login_required
 def system_map(request):
-    res = get_system(client, request.user.username)
+    c = get_client()
+    res = get_system(c, request.user.username)
     context = {"galaxies": res}
+    c.close()
     return render(request, "app/system_map.html", context)
 
 
 @login_required
 def galaxy_map(request):
-    res = get_galaxy_nodes(client)
+    c = get_client()
+    res = get_galaxy_nodes(c)
     context = {"galaxies": res}
+    c.close()
     return render(request, "app/galaxy_map.html", context)

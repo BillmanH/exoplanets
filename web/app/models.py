@@ -6,7 +6,8 @@ import yaml, os
 import pickle
 
 #%%
-# my Gremlin Model is like Django modesl in name only.
+# my Gremlin Model is like Django models in name only.
+# I'm creating a client object and connecting it to the 
 
 
 def get_client():
