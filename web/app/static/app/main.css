@@ -3,6 +3,10 @@ body {
     color: #cfd2d6;
   }
 
+svg {
+  border: 1px solid white;
+}
+
 h1 {
     color: #cfd2d6;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
