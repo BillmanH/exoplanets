@@ -16,7 +16,13 @@ from .GraphOperations import account
 
 
 def get_client():
-    config = yaml.safe_load(open("./configure.yaml"))
+    '''
+    c = get_client()
+    '''
+    try:
+        config = yaml.safe_load(open("./configure.yaml"))
+    except FileNotFoundError:
+        config = yaml.safe_load(open("../../configure.yaml"))
     endpoint = config["endpoint"]
     username = config["username"]
     password = config["password"]
