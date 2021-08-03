@@ -89,7 +89,5 @@ def get_system(client, username):
     edges_query = f"g.V().hasLabel('system').has('username','{username}').inE().outV().path().by('objid').by(label())"
     edges_callback = client.submitAsync(edges_query)
     edges = edges_callback.result().all().result()
-    # TODO: Pickling the results here for dev. Delete in Prod.
-    # pickle.dump(system, open("../data/system.p", "wb"))
     system = {"nodes": [clean_node(n) for n in nodes], "edges": edges}
     return system
