@@ -60,7 +60,7 @@ def new_universe(request):
         form = HomeSystemForm(request.POST)
         username = request.user.username
         # Delete the old sytem
-        account.drop_account(client,username)
+        account.drop_account(c,username)
         # Create the new system
         nodes, edges = universe.build_homeSystem(request.POST, username)
         data = {"nodes": nodes, "edges": edges}
