@@ -1,9 +1,14 @@
-from django.db import models
-
-from gremlin_python.driver import client, serializer, protocol
-from gremlin_python.driver.protocol import GremlinServerError
-import yaml, os
+import os
+# Pickle isn't used, but I might use it. 
 import pickle
+
+import yaml
+from django.db import models
+from gremlin_python.driver import client, protocol, serializer
+from gremlin_python.driver.protocol import GremlinServerError
+
+#Local modules:
+from .GraphOperations import account
 
 #%%
 # my Gremlin Model is like Django models in name only.
@@ -11,7 +16,13 @@ import pickle
 
 
 def get_client():
-    config = yaml.safe_load(open("./configure.yaml"))
+    '''
+    c = get_client()
+    '''
+    try:
+        config = yaml.safe_load(open("./configure.yaml"))
+    except FileNotFoundError:
+        config = yaml.safe_load(open("../../configure.yaml"))
     endpoint = config["endpoint"]
     username = config["username"]
     password = config["password"]
@@ -44,6 +55,7 @@ def create_vertex(node, username):
         substr = f".property('{k}','{cs(node[k])}')"
         gaddv += substr
     gaddv += f".property('username','{username}')"
+    gaddv += f".property('objtype','{node['label']}')"
     return gaddv
 
 
@@ -59,9 +71,9 @@ def create_edge(edge, username):
 
 def upload_data(client, username, data):
     for node in data["nodes"]:
-        callback = client.submit(create_vertex(node, username))
+        callback = client.submitAsync(create_vertex(node, username))
     for edge in data["edges"]:
-        callback = client.submit(create_edge(edge, username))
+        callback = client.submitAsync(create_edge(edge, username))
     ## link system to
     return
 
@@ -89,7 +101,5 @@ def get_system(client, username):
     edges_query = f"g.V().hasLabel('system').has('username','{username}').inE().outV().path().by('objid').by(label())"
     edges_callback = client.submitAsync(edges_query)
     edges = edges_callback.result().all().result()
-    # TODO: Pickling the results here for dev. Delete in Prod.
-    # pickle.dump(system, open("../data/system.p", "wb"))
     system = {"nodes": [clean_node(n) for n in nodes], "edges": edges}
     return system

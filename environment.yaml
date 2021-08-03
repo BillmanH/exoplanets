@@ -4,6 +4,7 @@ channels:
   - defaults
 dependencies:
   - python==3.7
+  - altair
   - pip
   - pyyaml
   - ipykernel
@@ -13,5 +14,5 @@ dependencies:
   - black
   - pip:
     - nb_black
-    - gremlinpython
+    - gremlinpython==3.5.1
 prefix: C:\Users\william.harding\Anaconda3\envs\exoplanets

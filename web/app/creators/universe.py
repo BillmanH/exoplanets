@@ -3,6 +3,7 @@ import numpy as np
 from numpy import random as r
 from datetime import datetime
 
+# Depending on where this is run, it could be back one dir. 
 try:
     syllables = pickle.load(open("../data/syllables.p", "rb"))
 except:
