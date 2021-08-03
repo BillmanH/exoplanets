@@ -8,7 +8,7 @@ from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
 #Local modules:
-from GraphOperations import account
+from .GraphOperations import account
 
 #%%
 # my Gremlin Model is like Django models in name only.

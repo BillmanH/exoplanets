@@ -5,8 +5,8 @@ side project for exploring exoplanet data
 Exoplanet Game is a strategy game I've been thinking about. Super small design phase right now, but it's a solid side project. 
 
 ## Working views now: 
-* `/systemmap`
-
+* `/systemmap` <- look at your system
+* `/new` < - create a new system
 
 ## Dataset
 Exoplanet data Data is gathered from here. 
