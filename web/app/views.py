@@ -56,9 +56,12 @@ def new_universe(request):
     context = {}
     form = HomeSystemForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
+        # Get some info from the client
         form = HomeSystemForm(request.POST)
-        # Create the new system
         username = request.user.username
+        # Delete the old sytem
+        account.drop_account(client,username)
+        # Create the new system
         nodes, edges = universe.build_homeSystem(request.POST, username)
         data = {"nodes": nodes, "edges": edges}
         upload_data(c, username, data)

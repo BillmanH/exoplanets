@@ -1,9 +1,14 @@
-from django.db import models
-
-from gremlin_python.driver import client, serializer, protocol
-from gremlin_python.driver.protocol import GremlinServerError
-import yaml, os
+import os
+# Pickle isn't used, but I might use it. 
 import pickle
+
+import yaml
+from django.db import models
+from gremlin_python.driver import client, protocol, serializer
+from gremlin_python.driver.protocol import GremlinServerError
+
+#Local modules:
+from GraphOperations import account
 
 #%%
 # my Gremlin Model is like Django models in name only.
@@ -44,6 +49,7 @@ def create_vertex(node, username):
         substr = f".property('{k}','{cs(node[k])}')"
         gaddv += substr
     gaddv += f".property('username','{username}')"
+    gaddv += f".property('objtype','{node['label']}')"
     return gaddv
 
 
