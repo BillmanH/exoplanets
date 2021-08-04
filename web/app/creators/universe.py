@@ -95,7 +95,7 @@ def sort_planets(t):
 
 
 def make_planet(t, orbiting):
-    planet = {"type": t, "name": make_word(rnd(2, 1))}
+    planet = {"class": t, "name": make_word(rnd(2, 1))}
     planet["label"] = "planet"
     planet["objid"] = uuid(n=13)
     planet["mass"] = abs(r.normal(pdata[t]["mass_mean"], pdata[t]["mass_std"]))
@@ -107,7 +107,7 @@ def make_planet(t, orbiting):
 
 
 def make_moon(t, planets):
-    moon = {"type": t, "name": make_word(rnd(2, 1))}
+    moon = {"class": t, "name": make_word(rnd(2, 1))}
     moon["label"] = "moon"
     moon["objid"] = uuid(n=13)
     moon["mass"] = abs(r.normal(mdata[t]["mass_mean"], mdata[t]["mass_std"]))
@@ -135,6 +135,8 @@ def build_homeSystem(data, username):
     star = {
         "name": make_word(rnd(2, 1)),
         "label": "star",
+        #TODO: Create some star classes
+        "class": "G",
         "objid": uuid(n=13),
     }
     planets = [
