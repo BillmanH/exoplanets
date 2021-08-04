@@ -12,21 +12,8 @@
     // https://github.com/d3/d3-force#simulation
     var data = {{ galaxies| safe }}
     nodes = data['nodes']
-    links = []
-    // for (i in data['edges']){
-    //     links.push({'source','target','source'})
-    // }
-    for (i in data['nodes']) {
-        // console.log(data['edges'][i])
-    }
-    for (i in data['edges']) {
-        // console.log(data['edges'][i])
-        links.push({
-            'source': data['edges'][i]['objects'][0],
-            'target': data['edges'][i]['objects'][2],
-            'label': data['edges'][i]['objects'][1]
-        })
-    }
+    links = data['edges']
+
     {% include "app/charts/nodemap.js" %}
 </script>
 
