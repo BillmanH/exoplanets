@@ -7,11 +7,10 @@ Exoplanet Game is a strategy game I've been thinking about. Super small design p
 ## Working views now: 
 * `/systemmap` <- look at your system
 * `/new` < - create a new system
-* `/systemmap`
 
-Current Dev Branch: 
-* Data types don't have a general type. Need a univeral category for object type (e.g "moon", "planet", "person")
-* Links don't reference parent correctly. All referencing the system ID, which won't work. 
+
+Current Dev Branch (the active sprint, if you will): 
+* get_system's query doesn't fetch the star. I need the star as it is the object that everything revolves around.
 
 ## Dataset
 Exoplanet data Data is gathered from here. 
