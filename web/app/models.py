@@ -94,12 +94,10 @@ def clean_node(x):
 
 def get_system(client, username):
     nodes_query = (
-        f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
+        f"g.V().hasLabel('system').has('username','{username}').in().inE('orbits').outV().valueMap()"
     )
     node_callback = client.submitAsync(nodes_query)
     nodes = node_callback.result().all().result()
-    edges_query = f"g.V().hasLabel('system').has('username','{username}').inE().outV().path().by('objid').by(label())"
-    edges_callback = client.submitAsync(edges_query)
-    edges = edges_callback.result().all().result()
+    edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes]
     system = {"nodes": [clean_node(n) for n in nodes], "edges": edges}
     return system
