@@ -9,9 +9,6 @@ Exoplanet Game is a strategy game I've been thinking about. Super small design p
 * `/new` < - create a new system
 
 
-Current Dev Branch (the active sprint, if you will): 
-* get_system's query doesn't fetch the star. I need the star as it is the object that everything revolves around.
-
 ## Dataset
 Exoplanet data Data is gathered from here. 
 ### Important Links
