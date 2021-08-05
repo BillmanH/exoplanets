@@ -93,11 +93,15 @@ def clean_node(x):
 
 
 def get_system(client, username):
+    # TODO: This process just assumes there is only one system per account. Eventually will need to expand to take 
+    # a system parameter to specify which system the user would like to fetch. 
     nodes_query = (
-        f"g.V().hasLabel('system').has('username','{username}').in().inE('orbits').outV().valueMap()"
+        f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
     )
+    
     node_callback = client.submitAsync(nodes_query)
     nodes = node_callback.result().all().result()
-    edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes]
+    edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
     system = {"nodes": [clean_node(n) for n in nodes], "edges": edges}
+
     return system
