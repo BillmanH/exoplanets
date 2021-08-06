@@ -38,15 +38,15 @@ function ticked() {
         .attr('cy', function(d) {
         return d.y
         })
-        .on("mousemove", function (d) {
-            selection.on("mousemove", (event) => {
-                d3.pointer(event)
-              })
+        .on("mouseover", (event) => {
+            return planet_tooltip.style("visibility", "visible")
         })
-        .on("mouseout", function () {
-            selection.on("mousemove", (event) => {
+        .on("mousemove", (event) => {
+                return planet_tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px")
+        })
+        .on("mouseout", (event) => {
                 d3.pointer(event)
-              })
+                return planet_tooltip.style("visibility", "hidden");
         })
     
     u.exit().remove()
