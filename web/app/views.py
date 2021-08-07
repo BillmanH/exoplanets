@@ -10,8 +10,9 @@ from .forms import HomeSystemForm, SignUpForm, QueryForm
 
 
 # managing the connection (sync)
-#   c = get_client()  <- Fetches the client object. 
-#   c.close() closes the connection afterwards, to avoid lingering connections. 
+#   c = get_client()  <- Fetches the client object.
+#   c.close() closes the connection afterwards, to avoid lingering connections.
+
 
 def signup(request):
     if request.method == "POST":
@@ -60,7 +61,7 @@ def new_universe(request):
         form = HomeSystemForm(request.POST)
         username = request.user.username
         # Delete the old sytem
-        account.drop_account(c,username)
+        account.drop_account(c, username)
         # Create the new system
         nodes, edges = universe.build_homeSystem(request.POST, username)
         data = {"nodes": nodes, "edges": edges}
@@ -85,6 +86,7 @@ def system_map(request):
 
 @login_required
 def galaxy_map(request):
+    # TODO: query returns blank (doesn't crash) if user does not have a system. Perhaps a redirect to `/new`?
     c = get_client()
     res = get_galaxy_nodes(c)
     context = {"galaxies": res}
