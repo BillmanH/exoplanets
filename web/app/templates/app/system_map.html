@@ -9,12 +9,13 @@
 
 </body>
 <script>
+    {% include "app/tooltips.js" %}
     // https://github.com/d3/d3-force#simulation
     var data = {{ galaxies| safe }}
     nodes = data['nodes']
     links = data['edges']
 
-    {% include "app/charts/nodemap.js" %}
+    {% include "app/charts/solar_system.js" %}
 </script>
 
 </html>
