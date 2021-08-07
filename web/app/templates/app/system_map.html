@@ -9,6 +9,7 @@
 
 </body>
 <script>
+    {% include "app/tooltips.js" %}
     // https://github.com/d3/d3-force#simulation
     var data = {{ galaxies| safe }}
     nodes = data['nodes']
