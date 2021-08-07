@@ -1,3 +1,14 @@
+function popvalues(a, m) {
+    delete a[m]
+    return a
+}
+
+function r(x) {
+    x = Math.round(x * 100) / 100
+    return x
+}
+
+
 function limitDict(d) {
     var things_we_dont_print = ["username", "objid", "id", "orbitsId", "vx", "vy", "x", "y"]
     for (i in things_we_dont_print) {
@@ -9,7 +20,9 @@ function limitDict(d) {
 //for tooltips, convert a dict to HTML
 function dictToHtml(d) {
     html = ""
-    d = limitDict(d)
+    var dt = {}
+    Object.assign(d, dt);
+    dt = limitDict(dt)
     for (var k in d) {
         x = k.replace(/_/g, " ")
         y = d[k]

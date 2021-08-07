@@ -29,8 +29,9 @@ function ticked() {
         .attr('cy', function (d) {
             return d.y
         })
-        .on("mouseover", (event) => {
-            return tooltip.style("visibility", "visible").html(dictToHtml(d3.select(this).datum().data));
+        .on("mouseover", (event, d) => {
+            console.log(d)
+            return tooltip.style("visibility", "visible").html(dictToHtml(d));
         })
         .on("mousemove", (event) => {
             return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px")
