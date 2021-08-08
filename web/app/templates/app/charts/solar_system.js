@@ -6,6 +6,16 @@ var svg = d3.select('body').append('svg')
     .attr('width', width)
     .attr('height', height);
 
+
+// normalize the radius
+
+planetScale = d3.scaleLinear()
+    .domain(
+        [
+            d3.min(nodes, function (d) { return d.radius; }),
+            d3.max(nodes, function (d) { return d.radius; })]
+    ).range([0, 20]);
+
 // https://github.com/d3/d3-force#simulation
 var force = d3.forceSimulation(nodes)
     .force('charge', d3.forceManyBody())
@@ -21,7 +31,7 @@ function ticked() {
 
     u.enter()
         .append('circle')
-        .attr('r', function (d) { return d.radius * 10 })
+        .attr('r', function (d) { return planetScale(d.radius) })
         .merge(u)
         .attr('cx', function (d) {
             return d.x
@@ -30,7 +40,6 @@ function ticked() {
             return d.y
         })
         .on("mouseover", (event, d) => {
-            console.log(d)
             return tooltip.style("visibility", "visible").html(dictToHtml(d));
         })
         .on("mousemove", (event) => {
