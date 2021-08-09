@@ -3,12 +3,15 @@ import numpy as np
 from numpy import random as r
 from datetime import datetime
 
-# Depending on where this is run, it could be back one dir. 
+# Depending on where this is run, it could be back one dir.
 try:
     syllables = pickle.load(open("../data/syllables.p", "rb"))
 except:
     syllables = pickle.load(open("data/syllables.p", "rb"))
 
+# TODO Get some stats on star types
+# sdata = {"radius_mean": 109, "radius_std": 1, "class": "G"}
+sdata = {"radius": 5, "class": "G"}
 
 pdata = {
     "dwarf": {
@@ -94,6 +97,14 @@ def sort_planets(t):
         return 4
 
 
+def make_star():
+    star = sdata
+    star["name"] = make_word(rnd(2, 1))
+    star["objid"] = uuid(n=13)
+    star["label"] = "star"
+    return star
+
+
 def make_planet(t, orbiting):
     planet = {"class": t, "name": make_word(rnd(2, 1))}
     planet["label"] = "planet"
@@ -132,13 +143,7 @@ def build_homeSystem(data, username):
         "label": "system",
         "objid": systemid,
     }
-    star = {
-        "name": make_word(rnd(2, 1)),
-        "label": "star",
-        #TODO: Create some star classes
-        "class": "G",
-        "objid": uuid(n=13),
-    }
+    star = make_star()
     planets = [
         make_planet(
             r.choice(list(pdata.keys()), p=[pdata[t]["prob"] for t in pdata.keys()]),
@@ -164,6 +169,7 @@ def build_homeSystem(data, username):
         for p in nodes
         if p.get("orbitsId")
     ]
+    # TODO: Move account to it's own module
     accountEdge = {
         "node1": systemid,
         "node2": accountid,
