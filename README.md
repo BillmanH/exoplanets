@@ -1,5 +1,12 @@
 # exoplanets
-side project for exploring exoplanet data
+A Gremlin Graph database driven strategy game. Get your civilization out into space. 
+
+* Django Web Server
+* Azure Cosmos DB (Gremlin)
+* D3.js for visualization
+
+## DEV
+Check out the Dev Branch for what I'm currently working on. 
 
 # APP
 Exoplanet Game is a strategy game I've been thinking about. Super small design phase right now, but it's a solid side project. 
