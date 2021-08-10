@@ -88,13 +88,13 @@ def uuid(n=8):
 
 def sort_planets(t):
     if t == "terrestrial":
-        return 1
+        return rnd(0.39, 1.52)
     if t == "gas":
-        return 2
+        return rnd(5.2, 10)
     if t == "ice":
-        return 3
+        return rnd(15, 29)
     if t == "dwarf":
-        return 4
+        return rnd(30, 50)
 
 
 def make_star():
@@ -111,7 +111,7 @@ def make_planet(t, orbiting):
     planet["objid"] = uuid(n=13)
     planet["mass"] = abs(r.normal(pdata[t]["mass_mean"], pdata[t]["mass_std"]))
     planet["radius"] = abs(r.normal(pdata[t]["radius_mean"], pdata[t]["radius_std"]))
-    planet["order"] = sort_planets(t)
+    planet["orbitsDistance"] = sort_planets(t)
     planet["orbitsId"] = orbiting["objid"]
     planet["orbitsName"] = orbiting["name"]
     return planet
@@ -125,6 +125,7 @@ def make_moon(t, planets):
     moon["radius"] = abs(r.normal(mdata[t]["radius_mean"], mdata[t]["radius_std"]))
     orbiting = r.choice(planets)
     moon["orbitsId"] = orbiting["objid"]
+    moon["orbitsDistance"] = .005
     moon["orbitsName"] = orbiting["name"]
     return moon
 
@@ -164,7 +165,7 @@ def build_homeSystem(data, username):
         if p["label"] != "system"
     ]
     orbits = [
-        {"node1": p["objid"], "node2": p["orbitsId"], "label": "orbits"}
+        {"node1": p["objid"], "node2": p["orbitsId"], "label": "orbits", "orbit_distance":p["orbitsDistance"]}
         for p in nodes
         if p.get("orbitsId")
     ]
