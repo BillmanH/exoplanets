@@ -9,7 +9,7 @@ var svg = d3.select('body').append('svg')
 
 // normalize the radius
 
-planetScale = d3.scaleLinear()
+planetScale = d3.scaleLog()
     .domain(
         [
             d3.min(nodes, function (d) { return d.radius; }),

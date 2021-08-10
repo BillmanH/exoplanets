@@ -3,12 +3,15 @@ import numpy as np
 from numpy import random as r
 from datetime import datetime
 
-# Depending on where this is run, it could be back one dir. 
+# Depending on where this is run, it could be back one dir.
 try:
     syllables = pickle.load(open("../data/syllables.p", "rb"))
 except:
     syllables = pickle.load(open("data/syllables.p", "rb"))
 
+# TODO Get some stats on star types
+# sdata = {"radius_mean": 109, "radius_std": 1, "class": "G"}
+sdata = {"radius": 106, "class": "G"}
 
 pdata = {
     "dwarf": {
@@ -85,13 +88,21 @@ def uuid(n=8):
 
 def sort_planets(t):
     if t == "terrestrial":
-        return 1
+        return rnd(0.39, 1.52)
     if t == "gas":
-        return 2
+        return rnd(5.2, 10)
     if t == "ice":
-        return 3
+        return rnd(15, 29)
     if t == "dwarf":
-        return 4
+        return rnd(30, 50)
+
+
+def make_star():
+    star = sdata
+    star["name"] = make_word(rnd(2, 1))
+    star["objid"] = uuid(n=13)
+    star["label"] = "star"
+    return star
 
 
 def make_planet(t, orbiting):
@@ -100,7 +111,7 @@ def make_planet(t, orbiting):
     planet["objid"] = uuid(n=13)
     planet["mass"] = abs(r.normal(pdata[t]["mass_mean"], pdata[t]["mass_std"]))
     planet["radius"] = abs(r.normal(pdata[t]["radius_mean"], pdata[t]["radius_std"]))
-    planet["order"] = sort_planets(t)
+    planet["orbitsDistance"] = sort_planets(t)
     planet["orbitsId"] = orbiting["objid"]
     planet["orbitsName"] = orbiting["name"]
     return planet
@@ -114,6 +125,7 @@ def make_moon(t, planets):
     moon["radius"] = abs(r.normal(mdata[t]["radius_mean"], mdata[t]["radius_std"]))
     orbiting = r.choice(planets)
     moon["orbitsId"] = orbiting["objid"]
+    moon["orbitsDistance"] = .005
     moon["orbitsName"] = orbiting["name"]
     return moon
 
@@ -122,7 +134,6 @@ def build_homeSystem(data, username):
     accountid = uuid(n=13)
     user = {
         "label": "account",
-        "username": "account",
         "created": datetime.now().strftime("%d-%m-%Y-%H-%M-%S"),
         "objid": accountid,
     }
@@ -132,13 +143,7 @@ def build_homeSystem(data, username):
         "label": "system",
         "objid": systemid,
     }
-    star = {
-        "name": make_word(rnd(2, 1)),
-        "label": "star",
-        #TODO: Create some star classes
-        "class": "G",
-        "objid": uuid(n=13),
-    }
+    star = make_star()
     planets = [
         make_planet(
             r.choice(list(pdata.keys()), p=[pdata[t]["prob"] for t in pdata.keys()]),
@@ -160,10 +165,11 @@ def build_homeSystem(data, username):
         if p["label"] != "system"
     ]
     orbits = [
-        {"node1": p["objid"], "node2": p["orbitsId"], "label": "orbits"}
+        {"node1": p["objid"], "node2": p["orbitsId"], "label": "orbits", "orbit_distance":p["orbitsDistance"]}
         for p in nodes
         if p.get("orbitsId")
     ]
+    # TODO: Move account to it's own module
     accountEdge = {
         "node1": systemid,
         "node2": accountid,
