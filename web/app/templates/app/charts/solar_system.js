@@ -6,7 +6,13 @@ var svg = d3.select('body').append('svg')
     .attr('width', width)
     .attr('height', height);
 
-
+var objectColors = {
+    'G': '#FDB813',
+    'moon':'#F4F1C9',
+    'terrestrial':'#3644E4',
+    'ice':'#A7DEDA',
+    'dwarf':'#0EC0A6'
+}
 // normalize the radius
 
 planetScale = d3.scaleLog()
@@ -38,7 +44,7 @@ var force = d3.forceSimulation(nodes)
 //     .force('center', d3.forceCenter(width / 2, height / 2))
 //     .force("link", d3.forceLink(links)
 //         .id(d => d.id)
-//         .distance(function(d) {return orbitScale(d.orbitsDistance);})
+//         .distance(function(d) {return     orbitScale(d.orbitsDistance);})
 //         .strength(0)
 //     )
 //     .on('tick', ticked);
@@ -53,6 +59,8 @@ function ticked() {
     u.enter()
         .append('circle')
         .attr('r', function (d) { return planetScale(d.radius) })
+        .style("fill", function (d) { return objectColors[d.class] })
+        .attr("stroke", 'black')
         .merge(u)
         .attr('cx', function (d) {
             return d.x
