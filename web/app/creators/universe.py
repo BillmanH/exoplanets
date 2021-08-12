@@ -71,7 +71,7 @@ mdata = {
 def make_word(n):
     syl = np.random.choice(syllables, n)
     word = "".join(syl)
-    return word
+    return word.capitalize()
 
 
 def rnd(n, s):
