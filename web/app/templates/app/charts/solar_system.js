@@ -1,7 +1,9 @@
 
 var width = 640,
     height = 480,
-    defaultNodeSize = 10;
+    defaultNodeSize = 10,
+    orbitalStrength = .2;
+
 var svg = d3.select('body').append('svg')
     .attr('width', width)
     .attr('height', height);
@@ -22,32 +24,22 @@ planetScale = d3.scaleLog()
             d3.max(nodes, function (d) { return d.radius; })]
     ).range([0, 20]);
 
-orbitScale = d3.scaleLog()
+orbitScale = d3.scaleLinear()
     .domain(
         [
             d3.min(nodes, function (d) { return d.orbitsDistance; }),
             d3.max(nodes, function (d) { return d.orbitsDistance; })]
     ).range([0, 20]);
 
-// https://github.com/d3/d3-force#simulation
 var force = d3.forceSimulation(nodes)
     .force('charge', d3.forceManyBody())
-    .force('center', d3.forceCenter(width / 2, height / 2))
     .force("link", d3.forceLink(links)
         .id(d => d.id)
-    )
+        .distance(function(d) {return orbitScale(d['source'].orbitsDistance)})
+        .strength(orbitalStrength)
+    ) 
+    .force('center', d3.forceCenter(width / 2, height / 2))
     .on('tick', ticked);
-
-//     // https://github.com/d3/d3-force#simulation
-// var force = d3.forceSimulation(nodes)
-//     .force('charge', d3.forceManyBody())
-//     .force('center', d3.forceCenter(width / 2, height / 2))
-//     .force("link", d3.forceLink(links)
-//         .id(d => d.id)
-//         .distance(function(d) {return     orbitScale(d.orbitsDistance);})
-//         .strength(0)
-//     )
-//     .on('tick', ticked);
 
 
 var point = {}
