@@ -15,7 +15,13 @@
     nodes = data['nodes']
     links = data['edges']
 
+    var width = 640,
+        height = 480,
+        defaultNodeSize = 10
+
+    {% include "app/charts/nodemap.js" %}
     {% include "app/charts/solar_system.js" %}
+
 </script>
 
 </html>

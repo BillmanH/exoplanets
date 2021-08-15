@@ -8,7 +8,7 @@ var s_objectColors = {
 }
 
 dwaw_node(
-    "sSystem",
+    "pSystem",
     nodes,
     links,
     s_objectColors,
