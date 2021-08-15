@@ -86,7 +86,7 @@ def system_map(request):
 
 @login_required
 def galaxy_map(request):
-    # TODO: query returns blank (doesn't crash) if user does not have a system. Perhaps a redirect to `/new`?
+    
     c = get_client()
     res = get_galaxy_nodes(c)
     context = {"galaxies": res}

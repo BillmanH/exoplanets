@@ -1,8 +1,6 @@
 
-var width = 640,
-    height = 480,
-    defaultNodeSize = 10,
-    orbitalStrength = .15;
+
+var s_orbitalStrength = .15;
 
 var plan_svg = d3.select('body').append('svg')
     .attr('width', width)
@@ -42,7 +40,7 @@ var planet_force = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links)
         .id(d => d.id)
         .distance(function (d) { return p_orbitScale(d['source'].orbitsDistance) })
-        .strength(w)
+        .strength(s_orbitalStrength)
     )
     .force('center', d3.forceCenter(p_b_box.right - (p_b_box.width / 2),
         p_b_box.bottom - (p_b_box.height / 2))

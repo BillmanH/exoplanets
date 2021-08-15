@@ -1,8 +1,6 @@
 
-var width = 640,
-    height = 480,
-    defaultNodeSize = 10,
-    orbitalStrength = .15;
+
+var p_orbitalStrength = .15;
 
 var svg = d3.select('body').append('svg')
     .attr('width', width)
@@ -41,7 +39,7 @@ var s_force = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links)
         .id(d => d.id)
         .distance(function(d) {return s_orbitScale(d['source'].orbitsDistance)})
-        .strength(orbitalStrength)
+        .strength(p_orbitalStrength)
     ) 
     .force('center', d3.forceCenter(width / 2, height / 2))
     .on('tick', s_ticked);
