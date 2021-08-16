@@ -1,52 +1,23 @@
 import pickle
 import numpy as np
+import yaml
 from numpy import random as r
 from datetime import datetime
+import os
+print(os.listdir())
 
 # Depending on where this is run, it could be back one dir.
 try:
     syllables = pickle.load(open("../data/syllables.p", "rb"))
-except:
+    pdata = yaml.safe_load(open('creators/specs/planet.yaml'))
+except FileNotFoundError:
     syllables = pickle.load(open("data/syllables.p", "rb"))
+    pdata = yaml.safe_load(open('web/app/creators/specs/planet.yaml'))["planet_types"]
 
 # TODO Get some stats on star types
 # sdata = {"radius_mean": 109, "radius_std": 1, "class": "G"}
 sdata = {"radius": 106, "class": "G"}
 
-pdata = {
-    "dwarf": {
-        "count": 6.0,
-        "prob": 0.42857142857142855,
-        "mass_mean": 0.0011061666666666668,
-        "mass_std": 0.0011102811205576121,
-        "radius_mean": 0.129,
-        "radius_std": 0.04591683787021923,
-    },
-    "gas": {
-        "count": 2.0,
-        "prob": 0.14285714285714285,
-        "mass_mean": 206.49599999999998,
-        "mass_std": 157.45005275324613,
-        "radius_mean": 10.055,
-        "radius_std": 1.2940054095713813,
-    },
-    "ice": {
-        "count": 2.0,
-        "prob": 0.14285714285714285,
-        "mass_mean": 15.8415,
-        "mass_std": 1.846255805678074,
-        "radius_mean": 3.923,
-        "radius_std": 0.08202438661763928,
-    },
-    "terrestrial": {
-        "count": 4.0,
-        "prob": 0.2857142857142857,
-        "mass_mean": 0.49432499999999996,
-        "mass_std": 0.4834953524423305,
-        "radius_mean": 0.7162,
-        "radius_std": 0.3056014070648236,
-    },
-}
 
 mdata = {
     "moon": {
@@ -68,7 +39,8 @@ mdata = {
 }
 
 #%%
-def make_word(n):
+def make_word(n, spaces=True):
+    # TODO: Spaces not implemented
     syl = np.random.choice(syllables, n)
     word = "".join(syl)
     return word.capitalize()
