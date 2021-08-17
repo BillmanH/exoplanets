@@ -50,6 +50,7 @@ function dwaw_node(
             .attr('r', function (d) { return radiusScale(d.radius) })
             .style("fill", function (d) { return objectColors[d.class] })
             .attr("stroke", 'black')
+            .attr('class', function (d) { return d.class + " " + d.objtype})
             .merge(u)
             .attr('cx', function (d) {
                 return d.x
@@ -70,5 +71,6 @@ function dwaw_node(
 
         u.exit().remove()
     }
+    return svg
 
 }

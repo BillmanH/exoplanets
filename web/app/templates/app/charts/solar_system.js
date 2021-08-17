@@ -2,12 +2,12 @@
 var s_objectColors = {
     'G': '#FDB813',
     'moon':'#F4F1C9',
-    'terrestrial':'#3644E4',
+    'terrestrial':'#73513C',
     'ice':'#A7DEDA',
     'dwarf':'#0EC0A6'
 }
 
-dwaw_node(
+ssystem = dwaw_node(
     "sSystem",
     nodes,
     links,
@@ -16,4 +16,11 @@ dwaw_node(
     height,
     width
 )
+
+supportsLifeColor = {}
+
+d3.selectAll(".terrestrial")
+    .attr("stroke", "#3644E4")
+    .style("stroke-width", 2)
+
 
