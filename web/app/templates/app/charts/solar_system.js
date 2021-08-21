@@ -7,6 +7,31 @@ var s_objectColors = {
     'dwarf':'#0EC0A6'
 }
 
+function s_objectStrokes (d) { 
+    var objectStrokes = {
+        "True":"#6b93d6",
+        "False":"black"
+    }
+    return objectStrokes[d.isSupportsLife] 
+}
+
+
+function click_planet(){
+    console.log('was clicked')
+    $.ajax({
+        url: '/ajax/planet',
+        type: 'get',
+        data: {
+        'planet': 'planet'
+    },
+    dataType: 'json',
+    beforeSend: function () {
+        console.log('ajax sent')
+      },
+    success: function(data){draw_planet(data)}
+    });
+}
+
 ssystem = dwaw_node(
     "sSystem",
     nodes,
@@ -14,13 +39,9 @@ ssystem = dwaw_node(
     s_objectColors,
     .15,
     height,
-    width
+    width,
+    clickHandler = click_planet,
+    strokesFunc = s_objectStrokes
 )
-
-supportsLifeColor = {}
-
-d3.selectAll(".terrestrial")
-    .attr("stroke", "#3644E4")
-    .style("stroke-width", 2)
 
 

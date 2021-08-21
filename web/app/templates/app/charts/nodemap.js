@@ -5,7 +5,9 @@ function dwaw_node(
     objectColors,
     orbitalStrength = .15,
     height,
-    width
+    width,
+    clickHandler=function(d){console.log("no click handler")},
+    strokesFunc = function(d){return "black"}
 ) {
     var svg = d3.select('body').append('svg')
         .attr('width', width)
@@ -48,7 +50,7 @@ function dwaw_node(
             .append('circle')
             .attr('r', function (d) { return radiusScale(d.radius) })
             .style("fill", function (d) { return objectColors[d.class] })
-            .attr("stroke", 'black')
+            .attr("stroke",  function (d) {strokesFunc(d)})
             .attr('class', function (d) { return d.class + " " + d.objtype})
             .merge(u)
             .attr('cx', function (d) {
@@ -67,9 +69,9 @@ function dwaw_node(
                 d3.pointer(event)
                 return tooltip.style("visibility", "hidden");
             })
+            .on("click", (event, d) => {clickHandler(this)})
 
         u.exit().remove()
     }
     return svg
-
 }

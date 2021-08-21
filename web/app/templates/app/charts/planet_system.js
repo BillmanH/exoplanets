@@ -20,19 +20,5 @@ function draw_planet(pdata){
 }
 
 
-d3.selectAll(".planet").on("click",(event, d) => {
-    console.log('was clicked')
-    $.ajax({
-        url: '/ajax/planet',
-        type: 'get',
-        data: {
-        'planet': 'planet'
-    },
-    dataType: 'json',
-    beforeSend: function () {
-        console.log('ajax sent')
-      },
-    success: function(data){draw_planet(data)}
-    });
-});
+
 
