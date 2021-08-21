@@ -7,13 +7,23 @@ var s_objectColors = {
     'dwarf':'#0EC0A6'
 }
 
-dwaw_node(
-    "pSystem",
-    nodes,
-    links,
-    s_objectColors,
-    .15,
-    height,
-    width
-)
+$("#sSystem").click(function () {
+    console.log( $(this).val() );
+  });
+
+$.ajax({
+    url: '/ajax/planet/',
+    data: {
+        'planet': 'planet'
+    },
+    dataType: 'json',
+    success: dwaw_node("pSystem",
+                        nodes,
+                        links,
+                        s_objectColors,
+                        .15,
+                        height,
+                        width) 
+});
+
 
