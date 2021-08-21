@@ -11,7 +11,6 @@ function dwaw_node(
         .attr('width', width)
         .attr('height', height)
         .classed('map', true)
-        .classed('planet', true)
         .attr("id", objid);
 
     radiusScale = d3.scaleLog()
