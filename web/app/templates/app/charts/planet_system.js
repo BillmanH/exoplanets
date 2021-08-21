@@ -7,13 +7,18 @@ var s_objectColors = {
     'dwarf':'#0EC0A6'
 }
 
-dwaw_node(
-    "pSystem",
-    nodes,
-    links,
-    s_objectColors,
-    .15,
-    height,
-    width
-)
+function draw_planet(pdata){
+    console.log(pdata)
+    d3.selectAll('#pSystem').remove()
+    dwaw_node("pSystem",
+                    nodes,
+                    links,
+                    s_objectColors,
+                    .15,
+                    height,
+                    width) 
+}
+
+
+
 
