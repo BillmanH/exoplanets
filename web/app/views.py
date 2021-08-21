@@ -79,7 +79,7 @@ def new_universe(request):
 def system_map(request):
     c = get_client()
     res = get_system(c, request.user.username)
-    context = {"galaxies": res}
+    context = {"solar_system": res}
     c.close()
     return render(request, "app/system_map.html", context)
 

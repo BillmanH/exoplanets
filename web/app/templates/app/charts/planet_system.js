@@ -7,23 +7,35 @@ var s_objectColors = {
     'dwarf':'#0EC0A6'
 }
 
-$("#sSystem").click(function () {
-    console.log( $(this).val() );
-  });
+function draw_planet(pdata){
+    console.log(pdata)
+    d3.selectAll('#pSystem').remove()
+    dwaw_node("pSystem",
+                    nodes,
+                    links,
+                    s_objectColors,
+                    .15,
+                    height,
+                    width) 
+}
 
-$.ajax({
-    url: '/ajax/planet',
-    data: {
+
+// $("#sSystem").click(function () {
+
+ssystem.selectAll('.planet')
+    .on("click", function(){
+    console.log('was clicked')
+    $.ajax({
+        url: '/ajax/planet',
+        type: 'get',
+        data: {
         'planet': 'planet'
     },
     dataType: 'json',
-    success: dwaw_node("pSystem",
-                        nodes,
-                        links,
-                        s_objectColors,
-                        .15,
-                        height,
-                        width) 
+    beforeSend: function () {
+        console.log('ajax sent')
+      },
+    success: function(data){draw_planet(data)}
+    });
 });
-
 

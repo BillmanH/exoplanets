@@ -11,9 +11,9 @@
 <script>
     {% include "app/tooltips.js" %}
     // https://github.com/d3/d3-force#simulation
-    var data = {{ galaxies| safe }}
-    nodes = data['nodes']
-    links = data['edges']
+    var solar_system = {{ solar_system | safe }}
+    nodes = solar_system['nodes']
+    links = solar_system['edges']
 
     var width = 640,
         height = 480,
