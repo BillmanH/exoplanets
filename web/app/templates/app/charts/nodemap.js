@@ -50,7 +50,7 @@ function dwaw_node(
             .append('circle')
             .attr('r', function (d) { return radiusScale(d.radius) })
             .style("fill", function (d) { return objectColors[d.class] })
-            .attr("stroke",  function (d) {strokesFunc(d)})
+            .attr("stroke",  function (d) {return strokesFunc(d)})
             .attr('class', function (d) { return d.class + " " + d.objtype})
             .merge(u)
             .attr('cx', function (d) {
