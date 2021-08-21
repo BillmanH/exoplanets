@@ -20,10 +20,7 @@ function draw_planet(pdata){
 }
 
 
-// $("#sSystem").click(function () {
-
-ssystem.selectAll('.planet')
-    .on("click", function(){
+d3.selectAll(".planet").on("click",(event, d) => {
     console.log('was clicked')
     $.ajax({
         url: '/ajax/planet',
