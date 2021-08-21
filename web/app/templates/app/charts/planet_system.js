@@ -12,7 +12,7 @@ $("#sSystem").click(function () {
   });
 
 $.ajax({
-    url: '/ajax/planet/',
+    url: '/ajax/planet',
     data: {
         'planet': 'planet'
     },
