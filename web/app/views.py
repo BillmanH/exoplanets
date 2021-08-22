@@ -45,7 +45,7 @@ def explore(request):
     if request.method == "POST" and form.is_valid():
         form = HomeSystemForm(request.POST)
         # TODO: Add query form
-        res = run_query(c, query=query)
+        res = run_query(c, query="g.V().count()")
     context = {"node_cnt": res}
     c.close()
     return render(request, "app/index.html", context)
