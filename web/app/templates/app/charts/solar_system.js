@@ -4,7 +4,8 @@ var s_objectColors = {
     'moon':'#F4F1C9',
     'terrestrial':'#73513C',
     'ice':'#A7DEDA',
-    'dwarf':'#0EC0A6'
+    'dwarf':'#0EC0A6',
+    'gas':'#0EC0A6'
 }
 
 function s_objectStrokes (d) { 
@@ -15,18 +16,20 @@ function s_objectStrokes (d) {
     return objectStrokes[d.isSupportsLife] 
 }
 
-
-function click_planet(){
-    console.log('was clicked')
+var testvar = "d"
+function click_planet(d){
+    // input_data = d
+    // delete d["x"];
+    // delete d["y"];
+    // delete d["vx"];
+    // delete d["vy"];
     $.ajax({
         url: '/ajax/planet',
         type: 'get',
-        data: {
-        'planet': 'planet'
-    },
+        data: d,
     dataType: 'json',
     beforeSend: function () {
-        console.log('ajax sent')
+        d3.selectAll('#pSystem').remove()
       },
     success: function(data){draw_planet(data)}
     });
@@ -34,8 +37,8 @@ function click_planet(){
 
 ssystem = dwaw_node(
     "sSystem",
-    nodes,
-    links,
+    solar_system['nodes'],
+    solar_system['edges'],
     s_objectColors,
     .15,
     height,

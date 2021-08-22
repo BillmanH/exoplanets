@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from app.models import *
@@ -45,7 +44,7 @@ def explore(request):
     if request.method == "POST" and form.is_valid():
         form = HomeSystemForm(request.POST)
         # TODO: Add query form
-        res = run_query(c, query=query)
+        res = run_query(c, query="g.V().count()")
     context = {"node_cnt": res}
     c.close()
     return render(request, "app/index.html", context)
