@@ -16,14 +16,12 @@ function s_objectStrokes (d) {
 }
 
 
-function click_planet(){
-    console.log('was clicked')
+function click_planet(d){
+    console.log(d)
     $.ajax({
         url: '/ajax/planet',
         type: 'get',
-        data: {
-        'planet': 'planet'
-    },
+        data: d,
     dataType: 'json',
     beforeSend: function () {
         console.log('ajax sent')

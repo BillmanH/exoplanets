@@ -69,7 +69,7 @@ function dwaw_node(
                 d3.pointer(event)
                 return tooltip.style("visibility", "hidden");
             })
-            .on("click", (event, d) => {clickHandler(this)})
+            .on("click", (event, d) => {clickHandler(d)})
 
         u.exit().remove()
     }
