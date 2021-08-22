@@ -10,6 +10,10 @@ def get_planet(request):
     request = request.GET
     selected_planet = [dict(request)]
     del selected_planet[0]['orbitsId']
+    del selected_planet[0]["x"];
+    del selected_planet[0]["y"];
+    del selected_planet[0]["vx"];
+    del selected_planet[0]["vy"];
     query = f"g.V().has('objid','{request.get('objid','')}').in('orbits').valueMap()"
     c = get_client()
     res = run_query(c, query)

@@ -4,7 +4,8 @@ var s_objectColors = {
     'moon':'#F4F1C9',
     'terrestrial':'#73513C',
     'ice':'#A7DEDA',
-    'dwarf':'#0EC0A6'
+    'dwarf':'#0EC0A6',
+    'gas':'#0EC0A6'
 }
 
 function s_objectStrokes (d) { 
@@ -15,8 +16,13 @@ function s_objectStrokes (d) {
     return objectStrokes[d.isSupportsLife] 
 }
 
-
+var testvar = "d"
 function click_planet(d){
+    // input_data = d
+    // delete d["x"];
+    // delete d["y"];
+    // delete d["vx"];
+    // delete d["vy"];
     $.ajax({
         url: '/ajax/planet',
         type: 'get',

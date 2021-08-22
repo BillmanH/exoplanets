@@ -4,7 +4,8 @@ var p_objectColors = {
     'moon':'#F4F1C9',
     'terrestrial':'#3644E4',
     'ice':'#A7DEDA',
-    'dwarf':'#0EC0A6'
+    'dwarf':'#0EC0A6',
+    'gas':'#0EC0A6'
 }
 
 function draw_planet(pdata){
@@ -13,7 +14,7 @@ function draw_planet(pdata){
             pdata["nodes"],
             pdata["links"],
             p_objectColors,
-            .15,
+            .003,
             height,
             width,
             strokesFunc = s_objectStrokes) 
