@@ -17,14 +17,13 @@ function s_objectStrokes (d) {
 
 
 function click_planet(d){
-    console.log(d)
     $.ajax({
         url: '/ajax/planet',
         type: 'get',
         data: d,
     dataType: 'json',
     beforeSend: function () {
-        console.log('ajax sent')
+        d3.selectAll('#pSystem').remove()
       },
     success: function(data){draw_planet(data)}
     });
@@ -32,8 +31,8 @@ function click_planet(d){
 
 ssystem = dwaw_node(
     "sSystem",
-    nodes,
-    links,
+    solar_system['nodes'],
+    solar_system['edges'],
     s_objectColors,
     .15,
     height,

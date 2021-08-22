@@ -8,17 +8,17 @@ def get_planet(request):
     get the planit info and the info of the surrounding objects.
     """
     request = request.GET
-    planet_name = {}
     selected_planet = [dict(request)]
-    query = f"g.V().has('objid',{request.get('objid','')}).in('orbits').valueMap()"
+    del selected_planet[0]['orbitsId']
+    query = f"g.V().has('objid','{request.get('objid','')}').in('orbits').valueMap()"
     c = get_client()
     res = run_query(c, query)
     c.close()
-    nodes = res + selected_planet
     edges = [
         {"source": i["objid"][0], "target": i["orbitsId"][0], "label": "orbits"}
-        for i in nodes
+        for i in res
         if "orbitsId" in i.keys()
     ]
-    system = {"nodes": [clean_node(n) for n in nodes], "edges": edges}
+    nodes = res + selected_planet
+    system = {"nodes": [clean_node(n) for n in nodes], "links": edges}
     return JsonResponse(system)
