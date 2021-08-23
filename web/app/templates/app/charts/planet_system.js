@@ -9,7 +9,7 @@ var p_objectColors = {
 }
 
 function draw_planet(pdata){
-    console.log(pdata)
+    // console.log(pdata)
     dwaw_node("pSystem",
             pdata["nodes"],
             pdata["links"],
@@ -20,6 +20,20 @@ function draw_planet(pdata){
             strokesFunc = s_objectStrokes) 
 }
 
+// NOTE: The clickhandler in the solar_system is where this function is activated
+function planet_details(
+    width,
+    height)
+    {
+        var svg = d3.select('body').append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .classed('map', true)
+        .attr("id", "planetDetails");
 
+        return svg
 
-
+        svg.append('rect')
+        .attr('width', width/2)
+        .attr('height', height/5)
+}
