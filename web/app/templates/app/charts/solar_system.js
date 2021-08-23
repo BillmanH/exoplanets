@@ -18,20 +18,19 @@ function s_objectStrokes (d) {
 
 var testvar = "d"
 function click_planet(d){
-    // input_data = d
-    // delete d["x"];
-    // delete d["y"];
-    // delete d["vx"];
-    // delete d["vy"];
     $.ajax({
         url: '/ajax/planet',
         type: 'get',
         data: d,
-    dataType: 'json',
-    beforeSend: function () {
-        d3.selectAll('#pSystem').remove()
-      },
-    success: function(data){draw_planet(data)}
+        dataType: 'json',
+        beforeSend: function () {
+            d3.selectAll('#pSystem').remove()
+            d3.selectAll('#planetDetails').remove()
+        },
+        success: function(data){
+            draw_planet(data)
+            planet_details(width,height/2)
+        }
     });
 }
 
