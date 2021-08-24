@@ -8,7 +8,7 @@ A Gremlin Graph database driven strategy game. Get your civilization out into sp
 * D3.js for visualization
 
 ## DEV
-Check out the Dev Branch for what I'm currently working on. 
+Check out the Dev Branch for what I'm currently working on. This project flow is just working in DEV and pulling into MAIN. 
 
 # APP
 Exoplanet Game is a strategy game I've been thinking about. Super small design phase right now, but it's a solid side project. 
