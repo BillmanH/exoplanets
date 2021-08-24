@@ -25,11 +25,10 @@ function click_planet(d){
         dataType: 'json',
         beforeSend: function () {
             d3.selectAll('#pSystem').remove()
-            d3.selectAll('#planetDetails').remove()
+            d3.selectAll('#planetsTable').remove()
         },
         success: function(data){
             draw_planet(data)
-            planet_details(width,height/2)
         }
     });
 }

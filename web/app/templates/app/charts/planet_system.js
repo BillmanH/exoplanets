@@ -1,4 +1,4 @@
-
+// note that the clickhandler for the solar
 var p_objectColors = {
     'G': '#FDB813',
     'moon':'#F4F1C9',
@@ -18,11 +18,12 @@ function draw_planet(pdata){
             height,
             width,
             strokesFunc = s_objectStrokes) 
+    dwaw_table(
+        "planetsTable",
+        pdata["nodes"],
+        ["class", "name", "mass", "radius", "orbitsDistance", "orbitsName", "isSupportsLife"],  // an array of values that you want shown
+        height,
+        width
+    )
 }
 
-// NOTE: The clickhandler in the solar_system is where this function is activated
-function planet_details(data)
-    {
-        $("body").append("<div id='planetDetails'></div>");
-        $("#planetDetails").append("<li>Appended item</li>");
-}

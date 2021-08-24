@@ -20,3 +20,7 @@ text {
 table, th, td {
   border:1px solid whitesmoke;
 }
+
+#hover-tooltip {
+  color: black
+}

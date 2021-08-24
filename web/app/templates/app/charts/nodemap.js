@@ -2,12 +2,12 @@ function dwaw_node(
     objid,
     nodes,
     links,
-    objectColors,
+    objectColors, // dict of types and colors based on class
     orbitalStrength = .15,
     height,
     width,
     clickHandler=function(d){console.log("no click handler")},
-    strokesFunc = function(d){return "black"}
+    strokesFunc = function(d){return "black"}  // strokes logic can be customized
 ) {
     var svg = d3.select('body').append('svg')
         .attr('width', width)
