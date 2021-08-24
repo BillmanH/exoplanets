@@ -1,4 +1,4 @@
-
+// note that the clickhandler for the solar
 var p_objectColors = {
     'G': '#FDB813',
     'moon':'#F4F1C9',
@@ -9,7 +9,7 @@ var p_objectColors = {
 }
 
 function draw_planet(pdata){
-    console.log(pdata)
+    // console.log(pdata)
     dwaw_node("pSystem",
             pdata["nodes"],
             pdata["links"],
@@ -18,8 +18,12 @@ function draw_planet(pdata){
             height,
             width,
             strokesFunc = s_objectStrokes) 
+    dwaw_table(
+        "planetsTable",
+        pdata["nodes"],
+        ["class", "name", "mass", "radius", "orbitsDistance", "orbitsName", "isSupportsLife"],  // an array of values that you want shown
+        height,
+        width
+    )
 }
-
-
-
 

@@ -41,7 +41,7 @@ function dictToHtml(d) {
 var tooltip = d3.select("body")
     .append("div")
     .style("background-color", 'white')
-    .attr("id", "terrain-info")
+    .attr("id", "hover-tooltip")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
