@@ -21,19 +21,8 @@ function draw_planet(pdata){
 }
 
 // NOTE: The clickhandler in the solar_system is where this function is activated
-function planet_details(
-    width,
-    height)
+function planet_details(data)
     {
-        var svg = d3.select('body').append('svg')
-        .attr('width', width)
-        .attr('height', height)
-        .classed('map', true)
-        .attr("id", "planetDetails");
-
-        return svg
-
-        svg.append('rect')
-        .attr('width', width/2)
-        .attr('height', height/5)
+        $("body").append("<div id='planetDetails'></div>");
+        $("#planetDetails").append("<li>Appended item</li>");
 }

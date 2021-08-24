@@ -11,3 +11,12 @@ h1 {
     color: #cfd2d6;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
+
+text {
+  color: whitesmoke;
+  font-family: Consolas,monaco,monospace;
+}
+
+table, th, td {
+  border:1px solid whitesmoke;
+}
