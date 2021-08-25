@@ -1,13 +1,12 @@
 // stolen from here: http://bl.ocks.org/AMDS/4a61497182b8fcb05906
-function dwaw_table(
+function draw_table(
     objid,
     data,
     titles,  // an array of values that you want shown
     height,
-    width
+    width,
+    tableClickHandler = function(d){console.log(d)} // default function to handle hover 
 ) {
-
-
         // var table = d3.select('#'+objid).append('table');
         var table = d3.select('body')
                         .append('table')
@@ -27,7 +26,8 @@ function dwaw_table(
         var rows = table.append('tbody').selectAll('tr')
             .data(data)
             .enter()
-                .append('tr');
+                .append('tr')
+                .on("click",(event, d) => {tableClickHandler(d)})
 
         rows.selectAll('td')
         .data(function (d) {
@@ -39,10 +39,14 @@ function dwaw_table(
             .attr('data-th', function (d) {
                 return d.name;
             })
+            .attr("id", function(d,i){ return "td"+i})
+            .on("mouseover",function(d) {
+                d3.select(this).classed("table-hover",true)
+            })
+            .on("mouseout",function(d) {
+                d3.select(this).classed("table-hover",false)
+            })
             .text(function (d) {
                 return d.value;
-            });
-            
-
-    return svg
+            });      
 }

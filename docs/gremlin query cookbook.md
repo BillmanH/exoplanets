@@ -11,7 +11,14 @@ Get the soler stystem, aka all the things that orbit something in a system
 g.V().hasLabel('system').has('username','userbill').in().inE('orbits')
 ```
 
-Drop an account, and everything asociated with it. Everything for a user has the 'username' property.   
+Get the objects orbiting an object.
+```
+g.V().has('objid','8308379553174').in('orbits').valueMap()
+```
+
+
+## NUCLEAR delete and drop functions, use with caution.
+Drop an account, and everything asociated with it. Everything for a user has the 'username' property.  
 ```
 g.V().has('username','Billmanh').drop()
 ```

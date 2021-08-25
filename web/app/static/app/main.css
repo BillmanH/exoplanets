@@ -5,6 +5,7 @@ body {
 
 svg {
   border: 1px solid white;
+  border-radius: 10px;
 }
 
 h1 {
@@ -19,8 +20,15 @@ text {
 
 table, th, td {
   border:1px solid whitesmoke;
+  font-family: Consolas,monaco,monospace;
+  border-radius: 5px;
 }
 
 #hover-tooltip {
   color: black
+}
+
+.table-hover {
+  color:#4AF626;
+  font-family: "DejaVu Sans Mono", monospace
 }
