@@ -27,3 +27,8 @@ table, th, td {
 #hover-tooltip {
   color: black
 }
+
+.table-hover {
+  color:#4AF626;
+  font-family: "DejaVu Sans Mono", monospace
+}

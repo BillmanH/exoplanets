@@ -18,10 +18,10 @@ function draw_planet(pdata){
             height,
             width,
             strokesFunc = s_objectStrokes) 
-    dwaw_table(
+    draw_table(
         "planetsTable",
         pdata["nodes"],
-        ["class", "name", "mass", "radius", "orbitsDistance", "orbitsName", "isSupportsLife"],  // an array of values that you want shown
+        ["name", "class", "mass", "radius", "orbitsDistance", "orbitsName", "isSupportsLife"],  // an array of values that you want shown
         height,
         width
     )
