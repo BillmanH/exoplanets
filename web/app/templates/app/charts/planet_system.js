@@ -8,6 +8,16 @@ var p_objectColors = {
     'gas':'#0EC0A6'
 }
 
+// dict of the value you want shown and `label` that you want as the column label
+var planet_table_lables = [{"label":"Name","value":"name"}, 
+                            {"label":"Class","value":"class"},
+                            {"label":"Mass","value":"mass"},
+                            {"label":"Radius","value":"radius"},
+                            {"label":"Orbiting Distance","value":"orbitsDistance"},
+                            {"label":"Orbiting Object","value":"orbitsName"},
+                            {"label":"Supports Life","value":"isSupportsLife"}
+                        ]
+
 function draw_planet(pdata){
     // console.log(pdata)
     dwaw_node("pSystem",
@@ -21,7 +31,7 @@ function draw_planet(pdata){
     draw_table(
         "planetsTable",
         pdata["nodes"],
-        ["name", "class", "mass", "radius", "orbitsDistance", "orbitsName", "isSupportsLife"],  // an array of values that you want shown
+        planet_table_lables,  
         height,
         width
     )
