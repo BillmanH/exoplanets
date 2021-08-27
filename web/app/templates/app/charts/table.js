@@ -20,7 +20,7 @@ function draw_table(
             .enter()
                 .append('th')
                 .text(function (d) {
-                    return d;
+                    return d.label;
                 })
 
         var rows = table.append('tbody').selectAll('tr')
@@ -32,7 +32,7 @@ function draw_table(
         rows.selectAll('td')
         .data(function (d) {
             return titles.map(function (k) {
-                return { 'value': d[k], 'name': k};
+                return { 'value': d[k.value], 'name': k};
             });
         }).enter()
             .append('td')
