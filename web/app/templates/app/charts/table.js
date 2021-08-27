@@ -47,6 +47,8 @@ function draw_table(
                 d3.select(this).classed("table-hover",false)
             })
             .text(function (d) {
-                return d.value;
+                y = d.value
+                if (y.toString().indexOf(".") != -1) {y = r(parseFloat(y.toString()),1000)};
+                return y;
             });      
 }
