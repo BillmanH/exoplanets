@@ -3,8 +3,8 @@ function popvalues(a, m) {
     return a
 }
 
-function r(x) {
-    x = Math.round(x * 100) / 100
+function r(x, n=100) {
+    x = Math.round(x * n) / n
     return x
 }
 
@@ -26,6 +26,7 @@ function dictToHtml(d) {
     for (var k in d) {
         x = k.replace(/_/g, " ")
         y = d[k]
+        if (y.toString().indexOf(".") != -1) {y = parseFloat(y.toString())};
         if (typeof (y) == "string") {
             y = d[k].replace(/_/g, " ")
         } else if (typeof (y) == "number") {
