@@ -20,7 +20,7 @@ function draw_table(
             .enter()
                 .append('th')
                 .text(function (d) {
-                    return d;
+                    return d.label;
                 })
 
         var rows = table.append('tbody').selectAll('tr')
@@ -32,7 +32,7 @@ function draw_table(
         rows.selectAll('td')
         .data(function (d) {
             return titles.map(function (k) {
-                return { 'value': d[k], 'name': k};
+                return { 'value': d[k.value], 'name': k};
             });
         }).enter()
             .append('td')
@@ -47,6 +47,8 @@ function draw_table(
                 d3.select(this).classed("table-hover",false)
             })
             .text(function (d) {
-                return d.value;
+                y = d.value
+                if (y.toString().indexOf(".") != -1) {y = r(parseFloat(y.toString()),1000)};
+                return y;
             });      
 }
