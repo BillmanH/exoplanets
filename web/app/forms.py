@@ -87,7 +87,7 @@ class HomeSystemForm(forms.Form):
         max_value=1,
         min_value=0,
         initial=0.5,
-        label="Population Aggression",
+        label="Population Constitution",
         widget=NumberInput,
         help_text="( %  ability to persivere)",
     )
