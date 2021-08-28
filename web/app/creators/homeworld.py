@@ -10,7 +10,7 @@ from . import maths
 
 # Setup Params:
 n_steps = 6  # max factions
-
+meta = ['uuid','name','label']
 
 def build_species(data):
     species = {}
@@ -28,10 +28,12 @@ def build_species(data):
 
 
 def vary_pops(species):
-    pop_std = 0.2 * (1 - species["population_conformity"])
+    pop_std = 0.2 * (1 - float(species["population_conformity"]))
     pop = {}
     for k in list(species.keys()):
-        pop[k] = abs(round(random.normal(species[k], pop_std), 3))
+        if k in meta:
+            continue
+        pop[k] = abs(round(random.normal(float(species[k]), pop_std), 3))
     pop["objid"] = maths.uuid(n=13)
     pop["label"] = "pop"
     return pop
@@ -70,10 +72,10 @@ def build_people(data):
     # Get the Species
     species = build_species(data)
     # Build the populations (note that pops is a DataFrame)
-    pops = pd.DataFrame([vary_pops(species) for i in range(data["starting_pop"])])
+    pops = pd.DataFrame([vary_pops(species) for i in range(int(data["starting_pop"]))])
     # Build the factions
-    n_factions = get_n_factions(n_steps, data["population_conformity"])
-    kmeans = KMeans(n_clusters=n_factions).fit(pops)
+    n_factions = get_n_factions(n_steps, float(data["population_conformity"]))
+    kmeans = KMeans(n_clusters=n_factions).fit(pops[[c for c in pops.columns if c not in meta]])
     pops["faction_no"] = kmeans.labels_
     factions = make_factions(kmeans)
     factions_df = pd.DataFrame(factions)
@@ -84,11 +86,11 @@ def build_people(data):
     # sum up the nodes and edges for return
     isOfSpecies = [
         {"node1": p["objid"], "node2": species["objid"], "label": "isOfSpecies"}
-        for p in pops
+        for p in pops.to_dict('records')
     ]
     isInFaction = [
         {"node1": p["objid"], "node2": p["isInFaction"], "label": "isInFaction"}
-        for p in pops
+        for p in pops.to_dict('records')
     ]
     nodes = [species] + pops.to_dict("records") + factions
     edges = isInFaction + isOfSpecies

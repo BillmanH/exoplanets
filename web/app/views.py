@@ -66,7 +66,7 @@ def new_universe(request):
         # Create the new system
         universe_nodes, universe_edges = universe.build_homeSystem(request.POST, username)
         # Create the homeworld and it's people. 
-        homeworld_nodes, homeworld_edges = homeworld.build_people(request.POST, username)
+        homeworld_nodes, homeworld_edges = homeworld.build_people(request.POST)
         # Upload all of that data that was created. s
         data = {"nodes": universe_nodes + homeworld_nodes, "edges": universe_edges + homeworld_edges}
         upload_data(c, username, data)
