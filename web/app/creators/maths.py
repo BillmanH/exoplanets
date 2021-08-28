@@ -8,3 +8,7 @@ def rnd(n, s):
     n = mean, s = std
     """
     return int(abs(np.ceil(r.normal(n, s))))
+
+
+def uuid(n=13):
+    return "".join([str(i) for i in np.random.choice(range(10), n)])

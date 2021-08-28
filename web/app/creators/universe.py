@@ -8,15 +8,9 @@ from . import language
 
 pdata = yaml.safe_load(open('web/app/creators/specs/planet.yaml'))["planet_types"]
 mdata = yaml.safe_load(open('web/app/creators/specs/moon.yaml'))["moon_types"]
-
-# TODO Get some stats on star types
-# sdata = {"radius_mean": 109, "radius_std": 1, "class": "G"}
-sdata = {"radius": 106, "class": "G"}
+sdata = yaml.safe_load(open('web/app/creators/specs/star.yaml'))
 
 
-
-def uuid(n=8):
-    return "".join([str(i) for i in np.random.choice(range(10), n)])
 
 
 def sort_planets(t):
@@ -33,7 +27,7 @@ def sort_planets(t):
 def make_star():
     star = sdata
     star["name"] = language.make_word(maths.rnd(1, 1))
-    star["objid"] = uuid(n=13)
+    star["objid"] = maths.uuid(n=13)
     star["label"] = "star"
     return star
 
@@ -41,7 +35,7 @@ def make_star():
 def make_planet(t, orbiting):
     planet = {"class": t, "name": language.make_word(maths.rnd(2, 1))}
     planet["label"] = "planet"
-    planet["objid"] = uuid(n=13)
+    planet["objid"] = maths.uuid(n=13)
     planet["mass"] = abs(r.normal(pdata[t]["mass_mean"], pdata[t]["mass_std"]))
     planet["radius"] = abs(r.normal(pdata[t]["radius_mean"], pdata[t]["radius_std"]))
     planet["orbitsDistance"] = maths.rnd(pdata[t]["distance_min"], pdata[t]["distance_max"])
@@ -61,7 +55,7 @@ def make_homeworld(orbiting, data):
 def make_moon(t, planets):
     moon = {"class": t, "name": language.make_word(maths.rnd(2, 1))}
     moon["label"] = "moon"
-    moon["objid"] = uuid(n=13)
+    moon["objid"] = maths.uuid(n=13)
     moon["mass"] = abs(r.normal(mdata[t]["mass_mean"], mdata[t]["mass_std"]))
     moon["radius"] = abs(r.normal(mdata[t]["radius_mean"], mdata[t]["radius_std"]))
     orbiting = r.choice(planets)
@@ -73,13 +67,13 @@ def make_moon(t, planets):
 
 
 def build_homeSystem(data, username):
-    accountid = uuid(n=13)
+    accountid = maths.uuid(n=13)
     user = {
         "label": "account",
         "created": datetime.now().strftime("%d-%m-%Y-%H-%M-%S"),
         "objid": accountid,
     }
-    systemid = uuid(n=13)
+    systemid = maths.uuid(n=13)
     system = {
         "name": language.make_word(maths.rnd(2, 1)),
         "label": "system",
