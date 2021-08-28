@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 
 from app.models import *
 
-from .creators import universe
+from .creators import universe, homeworld
 
 
 from .forms import HomeSystemForm, SignUpForm, QueryForm
@@ -65,6 +65,9 @@ def new_universe(request):
         account.drop_account(c, username)
         # Create the new system
         nodes, edges = universe.build_homeSystem(request.POST, username)
+        # Create the homeworld and it's people. 
+        nodes, edges = homeworld.build_people(request.POST, username)
+        # Upload all of that data that was created. s
         data = {"nodes": nodes, "edges": edges}
         upload_data(c, username, data)
         # load the galaxy map, thus starting the game

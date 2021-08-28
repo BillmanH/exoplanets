@@ -1,6 +1,6 @@
 import pickle
 import numpy as np
-import yaml
+
 
 
 syllables = pickle.load(open("web/app/creators/specs/syllables.p", "rb"))
