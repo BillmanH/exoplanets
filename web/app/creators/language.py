@@ -3,14 +3,7 @@ import numpy as np
 import yaml
 
 
-try:
-    syllables = pickle.load(open("../data/syllables.p", "rb"))
-except FileNotFoundError:
-    syllables = pickle.load(open("data/syllables.p", "rb"))
-
-
-pdata = yaml.safe_load(open('web/app/creators/specs/planet.yaml'))["planet_types"]
-mdata = yaml.safe_load(open('web/app/creators/specs/moon.yaml'))["moon_types"]
+syllables = pickle.load(open("web/app/creators/specs/syllables.p", "rb"))
 
 
 def make_word(n, spaces=True):

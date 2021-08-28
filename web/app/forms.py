@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms.widgets import NumberInput, CheckboxInput
-from yaml import nodes
+from django.forms.widgets import NumberInput
+
+
 
 # https://docs.djangoproject.com/en/3.1/ref/forms/widgets/#built-in-widgets
 

@@ -6,7 +6,6 @@ from datetime import datetime
 from . import maths
 from . import language
 
-
 pdata = yaml.safe_load(open('web/app/creators/specs/planet.yaml'))["planet_types"]
 mdata = yaml.safe_load(open('web/app/creators/specs/moon.yaml'))["moon_types"]
 
@@ -121,3 +120,4 @@ def build_homeSystem(data, username):
     }
     edges = system_edges + orbits + [accountEdge]
     return nodes, edges
+
