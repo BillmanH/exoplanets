@@ -33,8 +33,8 @@ def signup(request):
 
 def index(request):
     c = get_client()
-    res = run_query(c, query="g.V().count()")
-    context = {"node_cnt": res}
+    all_count = run_query(c, query="g.V().count()")
+    context = {"node_cnt": all_count}
     c.close()
     return render(request, "app/index.html", context)
 
