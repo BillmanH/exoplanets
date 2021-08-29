@@ -95,3 +95,13 @@ def build_people(data):
     nodes = [species] + pops.to_dict("records") + factions
     edges = isInFaction + isOfSpecies
     return nodes, edges
+
+
+def attach_people_to_world(homeworld_nodes,universe_nodes):
+    homeworld = [n for n in universe_nodes if n.get("isHomeworld")][0]
+    pops = [p for p in homeworld_nodes if p.get("label")=='pop']
+    edges = [
+        {"node1": p["objid"], "node2": homeworld["objid"], "label": "enhabits"}
+        for p in pops
+    ]
+    return edges

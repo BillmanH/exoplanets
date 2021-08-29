@@ -50,6 +50,7 @@ def make_homeworld(orbiting, data):
     planet["name"] = data["planet_name"]
     planet["isSupportsLife"] = True
     planet["isPopulated"] = True
+    planet["isHomeworld"] = True
     return planet
 
 def make_moon(t, planets):
