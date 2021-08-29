@@ -34,7 +34,7 @@ Exoplanet data Data is gathered from here.
 * uploading that data to cosmos (once parsed) with `python scripts/upload_systems.py`
 
 ### Database (Cosmos DB)
-The connection info is in the `configure.yaml` and looks like this. It is in `.gitignore` so you will need to add that file. 
+The connection info is in the `configure.yaml` and looks like this. It is in `.gitignore` so you will need to add that file. The format of of `configure.yaml` is as follows:
 ```
 # Web location of the cosmos DB:
 endpoint: wss://<the domain of your instance>:443/
