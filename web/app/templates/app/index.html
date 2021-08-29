@@ -1,3 +1,21 @@
-<ul>
-    <li>number of elements in collection: {{node_cnt}}</li>>
-</ul>
+{% load static %}
+<html>
+{% include "app/head.html" %}
+
+<body>
+    <ul>
+        <li>number of objects in the universe: {{all_count}}</li>
+        <li>number of accounts (players): {{count_accounts}}</li>
+    </ul>
+
+    <div>
+        <p>
+            <a href="/new">Create a new civilization</a>
+        </p>
+        <p>
+            <a href="/systemmap">Continue to your game</a>
+        </p>
+    </div>
+</body>
+
+</html>

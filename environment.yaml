@@ -12,6 +12,7 @@ dependencies:
   - pandas
   - django
   - black
+  - scikit-learn
   - pip:
     - nb_black
     - gremlinpython==3.5.1

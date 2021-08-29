@@ -4,7 +4,9 @@ from django.shortcuts import redirect, render
 
 from app.models import *
 
-from .creators import universe
+from .creators import universe, homeworld
+
+
 from .forms import HomeSystemForm, SignUpForm, QueryForm
 
 
@@ -31,8 +33,12 @@ def signup(request):
 
 def index(request):
     c = get_client()
-    res = run_query(c, query="g.V().count()")
-    context = {"node_cnt": res}
+    all_count = run_query(c, query="g.V().count()")
+    count_accounts = run_query(c,query="g.V().hasLabel('account').count()")
+    context = {
+        "all_count": all_count,
+        "count_accounts":count_accounts
+    }
     c.close()
     return render(request, "app/index.html", context)
 
@@ -62,8 +68,13 @@ def new_universe(request):
         # Delete the old sytem
         account.drop_account(c, username)
         # Create the new system
-        nodes, edges = universe.build_homeSystem(request.POST, username)
-        data = {"nodes": nodes, "edges": edges}
+        universe_nodes, universe_edges = universe.build_homeSystem(request.POST, username)
+        # Create the homeworld and it's people. 
+        homeworld_nodes, homeworld_edges = homeworld.build_people(request.POST)
+        # Attach the people to the homeworld
+        homeworld_edges = homeworld_edges + homeworld.attach_people_to_world(homeworld_nodes,universe_nodes)
+        # Upload all of that data that was created. s
+        data = {"nodes": universe_nodes + homeworld_nodes, "edges": universe_edges + homeworld_edges}
         upload_data(c, username, data)
         # load the galaxy map, thus starting the game
         return redirect("system_map")
