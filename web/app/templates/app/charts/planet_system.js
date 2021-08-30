@@ -37,3 +37,18 @@ function draw_planet(pdata){
     )
 }
 
+function clickTablePlanet(d){
+    $.ajax({
+        url: '/ajax/planet-details',
+        type: 'get',
+        data: d,
+        dataType: 'json',
+        beforeSend: function () {
+            // d3.selectAll('#pSystem').remove()
+            // d3.selectAll('#planetsTable').remove()
+        },
+        success: function(data){
+            // draw_planet(data)
+        }
+    });
+}

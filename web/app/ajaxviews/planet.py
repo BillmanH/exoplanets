@@ -26,3 +26,14 @@ def get_planet(request):
     nodes = res + selected_planet
     system = {"nodes": [clean_node(n) for n in nodes], "links": edges}
     return JsonResponse(system)
+
+def get_planet_details(request):
+    request = dict(request.GET)
+    querypops = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')}').in().valueMap()"
+    c = get_client()
+    respops = run_query(c, querypops)
+    # Get the factions 
+    querypops = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')}').in().valueMap()"
+    c.close()
+    return JsonResponse(respops)
+
