@@ -48,7 +48,7 @@ function clickTablePlanet(d){
             // d3.selectAll('#planetsTable').remove()
         },
         success: function(data){
-            // draw_planet(data)
+            console.log(data)
         }
     });
 }
