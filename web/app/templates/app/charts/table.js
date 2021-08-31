@@ -3,8 +3,6 @@ function draw_table(
     objid,
     data,
     titles,  // an array of values that you want shown
-    height,
-    width,
     tableClickHandler = function(d){console.log(d)} // default function to handle hover 
 ) {
         // var table = d3.select('#'+objid).append('table');
