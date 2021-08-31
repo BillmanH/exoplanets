@@ -26,6 +26,7 @@ function click_planet(d){
         beforeSend: function () {
             d3.selectAll('#pSystem').remove()
             d3.selectAll('#planetsTable').remove()
+            d3.selectAll('#peopleTable').remove()
         },
         success: function(data){
             draw_planet(data)

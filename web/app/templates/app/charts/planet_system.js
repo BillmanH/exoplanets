@@ -18,6 +18,36 @@ var planet_table_lables = [{"label":"Name","value":"name"},
                             {"label":"Supports Life","value":"isSupportsLife"}
                         ]
 
+var population_table_lables = [{"label":"Name","value":"name"}, 
+                            {"label":"Aggression","value":"population_aggression"},
+                            {"label":"Conformity","value":"population_conformity"},
+                            {"label":"Constitution","value":"population_constitution"},
+                            {"label":"Literacy","value":"population_literacy"}
+                        ]
+
+function clickTablePlanet(d){
+    $.ajax({
+        url: '/ajax/planet-details',
+        type: 'get',
+        data: d,
+        dataType: 'json',
+        beforeSend: function () {
+            d3.selectAll('#peopleTable').remove()
+            // d3.selectAll('#planetsTable').remove()
+        },
+        success: function(data){
+            console.log(data)
+            if ("pops" in data){
+                draw_table(
+                    "peopleTable",
+                    data['pops'],
+                    population_table_lables
+                    )
+            }
+        }
+    });
+}
+
 function draw_planet(pdata){
     // console.log(pdata)
     dwaw_node("pSystem",
@@ -32,8 +62,8 @@ function draw_planet(pdata){
         "planetsTable",
         pdata["nodes"],
         planet_table_lables,  
-        height,
-        width
+        tableClickHandler = clickTablePlanet
     )
 }
+
 

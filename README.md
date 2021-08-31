@@ -13,6 +13,10 @@ Check out the Dev Branch for what I'm currently working on. This project flow is
 # APP
 Exoplanet Game is a strategy game I've been thinking about. Super small design phase right now, but it's a solid side project. 
 
+## Features thus far:
+* [Solar systems with stars, planets and moons](/notebooks/Analysis%20-%20planet%20summary%20stats.ipynb)
+* [Populations (pops) with factions, and spiecies attributes](/notebooks/People/Generating%20Populations.ipynb)
+
 ## Working views now: 
 * `/systemmap` <- look at your system
 * `/new` < - create a new system
@@ -30,7 +34,7 @@ Exoplanet data Data is gathered from here.
 * uploading that data to cosmos (once parsed) with `python scripts/upload_systems.py`
 
 ### Database (Cosmos DB)
-The connection info is in the `configure.yaml` and looks like this. It is in `.gitignore` so you will need to add that file. 
+The connection info is in the `configure.yaml` and looks like this. It is in `.gitignore` so you will need to add that file. The format of of `configure.yaml` is as follows:
 ```
 # Web location of the cosmos DB:
 endpoint: wss://<the domain of your instance>:443/

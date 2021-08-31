@@ -11,8 +11,6 @@ mdata = yaml.safe_load(open('web/app/creators/specs/moon.yaml'))["moon_types"]
 sdata = yaml.safe_load(open('web/app/creators/specs/star.yaml'))
 
 
-
-
 def sort_planets(t):
     if t == "terrestrial":
         return maths.rnd(0.39, 1.52)
@@ -64,6 +62,7 @@ def make_moon(t, planets):
     moon["orbitsDistance"] = .005
     moon["orbitsName"] = orbiting["name"]
     moon["isSupportsLife"] = False
+    moon["isPopulated"] = False
     return moon
 
 

@@ -95,6 +95,8 @@ def clean_node(x):
     x["id"] = x["objid"]
     return x
 
+def clean_nodes(nodes):
+    return [clean_node(n) for n in nodes]
 
 def get_system(client, username):
     # TODO: This process just assumes there is only one system per account. Eventually will need to expand to take 
@@ -106,6 +108,6 @@ def get_system(client, username):
     node_callback = client.submitAsync(nodes_query)
     nodes = node_callback.result().all().result()
     edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
-    system = {"nodes": [clean_node(n) for n in nodes], "edges": edges}
+    system = {"nodes": clean_nodes(nodes), "edges": edges}
 
     return system
