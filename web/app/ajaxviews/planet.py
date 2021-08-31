@@ -1,4 +1,4 @@
-from app.models import clean_node, get_client, run_query
+from app.models import clean_nodes, get_client, run_query
 from django.http import JsonResponse
 
 
@@ -25,20 +25,22 @@ def get_planet(request):
         if "orbitsId" in i.keys()
     ]
     nodes = res + selected_planet
-    system = {"nodes": [clean_node(n) for n in nodes], "links": edges}
+    system = {"nodes": clean_nodes(nodes), "links": edges}
     return JsonResponse(system)
 
 def get_planet_details(request):
     request = dict(request.GET)
-    querypops = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')}').in().valueMap()"
+    queryplanet = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')[0]}').in().valueMap()"
     c = get_client()
-    respops = run_query(c, querypops)
-    # Get the factions (only the ones found on that planet)
-    factions = list(dict.fromkeys([i['isInFaction'][0] for i in respops]))
-    queryfaction = f"g.V().has('objid', within({factions})).valueMap()"
-    resfaction = run_query(c, queryfaction)
-    c.close()
-    response = {"pops":respops,
-                "factions":resfaction}
+    respops = clean_nodes(run_query(c, queryplanet))
+    pops = [i for i in respops if i.get("objtype")=='pop']
+    response = {"pops":pops}
+    # if faction has people, get the factions (only the ones found on that planet)
+    if len(pops)>0:
+        factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
+        queryfaction = f"g.V().has('objid', within({factions})).valueMap()"
+        resfaction = clean_nodes(run_query(c, queryfaction))
+        c.close()
+        response["factions"] = resfaction
     return JsonResponse(response)
 

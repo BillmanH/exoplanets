@@ -18,25 +18,6 @@ var planet_table_lables = [{"label":"Name","value":"name"},
                             {"label":"Supports Life","value":"isSupportsLife"}
                         ]
 
-function draw_planet(pdata){
-    // console.log(pdata)
-    dwaw_node("pSystem",
-            pdata["nodes"],
-            pdata["links"],
-            p_objectColors,
-            .003,
-            height,
-            width,
-            strokesFunc = s_objectStrokes) 
-    draw_table(
-        "planetsTable",
-        pdata["nodes"],
-        planet_table_lables,  
-        height,
-        width
-    )
-}
-
 function clickTablePlanet(d){
     $.ajax({
         url: '/ajax/planet-details',
@@ -52,3 +33,23 @@ function clickTablePlanet(d){
         }
     });
 }
+
+function draw_planet(pdata){
+    // console.log(pdata)
+    dwaw_node("pSystem",
+            pdata["nodes"],
+            pdata["links"],
+            p_objectColors,
+            .003,
+            height,
+            width,
+            strokesFunc = s_objectStrokes) 
+    draw_table(
+        "planetsTable",
+        pdata["nodes"],
+        planet_table_lables,  
+        tableClickHandler = clickTablePlanet
+    )
+}
+
+
