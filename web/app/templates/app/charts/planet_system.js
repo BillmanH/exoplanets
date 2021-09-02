@@ -25,8 +25,7 @@ var population_table_lables = [{"label":"Name","value":"name"},
                             {"label":"Literacy","value":"population_literacy"}
                         ]
                     
-var faction_table_lables = [{"label":"Faction Name","value":"name"}
-                            ]
+var faction_table_lables = [{"label":"Faction Name","value":"name"}]
 
 function clickTablePlanet(d){
     $.ajax({
@@ -37,6 +36,7 @@ function clickTablePlanet(d){
         beforeSend: function () {
             d3.selectAll('#peopleTable').remove()
             d3.selectAll('#factionTable').remove()
+            d3.selectAll('#description').remove()
         },
         success: function(data){
             console.log(data)
@@ -52,6 +52,7 @@ function clickTablePlanet(d){
                     faction_table_lables
                     )
             }
+            addTextBox(d,data)
         }
     });
 }
