@@ -24,13 +24,9 @@ def get_client():
     return client_g
 
 
-def run_query(client, query="g.V().count()"):
+def run_query(query="g.V().count()"):
     c = get_client()
-    """
-    run_query(client, query)
-    run_query(c, query)
-    """
-    callback = client.submitAsync(query)
+    callback = c.submitAsync(query)
     res = callback.result().all().result()
     c.close()
     return res
