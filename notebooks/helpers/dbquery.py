@@ -1,19 +1,16 @@
-import yaml
+import yaml, os
 
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
+
 
 def get_client():
     '''
     c = get_client()
     '''
-    try:
-        config = yaml.safe_load(open("./configure.yaml"))
-    except FileNotFoundError:
-        config = yaml.safe_load(open("../../configure.yaml"))
-    endpoint = config["endpoint"]
-    username = config["username"]
-    password = config["password"]
+    endpoint = os.getenv("endpoint","env vars not set")
+    username = os.getenv("username","env vars not set")
+    password = os.getenv("password","env vars not set")+"=="
     client_g = client.Client(
         endpoint,
         "g",
