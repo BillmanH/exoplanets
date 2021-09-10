@@ -78,7 +78,6 @@ def upload_data(client, username, data):
         callback = client.submitAsync(create_vertex(node, username))
     for edge in data["edges"]:
         callback = client.submitAsync(create_edge(edge, username))
-    ## link system to
     return
 
 
