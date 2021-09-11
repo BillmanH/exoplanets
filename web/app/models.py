@@ -12,7 +12,8 @@ from .GraphOperations import account
 
 #%%
 # my Gremlin Model is like Django models in name only.
-# I'm creating a client object and connecting it to the 
+# I'm creating a client object and using that connection to query the graph
+# The backend is all about the query string
 
 
 def get_client():
@@ -63,11 +64,9 @@ def check_vertex(node):
     gaddv = f"g.V().has('objid',{node['objid']})"
     return gaddv
 
-
 def create_edge(edge, username):
     gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}').to(g.V().has('objid','{cs(edge['node2'])}'))"
     return gadde
-
 
 def upload_data(client, username, data):
     for node in data["nodes"]:
@@ -75,13 +74,6 @@ def upload_data(client, username, data):
     for edge in data["edges"]:
         callback = client.submitAsync(create_edge(edge, username))
     return
-
-
-def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
-    callback = client.submitAsync(query)
-    res = callback.result().all().result()
-    return res
-
 
 def clean_node(x):
     for k in list(x.keys()):
@@ -93,16 +85,3 @@ def clean_node(x):
 def clean_nodes(nodes):
     return [clean_node(n) for n in nodes]
 
-def get_system(client, username):
-    # TODO: This process just assumes there is only one system per account. Eventually will need to expand to take 
-    # a system parameter to specify which system the user would like to fetch. 
-    nodes_query = (
-        f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
-    )
-    
-    node_callback = client.submitAsync(nodes_query)
-    nodes = node_callback.result().all().result()
-    edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
-    system = {"nodes": clean_nodes(nodes), "edges": edges}
-
-    return system

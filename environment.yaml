@@ -1,4 +1,4 @@
-name: exoplanets
+name: djangograph
 channels:
   - conda-forge
   - defaults

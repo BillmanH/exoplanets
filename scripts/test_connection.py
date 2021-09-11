@@ -1,7 +1,7 @@
 import asyncio
 import time
 
-import yaml,sys
+import yaml,sys, os
 #%% 
 from gremlin_python.driver import client, serializer, protocol
 from gremlin_python.driver.protocol import GremlinServerError
@@ -11,11 +11,9 @@ import traceback
 
 #%%
 #Connection config
-
-config = yaml.safe_load(open('configure.yaml'))
-endpoint = config['endpoint']
-username = config['username']
-password = config['password']
+endpoint = os.getenv("endpoint","env vars not set")
+username = os.getenv("dbusername","env vars not set")
+password = os.getenv("dbkey","env vars not set")+"=="
 
 
 #%%
