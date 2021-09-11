@@ -9,8 +9,8 @@ def get_client():
     c = get_client()
     '''
     endpoint = os.getenv("endpoint","env vars not set")
-    username = os.getenv("username","env vars not set")
-    password = os.getenv("password","env vars not set")+"=="
+    username = os.getenv("dbusername","env vars not set")
+    password = os.getenv("dbkey","env vars not set")+"=="
     client_g = client.Client(
         endpoint,
         "g",

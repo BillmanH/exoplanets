@@ -46,18 +46,27 @@ password: <Password string from the azure portal>
 You can test your connection with `python scripts/test_connection.py`.
 
 
-## App
+## Getting Started.
 
 ### Building the environment
 I'm using anaconda so you should be able to build the environemnt in any system with: 
 ```
 conda env create --file=environment.yaml
-```
+``` 
 
 and update it using:
 ```
 conda env update --name exoplanets --file=environment.yaml --prune
 ```
+
+To access the cosmos DB, you'll need to setup the environment variables. 
+```
+conda env config vars set endpoint=<copy paste from azure portal>
+conda env config vars set dbusername=<copy paste from azure portal>
+conda env config vars set dbkey=<copy paste from azure portal>
+```
+
+
 
 ### Running the web app from the root directory. 
 ```
