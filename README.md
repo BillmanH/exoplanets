@@ -66,14 +66,18 @@ conda env config vars set dbusername=<copy paste from azure portal>
 conda env config vars set dbkey=<copy paste from azure portal>
 ```
 
-
+You can confirm the environments are there with: 
+```
+conda env config vars list
+```
+When the app runs, if you see `"env vars not set"` in your error messages it meas that the os.env variables aren't set. 
 
 ### Running the web app from the root directory. 
 ```
 python web/manage.py runserver
 ```
-`models.py` has two functions, one that takes a request, and another that runs a query. `run_query` takes the query text string as an imput, with a default of `"g.V().count()"`
 
+You can also access the DB in `notebooks` with the DB helper tools.
 
 # Contributing
 Pretty early in the design right now, however I might invite collaborators later.
