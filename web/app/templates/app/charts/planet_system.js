@@ -18,12 +18,14 @@ var planet_table_lables = [{"label":"Name","value":"name"},
                             {"label":"Supports Life","value":"isSupportsLife"}
                         ]
 
-var population_table_lables = [{"label":"Name","value":"name"}, 
-                            {"label":"Aggression","value":"population_aggression"},
-                            {"label":"Conformity","value":"population_conformity"},
-                            {"label":"Constitution","value":"population_constitution"},
-                            {"label":"Literacy","value":"population_literacy"}
+var table_lables = [{"label":"Name","value":"name"}, 
+                            {"label":"Aggression","value":"aggression"},
+                            {"label":"Conformity","value":"conformity"},
+                            {"label":"Constitution","value":"constitution"},
+                            {"label":"Literacy","value":"literacy"}
                         ]
+                    
+var faction_table_lables = [{"label":"Faction Name","value":"name"}]
 
 function clickTablePlanet(d){
     $.ajax({
@@ -33,7 +35,8 @@ function clickTablePlanet(d){
         dataType: 'json',
         beforeSend: function () {
             d3.selectAll('#peopleTable').remove()
-            // d3.selectAll('#planetsTable').remove()
+            d3.selectAll('#factionTable').remove()
+            d3.selectAll('#description').remove()
         },
         success: function(data){
             console.log(data)
@@ -41,9 +44,15 @@ function clickTablePlanet(d){
                 draw_table(
                     "peopleTable",
                     data['pops'],
-                    population_table_lables
+                    table_lables
+                    )
+                draw_table(
+                    "factionTable",
+                    data['factions'],
+                    faction_table_lables
                     )
             }
+            addTextBox(d,data)
         }
     });
 }

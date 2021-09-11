@@ -11,14 +11,26 @@ from . import maths
 # Setup Params:
 n_steps = 6  # max factions
 meta = ['uuid','name','label']
+starting_attributes = ['conformity', 'literacy', 'aggression', 'constitution']
+
+def compare_values(values,gr1,gr2):
+    distance = []
+    for v in values:
+        distance.append(abs(gr1.get(v,0)-gr2.get(v,0)))
+    return sum(distance)/len(distance)
+
+def get_faction_loyalty(x,pops,factions):
+    g1 = pops.loc[x].to_dict()
+    f2 = factions.loc[int(g1['faction_no'])].to_dict()
+    return compare_values(starting_attributes,g1,f2)
 
 def build_species(data):
     species = {}
     for attr in [
-        "population_conformity",
-        "population_literacy",
-        "population_aggression",
-        "population_constitution",
+        "conformity",
+        "literacy",
+        "aggression",
+        "constitution",
     ]:
         species[attr] = data[attr]
     species["objid"] = maths.uuid(n=13)
@@ -28,7 +40,7 @@ def build_species(data):
 
 
 def vary_pops(species):
-    pop_std = 0.2 * (1 - float(species["population_conformity"]))
+    pop_std = 0.2 * (1 - float(species["conformity"]))
     pop = {}
     for k in list(species.keys()):
         if k in meta:
@@ -74,7 +86,7 @@ def build_people(data):
     # Build the populations (note that pops is a DataFrame)
     pops = pd.DataFrame([vary_pops(species) for i in range(int(data["starting_pop"]))])
     # Build the factions
-    n_factions = get_n_factions(n_steps, float(data["population_conformity"]))
+    n_factions = get_n_factions(n_steps, float(data["conformity"]))
     kmeans = KMeans(n_clusters=n_factions).fit(pops[[c for c in pops.columns if c not in meta]])
     pops["faction_no"] = kmeans.labels_
     factions = make_factions(kmeans)
@@ -92,6 +104,10 @@ def build_people(data):
         {"node1": p["objid"], "node2": p["isInFaction"], "label": "isInFaction"}
         for p in pops.to_dict('records')
     ]
+    pops['industry'] = (pops['aggression'] + pops['constitution'])/2
+    pops['wealth'] = (pops['literacy'] + pops['industry'])/2
+    pops['faction_loyalty'] = [(1-get_faction_loyalty(i,pops,factions_df)) for i in pops.index]
+
     nodes = [species] + pops.to_dict("records") + factions
     edges = isInFaction + isOfSpecies
     return nodes, edges

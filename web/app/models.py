@@ -19,13 +19,9 @@ def get_client():
     '''
     c = get_client()
     '''
-    try:
-        config = yaml.safe_load(open("./configure.yaml"))
-    except FileNotFoundError:
-        config = yaml.safe_load(open("../../configure.yaml"))
-    endpoint = config["endpoint"]
-    username = config["username"]
-    password = config["password"]
+    endpoint = os.getenv("endpoint","env vars not set")
+    username = os.getenv("dbusername","env vars not set")
+    password = os.getenv("dbkey","env vars not set")+"=="
     client_g = client.Client(
         endpoint,
         "g",
@@ -78,7 +74,6 @@ def upload_data(client, username, data):
         callback = client.submitAsync(create_vertex(node, username))
     for edge in data["edges"]:
         callback = client.submitAsync(create_edge(edge, username))
-    ## link system to
     return
 
 

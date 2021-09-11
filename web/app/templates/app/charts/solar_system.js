@@ -27,9 +27,12 @@ function click_planet(d){
             d3.selectAll('#pSystem').remove()
             d3.selectAll('#planetsTable').remove()
             d3.selectAll('#peopleTable').remove()
+            d3.selectAll('#factionTable').remove()
+            d3.selectAll('#description').remove()
         },
         success: function(data){
             draw_planet(data)
+            addTextBox(d,data)
         }
     });
 }

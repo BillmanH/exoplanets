@@ -60,7 +60,7 @@ class HomeSystemForm(forms.Form):
         widget=NumberInput,
         help_text="(population is in millions of people)",
     )
-    population_conformity = forms.FloatField(
+    conformity = forms.FloatField(
         max_value=1,
         min_value=0,
         initial=0.3,
@@ -68,7 +68,7 @@ class HomeSystemForm(forms.Form):
         widget=NumberInput,
         help_text='( % How much your people consider themselves "one people")',
     )
-    population_literacy = forms.FloatField(
+    literacy = forms.FloatField(
         max_value=1,
         min_value=0,
         initial=0.7,
@@ -76,7 +76,7 @@ class HomeSystemForm(forms.Form):
         widget=NumberInput,
         help_text="( % affects the tech advancement)",
     )
-    population_aggression = forms.FloatField(
+    aggression = forms.FloatField(
         max_value=1,
         min_value=0,
         initial=0.5,
@@ -84,7 +84,7 @@ class HomeSystemForm(forms.Form):
         widget=NumberInput,
         help_text='( % agressive to "others")',
     )
-    population_constitution = forms.FloatField(
+    constitution = forms.FloatField(
         max_value=1,
         min_value=0,
         initial=0.5,
