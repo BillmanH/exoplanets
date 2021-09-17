@@ -33,6 +33,14 @@ def cs(s):
     s = str(s).replace("'", "")
     return s
 
+def clean_node(x):
+    for k in list(x.keys()):
+        if len(x[k]) == 1:
+            x[k] = x[k][0]
+    x["id"] = x["objid"]
+    return x
+
+
 def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
 
