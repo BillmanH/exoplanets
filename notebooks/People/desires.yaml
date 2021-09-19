@@ -1,5 +1,26 @@
-desires:
-  - label: desires
-  - type: industry
-  - weight: .5
+objectives:
   -
+    label: objective
+    type: industry
+    weight: .5
+    comment: "build factories, skyscrapers, infrastructure"
+  -
+    type: expansion
+    label: objective
+    weight: .5
+    comment: "to increase population, eventually becoming a new pop"
+  -
+    type: war
+    label: objective
+    weight: .5
+    comment: "the general amount that the society wants to fight"
+  -
+    type: science
+    label: objective
+    weight: .5
+    comment: "building schools, education systems, information infrastructure"
+  -
+    type: wealth
+    label: objective
+    weight: .5
+    comment: "increasing luxury, entertainiment and amenities"
