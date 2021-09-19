@@ -52,6 +52,8 @@ def create_vertex(node):
     for k in properties:
         substr = f".property('{k}','{cs(node[k])}')"
         gaddv += substr
+    if 'objid' not in properties:
+        gaddv += f".property('objid','{uuid()}')"
     return gaddv
 
 def create_edge(edge):
@@ -63,11 +65,19 @@ def create_edge(edge):
     return gadde
 
 
-def upload_data(data): 
+def upload_data(data,verbose=True): 
     c = get_client()
     for node in data["nodes"]:
-        callback = c.submitAsync(create_vertex(node))
+        gadv = create_vertex(node)
+        callback = c.submitAsync(gadv)
+        if verbose:
+            print(gadv)
+            # print(callback)
     for edge in data["edges"]:
-        callback = c.submitAsync(create_edge(edge))
+        gadde = create_edge(edge)
+        callback = c.submitAsync(gadde)
+        if verbose:
+            print(gadde)
+            # print(callback)
     c.close()
     return

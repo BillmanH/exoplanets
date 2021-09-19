@@ -3,24 +3,29 @@ objectives:
     label: objective
     type: industry
     weight: .5
+    leadingAttribute: wealth
     comment: "build factories, skyscrapers, infrastructure"
   -
     type: expansion
     label: objective
     weight: .5
+    leadingAttribute: industry
     comment: "to increase population, eventually becoming a new pop"
   -
     type: war
     label: objective
-    weight: .5
+    weight: .4
+    leadingAttribute: aggression
     comment: "the general amount that the society wants to fight"
   -
     type: science
     label: objective
     weight: .5
+    leadingAttribute: literacy
     comment: "building schools, education systems, information infrastructure"
   -
     type: wealth
     label: objective
     weight: .5
+    leadingAttribute: literacy
     comment: "increasing luxury, entertainiment and amenities"
