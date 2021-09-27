@@ -121,3 +121,20 @@ def attach_people_to_world(homeworld_nodes,universe_nodes):
         for p in pops
     ]
     return edges
+
+def get_desire(x):
+    # Marginal return on base attribute
+    n = 2
+    return round(((float(x)+1)**(1-n) - 1)/(1-n),3)
+
+
+def get_pop_desires(pops,objectives):
+    edges = []
+    for p in pops:
+        for o in objectives:
+            edge = {'label':'desires',
+                    'node1':p['objid'],
+                    'node2':o['objid'],
+                    'weight':get_desire(p[o['leadingAttribute']])}
+            edges.append(edge)
+    return edges
