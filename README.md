@@ -72,12 +72,17 @@ conda env config vars list
 ```
 When the app runs, if you see `"env vars not set"` in your error messages it meas that the os.env variables aren't set. 
 
+You will need the `settings.py` file. Copy it from the `TEMPLATESETTINGS.py` and change to suit your purpose. 
+
 ### Running the web app from the root directory. 
 ```
 python web/manage.py runserver
 ```
+If this is your first time building the application, you will need to update the login data using:
+`python manage.py makemigrations`
 
-You can also access the DB in `notebooks` with the DB helper tools.
+
+**NOTE** You can also access the DB in `notebooks` with the DB helper tools.
 
 # Contributing
 Pretty early in the design right now, however I might invite collaborators later.
