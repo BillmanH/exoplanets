@@ -73,7 +73,12 @@ def new_universe(request):
         homeworld_nodes, homeworld_edges = homeworld.build_people(request.POST)
         # Attach the people to the homeworld
         homeworld_edges = homeworld_edges + homeworld.attach_people_to_world(homeworld_nodes,universe_nodes)
-        # Upload all of that data that was created. s
+        # Get the global list of objectives (prerequisite of desires)
+        res = run_query(c, query="g.V().hasLabel('objective').valueMap()")
+        objectives = [clean_node(n) for n in res]
+        # Get the pop desire for those objectives
+        homeworld_edges = homeworld_edges + homeworld.get_pop_desires([p for p in homeworld_nodes if p['label']=='pop'],objectives)
+        # Upload all of that data that was created. 
         data = {"nodes": universe_nodes + homeworld_nodes, "edges": universe_edges + homeworld_edges}
         upload_data(c, username, data)
         # load the galaxy map, thus starting the game
@@ -96,7 +101,6 @@ def system_map(request):
 
 @login_required
 def galaxy_map(request):
-    
     c = get_client()
     res = get_galaxy_nodes(c)
     context = {"galaxies": res}

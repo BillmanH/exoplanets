@@ -45,6 +45,7 @@ password: <Password string from the azure portal>
 ```
 You can test your connection with `python scripts/test_connection.py`.
 
+**NOTE:** while the game uses the graph database, the AUTH credentials are stored separately in the local `db.sqlite3`
 
 ## Getting Started.
 
@@ -66,18 +67,30 @@ conda env config vars set dbusername=<copy paste from azure portal>
 conda env config vars set dbkey=<copy paste from azure portal>
 ```
 
+I'm always importing modules from different places, so to compensate to multiple relative scopes for static resources (like city names and planet configuration.yaml files) I pass the _full path_ as an os env so that I can retrieve it.  for example on my local machine it's set to:"
+```
+conda env config vars set abspath="C:\Users\william.harding\Documents\repos\exoplanets"
+```
+
 You can confirm the environments are there with: 
 ```
 conda env config vars list
 ```
 When the app runs, if you see `"env vars not set"` in your error messages it meas that the os.env variables aren't set. 
 
+You will need the `settings.py` file. Copy it from the `TEMPLATESETTINGS.py` and change to suit your purpose. 
+
 ### Running the web app from the root directory. 
 ```
 python web/manage.py runserver
 ```
+If this is your first time building the application, you will need to update the login data using:
+```
+python web\manage.py makemigrations
+python web\manage.py migrate
+```
 
-You can also access the DB in `notebooks` with the DB helper tools.
+**NOTE** You can also access the DB in `notebooks` with the DB helper tools.
 
 # Contributing
 Pretty early in the design right now, however I might invite collaborators later.

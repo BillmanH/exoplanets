@@ -1,6 +1,6 @@
 # Configuration and keys
 configure.yaml
-
+web/settings.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
