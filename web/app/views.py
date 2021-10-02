@@ -74,10 +74,10 @@ def new_universe(request):
         # Attach the people to the homeworld
         homeworld_edges = homeworld_edges + homeworld.attach_people_to_world(homeworld_nodes,universe_nodes)
         # Get the global list of objectives (prerequisite of desires)
-        res = run_query("g.V().hasLabel('objective').valueMap()")
+        res = run_query(c, query="g.V().hasLabel('objective').valueMap()")
         objectives = [clean_node(n) for n in res]
         # Get the pop desire for those objectives
-        homeworld_edges = homeworld_edges + homeworld.get_pop_desires([p for p in homeworld_nodes if p['objtype']=='pop'],objectives)
+        homeworld_edges = homeworld_edges + homeworld.get_pop_desires([p for p in homeworld_nodes if p['label']=='pop'],objectives)
         # Upload all of that data that was created. 
         data = {"nodes": universe_nodes + homeworld_nodes, "edges": universe_edges + homeworld_edges}
         upload_data(c, username, data)
