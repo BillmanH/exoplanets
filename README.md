@@ -45,6 +45,7 @@ password: <Password string from the azure portal>
 ```
 You can test your connection with `python scripts/test_connection.py`.
 
+**NOTE:** while the game uses the graph database, the AUTH credentials are stored separately in the local `db.sqlite3`
 
 ## Getting Started.
 
@@ -84,8 +85,10 @@ You will need the `settings.py` file. Copy it from the `TEMPLATESETTINGS.py` and
 python web/manage.py runserver
 ```
 If this is your first time building the application, you will need to update the login data using:
-`python manage.py makemigrations`
-
+```
+python web\manage.py makemigrations
+python web\manage.py migrate
+```
 
 **NOTE** You can also access the DB in `notebooks` with the DB helper tools.
 
