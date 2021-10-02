@@ -66,6 +66,11 @@ conda env config vars set dbusername=<copy paste from azure portal>
 conda env config vars set dbkey=<copy paste from azure portal>
 ```
 
+I'm always importing modules from different places, so to compensate to multiple relative scopes for static resources (like city names and planet configuration.yaml files) I pass the _full path_ as an os env so that I can retrieve it.  for example on my local machine it's set to:"
+```
+conda env config vars set abspath="C:\Users\william.harding\Documents\repos\exoplanets"
+```
+
 You can confirm the environments are there with: 
 ```
 conda env config vars list
