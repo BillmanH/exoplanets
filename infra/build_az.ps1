@@ -1,3 +1,6 @@
-az login
+# swithc to the env that has the local variables
+conda activate exoplanets
 
-az account set --subscription <subscription id>
+# start the interactive login
+az login
+az account set --subscription $Env:subscription
