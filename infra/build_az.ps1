@@ -14,8 +14,16 @@ cd $Env:abspath
 # az group delete --name $resourceGroupName
 
 
+# *_parameters are in the .gitignore 
 # Graph database
 az group deployment create \
     --resource-group $resourceGroup \
     --template-file "infra/ARM/cosmos_db_template.json"
-    --parameters "infra/ARM/cosmos_db_template.json"
+    --parameters "infra/ARM/cosmos_db_parameters.json"
+
+# Web App
+# Graph database
+az group deployment create \
+    --resource-group $resourceGroup \
+    --template-file "infra/ARM/webapp_template.json"
+    --parameters "infra/ARM/webapp_parameters.json"
