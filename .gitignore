@@ -138,3 +138,7 @@ dmypy.json
 # Excel files
 data/~$*.xlsx
 data/examplesystem.json
+
+
+# ARM Template Parameter Files
+infra/ARM/*parameters.json
