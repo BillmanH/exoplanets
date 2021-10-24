@@ -8,7 +8,6 @@ dependencies:
   - pip
   - pyyaml
   - ipykernel
-  - altair
   - pandas
   - django
   - black

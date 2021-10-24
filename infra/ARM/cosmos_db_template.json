@@ -1,0 +1,153 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "databaseAccounts_graph_exodestiny_createMode": {
+            "type": "SecureString"
+        },
+        "graph_name": {
+            "defaultValue": "exodestiny",
+            "type": "String"
+        },
+        "region": {
+            "defaultValue": "West US 2",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2021-07-01-preview",
+            "name": "[parameters('graph_name')]",
+            "location": "[parameters('region')]",
+            "tags": {
+                "defaultExperience": "Gremlin (graph)",
+                "hidden-cosmos-mmspecial": "",
+                "CosmosAccountType": "Non-Production"
+            },
+            "kind": "GlobalDocumentDB",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "publicNetworkAccess": "Enabled",
+                "enableAutomaticFailover": false,
+                "enableMultipleWriteLocations": false,
+                "isVirtualNetworkFilterEnabled": false,
+                "virtualNetworkRules": [],
+                "disableKeyBasedMetadataWriteAccess": false,
+                "enableFreeTier": false,
+                "enableAnalyticalStorage": false,
+                "analyticalStorageConfiguration": {},
+                "databaseAccountOfferType": "Standard",
+                "defaultIdentity": "FirstPartyIdentity",
+                "networkAclBypass": "None",
+                "disableLocalAuth": false,
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Session",
+                    "maxIntervalInSeconds": 5,
+                    "maxStalenessPrefix": 100
+                },
+                "locations": [
+                    {
+                        "locationName": "[parameters('region')]",
+                        "provisioningState": "Succeeded",
+                        "failoverPriority": 0,
+                        "isZoneRedundant": false
+                    }
+                ],
+                "cors": [],
+                "capabilities": [
+                    {
+                        "name": "EnableGremlin"
+                    },
+                    {
+                        "name": "EnableServerless"
+                    }
+                ],
+                "ipRules": [],
+                "backupPolicy": {
+                    "type": "Periodic",
+                    "periodicModeProperties": {
+                        "backupIntervalInMinutes": 240,
+                        "backupRetentionIntervalInHours": 8,
+                        "backupStorageRedundancy": "Geo"
+                    }
+                },
+                "networkAclBypassResourceIds": [],
+                "diagnosticLogSettings": {
+                    "enableFullTextQuery": "None"
+                },
+                "createMode": "[parameters('databaseAccounts_graph_exodestiny_createMode')]"
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/gremlinDatabases",
+            "apiVersion": "2021-07-01-preview",
+            "name": "[concat(parameters('graph_name'), '/graphdb')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('graph_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "graphdb"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/gremlinDatabases",
+            "apiVersion": "2021-07-01-preview",
+            "name": "[concat(parameters('graph_name'), '/SampleDB')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('graph_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "SampleDB"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/gremlinDatabases/graphs",
+            "apiVersion": "2021-07-01-preview",
+            "name": "[concat(parameters('graph_name'), '/graphdb/systems')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/gremlinDatabases', parameters('graph_name'), 'graphdb')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('graph_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "systems",
+                    "indexingPolicy": {
+                        "indexingMode": "consistent",
+                        "automatic": true,
+                        "includedPaths": [
+                            {
+                                "path": "/*"
+                            }
+                        ],
+                        "excludedPaths": [
+                            {
+                                "path": "/\"_etag\"/?"
+                            }
+                        ]
+                    },
+                    "partitionKey": {
+                        "paths": [
+                            "/objid"
+                        ],
+                        "kind": "Hash"
+                    },
+                    "uniqueKeyPolicy": {
+                        "uniqueKeys": []
+                    },
+                    "conflictResolutionPolicy": {
+                        "mode": "LastWriterWins",
+                        "conflictResolutionPath": "/_ts"
+                    }
+                }
+            }
+        }
+    ]
+}
