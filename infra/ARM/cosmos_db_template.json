@@ -8,6 +8,10 @@
         "graph_name": {
             "defaultValue": "exodestiny",
             "type": "String"
+        },
+        "region": {
+            "defaultValue": "West US 2",
+            "type": "String"
         }
     },
     "variables": {},
@@ -16,7 +20,7 @@
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2021-07-01-preview",
             "name": "[parameters('graph_name')]",
-            "location": "West US 2",
+            "location": "[parameters('region')]",
             "tags": {
                 "defaultExperience": "Gremlin (graph)",
                 "hidden-cosmos-mmspecial": "",
@@ -47,7 +51,7 @@
                 },
                 "locations": [
                     {
-                        "locationName": "West US 2",
+                        "locationName": "[parameters('region')]",
                         "provisioningState": "Succeeded",
                         "failoverPriority": 0,
                         "isZoneRedundant": false
