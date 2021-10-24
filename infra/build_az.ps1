@@ -1,5 +1,5 @@
 # Script variables:
-$resourceGroupName = exodestiny
+$resourceGroupName = "exodestiny"
 $location = "West US 2"
 # swithc to the env that has the local variables
 conda activate exoplanets
@@ -16,14 +16,10 @@ cd $Env:abspath
 
 # *_parameters are in the .gitignore 
 # Graph database
-az group deployment create \
-    --resource-group $resourceGroup \
+az deployment group create \
+    --resource-group $resourceGroupName \
     --template-file "infra/ARM/cosmos_db_template.json"
     --parameters "infra/ARM/cosmos_db_parameters.json"
 
 # Web App
-# Graph database
-az group deployment create \
-    --resource-group $resourceGroup \
-    --template-file "infra/ARM/webapp_template.json"
-    --parameters "infra/ARM/webapp_parameters.json"
+az deployment group create --subscription $Env:subscription --resource-group $resourceGroupName --template-file "infra/ARM/webapp_template.json" --parameters "infra/ARM/webapp_parameters.json"
