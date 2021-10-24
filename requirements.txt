@@ -1,0 +1,6 @@
+pip
+gremlinpython
+django
+scikit-learn
+pyyaml
+pandas
