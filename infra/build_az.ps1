@@ -16,10 +16,7 @@ cd $Env:abspath
 
 # *_parameters are in the .gitignore 
 # Graph database
-az deployment group create \
-    --resource-group $resourceGroupName \
-    --template-file "infra/ARM/cosmos_db_template.json"
-    --parameters "infra/ARM/cosmos_db_parameters.json"
+az deployment group create --resource-group $resourceGroupName --template-file "infra/ARM/cosmos_db_template.json" --parameters "infra/ARM/cosmos_db_parameters.json"
 
 # Web App
 az deployment group create --subscription $Env:subscription --resource-group $resourceGroupName --template-file "infra/ARM/webapp_template.json" --parameters "infra/ARM/webapp_parameters.json"
