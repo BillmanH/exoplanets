@@ -85,6 +85,8 @@ When the app runs, if you see `"env vars not set"` in your error messages it mea
 You will need the `settings.py` file. Copy it from the `TEMPLATESETTINGS.py` and change to suit your purpose. 
 
 ### Running the web app from the root directory. 
+**Most** of this is in the django docs. 
+
 ```
 python web/manage.py runserver
 ```
