@@ -1,6 +1,8 @@
 # exoplanets
 A Gremlin Graph database driven strategy game. Get your civilization out into space. 
 
+[![Build and deploy Python app to Azure Web App - exodestiny](https://github.com/BillmanH/exoplanets/actions/workflows/build_and_deploy.yaml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/build_and_deploy.yaml)
+
 ![Alt text](/docs/img/solar_system.png?raw=true "solar system")
 
 * Django Web Server
