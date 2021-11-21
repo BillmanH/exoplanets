@@ -1,6 +1,5 @@
 # Configuration and keys
 configure.yaml
-web/settings.py
 *.key
 
 # Byte-compiled / optimized / DLL files
@@ -62,10 +61,8 @@ coverage.xml
 
 # Django stuff:
 *.log
-local_settings.py
 db.sqlite3
 db.sqlite3-journal
-web/web/settings.py
 
 # Flask stuff:
 instance/

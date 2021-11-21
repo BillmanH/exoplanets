@@ -66,6 +66,9 @@ you'll need to add the variables one at a time. I don't have a script for this b
 These are the variables used: 
 | Syntax | Description |
 | ----------- | ----------- |
+| stage | (`dev` or `prod` affects how the `settings.py` file will be used.) |
+| DEBUG | django setting for debugging |
+| SECRET_KEY | django web key used for dev |
 | endpoint | web endpoint of your gremlin graph |
 | dbusername | graph login username |
 | dbkey | copy paste from azure portal |
