@@ -1,5 +1,6 @@
 # Configuration and keys
 configure.yaml
+env-vars.json
 *.key
 
 # Byte-compiled / optimized / DLL files

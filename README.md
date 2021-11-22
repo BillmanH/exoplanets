@@ -5,6 +5,7 @@ A Gremlin Graph database driven strategy game. Get your civilization out into sp
 
 ![Alt text](/docs/img/solar_system.png?raw=true "solar system")
 
+* Azure App Service
 * Django Web Server
 * Azure App Service for Hosting
 * Azure Cosmos DB (Gremlin)
@@ -45,6 +46,7 @@ You can test your connection with `python scripts/test_connection.py`.
 **NOTE:** while the game uses the graph database, the AUTH credentials are stored separately in the local `db.sqlite3`
 
 ## Getting Started.
+* see the docs in the **infra** folder for production deployment. 
 
 ### Building the local testing environment
 You can run the application on your local machine without cloud resources. I'm using anaconda so you should be able to build the environemnt in any system with: 
@@ -63,12 +65,12 @@ conda env config vars set endpoint=<copy paste from azure portal>
 ```
 you'll need to add the variables one at a time. I don't have a script for this but the format is simple. 
 
-These are the variables used: 
+**These are the variables used:** 
 | Syntax | Description |
 | ----------- | ----------- |
 | stage | (`dev` or `prod` affects how the `settings.py` file will be used.) |
-| DEBUG | django setting for debugging |
 | SECRET_KEY | django web key used for dev |
+| ALLOWED_HOSTS | djengo settings, for specifying endpoint |
 | endpoint | web endpoint of your gremlin graph |
 | dbusername | graph login username |
 | dbkey | copy paste from azure portal |
@@ -104,7 +106,7 @@ python web\manage.py migrate
 **NOTE** You can also access the DB in `notebooks` with the DB helper tools.
 
 # Contributing
-Pretty early in the design right now, however I might invite collaborators later.
+Pretty early in the design right now, however I might invite collaborators later. Feel free to open an issue if you want to chat about contributing, or just make a PR. 
 
 Make sure to update the `environment.yaml` if you add python packages:
 ```
