@@ -95,12 +95,12 @@ You will need the `settings.py` file. Copy it from the `TEMPLATESETTINGS.py` and
 **Most** of this is in the django docs. 
 
 ```
-python web/manage.py runserver
+python manage.py runserver
 ```
 If this is your first time building the application, you will need to update the login data using:
 ```
-python web\manage.py makemigrations
-python web\manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 ```
 
 **NOTE** You can also access the DB in `notebooks` with the DB helper tools.

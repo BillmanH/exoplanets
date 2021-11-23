@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 
-syllables = pickle.load(open(os.path.join(os.getenv("abspath"),"web/app/creators/specs/syllables.p"), "rb"))
+syllables = pickle.load(open(os.path.join(os.getenv("abspath"),"app/creators/specs/syllables.p"), "rb"))
 
 
 def make_word(n, spaces=True):
