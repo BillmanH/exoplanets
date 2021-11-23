@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,17 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ["SECRET_KEY"]
 
-stage = os.environ['stage']
+stage = os.environ["stage"]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-if stage == 'prod':
+if stage == "prod":
     DEBUG = False
-if stage == 'dev':
+if stage == "dev":
     DEBUG = True
 
-ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
+ALLOWED_HOSTS = [os.environ["ALLOWED_HOSTS"]]
 
 
 # Application definition
@@ -80,7 +79,7 @@ WSGI_APPLICATION = "web.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-if os.environ['stage']=='prod':
+if os.environ["stage"] == "prod":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -103,15 +102,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
 
@@ -133,4 +126,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(os.environ["abspath"], "web","app","static","app")
+
+if stage == "prod":
+    STATIC_ROOT = os.path.join("app", "static", "app")
+    log_path = "prod_blog_log.log"
+if stage == "dev":
+    STATIC_ROOT = os.path.join(os.environ["abspath"], "app", "static", "app")
+    log_path = os.path.join(os.environ["abspath"], "data", "non_prod_blog_log.log")
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+    "handlers": {
+        "logfile": {
+            "class": "logging.handlers.WatchedFileHandler",
+            "filename": log_path,
+        }
+    },
+    "loggers": {
+        "django": {"handlers": ["logfile"], "level": "ERROR", "propagate": False,}
+    },
+}
