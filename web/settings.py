@@ -129,8 +129,11 @@ STATIC_URL = "/static/"
 
 if stage == "prod":
     STATIC_ROOT = os.path.join("app", "static", "app")
+    log_path = "prod_blog_log.log"
 if stage == "dev":
     STATIC_ROOT = os.path.join(os.environ["abspath"], "app", "static", "app")
+    log_path = os.path.join(os.environ["abspath"], "data", "non_prod_blog_log.log")
+
 
 LOGGING = {
     "version": 1,
@@ -139,7 +142,7 @@ LOGGING = {
     "handlers": {
         "logfile": {
             "class": "logging.handlers.WatchedFileHandler",
-            "filename": "D:\home\site\wwwroot\myapp.log",
+            "filename": log_path,
         }
     },
     "loggers": {
