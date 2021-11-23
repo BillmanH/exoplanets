@@ -6,9 +6,9 @@ from datetime import datetime
 from . import maths
 from . import language
 
-pdata = yaml.safe_load(open('web/app/creators/specs/planet.yaml'))["planet_types"]
-mdata = yaml.safe_load(open('web/app/creators/specs/moon.yaml'))["moon_types"]
-sdata = yaml.safe_load(open('web/app/creators/specs/star.yaml'))
+pdata = yaml.safe_load(open('app/creators/specs/planet.yaml'))["planet_types"]
+mdata = yaml.safe_load(open('app/creators/specs/moon.yaml'))["moon_types"]
+sdata = yaml.safe_load(open('app/creators/specs/star.yaml'))
 
 
 def sort_planets(t):
