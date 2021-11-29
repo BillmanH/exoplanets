@@ -15,6 +15,8 @@ A Gremlin Graph database driven strategy game. Get your civilization out into sp
 * [Solar systems with stars, planets and moons](/notebooks/Analysis%20-%20planet%20summary%20stats.ipynb)
 * [Populations (pops) with factions, and spiecies attributes](/notebooks/People/Generating%20Populations.ipynb)
 
+The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
+
 ## Working views now: 
 * `/systemmap` <- look at your system
 * `/new` < - create a new system

@@ -81,10 +81,17 @@ WSGI_APPLICATION = "web.wsgi.application"
 
 if os.environ["stage"] == "prod":
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+        'default': {
+            'ENGINE': 'sql_server.pyodbc',
+            'NAME': 'mydb',
+            'USER': 'user@myserver',
+            'PASSWORD': 'password',
+            'HOST': 'myserver.database.windows.net',
+            'PORT': '',
+            'OPTIONS': {
+                'driver': 'ODBC Driver 13 for SQL Server',
+            },
+        },
     }
 else:
     DATABASES = {
