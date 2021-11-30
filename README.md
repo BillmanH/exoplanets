@@ -68,16 +68,16 @@ conda env config vars set endpoint=<copy paste from azure portal>
 you'll need to add the variables one at a time. I don't have a script for this but the format is simple. 
 
 **These are the variables used:** 
-| Syntax | Description |
-| ----------- | ----------- |
-| stage | (`dev` or `prod` affects how the `settings.py` file will be used.) |
-| SECRET_KEY | django web key used for dev |
-| ALLOWED_HOSTS | djengo settings, for specifying endpoint |
+| Syntax | Description | Notes |
+| ----------- | ----------- | ----------- |
+| stage | (`dev` or `prod` affects how the `settings.py` file will be used.) | |
+| SECRET_KEY | django web key used for dev | |
+| ALLOWED_HOSTS | djengo settings, for specifying endpoint | it's a pipe-delimited string eg. `192.168.0.1\|mywebsite.com` |
 | endpoint | web endpoint of your gremlin graph |
-| dbusername | graph login username |
-| dbkey | copy paste from azure portal |
-| abspath | absolute path of your project (for resolving relative path loading issues) |
-| subscription | azure subscription id (for building resources) |
+| dbusername | graph login username | |
+| dbkey | copy paste from azure portal | |
+| abspath | absolute path of your project (for resolving relative path loading issues) | |
+| subscription | azure subscription id (for building resources) | |
 
 
 I'm always importing modules from different places, so to compensate to multiple relative scopes for static resources (like city names and planet configuration.yaml files) I pass the _full path_ as an os env so that I can retrieve it.  for example on my local machine it's set to:"

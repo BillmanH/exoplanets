@@ -30,7 +30,8 @@ if stage == "prod":
 if stage == "dev":
     DEBUG = True
 
-ALLOWED_HOSTS = [os.environ["ALLOWED_HOSTS"]]
+# Using pipe delimeted string to allow the environment vars to separate a list of hosts. 
+ALLOWED_HOSTS = [os.environ["ALLOWED_HOSTS"].split('|')]
 
 
 # Application definition
