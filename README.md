@@ -78,7 +78,8 @@ you'll need to add the variables one at a time. I don't have a script for this b
 | dbkey | copy paste from azure portal | |
 | abspath | absolute path of your project (for resolving relative path loading issues) | |
 | subscription | azure subscription id (for building resources) | |
-
+| sqluser | azure SQL user login (SQL used for django user/login tables) | only required if `stage` is set to `prod` |
+| sqlpwd | azure SQL pasword (SQL used for django user/login tables) | only required if `stage` is set to `prod` |
 
 I'm always importing modules from different places, so to compensate to multiple relative scopes for static resources (like city names and planet configuration.yaml files) I pass the _full path_ as an os env so that I can retrieve it.  for example on my local machine it's set to:"
 ```

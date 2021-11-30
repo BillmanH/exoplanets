@@ -84,10 +84,10 @@ if os.environ["stage"] == "prod":
     DATABASES = {
         'default': {
             'ENGINE': 'sql_server.pyodbc',
-            'NAME': 'mydb',
-            'USER': 'user@myserver',
-            'PASSWORD': 'password',
-            'HOST': 'myserver.database.windows.net',
+            'NAME': 'os.environ["sqlname"]',
+            'USER': 'os.environ["sqluser"]',
+            'PASSWORD': 'os.environ["sqlpwd"]',
+            'HOST': 'os.environ["sqlserv"]',
             'PORT': '',
             'OPTIONS': {
                 'driver': 'ODBC Driver 13 for SQL Server',
