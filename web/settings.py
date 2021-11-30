@@ -135,7 +135,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 if stage == "prod":
-    STATIC_ROOT = os.path.join("app", "static", "app")
+    STATIC_ROOT = os.path.join("app", "static")
     log_path = "prod_blog_log.log"
 if stage == "dev":
     STATIC_ROOT = os.path.join(os.environ["abspath"], "app", "static", "app")
