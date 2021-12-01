@@ -4,3 +4,4 @@ django
 scikit-learn
 pyyaml
 pandas
+django-pyodbc-azure

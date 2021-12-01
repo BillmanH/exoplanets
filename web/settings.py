@@ -30,7 +30,8 @@ if stage == "prod":
 if stage == "dev":
     DEBUG = True
 
-ALLOWED_HOSTS = [os.environ["ALLOWED_HOSTS"]]
+# Using pipe delimeted string to allow the environment vars to separate a list of hosts. 
+ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split('|')
 
 
 # Application definition
@@ -81,10 +82,17 @@ WSGI_APPLICATION = "web.wsgi.application"
 
 if os.environ["stage"] == "prod":
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+        'default': {
+            'ENGINE': 'sql_server.pyodbc',
+            'NAME': 'os.environ["sqlname"]',
+            'USER': 'os.environ["sqluser"]',
+            'PASSWORD': 'os.environ["sqlpwd"]',
+            'HOST': 'os.environ["sqlserv"]',
+            'PORT': '',
+            'OPTIONS': {
+                'driver': 'ODBC Driver 13 for SQL Server',
+            },
+        },
     }
 else:
     DATABASES = {
@@ -128,7 +136,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 if stage == "prod":
-    STATIC_ROOT = os.path.join("app", "static", "app")
+    STATIC_ROOT = os.path.join("app", "static")
     log_path = "prod_blog_log.log"
 if stage == "dev":
     STATIC_ROOT = os.path.join(os.environ["abspath"], "app", "static", "app")
