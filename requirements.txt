@@ -1,6 +1,6 @@
 pip
 gremlinpython
-django
+django==2.1
 scikit-learn
 pyyaml
 pandas
