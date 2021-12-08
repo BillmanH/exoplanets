@@ -1,6 +1,7 @@
 pip
 gremlinpython
 django==2.1
+django-storages[azure]
 scikit-learn
 pyyaml
 pandas

@@ -11,11 +11,15 @@ A Gremlin Graph database driven strategy game. Get your civilization out into sp
 * Azure Cosmos DB (Gremlin)
 * D3.js for visualization
 
+* **Note** that I'm using Azure SQL and Azure Storage in this project, but for cost reasons I'm using the same resources from other projects. For that reason I don't have examples of building them here. The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
+
+
+
 ## Features thus far:
+* `dev` and `prod` systems set up for easy switching. `dev` is the local machine and `prod` is online with `DEBUG=False`.
 * [Solar systems with stars, planets and moons](/notebooks/Analysis%20-%20planet%20summary%20stats.ipynb)
 * [Populations (pops) with factions, and spiecies attributes](/notebooks/People/Generating%20Populations.ipynb)
 
-The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
 
 ## Working views now: 
 * `/systemmap` <- look at your system
@@ -47,7 +51,9 @@ You can test your connection with `python scripts/test_connection.py`.
 
 **NOTE:** while the game uses the graph database, the AUTH credentials are stored separately in the local `db.sqlite3`
 
-## Getting Started.
+## Making your own game
+I built this game so that I could clone it and create different versions. You should be able to clone the repo and run it on your own machine or in the cloud of your choice. Some assembly required as this application uses a lot of tools. I'm working to keep the costs of the game down to <$20 a month. 
+
 * see the docs in the **infra** folder for production deployment. 
 
 ### Building the local testing environment
@@ -67,21 +73,40 @@ conda env config vars set endpoint=<copy paste from azure portal>
 ```
 you'll need to add the variables one at a time. I don't have a script for this but the format is simple. 
 
-**These are the variables used:** 
+#### Variables for the base Django
 | Syntax | Description | Notes |
 | ----------- | ----------- | ----------- |
 | stage | (`dev` or `prod` affects how the `settings.py` file will be used.) | |
 | SECRET_KEY | django web key used for dev | |
 | ALLOWED_HOSTS | djengo settings, for specifying endpoint | it's a pipe-delimited string eg. `192.168.0.1\|mywebsite.com` |
-| endpoint | web endpoint of your gremlin graph |
+| abspath | absolute path of your project (for resolving relative path loading issues (like using jupyter)) | |
+
+#### Variables for the gremlin graph
+| Syntax | Description | Notes |
+| ----------- | ----------- | ----------- |
+| endpoint | web endpoint of your gremlin graph |  |
 | dbusername | graph login username | |
 | dbkey | copy paste from azure portal | |
-| abspath | absolute path of your project (for resolving relative path loading issues) | |
+
+#### Azure Resources (ARM etc.)
+| Syntax | Description | Notes |
+| ----------- | ----------- | ----------- |
 | subscription | azure subscription id (for building resources) | |
+
+#### Azure SQL DB
+| Syntax | Description | Notes |
+| ----------- | ----------- | ----------- |
 | sqluser | azure SQL user login (SQL used for django user/login tables) | only required if `stage` is set to `prod` |
 | sqlpwd | azure SQL pasword (SQL used for django user/login tables) | only required if `stage` is set to `prod` |
 | sqlserv | azure SQL server | only required if `stage` is set to `prod` |
 | sqlname | azure SQL name | only required if `stage` is set to `prod` |
+
+#### Azure Storage
+| Syntax | Description | Notes |
+| ----------- | ----------- | ----------- |
+| AZURE_STORAGE_KEY | From the portal | |
+| AZURE_ACCOUNT_NAME | From the portal |  |
+| AZURE_STATIC_CONTAINER | From the portal |  |
 
 I'm always importing modules from different places, so to compensate to multiple relative scopes for static resources (like city names and planet configuration.yaml files) I pass the _full path_ as an os env so that I can retrieve it.  for example on my local machine it's set to:"
 ```
