@@ -27,11 +27,11 @@ jobs:
           python -m venv venv
           source venv/bin/activate
       
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
-          apt-get update
-          apt-get install g++
-          apt-get install unixodbc-dev
+          # apt-get update
+          # apt-get install g++
+          # apt-get install unixodbc-dev
           pip install -r requirements.txt
 
         
