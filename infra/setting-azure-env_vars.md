@@ -7,6 +7,7 @@
 az webapp config show --resource-group <resource-group-name> --name <app-name> --query linuxFxVersion
 ```
 
+## Setting evnironment variables in Azure App Service
 set the vars in the App service with:
 ```
 az webapp config appsettings set --name <app-name> --resource-group <resource-group-name> --settings @infra/env-vars.json
