@@ -81,19 +81,17 @@ WSGI_APPLICATION = "web.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# if os.environ["stage"] == "prod":
-# Testing if the local db.sqllite3 will suffice
-if False:
+if os.environ["stage"] == "prod":
     DATABASES = {
         'default': {
-            'ENGINE': 'sql_server.pyodbc',
+            'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'os.environ["sqlname"]',
             'USER': 'os.environ["sqluser"]',
             'PASSWORD': 'os.environ["sqlpwd"]',
             'HOST': 'os.environ["sqlserv"]',
-            'PORT': '',
+            'PORT': '5432',
             'OPTIONS': {
-                'driver': 'ODBC Driver 13 for SQL Server',
+                'sslmode': 'require',
             },
         },
     }
