@@ -9,10 +9,8 @@ az login
 az account set --subscription $Env:subscription
 cd $Env:abspath
 
-
 # az group create -l $location -n $resourceGroupName
 # az group delete --name $resourceGroupName
-
 
 # *_parameters are in the .gitignore 
 # Single turnkey resources from template. 
