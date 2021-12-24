@@ -7,10 +7,39 @@
 az webapp config show --resource-group <resource-group-name> --name <app-name> --query linuxFxVersion
 ```
 
+## Setting evnironment variables in Azure App Service
+It is important that the environment variables in your local environment match the one you have in the cloud.  
 set the vars in the App service with:
 ```
 az webapp config appsettings set --name <app-name> --resource-group <resource-group-name> --settings @infra/env-vars.json
 ```
+That requires that you have a `env-vars.json` file, which is in the gitignore. All of the variables are updated in the root/readme.md but just for formatting, the Json looks like this:
+```
+{
+    "endpoint": "wss://foo.com:443/",
+    "dbusername": "/dbs/graphdb/colls/db",
+    "dbkey": "longstring",
+    "abspath": ".",
+    "subscription": "sub",
+    "SECRET_KEY": "key",
+    "ALLOWED_HOSTS": "site.azurewebsites.net",
+    "stage": "prod",
+    "sqluser": "admin",
+    "sqlpwd": "pwd",
+    "sqlserv": "db.database.windows.net",
+    "sqlname": "Home",
+    "AZURE_STORAGE_KEY": "key",
+    "AZURE_ACCOUNT_NAME": "blob",
+    "AZURE_STATIC_CONTAINER": "static"
+}
+```
+
+
+To get the list of local variables (to ensure that local _dev_ and cloud _prod_ match):
+```
+conda env config vars list
+```
+
 
 ## Creating the RBAC role that communicates with GitHub and manages that deployment. 
 ```
