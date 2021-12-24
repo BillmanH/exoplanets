@@ -1,9 +1,11 @@
--- create user djangologin with encrypted password 'XfRVldD9K88Hekwz';
- -- create database exologin with encoding 'utf8' owner djangologin;
+-- User Control functions (for the django login)
 
-SELECT *
-FROM pg_catalog.pg_user;
+-- CREATE user djangologin WITH password 'password';
+-- GRANT ALL PRIVILEGES ON DATABASE exo TO djangologin;
+-- DROP USER IF EXISTS djangologin;
 
+-- SELECT *
+-- FROM pg_catalog.pg_user;
 
-select *
-from pg_catalog.pg_tables;
+-- SELECT *
+-- FROM pg_catalog.pg_tables;
