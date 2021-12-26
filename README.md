@@ -11,20 +11,14 @@ A Gremlin Graph database driven strategy game. Get your civilization out into sp
 * Azure Cosmos DB (Gremlin)
 * D3.js for visualization
 
-* **Note** that I'm using Azure SQL and Azure Storage in this project, but for cost reasons I'm using the same resources from other projects. For that reason I don't have examples of building them here. The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
+* **Note** 
+* Azure Storage in this project, but for cost reasons I'm using the same resources from other projects. For that reason I don't have examples of building them here. 
+* The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
 
-
-
-## Features thus far:
+## Features:
 * `dev` and `prod` systems set up for easy switching. `dev` is the local machine and `prod` is online with `DEBUG=False`.
 * [Solar systems with stars, planets and moons](/notebooks/Analysis%20-%20planet%20summary%20stats.ipynb)
 * [Populations (pops) with factions, and spiecies attributes](/notebooks/People/Generating%20Populations.ipynb)
-
-
-## Working views now: 
-* `/systemmap` <- look at your system
-* `/new` < - create a new system
-
 
 ## Dataset
 Exoplanet data Data is gathered from here. 
@@ -57,7 +51,7 @@ I built this game so that I could clone it and create different versions. You sh
 * see the docs in the **infra** folder for production deployment. 
 
 ### Building the local testing environment
-You can run the application on your local machine without cloud resources. I'm using anaconda so you should be able to build the environemnt in any system with: 
+You can run the application on your local machine without cloud resources. I'm using anaconda so you should be able to build the environment in any system with: 
 ```
 conda env create --file=environment.yaml
 ``` 
@@ -72,6 +66,8 @@ To access the cosmos DB, you'll need to setup the environment variables.
 conda env config vars set endpoint=<copy paste from azure portal>
 ```
 you'll need to add the variables one at a time. I don't have a script for this but the format is simple. 
+
+**NOTE** I created a ps script that syncs between local and cloud. Have a look at `setting_local-env_vars.ps1` in the _infra_ folder. 
 
 #### Variables for the base Django
 | Syntax | Description | Notes |
