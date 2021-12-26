@@ -84,11 +84,11 @@ WSGI_APPLICATION = "web.wsgi.application"
 if os.environ["stage"] == "prod":
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'os.environ["sqlname"]',
-            'USER': 'os.environ["sqluser"]',
-            'PASSWORD': 'os.environ["sqlpwd"]',
-            'HOST': 'os.environ["sqlserv"]',
+            'ENGINE': "django.db.backends.postgresql",
+            'NAME': os.environ["sqlname"],
+            'USER': os.environ["sqluser"],
+            'PASSWORD': os.environ["sqlpwd"],
+            'HOST': os.environ["sqlserv"],
             'PORT': '5432',
             'OPTIONS': {
                 'sslmode': 'require',
@@ -98,11 +98,11 @@ if os.environ["stage"] == "prod":
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'os.environ["sqlname"]',
-            'USER': 'os.environ["sqluser"]',
-            'PASSWORD': 'os.environ["sqlpwd"]',
-            'HOST': 'os.environ["sqlserv"]',
+            'ENGINE': "django.db.backends.postgresql",
+            'NAME': os.environ["sqlname"],
+            'USER': os.environ["sqluser"],
+            'PASSWORD': os.environ["sqlpwd"],
+            'HOST': os.environ["sqlserv"],
             'PORT': '5432',
             'OPTIONS': {
                 'sslmode': 'require',
