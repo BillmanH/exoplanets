@@ -5,3 +5,4 @@ django-storages[azure]
 scikit-learn
 pyyaml
 pandas
+psycopg2-binary
