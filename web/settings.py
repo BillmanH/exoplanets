@@ -82,6 +82,7 @@ WSGI_APPLICATION = "web.wsgi.application"
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 if os.environ["stage"] == "prod":
+    # Postgres for local 'prod' deploy
     DATABASES = {
         'default': {
             'ENGINE': "django.db.backends.postgresql",
@@ -96,25 +97,13 @@ if os.environ["stage"] == "prod":
         },
     }
 else:
+    # Local database for local 'dev' deploy
     DATABASES = {
-        'default': {
-            'ENGINE': "django.db.backends.postgresql",
-            'NAME': os.environ["sqlname"],
-            'USER': os.environ["sqluser"],
-            'PASSWORD': os.environ["sqlpwd"],
-            'HOST': os.environ["sqlserv"],
-            'PORT': '5432',
-            'OPTIONS': {
-                'sslmode': 'require',
-            },
-        },
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-    # DATABASES = {
-    #     "default": {
-    #         "ENGINE": "django.db.backends.sqlite3",
-    #         "NAME": BASE_DIR / "db.sqlite3",
-    #     }
-    # }
 
 
 # Password validation
