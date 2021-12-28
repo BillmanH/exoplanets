@@ -1,6 +1,5 @@
 body {
     background-color: #2d2d2d;
-    color: #cfd2d6;
   }
 
 svg {
@@ -13,6 +12,7 @@ h1 {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
+
 text {
   color: whitesmoke;
   font-family: Consolas,monaco,monospace;
@@ -20,6 +20,7 @@ text {
 
 table, th, td {
   border:1px solid whitesmoke;
+  color: #cfd2d6;
   font-family: Consolas,monaco,monospace;
   border-radius: 5px;
 }
@@ -31,4 +32,9 @@ table, th, td {
 .table-hover {
   color:#4AF626;
   font-family: "DejaVu Sans Mono", monospace
+}
+
+
+.menu {
+  color: black
 }
