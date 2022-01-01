@@ -121,13 +121,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 # Static and Media Files
@@ -135,16 +131,15 @@ USE_TZ = True
 # STATIC_URL = "/static/"
 
 if stage == "prod":
+    AZURE_STORAGE_KEY = os.environ.get('AZURE_STORAGE_KEY', False)+"==" # wierd env string issue
+    AZURE_ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', False)
+    AZURE_STATIC_CONTAINER = os.environ.get('AZURE_STATIC_CONTAINER', 'static')
+    AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'  # CDN URL
     STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_STATIC_CONTAINER}/'
     STATIC_ROOT = os.path.join("app", "static")
     log_path = "prod_blog_log.log"
     DEFAULT_FILE_STORAGE = 'web.backend.AzureMediaStorage'
     STATICFILES_STORAGE  = 'web.backend.AzureStaticStorage'
-
-    AZURE_STORAGE_KEY = os.environ.get('AZURE_STORAGE_KEY', False)+"==" # wierd env string issue
-    AZURE_ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', False)
-    AZURE_STATIC_CONTAINER = os.environ.get('AZURE_STATIC_CONTAINER', 'static')
-    AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'  # CDN URL
 
 if stage == "dev":
     STATIC_URL = "/static/"
