@@ -5,7 +5,7 @@ from django.http import JsonResponse, response
 def get_planet(request):
     """
     given that user has clicked on a planet,
-    get the planit info and the info of the surrounding objects.
+    get the planet info and the info of the surrounding objects.
     """
     request = request.GET
     selected_planet = [dict(request)]

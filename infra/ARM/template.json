@@ -245,11 +245,7 @@
             "name": "[parameters('name')]",
             "type": "Microsoft.Web/sites",
             "location": "[parameters('location')]",
-            "tags": {
-                "purpose": "game",
-                "scope": "public",
-                "use": "personal"
-            },
+            "tags": "[parameters('tags')]",
             "dependsOn": [
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
             ],
@@ -307,11 +303,7 @@
             "type": "Microsoft.Web/serverfarms",
             "location": "[parameters('location')]",
             "kind": "linux",
-            "tags": {
-                "purpose": "game",
-                "scope": "public",
-                "use": "personal"
-            },
+            "tags": "[parameters('tags')]",
             "dependsOn": [],
             "properties": {
                 "name": "[parameters('hostingPlanName')]",

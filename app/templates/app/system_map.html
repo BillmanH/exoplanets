@@ -3,11 +3,19 @@
 {% include "app/head.html" %}
 
 <body>
-    <ul>
-
-    </ul>
-
+    <div class="menu">
+        <p>
+            <a class="menu" href="/new">Galaxy</a>
+        </p>
+        <p>
+            <a class="menu" href="/systemmap">Population</a>
+        </p>
+        <p>
+            <a class='menu' href='../accounts/logout/'>Logout</a>
+        </p>
+    </div>
 </body>
+
 <script>
     {% include "app/tooltips.js" %}
 
@@ -16,7 +24,7 @@
     var width = 640,
         height = 480,
         defaultNodeSize = 10
-
+    
     {% include "app/charts/nodemap.js" %}
     {% include "app/charts/solar_system.js" %}
     {% include "app/charts/planet_system.js" %}

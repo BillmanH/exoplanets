@@ -82,6 +82,7 @@ WSGI_APPLICATION = "web.wsgi.application"
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 if os.environ["stage"] == "prod":
+    # Postgres for local 'prod' deploy
     DATABASES = {
         'default': {
             'ENGINE': "django.db.backends.postgresql",
@@ -96,25 +97,13 @@ if os.environ["stage"] == "prod":
         },
     }
 else:
+    # Local database for local 'dev' deploy
     DATABASES = {
-        'default': {
-            'ENGINE': "django.db.backends.postgresql",
-            'NAME': os.environ["sqlname"],
-            'USER': os.environ["sqluser"],
-            'PASSWORD': os.environ["sqlpwd"],
-            'HOST': os.environ["sqlserv"],
-            'PORT': '5432',
-            'OPTIONS': {
-                'sslmode': 'require',
-            },
-        },
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-    # DATABASES = {
-    #     "default": {
-    #         "ENGINE": "django.db.backends.sqlite3",
-    #         "NAME": BASE_DIR / "db.sqlite3",
-    #     }
-    # }
 
 
 # Password validation
@@ -143,22 +132,22 @@ USE_TZ = True
 
 # Static and Media Files
 
-DEFAULT_FILE_STORAGE = 'web.backend.AzureMediaStorage'
-STATICFILES_STORAGE  = 'web.backend.AzureStaticStorage'
-
-AZURE_STORAGE_KEY = os.environ.get('AZURE_STORAGE_KEY', False)+"==" # wierd env string issue
-AZURE_ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', False)
-AZURE_STATIC_CONTAINER = os.environ.get('AZURE_STATIC_CONTAINER', 'static')
-AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'  # CDN URL
-
-STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_STATIC_CONTAINER}/'
-
 # STATIC_URL = "/static/"
 
 if stage == "prod":
+    STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_STATIC_CONTAINER}/'
     STATIC_ROOT = os.path.join("app", "static")
     log_path = "prod_blog_log.log"
+    DEFAULT_FILE_STORAGE = 'web.backend.AzureMediaStorage'
+    STATICFILES_STORAGE  = 'web.backend.AzureStaticStorage'
+
+    AZURE_STORAGE_KEY = os.environ.get('AZURE_STORAGE_KEY', False)+"==" # wierd env string issue
+    AZURE_ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', False)
+    AZURE_STATIC_CONTAINER = os.environ.get('AZURE_STATIC_CONTAINER', 'static')
+    AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'  # CDN URL
+
 if stage == "dev":
+    STATIC_URL = "/static/"
     STATIC_ROOT = os.path.join(os.environ["abspath"], "app", "static", "app")
     log_path = os.path.join(os.environ["abspath"], "data", "non_prod_blog_log.log")
 
