@@ -12,9 +12,7 @@ __pycache__/
 *.so
 
 # Static files that are just for Admin
-app/static/app/app/admin/*
-app/static/app/admin/js/*
-app/static/app/admin/*
+app/static/app/*
 
 # Distribution / packaging
 .Python
