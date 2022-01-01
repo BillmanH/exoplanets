@@ -1,6 +1,8 @@
 body {
     background-color: #2d2d2d;
+    color:#90EE90
   }
+
 
 svg {
   border: 1px solid white;
@@ -37,4 +39,8 @@ table, th, td {
 
 .menu {
   color: whitesmoke
+}
+
+.info {
+  color:#90EE90
 }
