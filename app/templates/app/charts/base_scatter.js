@@ -7,7 +7,6 @@ function draw_scatter(
     clickHandler=function(d){console.log("no click handler")},
     strokesFunc = function(d){return "black"}  // strokes logic can be customized
 ) {
-    var gridScale = [-100,100]
     var svg = d3.select('body').append('svg')
         .attr('width', width)
         .attr('height', height)
@@ -20,13 +19,13 @@ function draw_scatter(
             [
                 d3.min(nodes, function (d) { return d.glat; }),
                 d3.max(nodes, function (d) { return d.glat; })]
-        ).range(gridScale);
+        ).range([1,100]);
     glonScale = d3.scaleLinear()
         .domain(
             [
                 d3.min(nodes, function (d) { return d.glon; }),
                 d3.max(nodes, function (d) { return d.glon; })]
-        ).range(gridScale);
+        ).range([1,150]);
 
     var u = d3.select('#'+objid)
         .selectAll('circle')
