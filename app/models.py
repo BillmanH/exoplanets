@@ -77,10 +77,13 @@ def upload_data(client, username, data):
     return
 
 
-def get_galaxy_nodes(client, query="g.V().haslabel('system')"):
+def get_galaxy_nodes(client):
+    # TODO: Add Glat and glon to systems when created
+    # TODO: Create edge from user that connects to systems that have been discovered
+    query="g.V().haslabel('system').valueMap('hostname','objid','disc_facility','glat','glon')"
     callback = client.submitAsync(query)
     res = callback.result().all().result()
-    return res
+    return clean_nodes(res)
 
 
 def clean_node(x):

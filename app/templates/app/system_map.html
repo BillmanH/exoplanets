@@ -5,13 +5,13 @@
 <body>
     <div class="menu">
         <p>
-            <a class="menu button" href="/new">Galaxy</a>
+            <a class="menu button" href="/galaxymap">Galaxy</a>
         </p>
         <p>
             <a class="menu button" href="/systemmap">Population</a>
         </p>
         <p>
-        <a class='menu button' href='/'>Quit</a>
+            <a class='menu button' href='/'>Quit</a>
         </p>
     </div>
 </body>
@@ -24,11 +24,11 @@
     var width = 640,
         height = 480,
         defaultNodeSize = 10
-    
-    {% include "app/charts/nodemap.js" %}
+
+    {% include "app/charts/base_nodemap.js" %}
+    {% include "app/charts/base_table.js" %}
     {% include "app/charts/solar_system.js" %}
     {% include "app/charts/planet_system.js" %}
-    {% include "app/charts/table.js" %}
     {% include "app/charts/text_description.js" %}
 </script>
 
