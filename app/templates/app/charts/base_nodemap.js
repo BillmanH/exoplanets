@@ -1,4 +1,4 @@
-function dwaw_node(
+function draw_node(
     objid,
     nodes,
     links,

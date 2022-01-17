@@ -1,7 +1,29 @@
-<ul>
-    <li>text pipe of the data: {{galaxies}}}</li>>
-</ul>
+{% load static %}
+<html>
+{% include "app/head.html" %}
+
+<body>
+    <div class="menu">
+        <p>
+            <a class="menu button" href="/systemmap">System</a>
+        </p>
+        <p>
+            <a class='menu button' href='/'>Quit</a>
+        </p>
+    </div>
+</body>
 
 <script>
-    console.log({{ data }})
+    {% include "app/tooltips.js" %}
+
+    var galaxies = {{ galaxies | safe }}
+    var width = 640,
+        height = 480,
+        defaultNodeSize = 10
+
+    {% include "app/charts/base_scatter.js" %}
+    {% include "app/charts/galaxy.js" %}
+</script>
+
+<script>
 </script>

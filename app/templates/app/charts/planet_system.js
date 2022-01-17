@@ -59,7 +59,7 @@ function clickTablePlanet(d){
 
 function draw_planet(pdata){
     // console.log(pdata)
-    dwaw_node("pSystem",
+    draw_node("pSystem",
             pdata["nodes"],
             pdata["links"],
             p_objectColors,

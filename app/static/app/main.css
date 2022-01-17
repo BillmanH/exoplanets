@@ -38,9 +38,23 @@ table, th, td {
 
 
 .menu {
-  color: whitesmoke
+  color: whitesmoke;
+  padding: 5px 5px;
+  border: 1px solid white;
+}
+
+.menu.button {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  padding: 14px 25px;
+}
+
+.menu.button:hover {
+  background-color: whitesmoke;
+  color: black
 }
 
 .info {
-  color:#90EE90
+  color:#90EE90;
 }

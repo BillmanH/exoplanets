@@ -37,7 +37,7 @@ function click_planet(d){
     });
 }
 
-ssystem = dwaw_node(
+ssystem = draw_node(
     "sSystem",
     solar_system['nodes'],
     solar_system['edges'],

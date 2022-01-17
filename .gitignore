@@ -11,6 +11,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Static files that are just for Admin
+app/static/app/*
+
 # Distribution / packaging
 .Python
 build/
@@ -141,3 +144,4 @@ data/examplesystem.json
 
 # ARM Template Parameter Files
 infra/ARM/*parameters.json
+app/static/app/app/admin/img/icon-clock.svg
