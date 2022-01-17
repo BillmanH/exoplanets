@@ -1,8 +1,8 @@
 pip
-gremlinpython
+gremlinpython==3.5.1
 django>=2.2
 django-storages[azure]
 scikit-learn
 pyyaml
 pandas
-psycopg2-binary
+psycopg2-binaryp==2.9.2
