@@ -15,5 +15,5 @@ dependencies:
   - pip:
     - nb_black
     - gremlinpython==3.5.1
-    - psycopg2-binary==2.9.2
+    - psycopg2-binary
 prefix: C:\Users\william.harding\Anaconda3\envs\exoplanets
