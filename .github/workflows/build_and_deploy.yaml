@@ -29,9 +29,6 @@ jobs:
       
       - name: Install Dependencies
         run: |
-          # apt-get update
-          # apt-get install g++
-          # apt-get install unixodbc-dev
           pip install -r requirements.txt
 
         
