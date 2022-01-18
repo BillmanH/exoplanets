@@ -15,7 +15,11 @@ Get the objects orbiting an object.
 ```
 g.V().has('objid','8308379553174').in('orbits').valueMap()
 ```
+### Population Queries
+Get some data for pops
+```
 
+```
 
 ## NUCLEAR delete and drop functions, use with caution.
 Drop an account, and everything asociated with it. Everything for a user has the 'username' property.  
