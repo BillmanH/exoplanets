@@ -3,6 +3,7 @@ import os
 import pickle
 
 import yaml
+import numpy as np
 from django.db import models
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
@@ -14,6 +15,7 @@ from .GraphOperations import account
 # my Gremlin Model is like Django models in name only.
 # I'm creating a client object and connecting it to the 
 
+notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
 
 def get_client():
     '''
@@ -53,12 +55,12 @@ def create_vertex(node, username):
     properties = [k for k in node.keys()]
     for k in properties:
         # try to convert objects that aren't ids
-        if k not in ['id','objid']:
+        if k not in notFloats:
             #first try to upload it as a float.
             try:
-                float(node[k])
-                substr = f".property('{k}',{cs(node[k])})"
-            except ValueError:
+                rounded = np.round_(node[k],4)
+                substr = f".property('{k}',{rounded})"
+            except:
                 substr = f".property('{k}','{cs(node[k])}')"
         else:
             substr = f".property('{k}','{cs(node[k])}')"
