@@ -52,11 +52,15 @@ def create_vertex(node, username):
     gaddv = f"g.addV('{node['label']}')"
     properties = [k for k in node.keys()]
     for k in properties:
-        #first try to upload it as a float.
-        try:
-            float(node[k])
-            substr = f".property('{k}',{cs(node[k])})"
-        except ValueError:
+        # try to convert objects that aren't ids
+        if k not in ['id','objid']:
+            #first try to upload it as a float.
+            try:
+                float(node[k])
+                substr = f".property('{k}',{cs(node[k])})"
+            except ValueError:
+                substr = f".property('{k}','{cs(node[k])}')"
+        else:
             substr = f".property('{k}','{cs(node[k])}')"
         gaddv += substr
     gaddv += f".property('username','{username}')"
