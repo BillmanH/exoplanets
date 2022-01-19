@@ -4,6 +4,9 @@
 
 <body>
     <div class="menu">
+        <div>
+            {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+        </div>
         <p>
             <a class="menu button" href="/systemmap">System</a>
         </p>
