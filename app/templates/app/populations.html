@@ -1,0 +1,20 @@
+{% load static %}
+<html>
+{% include "app/head.html" %}
+
+<body>
+    <div>
+        {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+    </div>
+    <div class="menu">
+        <p>
+            <a class="menu button" href="/galaxymap">Galaxy</a>
+        </p>
+        <p>
+            <a class="menu button" href="/systemmap">Population</a>
+        </p>
+        <p>
+            <a class='menu button' href='/'>Main Menu</a>
+        </p>
+    </div>
+</body>

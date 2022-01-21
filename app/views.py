@@ -106,3 +106,11 @@ def galaxy_map(request):
     context = {"galaxies": res}
     c.close()
     return render(request, "app/galaxy_map.html", context)
+
+@login_required
+def populations_view(request):
+    c = get_client()
+    res = get_galaxy_nodes(c)
+    context = {"pops": res}
+    c.close()
+    return render(request, "app/populations.html", context)
