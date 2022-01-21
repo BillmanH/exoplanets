@@ -4,8 +4,16 @@ function draw_scatter(
     objectColors, // dict of types and colors based on class
     height,
     width,
-    clickHandler=function(d){console.log("no click handler")},
-    strokesFunc = function(d){return "black"}  // strokes logic can be customized
+    // need to know the value to use for X and Y in the scale AND the .attr('cx')
+    xy = {"x":"x",
+        "y":"y"},
+    // optional customization of some functions. 
+    // This would be specified by the js script that calls `draw_scatter()`
+    circleFill = function (d) { return objectColors[d.disc_facility] },
+    circleSize = function (d) { return 5 },
+    strokeColor = function (d) { return "black" },
+    circleClass = function (d) { return "circle" },
+    clickHandler = function (d) { console.log("no click handler") },
 ) {
     var svg = d3.select('body').append('svg')
         .attr('width', width)
@@ -17,32 +25,32 @@ function draw_scatter(
     glatScale = d3.scaleLinear()
         .domain(
             [
-                d3.min(nodes, function (d) { return d.glat; }),
-                d3.max(nodes, function (d) { return d.glat; })]
-        ).range([1,100]);
+                d3.min(nodes, function (d) { return d[xy["x"]]; }),
+                d3.max(nodes, function (d) { return d[xy["x"]]; })]
+        ).range([1, 100]);
     glonScale = d3.scaleLinear()
         .domain(
             [
-                d3.min(nodes, function (d) { return d.glon; }),
-                d3.max(nodes, function (d) { return d.glon; })]
-        ).range([1,150]);
+                d3.min(nodes, function (d) { return d[xy["y"]]; }),
+                d3.max(nodes, function (d) { return d[xy["y"]]; })]
+        ).range([1, 150]);
 
-    var u = d3.select('#'+objid)
+    var u = d3.select('#' + objid)
         .selectAll('circle')
         .data(nodes)
 
-        u.enter()
+    u.enter()
         .append('circle')
-        .attr('r', function (d) { return 5 })
-        .style("fill", function (d) { return objectColors[d.disc_facility] })
-        .attr("stroke",  function (d) {return "black" })
-        .attr('class', function (d) { return "system" })
+        .attr('r', circleSize)
+        .style("fill", circleFill)
+        .attr("stroke", strokeColor)
+        .attr('class', circleClass)
         .merge(u)
         .attr('cx', function (d) {
-            return glatScale(d.glat)
+            return glatScale(d[xy["x"]])
         })
         .attr('cy', function (d) {
-            return glonScale(d.glon)
+            return glonScale(d[xy["x"]])
         })
         .on("mouseover", (event, d) => {
             return tooltip.style("visibility", "visible").html(dictToHtml(d));
@@ -54,6 +62,7 @@ function draw_scatter(
             d3.pointer(event)
             return tooltip.style("visibility", "hidden");
         })
+        .on("click", (event, d) => {clickHandler(d)})
 
     return svg
 }
