@@ -127,7 +127,7 @@ def get_system(client, username):
 
 def get_factions(client, username):
     nodes_query = (
-        f"g.V().has('username',{username}).has('label','faction').valuemap()"
+        f"g.V().has('username','{username}').has('label','faction').valuemap()"
     )
     node_callback = client.submitAsync(nodes_query)
     nodes = node_callback.result().all().result()

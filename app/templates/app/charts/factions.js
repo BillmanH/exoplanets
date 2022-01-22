@@ -1,8 +1,12 @@
+var faction_table_lables = [{"label":"Faction #","value":"faction_no"}, 
+                            {"label":"Name","value":"name"},
+                            {"label":"Type","value":"objtype"}
+                        ]
 
-Scater_Factions = draw_table(
-    "factions01",
-    data,
-    titles,
-    xy = {"x":"glat",
-        "y":"glon"}
+
+draw_table(
+    "planetsTable",
+    factions["nodes"],
+    faction_table_lables,  
+    tableClickHandler = function(d){console.log(d)}
 )
