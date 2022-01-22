@@ -1,7 +1,6 @@
 function draw_scatter(
     objid,
     nodes,
-    objectColors, // dict of types and colors based on class
     height,
     width,
     // need to know the value to use for X and Y in the scale AND the .attr('cx')
@@ -9,7 +8,7 @@ function draw_scatter(
         "y":"y"},
     // optional customization of some functions. 
     // This would be specified by the js script that calls `draw_scatter()`
-    circleFill = function (d) { return objectColors[d.disc_facility] },
+    circleFill = function (d) { return "white" },
     circleSize = function (d) { return 5 },
     strokeColor = function (d) { return "black" },
     circleClass = function (d) { return "circle" },
@@ -50,7 +49,7 @@ function draw_scatter(
             return glatScale(d[xy["x"]])
         })
         .attr('cy', function (d) {
-            return glonScale(d[xy["x"]])
+            return glonScale(d[xy["y"]])
         })
         .on("mouseover", (event, d) => {
             return tooltip.style("visibility", "visible").html(dictToHtml(d));

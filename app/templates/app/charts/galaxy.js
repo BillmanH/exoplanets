@@ -62,18 +62,13 @@ var g_objectColors = {
 
 
 
-function g_objectStrokes (d) { 
-    var objectStrokes = {
-        "True":"#6b93d6",
-        "False":"black"
-    }
-    return objectStrokes["true"] 
-}
-
 ggalaxy = draw_scatter(
     "ggalaxy",
     galaxies,
     g_objectColors,
     height,
-    width
+    width,
+    xy = {"x":"glat",
+        "y":"glon"},
+    circleFill = function (d) { return g_objectColors[d.disc_facility] }
 )
