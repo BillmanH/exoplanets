@@ -1,10 +1,8 @@
 
-Scater_Factions = draw_scatter(
-    "ggalaxy",
-    galaxies,
-    g_objectColors,
-    height,
-    width,
+Scater_Factions = draw_table(
+    "factions01",
+    data,
+    titles,
     xy = {"x":"glat",
         "y":"glon"}
 )

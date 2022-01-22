@@ -23,11 +23,11 @@
     {% include "app/tooltips.js" %}
 
     var factions = {{ factions | safe }}
-    console.log(solar_system['edges'])
+    console.log(factions)
     var width = 640,
         height = 480,
         defaultNodeSize = 10
 
-    {% include "app/charts/base_scatter.js" %}
-    {% include "app/charts/base_scatter.js" %}
+    {% include "app/charts/base_table.js" %}
+    {% include "app/charts/factions.js" %}
 </script>

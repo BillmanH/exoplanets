@@ -15,6 +15,9 @@ from .GraphOperations import account
 # my Gremlin Model is like Django models in name only.
 # I'm creating a client object and connecting it to the 
 
+# NOTE: in order not to delay load times, try making small queries to populate the page first, 
+# then handle additional queries in `axajviews`. This will be better for the clint in the long run. 
+
 notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
 
 def get_client():
@@ -119,4 +122,14 @@ def get_system(client, username):
     edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
     system = {"nodes": clean_nodes(nodes), "edges": edges}
 
+    return system
+
+
+def get_factions(client, username):
+    nodes_query = (
+        f"g.V().has('username',{username}).has('label','faction').valuemap()"
+    )
+    node_callback = client.submitAsync(nodes_query)
+    nodes = node_callback.result().all().result()
+    system = {"nodes": clean_nodes(nodes), "edges": []}
     return system
