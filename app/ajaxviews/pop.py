@@ -23,3 +23,20 @@ def get_pop_text(request):
         response["factions"] = resfaction
     return JsonResponse(response)
 
+def get_faction_details(request):
+    """
+    given that user has clicked on a faction (population),
+    get the pop info for the pops in that faction.
+    """
+    response = {}
+    request = dict(request.GET)
+    queryplanet = f"g.V().hasLabel('faction').has('objid','{request.get('objid','')[0]}').in().valueMap()"
+    c = get_client()
+    respops = clean_nodes(run_query(c, queryplanet))
+    pops = [i for i in respops if i.get("objtype")=='pop']
+    # if faction has people, get the factions (only the ones found on that planet)
+    if len(pops)>0:
+        response["pops"] = pops
+        factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
+        c.close()
+    return JsonResponse(response)

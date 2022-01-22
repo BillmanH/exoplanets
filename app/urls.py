@@ -12,5 +12,6 @@ urlpatterns = [
     path("systemmap", views.system_map, name="system_map"),
     path("populations", views.populations_view, name="populations"),
     path("ajax/planet", planet.get_planet, name="get_planet"),
-    path("ajax/planet-details", planet.get_planet_details, name="get_planet_details")
+    path("ajax/planet-details", planet.get_planet_details, name="get_planet_details"),
+    path("ajax/faction-details", planet.get_faction_details, name="get_faction-details")
 ]
