@@ -26,13 +26,13 @@ function draw_scatter(
             [
                 d3.min(nodes, function (d) { return d[xy["x"]]; }),
                 d3.max(nodes, function (d) { return d[xy["x"]]; })]
-        ).range([1, 100]);
+        ).range([10, 100]);
     glonScale = d3.scaleLinear()
         .domain(
             [
                 d3.min(nodes, function (d) { return d[xy["y"]]; }),
                 d3.max(nodes, function (d) { return d[xy["y"]]; })]
-        ).range([1, 150]);
+        ).range([10, 150]);
 
     var u = d3.select('#' + objid)
         .selectAll('circle')

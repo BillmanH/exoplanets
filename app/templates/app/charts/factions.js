@@ -44,6 +44,7 @@ function clickTableFaction(d) {
         dataType: 'json',
         beforeSend: function () {
             d3.selectAll('#peopleTable').remove()
+            d3.selectAll('#peopleScatter').remove()
         },
         success: function (data) {
             console.log(data)
@@ -52,6 +53,14 @@ function clickTableFaction(d) {
                     "peopleTable",
                     data['pops'],
                     pop_table_lables
+                )
+                draw_scatter(
+                    "peopleScatter",
+                    data['pops'],
+                    height,
+                    width,
+                    xy = {"x":"aggression",
+                        "y":"conformity"}
                 )
             }
         }
