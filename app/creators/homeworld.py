@@ -63,11 +63,10 @@ def get_n_factions(n_steps, conf):
 
 
 def make_factions(kmeans):
-    factionID = maths.uuid(n=13)
     factions = [
         {
             "name": language.make_word(2),
-            "objid": factionID,
+            "objid": maths.uuid(n=13),
             "label": "faction",
             "faction_no":i
         }
