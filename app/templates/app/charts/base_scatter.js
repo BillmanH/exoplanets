@@ -4,7 +4,7 @@ function draw_scatter(
     height,
     width,
     xLabel='X axis',
-    yLabel='y axis',
+    yLabel='Y axis',
     // need to know the value to use for X and Y in the scale AND the .attr('cx')
     xy = {"x":"x",
         "y":"y"},
@@ -38,7 +38,7 @@ function draw_scatter(
         .attr('x', innerWidth / 2)
         .attr('y', 100)
         .text(xLabel);
-        
+
     yAxisG.append('text')
         .attr('class', 'axis-label')
         .attr('x', -innerHeight / 2)

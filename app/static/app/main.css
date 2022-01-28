@@ -58,3 +58,7 @@ table, th, td {
 .info {
   color:#90EE90;
 }
+
+.axis-label {
+  color: whitesmoke;
+}
