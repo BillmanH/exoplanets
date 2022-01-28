@@ -62,6 +62,14 @@ function clickTableFaction(d) {
                     xy = {"x":"aggression",
                         "y":"conformity"}
                 )
+                draw_scatter(
+                    "peopleScatter",
+                    data['pops'],
+                    height,
+                    width,
+                    xy = {"x":"constitution",
+                        "y":"faction_loyalty"}
+                )
             }
         }
     });
