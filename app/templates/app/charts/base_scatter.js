@@ -3,6 +3,8 @@ function draw_scatter(
     nodes,
     height,
     width,
+    xLabel='X axis',
+    yLabel='y axis',
     // need to know the value to use for X and Y in the scale AND the .attr('cx')
     xy = {"x":"x",
         "y":"y"},
@@ -14,12 +16,36 @@ function draw_scatter(
     circleClass = function (d) { return "circle" },
     clickHandler = function (d) { console.log("no click handler") },
 ) {
+    const margin = { left: 120, right: 30, top: 20, bottom: 120 };
+
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+
     var svg = d3.select('body').append('svg')
         .attr('width', width)
         .attr('height', height)
         .classed('map', true)
         .attr("id", objid);
 
+    var g = svg.append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
+    var xAxisG = g.append('g')
+        .attr('transform', `translate(0, ${innerHeight})`);
+    var yAxisG = g.append('g');
+
+    xAxisG.append('text')
+        .attr('class', 'axis-label')
+        .attr('x', innerWidth / 2)
+        .attr('y', 100)
+        .text(xLabel);
+        
+    yAxisG.append('text')
+        .attr('class', 'axis-label')
+        .attr('x', -innerHeight / 2)
+        .attr('y', -60)
+        .attr('transform', `rotate(-90)`)
+        .style('text-anchor', 'middle')
+        .text(yLabel);
 
     glatScale = d3.scaleLinear()
         .domain(
