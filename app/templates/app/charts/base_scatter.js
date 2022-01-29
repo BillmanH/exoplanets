@@ -52,25 +52,24 @@ function draw_scatter(
             [
                 d3.min(nodes, function (d) { return d[xy["x"]]; }),
                 d3.max(nodes, function (d) { return d[xy["x"]]; })]
-        ).range([10, 100]);
+        ).range([0, innerWidth]);
     glonScale = d3.scaleLinear()
         .domain(
             [
                 d3.min(nodes, function (d) { return d[xy["y"]]; }),
                 d3.max(nodes, function (d) { return d[xy["y"]]; })]
-        ).range([10, 150]);
+        ).range([0, innerHeight]);
 
-    var u = d3.select('#' + objid)
-        .selectAll('circle')
+    var u = g.selectAll('circle')
         .data(nodes)
 
+    console.log(xy)
     u.enter()
         .append('circle')
         .attr('r', circleSize)
         .style("fill", circleFill)
         .attr("stroke", strokeColor)
         .attr('class', circleClass)
-        .merge(u)
         .attr('cx', function (d) {
             return glatScale(d[xy["x"]])
         })

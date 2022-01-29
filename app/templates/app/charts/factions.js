@@ -15,7 +15,7 @@ var pop_table_lables = [{"label":"Name","value":"name"},
 $.ajax({
     url: '/ajax/pops-all',
     type: 'get',
-    data: [],
+    data: {"username":"{{ user.username | safe }}"},
     dataType: 'json',
     beforeSend: function () {
         d3.selectAll('#peopleTable').remove()
@@ -28,11 +28,16 @@ $.ajax({
                 data["pops"],
                 height,
                 width,
+                xLabel='conformity',
+                yLabel='aggression',
                 xy = {"x":"conformity",
                     "y":"aggression"} 
             )
             }
-        }
+        },
+    error: function (jqXHR, status, err) {
+        console.log(status,err);
+        },
     });
 
 function clickTableFaction(d) {
@@ -59,16 +64,20 @@ function clickTableFaction(d) {
                     data['pops'],
                     height,
                     width,
-                    xy = {"x":"aggression",
-                        "y":"conformity"}
+                    xLabel='conformity',
+                    yLabel='aggression',
+                    xy = {"x":"conformity",
+                        "y":"aggression"}
                 )
                 draw_scatter(
                     "peopleScatter",
                     data['pops'],
                     height,
                     width,
-                    xy = {"x":"constitution",
-                        "y":"faction_loyalty"}
+                    xLabel='faction_loyalty',
+                    yLabel='constitution',
+                    xy = {"x":"faction_loyalty",
+                        "y":"constitution"}
                 )
             }
         }

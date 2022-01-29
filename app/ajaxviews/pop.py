@@ -47,7 +47,7 @@ def get_all_pops(request):
     """
     response = {}
     request = dict(request.GET)
-    queryplanet = f"g.V().hasLabel('faction').has('objid','{request.get('objid','')[0]}').in().valueMap()"
+    queryplanet = f"g.V().hasLabel('pop').has('username','{request.get('username','')[0]}').valueMap()"
     c = get_client()
     respops = clean_nodes(run_query(c, queryplanet))
     pops = [i for i in respops if i.get("objtype")=='pop']

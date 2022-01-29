@@ -67,7 +67,9 @@ ggalaxy = draw_scatter(
     galaxies,
     height,
     width,
+    xLabel='galactic longitude',
+    yLabel='galactic latitude',
     xy = {"x":"glat",
-        "y":"glon"},
+    "y":"glon"},
     circleFill = function (d) { return g_objectColors[d.disc_facility] }
 )
