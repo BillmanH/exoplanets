@@ -3,12 +3,15 @@
 {% include "app/head.html" %}
 
 <body>
+    <div>
+        {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+    </div>
     <div class="menu">
         <p>
             <a class="menu button" href="/galaxymap">Galaxy</a>
         </p>
         <p>
-            <a class="menu button" href="/systemmap">Population</a>
+            <a class="menu button" href="/populations">Population</a>
         </p>
         <p>
             <a class='menu button' href='/'>Quit</a>

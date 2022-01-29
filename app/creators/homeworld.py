@@ -53,7 +53,7 @@ def vary_pops(species):
 
 def get_pop_name(df, faction_no):
     # the pop name is the faction name plus an extra syllable.
-    name = df[df["id"] == faction_no]["name"].values[0] + " " + language.make_word(1)
+    name = df[df["faction_no"] == faction_no]["name"].values[0] + " " + language.make_word(1)
     return name
 
 
@@ -65,10 +65,10 @@ def get_n_factions(n_steps, conf):
 def make_factions(kmeans):
     factions = [
         {
-            "id": i,
             "name": language.make_word(2),
             "objid": maths.uuid(n=13),
             "label": "faction",
+            "faction_no":i
         }
         for i in range(kmeans.n_clusters)
     ]
@@ -76,7 +76,7 @@ def make_factions(kmeans):
 
 
 def get_faction_objid(df, faction_no):
-    objid = df[df["id"] == faction_no]["objid"].values[0]
+    objid = df[df["faction_no"] == faction_no]["objid"].values[0]
     return objid
 
 

@@ -1,0 +1,34 @@
+{% load static %}
+<html>
+{% include "app/head.html" %}
+
+<body>
+    <div>
+        {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+    </div>
+    <div class="menu">
+        <p>
+            <a class="menu button" href="/galaxymap">Galaxy</a>
+        </p>
+        <p>
+            <a class="menu button" href="/systemmap">System</a>
+        </p>
+        <p>
+            <a class='menu button' href='/'>Main Menu</a>
+        </p>
+    </div>
+</body>
+
+<script>
+    {% include "app/tooltips.js" %}
+
+    var factions = {{ factions | safe }}
+    console.log(factions)
+    var width = 640,
+        height = 480,
+        defaultNodeSize = 10
+
+    {% include "app/charts/base_table.js" %}
+    {% include "app/charts/base_scatter.js" %}
+    {% include "app/charts/factions.js" %}
+</script>

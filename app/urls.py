@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from .ajaxviews import planet
+from .ajaxviews import planet, pop
 
 urlpatterns = [
     path("", views.index),
@@ -10,6 +10,9 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("galaxymap", views.galaxy_map, name="galaxy_map"),
     path("systemmap", views.system_map, name="system_map"),
+    path("populations", views.populations_view, name="populations"),
     path("ajax/planet", planet.get_planet, name="get_planet"),
-    path("ajax/planet-details", planet.get_planet_details, name="get_planet_details")
+    path("ajax/planet-details", planet.get_planet_details, name="get_planet_details"),
+    path("ajax/faction-details", pop.get_faction_details, name="get_faction_details"),
+    path("ajax/pops-all", pop.get_all_pops, name="get_all_pops")
 ]

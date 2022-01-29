@@ -3,6 +3,7 @@ import os
 import pickle
 
 import yaml
+import numpy as np
 from django.db import models
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
@@ -14,6 +15,10 @@ from .GraphOperations import account
 # my Gremlin Model is like Django models in name only.
 # I'm creating a client object and connecting it to the 
 
+# NOTE: in order not to delay load times, try making small queries to populate the page first, 
+# then handle additional queries in `axajviews`. This will be better for the clint in the long run. 
+
+notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
 
 def get_client():
     '''
@@ -52,7 +57,16 @@ def create_vertex(node, username):
     gaddv = f"g.addV('{node['label']}')"
     properties = [k for k in node.keys()]
     for k in properties:
-        substr = f".property('{k}','{cs(node[k])}')"
+        # try to convert objects that aren't ids
+        if k not in notFloats:
+            #first try to upload it as a float.
+            try:
+                rounded = np.round_(node[k],4)
+                substr = f".property('{k}',{rounded})"
+            except:
+                substr = f".property('{k}','{cs(node[k])}')"
+        else:
+            substr = f".property('{k}','{cs(node[k])}')"
         gaddv += substr
     gaddv += f".property('username','{username}')"
     gaddv += f".property('objtype','{node['label']}')"
@@ -108,4 +122,14 @@ def get_system(client, username):
     edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
     system = {"nodes": clean_nodes(nodes), "edges": edges}
 
+    return system
+
+
+def get_factions(client, username):
+    nodes_query = (
+        f"g.V().has('username','{username}').has('label','faction').valuemap()"
+    )
+    node_callback = client.submitAsync(nodes_query)
+    nodes = node_callback.result().all().result()
+    system = {"nodes": clean_nodes(nodes), "edges": []}
     return system

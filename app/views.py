@@ -58,6 +58,8 @@ def explore(request):
 
 @login_required
 def new_universe(request):
+    # TODO: too many requests here. Makes the load time longer. 
+    # Make this into a serires of loading ajax functions to give better feedback to user. 
     c = get_client()
     context = {}
     form = HomeSystemForm(request.POST or None)
@@ -106,3 +108,11 @@ def galaxy_map(request):
     context = {"galaxies": res}
     c.close()
     return render(request, "app/galaxy_map.html", context)
+
+@login_required
+def populations_view(request):
+    c = get_client()
+    res = get_factions(c, request.user.username)
+    c.close()
+    context = {"factions": res}
+    return render(request, "app/populations.html", context)
