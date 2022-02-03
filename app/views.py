@@ -84,11 +84,22 @@ def new_universe(request):
         data = {"nodes": universe_nodes + homeworld_nodes, "edges": universe_edges + homeworld_edges}
         upload_data(c, username, data)
         # load the galaxy map, thus starting the game
-        return redirect("system_map")
+        return redirect("genesis")
     if request.method == "GET":
         form = HomeSystemForm()
         context["form"] = form
     c.close()
+    return render(request, "app/creation/new_universe.html", context)
+
+@login_required
+def genesis(request):
+    c = get_client()
+    context = {}
+    form = HomeSystemForm(request.GET or None)
+    username = request.user.username
+    universe_nodes, universe_edges = universe.build_homeSystem(request.GET, username)
+    data = {"nodes": universe_nodes + homeworld_nodes, "edges": universe_edges + homeworld_edges}
+    upload_data(c, username, data)
     return render(request, "app/creation/new_universe.html", context)
 
 
