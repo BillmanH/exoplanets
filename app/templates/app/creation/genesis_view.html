@@ -8,5 +8,23 @@
 
 <body>
     <h1>In the beginning there was nothing</h1>
-
+    This process can take some time. Sit back and watch the universe expand.
+    </br>Or you can quit back to the main menu, but you will need to start the creation process again. 
+    <p>
+        <a class='menu button' href='/'>Quit</a>
+    </p>
 <body>
+
+    <script>
+        {% include "app/tooltips.js" %}
+    
+        var solar_system = {{ solar_system | safe }}
+        console.log(solar_system['edges'])
+        var width = 640,
+            height = 480,
+            defaultNodeSize = 10
+    
+        {% include "app/charts/base_nodemap.js" %}
+        {% include "app/charts/solar_system.js" %}
+    </script>
+    
