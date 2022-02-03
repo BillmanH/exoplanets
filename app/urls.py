@@ -4,10 +4,10 @@ from . import views
 from .ajaxviews import planet, pop
 
 urlpatterns = [
-    path("", views.index),
+    path("", views.index, name="index"),
     path("explore", views.explore),
     path("new", views.new_universe),
-    path("", views.index, name="index"),
+    path("genesis_view", views.genesis, name="genesis"),
     path("galaxymap", views.galaxy_map, name="galaxy_map"),
     path("systemmap", views.system_map, name="system_map"),
     path("populations", views.populations_view, name="populations"),

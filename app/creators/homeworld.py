@@ -25,6 +25,7 @@ def get_faction_loyalty(x,pops,factions):
     return compare_values(starting_attributes,g1,f2)
 
 def build_species(data):
+    # TODO: Replace attributes with something more meaninful, like what kinds of resources they consume
     species = {}
     for attr in [
         "conformity",
