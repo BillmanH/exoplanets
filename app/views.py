@@ -44,19 +44,6 @@ def index(request):
 
 
 @login_required
-def explore(request):
-    c = get_client()
-    form = QueryForm(request.POST or None)
-    if request.method == "POST" and form.is_valid():
-        form = HomeSystemForm(request.POST)
-        # TODO: Add query form
-        res = run_query(c, query="g.V().count()")
-    context = {"node_cnt": res}
-    c.close()
-    return render(request, "app/index.html", context)
-
-
-@login_required
 def new_universe(request):
     # TODO: too many requests here. Makes the load time longer. 
     # Make this into a serires of loading ajax functions to give better feedback to user. 
@@ -75,6 +62,7 @@ def new_universe(request):
         data = {"nodes": universe_nodes, "edges": universe_edges}
         upload_data(c, username, data)
         # load the galaxy map, thus starting the game
+        c.close()
         return redirect("genesis")
         
         # # Create the homeworld and it's people. 

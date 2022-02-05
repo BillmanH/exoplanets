@@ -5,7 +5,6 @@ from .ajaxviews import planet, pop
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("explore", views.explore),
     path("new", views.new_universe),
     path("genesis_view", views.genesis, name="genesis"),
     path("galaxymap", views.galaxy_map, name="galaxy_map"),
