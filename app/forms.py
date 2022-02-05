@@ -27,10 +27,6 @@ class SignUpForm(UserCreationForm):
         )
 
 
-class QueryForm(forms.Form):
-    queryField = forms.CharField(label="your query", max_length=1000)
-
-
 class HomeSystemForm(forms.Form):
     planet_name = forms.CharField(label="Planet Name", max_length=100)
     num_planets = forms.IntegerField(

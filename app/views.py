@@ -7,7 +7,7 @@ from app.models import *
 from .creators import universe, homeworld
 
 
-from .forms import HomeSystemForm, SignUpForm, QueryForm
+from .forms import HomeSystemForm, SignUpForm
 
 
 # managing the connection (sync)
