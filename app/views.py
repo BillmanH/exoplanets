@@ -65,6 +65,7 @@ def new_universe(request):
             "node2": requestedSystem["objid"],
             "label": "requestedSystem",
         }
+        universe_edges.append(formEdge)
         # Upload all of that data that was created.
         data = {"nodes": universe_nodes, "edges": universe_edges}
         upload_data(c, username, data)
