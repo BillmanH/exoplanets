@@ -11,15 +11,26 @@ from gremlin_python.driver.protocol import GremlinServerError
 #Local modules:
 from .GraphOperations import account
 
+
+# ASSERTIONS: 
+
+# Nodes must have expected values
+expectedProperties = ['label','objid','name']
+
+# Don't convert these to floats
+notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
+
+
+class GraphFormatError(Exception):
+    """graph error message for cosmos/gremlin checks"""
+    pass
+
 #%%
 # my Gremlin Model is like Django models in name only.
 # I'm creating a client object and connecting it to the 
 
 # NOTE: in order not to delay load times, try making small queries to populate the page first, 
 # then handle additional queries in `axajviews`. This will be better for the clint in the long run. 
-
-notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
-
 def get_client():
     '''
     c = get_client()
@@ -54,6 +65,12 @@ def cs(s):
 
 
 def create_vertex(node, username):
+    if (len(
+        [i for i in expectedProperties 
+            if i in list(node.keys())]
+            )>len(expectedProperties)
+        ):
+        raise GraphFormatError
     gaddv = f"g.addV('{node['label']}')"
     properties = [k for k in node.keys()]
     for k in properties:
