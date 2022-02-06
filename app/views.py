@@ -34,19 +34,16 @@ def signup(request):
 def index(request):
     c = get_client()
     all_count = run_query(c, query="g.V().count()")
-    count_accounts = run_query(c,query="g.V().hasLabel('account').count()")
-    context = {
-        "all_count": all_count,
-        "count_accounts":count_accounts
-    }
+    count_accounts = run_query(c, query="g.V().hasLabel('account').count()")
+    context = {"all_count": all_count, "count_accounts": count_accounts}
     c.close()
     return render(request, "app/index.html", context)
 
 
 @login_required
 def new_universe(request):
-    # TODO: too many requests here. Makes the load time longer. 
-    # Make this into a serires of loading ajax functions to give better feedback to user. 
+    # TODO: too many requests here. Makes the load time longer.
+    # Make this into a serires of loading ajax functions to give better feedback to user.
     c = get_client()
     context = {}
     form = HomeSystemForm(request.POST or None)
@@ -57,15 +54,25 @@ def new_universe(request):
         # Delete the old sytem
         account.drop_account(c, username)
         # Create the new system
-        universe_nodes, universe_edges = universe.build_homeSystem(request.POST, username)
-        # Upload all of that data that was created. 
+        universe_nodes, universe_edges = universe.build_homeSystem(
+            request.POST, username
+        )
+        # Adding the form to the graph
+        requestedSystem = form.formToNode(request.POST)
+        universe_nodes.append(requestedSystem)
+        formEdge = {
+            "node1": [u for u in universe_nodes if u["label"] == "account"][0]["objid"],
+            "node2": requestedSystem["objid"],
+            "label": "requestedSystem",
+        }
+        # Upload all of that data that was created.
         data = {"nodes": universe_nodes, "edges": universe_edges}
         upload_data(c, username, data)
-        # load the galaxy map, thus starting the game
+        # load the galaxy map, thus sta rting the game
         c.close()
         return redirect("genesis")
-        
-        # # Create the homeworld and it's people. 
+
+        # # Create the homeworld and it's people.
         # homeworld_nodes, homeworld_edges = homeworld.build_people(request.POST)
         # # Attach the people to the homeworld
         # homeworld_edges = homeworld_edges + homeworld.attach_people_to_world(homeworld_nodes,universe_nodes)
@@ -75,12 +82,12 @@ def new_universe(request):
         # # Get the pop desire for those objectives
         # homeworld_edges = homeworld_edges + homeworld.get_pop_desires([p for p in homeworld_nodes if p['label']=='pop'],objectives)
 
-
     if request.method == "GET":
         form = HomeSystemForm()
         context["form"] = form
     c.close()
     return render(request, "app/creation/new_universe.html", context)
+
 
 @login_required
 def genesis(request):
@@ -107,6 +114,7 @@ def galaxy_map(request):
     context = {"galaxies": res}
     c.close()
     return render(request, "app/galaxy_map.html", context)
+
 
 @login_required
 def populations_view(request):
