@@ -1,10 +1,9 @@
-import numpy as np
 import yaml
 from numpy import random as r
-from datetime import datetime
 
 from . import maths
 from . import language
+from . import account
 
 pdata = yaml.safe_load(open('app/creators/specs/planet.yaml'))["planet_types"]
 mdata = yaml.safe_load(open('app/creators/specs/moon.yaml'))["moon_types"]
@@ -67,12 +66,8 @@ def make_moon(t, planets):
 
 
 def build_homeSystem(data, username):
-    accountid = maths.uuid(n=13)
-    user = {
-        "label": "account",
-        "created": datetime.now().strftime("%d-%m-%Y-%H-%M-%S"),
-        "objid": accountid,
-    }
+    user = account.create_account(username)
+
     systemid = maths.uuid(n=13)
     system = {
         "name": language.make_word(maths.rnd(2, 1)),
@@ -109,7 +104,7 @@ def build_homeSystem(data, username):
     # TODO: Move account to it's own module
     accountEdge = {
         "node1": systemid,
-        "node2": accountid,
+        "node2": user['objid'],
         "label": "belongsToUser",
     }
     edges = system_edges + orbits + [accountEdge]
