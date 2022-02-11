@@ -1,9 +1,8 @@
 function genesisHomeworld(d) {
-    // get the pops that are in that faction
     $.ajax({
         url: '/ajax/genesis-homeworld',
         type: 'get',
-        data: d,
+        data: {"username":username,"solar_system":solar_system['nodes']},
         dataType: 'json',
         success: function (data) {
             console.log(data)
