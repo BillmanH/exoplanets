@@ -69,7 +69,6 @@ def new_universe(request):
         # Upload all of that data that was created.
         data = {"nodes": universe_nodes, "edges": universe_edges}
         upload_data(c, username, data)
-        # load the galaxy map, thus sta rting the game
         c.close()
         return redirect("genesis")
 
@@ -94,7 +93,8 @@ def new_universe(request):
 def genesis(request):
     c = get_client()
     res = get_system(c, request.user.username)
-    context = {"solar_system": res}
+    context = {"solar_system": res,
+                "username": request.user.username}
     c.close()
     return render(request, "app/creation/genesis_view.html", context)
 
