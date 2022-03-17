@@ -1,10 +1,7 @@
 {% load static %}
+<html>
+{% include "app/head.html" %}
 
-
-<head>
-    <link rel="stylesheet" href="{% static 'app/main.css' %}">
-    <script type="text/javascript" src="{% static 'app/d3/d3.js' %}"></script>
-</head>
 
 <body>
     <h1>In the beginning there was nothing</h1>
@@ -32,6 +29,8 @@
       </br>A civilization has somehow risen out of the muck 
     <script>
         {% include "app/charts/base_table.js" %}
-
+        {% include "app/creation/homeworld_ajax.js" %}
     </script>
 </body>
+
+</html>
