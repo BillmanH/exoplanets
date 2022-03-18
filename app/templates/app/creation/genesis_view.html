@@ -31,6 +31,16 @@
         {% include "app/charts/base_table.js" %}
         {% include "app/creation/homeworld_ajax.js" %}
     </script>
+        <h2 class="blinking">Slowly that life learned to use tools</h2>
+
+        <div id="pleasewait">please wait ...</div>
 </body>
+
+<script type="text/javascript">
+    var blink = document.getElementById('pleasewait');
+    setInterval(function() {
+        blink.style.opacity = (blink.style.opacity == 0 ? 1 : 0);
+    }, 100);
+</script>
 
 </html>

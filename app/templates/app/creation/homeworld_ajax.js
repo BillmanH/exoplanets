@@ -13,8 +13,11 @@ function genesisHomeworld(d) {
                     pop_table_lables
                 )
             }
+        },
+        complete: function(){
+            $("#popgen").attr('id', 'popgendone');
         }
     });
-}
+}   
 
 genesisHomeworld()
