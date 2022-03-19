@@ -10,30 +10,31 @@ from . import maths
 
 # Setup Params:
 n_steps = 6  # max factions
-meta = ['uuid','name','label']
-starting_attributes = ['conformity', 'literacy', 'aggression', 'constitution']
+meta = ["uuid", "name", "label"]
+starting_attributes = ["conformity", "literacy", "aggression", "constitution"]
 
-def compare_values(values,gr1,gr2):
+
+def compare_values(values, gr1, gr2):
     distance = []
     for v in values:
-        distance.append(abs(gr1.get(v,0)-gr2.get(v,0)))
-    return sum(distance)/len(distance)
+        distance.append(abs(gr1.get(v, 0) - gr2.get(v, 0)))
+    return sum(distance) / len(distance)
 
-def get_faction_loyalty(x,pops,factions):
+
+def get_faction_loyalty(x, pops, factions):
     g1 = pops.loc[x].to_dict()
-    f2 = factions.loc[int(g1['faction_no'])].to_dict()
-    return compare_values(starting_attributes,g1,f2)
+    f2 = factions.loc[int(g1["faction_no"])].to_dict()
+    return compare_values(starting_attributes, g1, f2)
+
 
 def build_species(data):
     # TODO: Replace attributes with something more meaninful, like what kinds of resources they consume
     species = {}
-    for attr in [
-        "conformity",
-        "literacy",
-        "aggression",
-        "constitution",
-    ]:
-        species[attr] = data[attr]
+    # pulling out the parts of the genesis-form that are specific to species
+    [
+        species.update({attr: data[attr]})
+        for attr in ["conformity", "literacy", "aggression", "constitution",]
+    ]
     species["objid"] = maths.uuid(n=13)
     species["label"] = "species"
     species["name"] = language.make_word(random.choice([1, 2]))
@@ -54,7 +55,11 @@ def vary_pops(species):
 
 def get_pop_name(df, faction_no):
     # the pop name is the faction name plus an extra syllable.
-    name = df[df["faction_no"] == faction_no]["name"].values[0] + " " + language.make_word(1)
+    name = (
+        df[df["faction_no"] == faction_no]["name"].values[0]
+        + " "
+        + language.make_word(1)
+    )
     return name
 
 
@@ -69,7 +74,7 @@ def make_factions(kmeans):
             "name": language.make_word(2),
             "objid": maths.uuid(n=13),
             "label": "faction",
-            "faction_no":i
+            "faction_no": i,
         }
         for i in range(kmeans.n_clusters)
     ]
@@ -88,7 +93,9 @@ def build_people(data):
     pops = pd.DataFrame([vary_pops(species) for i in range(int(data["starting_pop"]))])
     # Build the factions
     n_factions = get_n_factions(n_steps, float(data["conformity"]))
-    kmeans = KMeans(n_clusters=n_factions).fit(pops[[c for c in pops.columns if c not in meta]])
+    kmeans = KMeans(n_clusters=n_factions).fit(
+        pops[[c for c in pops.columns if c not in meta]]
+    )
     pops["faction_no"] = kmeans.labels_
     factions = make_factions(kmeans)
     factions_df = pd.DataFrame(factions)
@@ -99,43 +106,48 @@ def build_people(data):
     # sum up the nodes and edges for return
     isOfSpecies = [
         {"node1": p["objid"], "node2": species["objid"], "label": "isOfSpecies"}
-        for p in pops.to_dict('records')
+        for p in pops.to_dict("records")
     ]
     isInFaction = [
         {"node1": p["objid"], "node2": p["isInFaction"], "label": "isInFaction"}
-        for p in pops.to_dict('records')
+        for p in pops.to_dict("records")
     ]
-    pops['industry'] = (pops['aggression'] + pops['constitution'])/2
-    pops['wealth'] = (pops['literacy'] + pops['industry'])/2
-    pops['faction_loyalty'] = [(1-get_faction_loyalty(i,pops,factions_df)) for i in pops.index]
+    pops["industry"] = (pops["aggression"] + pops["constitution"]) / 2
+    pops["wealth"] = (pops["literacy"] + pops["industry"]) / 2
+    pops["faction_loyalty"] = [
+        (1 - get_faction_loyalty(i, pops, factions_df)) for i in pops.index
+    ]
 
     nodes = [species] + pops.to_dict("records") + factions
     edges = isInFaction + isOfSpecies
     return nodes, edges
 
 
-def attach_people_to_world(homeworld_nodes,universe_nodes):
-    homeworld = [n for n in universe_nodes if n.get("isHomeworld")][0]
-    pops = [p for p in homeworld_nodes if p.get("label")=='pop']
+def attach_people_to_world(homeworld_nodes, homeworld):
+    # in the beginning there should only be one homeworld
+    pops = [p for p in homeworld_nodes if p.get("label") == "pop"]
     edges = [
         {"node1": p["objid"], "node2": homeworld["objid"], "label": "enhabits"}
         for p in pops
     ]
     return edges
 
+
 def get_desire(x):
     # Marginal return on base attribute
     n = 2
-    return round(((float(x)+1)**(1-n) - 1)/(1-n),3)
+    return round(((float(x) + 1) ** (1 - n) - 1) / (1 - n), 3)
 
 
-def get_pop_desires(pops,objectives):
+def get_pop_desires(pops, objectives):
     edges = []
     for p in pops:
         for o in objectives:
-            edge = {'label':'desires',
-                    'node1':p['objid'],
-                    'node2':o['objid'],
-                    'weight':get_desire(p[o['leadingAttribute']])}
+            edge = {
+                "label": "desires",
+                "node1": p["objid"],
+                "node2": o["objid"],
+                "weight": get_desire(p[o["leadingAttribute"]]),
+            }
             edges.append(edge)
     return edges
