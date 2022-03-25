@@ -23,3 +23,13 @@ conda env config vars set endpoint=<copy paste from azure portal>
 you'll need to add the variables one at a time. I don't have a script for this but the format is simple. 
 
 **NOTE** I created a ps script that syncs between local and cloud. Have a look at `setting_local-env_vars.ps1` in the _infra_ folder. 
+
+
+Note that some keys are omited in the script and will need to be set manually. After entering keys you can confirm with:
+```
+conda env config vars list
+```
+If any variables are missing (you'll find out when you run `python manage.py runserver`) you can add/update them with
+```
+conda env config vars set varname=value
+```
