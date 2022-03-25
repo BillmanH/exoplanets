@@ -1,6 +1,6 @@
 pip
 gremlinpython==3.5.1
-django>=2.2
+django==3.2.7
 django-storages[azure]
 scikit-learn
 pyyaml

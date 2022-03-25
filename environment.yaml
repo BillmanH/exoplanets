@@ -9,7 +9,7 @@ dependencies:
   - pyyaml
   - ipykernel
   - pandas
-  - django>=2.2
+  - django==3.2.7
   - black
   - scikit-learn
   - pip:
