@@ -33,3 +33,11 @@ If any variables are missing (you'll find out when you run `python manage.py run
 ```
 conda env config vars set varname=value
 ```
+
+3. Make your migrations
+
+If this is your first time building the application, you will need to update the login data using:
+```
+python manage.py makemigrations
+python manage.py migrate
+```
