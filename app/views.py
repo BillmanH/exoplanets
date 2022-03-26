@@ -72,10 +72,6 @@ def new_universe(request):
         c.close()
         return redirect("genesis")
 
-        # # Create the homeworld and it's people.
-        # homeworld_nodes, homeworld_edges = homeworld.build_people(request.POST)
-        # # Attach the people to the homeworld
-        # homeworld_edges = homeworld_edges + homeworld.attach_people_to_world(homeworld_nodes,universe_nodes)
         # # Get the global list of objectives (prerequisite of desires)
         # res = run_query(c, query="g.V().hasLabel('objective').valueMap()")
         # objectives = [clean_node(n) for n in res]

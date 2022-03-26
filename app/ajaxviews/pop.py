@@ -18,6 +18,19 @@ def make_homeworld(request):
     response['factions'] = [p for p in homeworld_nodes if p.get('label')=='faction']
     return JsonResponse(response)
 
+def set_pop_desires(request):
+        c = get_client()
+        poquery = f"g.V().haslabel('pop').has('username','{request.get('username')[0]}')"
+        res = run_query(c, query="g.V().hasLabel('objective').valueMap()")
+        pops = run_query(c, query=poquery)
+        c.close()
+        objectives = [clean_nodes(n) for n in res]
+        pops = [clean_nodes(n) for n in pops]
+        # # Get the pop desire for those objectives
+        homeworld_edges = homeworld.get_pop_desires(pops,objectives)
+        return JsonResponse(response)
+
+
 def get_pop_text(request):
     """
     given that user has clicked on a p (population),
