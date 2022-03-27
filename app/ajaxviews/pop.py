@@ -22,20 +22,21 @@ def make_homeworld(request):
     return JsonResponse(response)
 
 def set_pop_desires(request):
-        c = get_client()
-        username = request.get('username')[0]
-        poquery = f"g.V().haslabel('pop').has('username','{request.get('username')[0]}')"
-        res = run_query(c, query="g.V().hasLabel('objective').valueMap()")
-        pops = run_query(c, query=poquery)
-        objectives = [clean_nodes(n) for n in res]
-        pops = [clean_nodes(n) for n in pops]
-        # # Get the pop desire for those objectives
-        desire_edges = homeworld.get_pop_desires(pops,objectives)
-        data = {"nodes": [], "edges": desire_edges}
-        upload_data(c, username, data)
-        c.close()
-        response = {}
-        return JsonResponse(response)
+    request = dict(request.GET)
+    c = get_client()
+    username = request.get('username')[0]
+    poquery = f"g.V().haslabel('pop').has('username','{request.get('username')[0]}').valuemap()"
+    objectives = run_query(c, query="g.V().hasLabel('objective').valuemap()")
+    pops = run_query(c, query=poquery)
+    objectives = clean_nodes(objectives)
+    pops = clean_nodes(pops)
+    # # Get the pop desire for those objectives
+    desire_edges = homeworld.get_pop_desires(pops,objectives)
+    data = {"nodes": [], "edges": desire_edges}
+    upload_data(c, username, data)
+    c.close()
+    response = {}
+    return JsonResponse(response)
 
 
 def get_pop_text(request):

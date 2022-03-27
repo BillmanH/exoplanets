@@ -20,6 +20,7 @@ function genesisPopDesire(d){
         dataType: 'json',
         success: function (data) {
             console.log("pop desires, was created")
+            $("body").append("When you are ready, <a href='/systemmap' class='menu button'>go to the system map</a>");
         }
     })
 }
@@ -44,13 +45,11 @@ function genesisHomeworld(d) {
                     faction_table_lables
                 )
             }
+            genesisPopDesire()
         },
         
     });
-}   
+}
 
 genesisHomeworld()
 
-a = $("#pleasewait").clone();
-$("#pleasewait").remove();
-$("body").append(a);
