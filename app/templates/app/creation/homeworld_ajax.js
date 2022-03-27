@@ -12,6 +12,18 @@ var faction_table_lables = [
     { "label": "Type", "value": "label" }
 ]
 
+function genesisPopDesire(d){
+    $.ajax({
+        url: '/ajax/genesis-pop-desire',
+        // Doesn't really need client data, but as a placeholder
+        data: {"username":username},
+        dataType: 'json',
+        success: function (data) {
+            console.log("pop desires, was created")
+        }
+    })
+}
+
 function genesisHomeworld(d) {
     $.ajax({
         url: '/ajax/genesis-homeworld',
@@ -19,8 +31,7 @@ function genesisHomeworld(d) {
         data: {"username":username,"solar_system":solar_system['nodes']},
         dataType: 'json',
         success: function (data) {
-            console.log("pop data")
-            console.log(data)
+            console.log("pops, were created")
             if ("pops" in data) {
                 draw_table(
                     "peopleTable",
@@ -33,7 +44,8 @@ function genesisHomeworld(d) {
                     faction_table_lables
                 )
             }
-        }
+        },
+        
     });
 }   
 

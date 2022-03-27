@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 
 from app.models import *
 
-from .creators import universe, homeworld
+from .creators import universe
 
 
 from .forms import HomeSystemForm, SignUpForm
