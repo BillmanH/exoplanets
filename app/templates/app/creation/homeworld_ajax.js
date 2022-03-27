@@ -29,7 +29,7 @@ function genesisHomeworld(d) {
     $.ajax({
         url: '/ajax/genesis-homeworld',
         type: 'get',
-        data: {"username":username,"solar_system":solar_system['nodes']},
+        data: {"username":username},
         dataType: 'json',
         success: function (data) {
             console.log("pops, were created")
