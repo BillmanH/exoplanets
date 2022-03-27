@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms.widgets import NumberInput
 
-
+from .creators.maths import uuid
 
 # https://docs.djangoproject.com/en/3.1/ref/forms/widgets/#built-in-widgets
 
@@ -25,10 +25,6 @@ class SignUpForm(UserCreationForm):
             "password1",
             "password2",
         )
-
-
-class QueryForm(forms.Form):
-    queryField = forms.CharField(label="your query", max_length=1000)
 
 
 class HomeSystemForm(forms.Form):
@@ -92,3 +88,11 @@ class HomeSystemForm(forms.Form):
         widget=NumberInput,
         help_text="( %  ability to persivere)",
     )
+    def formToNode(self,post):
+        fields = list(self.fields.keys())
+        postDict = dict(post)
+        node = {i:postDict[i][0] for i in postDict.keys() if i in fields}
+        node['label'] = "form"
+        node['name'] = "form"
+        node['objid'] = uuid(n=13)
+        return node

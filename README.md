@@ -50,24 +50,6 @@ I built this game so that I could clone it and create different versions. You sh
 
 * see the docs in the **infra** folder for production deployment. 
 
-### Building the local testing environment
-You can run the application on your local machine without cloud resources. I'm using anaconda so you should be able to build the environment in any system with: 
-```
-conda env create --file=environment.yaml
-``` 
-
-and update it using:
-```
-conda env update --name exoplanets --file=environment.yaml --prune
-```
-
-To access the cosmos DB, you'll need to setup the environment variables. 
-```
-conda env config vars set endpoint=<copy paste from azure portal>
-```
-you'll need to add the variables one at a time. I don't have a script for this but the format is simple. 
-
-**NOTE** I created a ps script that syncs between local and cloud. Have a look at `setting_local-env_vars.ps1` in the _infra_ folder. 
 
 #### Variables for the base Django
 | Syntax | Description | Notes |
@@ -123,11 +105,7 @@ You will need the `settings.py` file. Copy it from the `TEMPLATESETTINGS.py` and
 ```
 python manage.py runserver
 ```
-If this is your first time building the application, you will need to update the login data using:
-```
-python manage.py makemigrations
-python manage.py migrate
-```
+
 
 **NOTE** You can also access the DB in `notebooks` with the DB helper tools.
 
