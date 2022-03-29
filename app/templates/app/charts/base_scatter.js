@@ -1,10 +1,14 @@
 function draw_scatter(
+    // Note when using: The arguments need to be present, in order. Even if not used. 
     objid,
     nodes,
     height,
     width,
     xLabel='X axis',
     yLabel='Y axis',
+    // scaleToOne = true : the scatter plot will scale the values between 0 and 1.
+    // scaleToOne = false : the plot will scale to the values in the `xy` dict.
+    scaleToOne = true,
     // need to know the value to use for X and Y in the scale AND the .attr('cx')
     xy = {"x":"x",
         "y":"y"},
@@ -15,9 +19,6 @@ function draw_scatter(
     strokeColor = function (d) { return "black" },
     circleClass = function (d) { return "circle" },
     clickHandler = function (d) { console.log("no click handler") },
-    // scaleToOne = true : the scatter plot will scale the values between 0 and 1.
-    // scaleToOne = false : the plot will scale to the values in the `xy` dict.
-    scaleToOne = true,
 ) {
     const margin = { left: 120, right: 30, top: 20, bottom: 120 };
 
