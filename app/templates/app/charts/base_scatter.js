@@ -15,6 +15,9 @@ function draw_scatter(
     strokeColor = function (d) { return "black" },
     circleClass = function (d) { return "circle" },
     clickHandler = function (d) { console.log("no click handler") },
+    // scaleToOne = true : the scatter plot will scale the values between 0 and 1.
+    // scaleToOne = false : the plot will scale to the values in the `xy` dict.
+    scaleToOne = true,
 ) {
     const margin = { left: 120, right: 30, top: 20, bottom: 120 };
 
@@ -46,19 +49,23 @@ function draw_scatter(
         .attr('transform', `rotate(-90)`)
         .style('text-anchor', 'middle')
         .text(yLabel);
-
-    glatScale = d3.scaleLinear()
-        .domain(
-            [
-                d3.min(nodes, function (d) { return d[xy["x"]]; }),
-                d3.max(nodes, function (d) { return d[xy["x"]]; })]
-        ).range([0, innerWidth]);
-    glonScale = d3.scaleLinear()
-        .domain(
-            [
-                d3.min(nodes, function (d) { return d[xy["y"]]; }),
-                d3.max(nodes, function (d) { return d[xy["y"]]; })]
-        ).range([0, innerHeight]);
+    if (scaleToOne){
+        glatScale = d3.scaleLinear().domain([0,1]).range([0, innerWidth]);
+        glonScale = d3.scaleLinear().domain([0,1]).range([0, innerHeight]);   
+    } else {
+        glatScale = d3.scaleLinear()
+            .domain(
+                [
+                    d3.min(nodes, function (d) { return d[xy["x"]]; }),
+                    d3.max(nodes, function (d) { return d[xy["x"]]; })]
+            ).range([0, innerWidth]);
+        glonScale = d3.scaleLinear()
+            .domain(
+                [
+                    d3.min(nodes, function (d) { return d[xy["y"]]; }),
+                    d3.max(nodes, function (d) { return d[xy["y"]]; })]
+            ).range([0, innerHeight]);
+    }
 
     var u = g.selectAll('circle')
         .data(nodes)
