@@ -37,7 +37,7 @@ def build_species(data):
     ]
     species["objid"] = maths.uuid(n=13)
     species["label"] = "species"
-    species["name"] = language.make_word(random.choice([1, 2]))
+    species["name"] = language.make_dist_word(random.choice([1, 2]))
     return species
 
 
@@ -58,7 +58,7 @@ def get_pop_name(df, faction_no):
     name = (
         df[df["faction_no"] == faction_no]["name"].values[0]
         + " "
-        + language.make_word(1)
+        + language.make_dist_word(random.choice([1, 2]))
     )
     return name
 
@@ -71,7 +71,7 @@ def get_n_factions(n_steps, conf):
 def make_factions(kmeans):
     factions = [
         {
-            "name": language.make_word(2),
+            "name": language.make_dist_word(2),
             "objid": maths.uuid(n=13),
             "label": "faction",
             "faction_no": i,

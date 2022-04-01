@@ -1,10 +1,14 @@
 function draw_scatter(
+    // Note when using: The arguments need to be present, in order. Even if not used. 
     objid,
     nodes,
     height,
     width,
     xLabel='X axis',
     yLabel='Y axis',
+    // scaleToOne = true : the scatter plot will scale the values between 0 and 1.
+    // scaleToOne = false : the plot will scale to the values in the `xy` dict.
+    scaleToOne = true,
     // need to know the value to use for X and Y in the scale AND the .attr('cx')
     xy = {"x":"x",
         "y":"y"},
@@ -46,19 +50,23 @@ function draw_scatter(
         .attr('transform', `rotate(-90)`)
         .style('text-anchor', 'middle')
         .text(yLabel);
-
-    glatScale = d3.scaleLinear()
-        .domain(
-            [
-                d3.min(nodes, function (d) { return d[xy["x"]]; }),
-                d3.max(nodes, function (d) { return d[xy["x"]]; })]
-        ).range([0, innerWidth]);
-    glonScale = d3.scaleLinear()
-        .domain(
-            [
-                d3.min(nodes, function (d) { return d[xy["y"]]; }),
-                d3.max(nodes, function (d) { return d[xy["y"]]; })]
-        ).range([0, innerHeight]);
+    if (scaleToOne){
+        glatScale = d3.scaleLinear().domain([0,1]).range([0, innerWidth]);
+        glonScale = d3.scaleLinear().domain([0,1]).range([0, innerHeight]);   
+    } else {
+        glatScale = d3.scaleLinear()
+            .domain(
+                [
+                    d3.min(nodes, function (d) { return d[xy["x"]]; }),
+                    d3.max(nodes, function (d) { return d[xy["x"]]; })]
+            ).range([0, innerWidth]);
+        glonScale = d3.scaleLinear()
+            .domain(
+                [
+                    d3.min(nodes, function (d) { return d[xy["y"]]; }),
+                    d3.max(nodes, function (d) { return d[xy["y"]]; })]
+            ).range([0, innerHeight]);
+    }
 
     var u = g.selectAll('circle')
         .data(nodes)

@@ -8,31 +8,37 @@ function r(x, n=100) {
     return x
 }
 
+renames = {}
 
 function limitDict(d) {
-    var things_we_dont_print = ["username", "objid", "id", "orbitsId", "vx", "vy", "x", "y"]
+    var things_we_dont_print = ["username", "objid", "id", "orbitsId", "vx", "vy", "x", "y", "isInFaction"]
     for (i in things_we_dont_print) {
         d = popvalues(d, things_we_dont_print[i])
     }
     return d
 }
 
+function toProperCase(s)
+{
+  return s.toLowerCase().replace(/^(.)|\s(.)/g, 
+          function($1) { return $1.toUpperCase(); });
+}
+
 //for tooltips, convert a dict to HTML
 function dictToHtml(d) {
-    html = ""
-    var dt = {}
-    Object.assign(d, dt);
+    html = "<div><strong>"+ d['name'] +"</strong>" + ": "+ d['objtype']+ "</div>"
+    var dt = Object.assign({}, d);
     dt = limitDict(dt)
-    for (var k in d) {
+    for (var k in dt) {
         x = k.replace(/_/g, " ")
-        y = d[k]
+        y = dt[k]
         if (y.toString().indexOf(".") != -1) {y = parseFloat(y.toString())};
         if (typeof (y) == "string") {
-            y = d[k].replace(/_/g, " ")
+            y = dt[k].replace(/_/g, " ")
         } else if (typeof (y) == "number") {
             y = r(y)
         } else if (typeof (y) == "object") {
-            y = d[k].toString().replace(/_/g, " ")
+            y = dt[k].toString().replace(/_/g, " ")
         }
         html += x + ": " + y + "<br>"
     }
@@ -46,5 +52,9 @@ var tooltip = d3.select("body")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
+    .style("padding-top", "5px")
+    .style("padding-right", "5px")
+    .style("padding-bottom", "5px")
+    .style("padding-left", "5px")
     .html("<p>Default Text</p>");
 

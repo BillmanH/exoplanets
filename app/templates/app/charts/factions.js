@@ -30,6 +30,7 @@ $.ajax({
                 width,
                 xLabel='conformity',
                 yLabel='aggression',
+                scaleToOne = true,
                 xy = {"x":"conformity",
                     "y":"aggression"} 
             )
@@ -66,8 +67,9 @@ function clickTableFaction(d) {
                     width,
                     xLabel='conformity',
                     yLabel='aggression',
+                    scaleToOne = false,
                     xy = {"x":"conformity",
-                        "y":"aggression"}
+                        "y":"aggression"},
                 )
                 draw_scatter(
                     "peopleScatter",
@@ -76,8 +78,9 @@ function clickTableFaction(d) {
                     width,
                     xLabel='faction_loyalty',
                     yLabel='constitution',
+                    scaleToOne = false,
                     xy = {"x":"faction_loyalty",
-                        "y":"constitution"}
+                        "y":"constitution"},
                 )
             }
         }
