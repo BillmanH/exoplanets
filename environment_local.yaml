@@ -1,0 +1,21 @@
+# Local environment has some things that are only used in notebooks. So you don't need them in the server version. 
+name: exoplanets
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python==3.7
+  - altair
+  - nltk
+  - pip
+  - pyyaml
+  - ipykernel
+  - pandas
+  - django==3.2.7
+  - black
+  - scikit-learn
+  - pip:
+    - nb_black
+    - gremlinpython==3.5.1
+    - psycopg2-binary==2.9.2
+prefix: C:\Users\william.harding\Anaconda3\envs\exoplanets

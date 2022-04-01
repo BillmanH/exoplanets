@@ -4,7 +4,6 @@ channels:
   - defaults
 dependencies:
   - python==3.7
-  - altair
   - pip
   - pyyaml
   - ipykernel
