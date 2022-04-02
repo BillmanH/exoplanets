@@ -1,5 +1,6 @@
 import yaml, os
 import numpy as np
+import pandas as pd
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
@@ -40,6 +41,16 @@ def clean_node(x):
     x["id"] = x["objid"]
     return x
 
+def qtodf (query):
+    '''
+    Convinience function for getting the results as a dataframe. Assumes `.valueMap()` query.
+        * runs `run_query(query)`
+        * cleans each node
+        * returns pandas dataframe
+    '''
+    res = run_query(query)
+    nodes = [clean_node(n) for n in res]
+    return pd.DataFrame(nodes)
 
 def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
