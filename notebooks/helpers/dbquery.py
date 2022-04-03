@@ -55,25 +55,37 @@ def qtodf (query):
 def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
 
-def create_vertex(node):
+# Don't convert these to floats
+notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
+
+def create_vertex(node, username):
     gaddv = f"g.addV('{node['label']}')"
-    node['username'] = 'notebook'
-    node['objtype'] = node['label']
-    properties = [k for k in node.keys() if k != 'label']
+    properties = [k for k in node.keys()]
     for k in properties:
-        substr = f".property('{k}','{cs(node[k])}')"
+        # try to convert objects that aren't ids
+        if k not in notFloats:
+            #first try to upload it as a float.
+            try:
+                rounded = np.round_(node[k],4)
+                substr = f".property('{k}',{rounded})"
+            except:
+                substr = f".property('{k}','{cs(node[k])}')"
+        else:
+            substr = f".property('{k}','{cs(node[k])}')"
         gaddv += substr
-    if 'objid' not in properties:
-        gaddv += f".property('objid','{uuid()}')"
+    gaddv += f".property('username','{username}')"
+    gaddv += f".property('objtype','{node['label']}')"
     return gaddv
 
-def create_edge(edge):
-    properties = [k for k in edge.keys() if (k != 'label')&('node' not in k)]
-    eprop =  ".property('username','notebook')"
-    for k in properties:
-        eprop += f".property('{k}','{cs(edge[k])}')"
-    gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}'){eprop}.to(g.V().has('objid','{cs(edge['node2'])}'))"
-    return gadde
+def create_edge(edge, username):
+    gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}')"
+    for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
+        if i == 'weight':
+            gadde += f".property('{i}',{edge[i]})"
+        else:
+            gadde += f".property('{i}','{edge[i]}')"
+    gadde_fin = f".to(g.V().has('objid','{cs(edge['node2'])}'))"
+    return gadde + gadde_fin
 
 
 def upload_data(data,verbose=True): 
