@@ -26,6 +26,11 @@ g.V().has('faction','name','factionName').in('isInFaction').values('aggression')
 ```
 g.V().has('objid','5720114744401').outE('desires').inV().hasLabel('objective')
 ```
+Getting all of the desires, weights and objectives for a pop
+```
+g.V().has('objid','5720114744401').outE('desires').inV().hasLabel('objective').dedup().path().by('name').by('weight').by('type')
+```
+
 
 ## NUCLEAR delete and drop functions, use with caution.
 Drop an account, and everything asociated with it. Everything for a user has the 'username' property.  
