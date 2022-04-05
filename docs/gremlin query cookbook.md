@@ -16,9 +16,15 @@ Get the objects orbiting an object.
 g.V().has('objid','8308379553174').in('orbits').valueMap()
 ```
 ### Population Queries
-Get the average agression for a faction
+Get the average agression for a faction (average of pop['agression'])
 ```
 g.V().has('faction','name','factionName').in('isInFaction').values('aggression').mean()
+```
+
+##  Desires
+### Get all of the desired objectives of a pop
+```
+g.V().has('objid','5720114744401').outE('desires').inV().hasLabel('objective')
 ```
 
 ## NUCLEAR delete and drop functions, use with caution.
