@@ -1,7 +1,7 @@
 objectives:
   -
-    label: objective
     type: industry
+    label: objective
     weight: .5
     leadingAttribute: wealth
     comment: "build factories, skyscrapers, infrastructure"
