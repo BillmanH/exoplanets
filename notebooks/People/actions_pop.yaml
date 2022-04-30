@@ -30,20 +30,20 @@ actions:
     leadingAttribute: industry
     comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
   -
-    type: war
+    type: attack
     label: action
-    required_desire: .4
+    required_desire: .8
     leadingAttribute: aggression
-    comment: "the general amount that the society wants to fight"
+    comment: "pointless loss of lives and wealth, possibly resulting in converting a population to this faction"
   -
-    type: science
+    type: betterliving
+    label: action
+    required_desire: .3
+    leadingAttribute: literacy
+    comment: "researching advances in medication and domestic tranquligy, increases wealth"
+  -
+    type: buildinfra
     label: action
     required_desire: .5
-    leadingAttribute: literacy
-    comment: "building schools, education systems, information infrastructure"
-  -
-    type: wealth
-    label: action
-    required_desire: .5
-    leadingAttribute: literacy
-    comment: "increasing luxury, entertainiment and amenities"
+    leadingAttribute: wealth
+    comment: "increase industry by investing in local infrastructure, increases industry"
