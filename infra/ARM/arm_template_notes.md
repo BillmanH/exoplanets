@@ -10,9 +10,13 @@ az login
 az account set --subscription $Env:subscription
 cd $Env:abspath
 ```
-That should label the subscription and the name. Then you just run the resources. **NOTE** see the `build_az.ps1` for the steps as they are actually run. 
+That should label the subscription and the name. Then you just run the resources. **NOTE** see the `build_az.ps1` for the steps as they are actually run. When I run that script, I don't run the entire thing. I copy/paste chuncks into repl and run them individually to test things out. The coments in the script should walk you through the process. 
 ```
 az deployment group create --resource-group $resourceGroupName --template-file "infra/ARM/template.json" --parameters "infra/ARM/parameters.json"
 ```
+**NOTE** you will need to provide the `parameters.json` yourself. It's where the secrets are and is in the gitignore. 
+
+## Keys and passwords
+For rback roles and env vars there is a `.key` file that is in the gitignore. It is json shaped. 
 
 
