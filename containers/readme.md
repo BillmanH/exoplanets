@@ -6,8 +6,11 @@ Azure functions run the backend of the game. All things happening that aren't co
 |---|---|---|
 | time | timer function. Some things take time to complete. This checks all of the things that are in process, and resolves them. | not yet live |
 | chaos | timer function, this facilitates all of the brownian motion in the universe. It makes random things happen. | not yet live |
+| HttpExample | http function. Just keeping it as a template. Not involved in the game. | template |
 
 # Dev Cycle Steps:
+
+![Alt text](/docs/img/container_cicd.png?raw=true "docker cicd")
 
 ## Creating a new function
 You can get a list of the templates from: `func templates list`
