@@ -9,9 +9,11 @@ A Gremlin Graph database driven strategy game. Get your civilization out into sp
 * Azure Cosmos DB (Gremlin)
 * D3.js for visualization
 
-* **Note** 
-* Azure Storage in this project, but for cost reasons I'm using the same resources from other projects. For that reason I don't have examples of building them here. 
-* The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
+* **Note:** 
+    * Azure Storage in this project, but for cost reasons I'm using the same resources from other projects. For that reason I don't have examples of building them here. 
+    * The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
+
+![Alt text](../docs/img/Exodestiny.png?raw=true "solar system")
 
 ## Features:
 * `dev` and `prod` systems set up for easy switching. `dev` is the local machine and `prod` is online with `DEBUG=False`.
