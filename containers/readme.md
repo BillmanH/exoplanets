@@ -27,6 +27,8 @@ build it
 ```
 docker build --tag <registry>.azurecr.io/exodestiny:v1.0.0 .
 ```
+docker build --tag <registry>.azurecr.io/exodestiny:v1.0.0 .
+
 run it
 ```
 docker run -p 8080:80 -it <registry>.azurecr.io/exodestiny:v1.0.0
