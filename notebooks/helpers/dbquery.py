@@ -90,17 +90,19 @@ def create_edge(edge, username):
 
 def upload_data(data,verbose=True): 
     c = get_client()
-    for node in data["nodes"]:
-        gadv = create_vertex(node)
-        callback = c.submitAsync(gadv)
-        if verbose:
-            print(gadv)
-            # print(callback)
-    for edge in data["edges"]:
-        gadde = create_edge(edge)
-        callback = c.submitAsync(gadde)
-        if verbose:
-            print(gadde)
-            # print(callback)
+    if len(data["nodes"])>0:
+        for node in data["nodes"]:
+            gadv = create_vertex(node, "notebook")
+            callback = c.submitAsync(gadv)
+            if verbose:
+                print(gadv)
+                # print(callback)
+    if len(data["edges"])>0:
+        for edge in data["edges"]:
+            gadde = create_edge(edge)
+            callback = c.submitAsync(gadde)
+            if verbose:
+                print(gadde)
+                # print(callback)
     c.close()
     return
