@@ -7,6 +7,8 @@ ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
 
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
-RUN start.sh
+COPY start.sh /
+COPY .env /
+RUN /bin/bash -c "source .env"
 
 COPY . /home/site/wwwroot

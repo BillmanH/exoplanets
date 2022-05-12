@@ -30,13 +30,14 @@ build it
 ```
 docker build --tag <registry>.azurecr.io/exodestiny:v1.0.0 .
 ```
-docker build --tag <registry>.azurecr.io/exodestiny:v1.0.0 .
 
 run it
 ```
 docker run -p 8080:80 -it <registry>.azurecr.io/exodestiny:v1.0.0
 ```
 then test it at this url: `http://localhost:8080/api/HttpExample?name=Functions`
+
+**Note** the timer trigger and other functions require Azure and, thus, won't work locally, however you can infer the build validation from the error messages.
 
 ## Push it to prod
 There isn't a dev environment on the web, so this will push it directly into prod. Test on your local machine. 
