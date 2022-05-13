@@ -150,3 +150,8 @@ infra/ARM/parameters*.json
 # Settings files that exist, but changes aren't tracked
 #   This is done to create a placeholder when cloning a new repo. 
 *local.settings.json
+
+
+# Local blobstore values
+__blobstorage__/*
+__azurite_db*
