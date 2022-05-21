@@ -5,7 +5,7 @@
         "databaseAccounts_graph_exodestiny_createMode": {
             "type": "SecureString"
         },
-        "graph_name": {
+        "applicationName": {
             "defaultValue": "exodestiny",
             "type": "String"
         },
@@ -16,26 +16,14 @@
         "subscriptionId": {
             "type": "string"
         },
-        "name": {
-            "type": "string"
-        },
-        "location": {
-            "type": "string"
-        },
         "hostingPlanName": {
             "type": "string"
         },
-        "serverFarmResourceGroup": {
+        "resourceGroup": {
             "type": "string"
         },
         "alwaysOn": {
             "type": "bool"
-        },
-        "sku": {
-            "type": "string"
-        },
-        "skuCode": {
-            "type": "string"
         },
         "workerSize": {
             "type": "string"
@@ -100,6 +88,9 @@
             "type": "string",
             "defaultValue": "Disabled"
         },
+        "storageAccountName": {
+            "type": "string"
+        },
         "infrastructureEncryption": {
             "type": "string",
             "defaultValue": "Disabled"
@@ -110,7 +101,7 @@
         {
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2021-07-01-preview",
-            "name": "[parameters('graph_name')]",
+            "name": "[parameters('applicationName')]",
             "location": "[parameters('region')]",
             "tags": {
                 "defaultExperience": "Gremlin (graph)",
@@ -176,9 +167,9 @@
         {
             "type": "Microsoft.DocumentDB/databaseAccounts/gremlinDatabases",
             "apiVersion": "2021-07-01-preview",
-            "name": "[concat(parameters('graph_name'), '/graphdb')]",
+            "name": "[concat(parameters('applicationName'), '/graphdb')]",
             "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('graph_name'))]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('applicationName'))]"
             ],
             "properties": {
                 "resource": {
@@ -189,9 +180,9 @@
         {
             "type": "Microsoft.DocumentDB/databaseAccounts/gremlinDatabases",
             "apiVersion": "2021-07-01-preview",
-            "name": "[concat(parameters('graph_name'), '/SampleDB')]",
+            "name": "[concat(parameters('applicationName'), '/SampleDB')]",
             "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('graph_name'))]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('applicationName'))]"
             ],
             "properties": {
                 "resource": {
@@ -202,10 +193,10 @@
         {
             "type": "Microsoft.DocumentDB/databaseAccounts/gremlinDatabases/graphs",
             "apiVersion": "2021-07-01-preview",
-            "name": "[concat(parameters('graph_name'), '/graphdb/systems')]",
+            "name": "[concat(parameters('applicationName'), '/graphdb/systems')]",
             "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/gremlinDatabases', parameters('graph_name'), 'graphdb')]",
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('graph_name'))]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/gremlinDatabases', parameters('applicationName'), 'graphdb')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('applicationName'))]"
             ],
             "properties": {
                 "resource": {
@@ -242,15 +233,15 @@
         },
         {
             "apiVersion": "2018-11-01",
-            "name": "[parameters('name')]",
+            "name": "[parameters('azfuncName')]",
             "type": "Microsoft.Web/sites",
-            "location": "[parameters('location')]",
+            "location": "[parameters('region')]",
             "tags": "[parameters('tags')]",
             "dependsOn": [
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
             ],
             "properties": {
-                "name": "[parameters('name')]",
+                "name": "[parameters('azfuncName')]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -261,7 +252,7 @@
                     "linuxFxVersion": "[parameters('linuxFxVersion')]",
                     "alwaysOn": "[parameters('alwaysOn')]"
                 },
-                "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('resourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
                 "clientAffinityEnabled": false
             },
             "resources": [
@@ -292,7 +283,7 @@
                         }
                     },
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+                        "[resourceId('Microsoft.Web/Sites', parameters('azfuncName'))]"
                     ]
                 }
             ]
@@ -301,7 +292,7 @@
             "apiVersion": "2018-11-01",
             "name": "[parameters('hostingPlanName')]",
             "type": "Microsoft.Web/serverfarms",
-            "location": "[parameters('location')]",
+            "location": "[parameters('region')]",
             "kind": "linux",
             "tags": "[parameters('tags')]",
             "dependsOn": [],
@@ -313,15 +304,15 @@
                 "reserved": true
             },
             "sku": {
-                "Tier": "[parameters('sku')]",
-                "Name": "[parameters('skuCode')]"
+                "Tier": "[parameters('azfuncSku')]",
+                "Name": "[parameters('azfuncSkuCode')]"
             }
         },
         {
             "type": "Microsoft.DBforPostgreSQL/servers",
             "apiVersion": "2017-12-01-preview",
             "kind": "",
-            "location": "[parameters('location')]",
+            "location": "[parameters('region')]",
             "name": "[parameters('serverName')]",
             "properties": {
                 "version": "[parameters('version')]",
@@ -344,6 +335,98 @@
                 "family": "[parameters('skuFamily')]"
             },
             "tags": "[parameters('tags')]"
+        },
+        {
+            "apiVersion": "2019-06-01",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[parameters('storageAccountName')]",
+            "location": "[parameters('region')]",
+            "tags": "[parameters('tags')]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "properties": {
+                "supportsHttpsTrafficOnly": true,
+                "minimumTlsVersion": "TLS1_2"
+            }
+        },
+        {
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('azfuncName')]",
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp,linux",
+            "location": "[parameters('region')]",
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "[concat('/subscriptions/',parameters('subscriptionId'),'/resourceGroups/exodestiny/providers/Microsoft.Insights/components/exo-jobs']"
+            },
+            "dependsOn": [
+                "microsoft.insights/components/exo-jobs",
+                "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+            ],
+            "properties": {
+                "name": "[parameters('azfuncName')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "python"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference('microsoft.insights/components/exo-jobs', '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[reference('microsoft.insights/components/exo-jobs', '2015-05-01').ConnectionString]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(parameters('subscriptionId')),parameters('applicationName'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(parameters('subscriptionId')),parameters('applicationName'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(parameters('azfuncName')), 'bcf5')]"
+                        }
+                    ],
+                    "cors": {
+                        "allowedOrigins": [
+                            "https://portal.azure.com"
+                        ]
+                    },
+                    "use32BitWorkerProcess": "[parameters('use32BitWorkerProcess')]",
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "ftpsState": "[parameters('ftpsState')]"
+                },
+                "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "clientAffinityEnabled": false,
+                "virtualNetworkSubnetId": null,
+                "httpsOnly": false
+            }
+        },
+        {
+            "apiVersion": "2020-02-02-preview",
+            "name": "exo-jobs",
+            "type": "microsoft.insights/components",
+            "location": "westus2",
+            "tags": {},
+            "dependsOn": [
+                "newWorkspaceTemplate"
+            ],
+            "properties": {
+                "ApplicationId": "[parameters('azfuncName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Flow_Type": "Redfield",
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[concat('/subscriptions/',parameters('subscriptionId'),'/resourceGroups/DefaultResourceGroup-WUS2/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-',parameters('subscriptionId')]"
+            }
         }
     ]
 }
