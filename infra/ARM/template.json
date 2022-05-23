@@ -52,19 +52,19 @@
         "serverName": {
             "type": "string"
         },
-        "skuCapacity": {
+        "postGresskuCapacity": {
             "type": "int"
         },
-        "skuFamily": {
+        "postGresskuFamily": {
             "type": "string"
         },
-        "skuName": {
+        "postGresskuName": {
             "type": "string"
         },
-        "skuSizeMB": {
+        "postGresskuSizeMB": {
             "type": "int"
         },
-        "skuTier": {
+        "postGresskuTier": {
             "type": "string"
         },
         "version": {
@@ -94,6 +94,21 @@
         "infrastructureEncryption": {
             "type": "string",
             "defaultValue": "Disabled"
+        },
+        "azfuncName": {
+            "type": "string"
+        },
+        "appSku": {
+            "type": "string"
+        },
+        "appSkuCode": {
+            "type": "string"
+        },
+        "use32BitWorkerProcess": {
+            "type": "bool"
+        },
+        "ftpsState": {
+            "type": "string"
         }
     },
     "variables": {},
@@ -233,15 +248,15 @@
         },
         {
             "apiVersion": "2018-11-01",
-            "name": "[parameters('azfuncName')]",
+            "name": "[parameters('applicationName')]",
             "type": "Microsoft.Web/sites",
             "location": "[parameters('region')]",
             "tags": "[parameters('tags')]",
-            "dependsOn": [
+            "dependsOn": [ 
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
             ],
             "properties": {
-                "name": "[parameters('azfuncName')]",
+                "name": "[parameters('applicationName')]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -283,7 +298,7 @@
                         }
                     },
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/Sites', parameters('azfuncName'))]"
+                        "[resourceId('Microsoft.Web/Sites', parameters('applicationName'))]"
                     ]
                 }
             ]
@@ -304,8 +319,8 @@
                 "reserved": true
             },
             "sku": {
-                "Tier": "[parameters('azfuncSku')]",
-                "Name": "[parameters('azfuncSkuCode')]"
+                "Tier": "[parameters('appSku')]",
+                "Name": "[parameters('appSkuCode')]"
             }
         },
         {
@@ -319,7 +334,7 @@
                 "administratorLogin": "[parameters('administratorLogin')]",
                 "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
                 "storageProfile": {
-                    "storageMB": "[parameters('skuSizeMB')]",
+                    "storageMB": "[parameters('postGresskuSizeMB')]",
                     "backupRetentionDays": "[parameters('backupRetentionDays')]",
                     "geoRedundantBackup": "[parameters('geoRedundantBackup')]",
                     "storageAutoGrow": "[parameters('storageAutoGrow')]"
@@ -328,11 +343,11 @@
                 "infrastructureEncryption": "[parameters('infrastructureEncryption')]"
             },
             "sku": {
-                "name": "[parameters('skuName')]",
-                "tier": "[parameters('skuTier')]",
-                "capacity": "[parameters('skuCapacity')]",
-                "size": "[parameters('skuSizeMB')]",
-                "family": "[parameters('skuFamily')]"
+                "name": "[parameters('postGresskuName')]",
+                "tier": "[parameters('postGresskuTier')]",
+                "capacity": "[parameters('postGresskuCapacity')]",
+                "size": "[parameters('postGresskuSizeMB')]",
+                "family": "[parameters('postGresskuFamily')]"
             },
             "tags": "[parameters('tags')]"
         },
@@ -357,10 +372,9 @@
             "kind": "functionapp,linux",
             "location": "[parameters('region')]",
             "tags": {
-                "hidden-link: /app-insights-resource-id": "[concat('/subscriptions/',parameters('subscriptionId'),'/resourceGroups/exodestiny/providers/Microsoft.Insights/components/exo-jobs']"
+                "hidden-link: /app-insights-resource-id": "[concat('/subscriptions/',parameters('subscriptionId'),'/resourceGroups/exodestiny/providers/Microsoft.Insights/components/exo-jobs')]"
             },
             "dependsOn": [
-                "microsoft.insights/components/exo-jobs",
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
             ],
             "properties": {
@@ -376,20 +390,12 @@
                             "value": "python"
                         },
                         {
-                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference('microsoft.insights/components/exo-jobs', '2015-05-01').InstrumentationKey]"
-                        },
-                        {
-                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference('microsoft.insights/components/exo-jobs', '2015-05-01').ConnectionString]"
-                        },
-                        {
                             "name": "AzureWebJobsStorage",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(parameters('subscriptionId')),parameters('applicationName'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId(parameters('subscriptionId'),parameters('applicationName'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
                         },
                         {
                             "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(parameters('subscriptionId')),parameters('applicationName'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId(parameters('subscriptionId'),parameters('applicationName'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
@@ -405,27 +411,10 @@
                     "linuxFxVersion": "[parameters('linuxFxVersion')]",
                     "ftpsState": "[parameters('ftpsState')]"
                 },
-                "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('resourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
                 "clientAffinityEnabled": false,
                 "virtualNetworkSubnetId": null,
                 "httpsOnly": false
-            }
-        },
-        {
-            "apiVersion": "2020-02-02-preview",
-            "name": "exo-jobs",
-            "type": "microsoft.insights/components",
-            "location": "westus2",
-            "tags": {},
-            "dependsOn": [
-                "newWorkspaceTemplate"
-            ],
-            "properties": {
-                "ApplicationId": "[parameters('azfuncName')]",
-                "Request_Source": "IbizaWebAppExtensionCreate",
-                "Flow_Type": "Redfield",
-                "Application_Type": "web",
-                "WorkspaceResourceId": "[concat('/subscriptions/',parameters('subscriptionId'),'/resourceGroups/DefaultResourceGroup-WUS2/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-',parameters('subscriptionId')]"
             }
         }
     ]
