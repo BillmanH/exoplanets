@@ -22,7 +22,7 @@ notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
 
 
 class GraphFormatError(Exception):
-    """graph error message for cosmos/gremlin checks"""
+    """exodestiny data structure error graph error message for cosmos/gremlin checks"""
     pass
 
 #%%
@@ -96,8 +96,14 @@ def check_vertex(node):
 
 
 def create_edge(edge, username):
-    gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}').to(g.V().has('objid','{cs(edge['node2'])}'))"
-    return gadde
+    gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}')"
+    for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
+        if i == 'weight':
+            gadde += f".property('{i}',{edge[i]})"
+        else:
+            gadde += f".property('{i}','{edge[i]}')"
+    gadde_fin = f".to(g.V().has('objid','{cs(edge['node2'])}'))"
+    return gadde + gadde_fin
 
 
 def upload_data(client, username, data):

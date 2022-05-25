@@ -1,0 +1,49 @@
+actions:
+  -
+    type: patriot_education
+    label: action
+    required_desire: .5
+    leadingdesire: wealth
+    comment: "expand public education programs with a collective theme, increase literacy and faction loyalty"
+  -
+    type: safetynets
+    label: action
+    required_desire: .7
+    leadingdesire: wealth
+    comment: "increase the wealth and literacy of other populations within your faction"
+  -
+    type: charity
+    label: action
+    required_desire: .8
+    leadingdesire: wealth
+    comment: "increase the wealth and literacy of populations in other factions"
+  -
+    type: individual_education
+    label: action
+    required_desire: .2
+    leadingdesire: wealth
+    comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
+  -
+    type: patriot_propoganda
+    label: action
+    required_desire: .2
+    leadingdesire: industry
+    comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
+  -
+    type: attack
+    label: action
+    required_desire: .8
+    leadingdesire: aggression
+    comment: "pointless loss of lives and wealth, possibly resulting in converting a population to this faction"
+  -
+    type: betterliving
+    label: action
+    required_desire: .3
+    leadingdesire: literacy
+    comment: "researching advances in medication and domestic tranquligy, increases wealth"
+  -
+    type: buildinfra
+    label: action
+    required_desire: .5
+    leadingdesire: wealth
+    comment: "increase industry by investing in local infrastructure, increases industry"

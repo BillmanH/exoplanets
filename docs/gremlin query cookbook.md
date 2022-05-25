@@ -16,10 +16,21 @@ Get the objects orbiting an object.
 g.V().has('objid','8308379553174').in('orbits').valueMap()
 ```
 ### Population Queries
-Get the average agression for a faction
+Get the average agression for a faction (average of pop['agression'])
 ```
 g.V().has('faction','name','factionName').in('isInFaction').values('aggression').mean()
 ```
+
+##  Desires
+### Get all of the desired objectives of a pop
+```
+g.V().has('objid','5720114744401').outE('desires').inV().hasLabel('objective')
+```
+Getting all of the desires, weights and objectives for a pop
+```
+g.V().has('objid','5720114744401').outE('desires').inV().hasLabel('objective').dedup().path().by('name').by('weight').by('type')
+```
+
 
 ## NUCLEAR delete and drop functions, use with caution.
 Drop an account, and everything asociated with it. Everything for a user has the 'username' property.  
