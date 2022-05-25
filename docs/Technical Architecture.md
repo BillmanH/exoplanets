@@ -131,6 +131,13 @@ python manage.py migrate
 
 **NOTE** You can also access the DB in `notebooks` with the DB helper tools.
 
+### Migrating Static to Azure
+To host static files in Azure you'll need to create a public blob (recommended). In the portal, create a new container, and change it's `Public access level` to `blob`. Then you can migrate your static files to that bob with:
+```
+python manage.py collectstatic
+```
+if your env variables are configured correctly you should be able to migrate those files. 
+
 # Contributing
 Pretty early in the design right now, however I might invite collaborators later. Feel free to open an issue if you want to chat about contributing, or just make a PR. 
 
