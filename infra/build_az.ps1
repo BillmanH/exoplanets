@@ -11,6 +11,7 @@ az login
 az account set --subscription $Env:subscription
 cd $Env:abspath
 
+# # Only need to do this when creating the new resource group:
 # az group create -l $location -n $resourceGroupName
 # az group delete --name $resourceGroupName
 
