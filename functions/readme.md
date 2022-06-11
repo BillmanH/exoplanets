@@ -9,8 +9,17 @@ Azure functions run the backend of the game. All things happening that aren't co
 | HttpExample | http function. Just keeping it as a template. Not involved in the game. | template |
 
 # Dev Cycle Steps:
+**Note** I switched from container to regular az functions as I found them easier to troubleshoot and view logs . 
 
 ![Alt text](/docs/img/container_cicd.png?raw=true "docker cicd")
+
+## Creating the local development environment
+The Azure Func Tools don't support conda environments, so I'm using a regular python env. This will need to be done anytime `requirements.txt` is updated OR when the environment variables are reset. This is just for the local environment. 
+```
+python -m venv .venv
+.venv\scripts\activate
+pip install -r requirements.txt
+```
 
 ## Creating a new function
 You can get a list of the templates from: `func templates list`
@@ -24,34 +33,9 @@ func start
 ```
 then test it at this url: `http://localhost:7071/api/HttpExample?name=Functions`
 
-## Test the completed container (publish)
-
-build it
-```
-docker build --tag <registry>.azurecr.io/exodestiny:v1.0.0 .
-```
-
-run it
-```
-docker run -p 8080:80 -it <registry>.azurecr.io/exodestiny:v1.0.0
-```
-then test it at this url: `http://localhost:8080/api/HttpExample?name=Functions`
-
-**Note** the timer trigger and other functions require Azure and, thus, won't work locally, however you can infer the build validation from the error messages.
 
 ## Push it to prod
-There isn't a dev environment on the web, so this will push it directly into prod. Test on your local machine. 
-
-```
-docker login <registry>.azurecr.io
-```
-If you are using the Azure CLI, it should just grab your creds. If not, the credentials are in the `parameters_func.json` that was used to create the resource. They are .gitignore so they won't be in the repo.
-
-Push the container:
-```
-docker push <registry>.azurecr.io/exodestiny:v1.0.0
-```
-From there, the webhook should push it to the azure functions. This happens in real time. 
+There isn't a dev environment on the web, so this will push it directly into prod. Test on your local machine. Then the deploy function within VSC is used to push the function into prod. This means that the code for functions is updated differently than the webapp (wich updates on a GH action). I'll add that to the CICD process at some point. 
 
 # More useful docs:
 

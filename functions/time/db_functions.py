@@ -1,9 +1,6 @@
-import datetime
-import logging
-
-import azure.functions as func
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
+import os
 
 def get_client():
     '''
@@ -20,12 +17,20 @@ def get_client():
         message_serializer=serializer.GraphSONSerializersV2d0(),
     )
     return client_g
-    
-def main(mytimer: func.TimerRequest) -> None:
-    utc_timestamp = datetime.datetime.utcnow().replace(
-        tzinfo=datetime.timezone.utc).isoformat()
 
-    if mytimer.past_due:
-        logging.info('The timer is past due!')
+def run_query(client, query="g.V().count()"):
+    """
+    run_query(client, query)
+    run_query(c, query)
+    """
+    callback = client.submitAsync(query)
+    res = callback.result().all().result()
+    return res
 
-    logging.info('Python timer trigger function ran at %s', utc_timestamp)
+def clean_node(x):
+    for k in list(x.keys()):
+        if len(x[k]) == 1:
+            x[k] = x[k][0]
+    x["id"] = x["objid"]
+    return x
+
