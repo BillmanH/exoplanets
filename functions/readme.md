@@ -21,6 +21,17 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+## Updating the environment in the cloud:
+
+to get the settings into your local file:
+```
+az webapp config appsettings list --name <app-name> --resource-group <group-name> > application_settings.json
+```
+To update those settings: 
+```
+az webapp config appsettings set --resource-group <group-name> --name <app-name> --settings @application_settings.json
+```
+
 ## Creating a new function
 You can get a list of the templates from: `func templates list`
 ```
