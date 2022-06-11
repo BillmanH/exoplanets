@@ -7,10 +7,6 @@ from .db_functions import get_client, run_query, clean_node
 logger = logging.getLogger('azure.mgmt.resource')
 c = get_client()
 
-print(f"Logger enabled for ERROR={logger.isEnabledFor(logging.ERROR)}, " \
-    f"WARNING={logger.isEnabledFor(logging.WARNING)}, " \
-    f"INFO={logger.isEnabledFor(logging.INFO)}, " \
-    f"DEBUG={logger.isEnabledFor(logging.DEBUG)}")
 
 def main(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
@@ -25,9 +21,10 @@ def main(mytimer: func.TimerRequest) -> None:
 
     # Autoincrement time by one:
     currentTime = time['currentTime'] + 1
-    print(f"time was discovered at:")
-    print(time)
+    logging.info(f"time was discovered at:")
+    logging.info(time)
+    # TODO: Update function to indicate from where time was updated (e.g. notebook, local function, prod function)
     updateRes = run_query(c, f"g.V().hasLabel('time').property('currentTime', {currentTime})")
 
-    print(f"currentTime was updated to:{currentTime}")
+    logging.info(f"currentTime was updated to: {currentTime}")
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
