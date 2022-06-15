@@ -93,3 +93,19 @@ def get_all_pops(request):
         response["pops"] = pops
     c.close()
     return JsonResponse(response)
+
+
+def get_pop_desires(request):
+    """
+    given a specific pop,
+    get all of the desires of that pop. 
+    """
+    response = {}
+    request = dict(request.GET)
+    query =f"g.V().has('objid','{request.get('objid','')[0]}').out('desires').valueMap()"
+    c = get_client()
+    res = clean_nodes(run_query(c, query))
+    # if faction has people, get the factions (only the ones found on that planet)
+    response["desires"] = res
+    c.close()
+    return JsonResponse(response)

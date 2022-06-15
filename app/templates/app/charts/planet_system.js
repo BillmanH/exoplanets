@@ -24,7 +24,14 @@ var table_lables = [{"label":"Name","value":"name"},
                             {"label":"Constitution","value":"constitution"},
                             {"label":"Literacy","value":"literacy"}
                         ]
-                    
+     
+var desire_table_lables = [{"Type":"Name","value":"type"}, 
+                        {"label":"Aggression","value":"leadingAttribute"},
+                        {"label":"Weight","value":"weight"},
+                        {"label":"Comment","value":"comment"},
+                        {"label":"Literacy","value":"literacy"}
+                    ]
+
 var faction_table_lables = [{"label":"Faction Name","value":"name"}]
 
 function clickTablePlanet(d){
@@ -44,7 +51,8 @@ function clickTablePlanet(d){
                 draw_table(
                     "peopleTable",
                     data['pops'],
-                    table_lables
+                    table_lables,
+                    tableClickHandler = clickTablePopDesires
                     )
                 draw_table(
                     "factionTable",
@@ -76,3 +84,25 @@ function draw_planet(pdata){
 }
 
 
+function clickTablePopDesires(d){
+    $.ajax({
+        url: '/ajax/pop-desires',
+        type: 'get',
+        data: d,
+        dataType: 'json',
+        beforeSend: function () {
+            d3.selectAll('#peopledesires').remove()
+        },
+        success: function(data){
+            console.log(data)
+            if ("desires" in data){
+                draw_table(
+                    "peopleTable",
+                    data['desires'],
+                    desire_table_lables
+                    )
+            }
+            addTextBox(d,data)
+        }
+    });
+}
