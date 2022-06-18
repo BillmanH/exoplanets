@@ -46,6 +46,7 @@ function clickTablePlanet(d){
             d3.selectAll('#peopleTable').remove()
             d3.selectAll('#factionTable').remove()
             d3.selectAll('#description').remove()
+            d3.selectAll('#peopledesires').remove()
         },
         success: function(data){
             console.log(data)
