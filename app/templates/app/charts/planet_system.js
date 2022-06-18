@@ -26,11 +26,13 @@ var table_lables = [{"label":"Name","value":"name"},
                         ]
      
 var desire_table_lables = [{"Type":"Name","value":"type"}, 
-                        {"label":"Aggression","value":"leadingAttribute"},
+                        {"label":"Name","value":"name"},
                         {"label":"Weight","value":"weight"},
-                        {"label":"Comment","value":"comment"},
-                        {"label":"Literacy","value":"literacy"}
+                        {"label":"type","value":"type"},
+                        {"label":"comment","value":"comment"},
+                        {"label":"leadingAttribute","value":"leadingAttribute"}
                     ]
+
 
 var faction_table_lables = [{"label":"Faction Name","value":"name"}]
 
@@ -97,12 +99,11 @@ function clickTablePopDesires(d){
             console.log(data)
             if ("desires" in data){
                 draw_table(
-                    "peopleTable",
+                    "peopledesires",
                     data['desires'],
                     desire_table_lables
                     )
             }
-            addTextBox(d,data)
         }
     });
 }

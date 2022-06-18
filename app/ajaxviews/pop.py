@@ -1,4 +1,4 @@
-from app.models import clean_nodes, get_client, run_query, upload_data
+from app.models import clean_nodes, get_client, run_query, upload_data, flatten
 from django.http import JsonResponse
 
 from app.creators import homeworld
@@ -102,10 +102,13 @@ def get_pop_desires(request):
     """
     response = {}
     request = dict(request.GET)
-    query =f"g.V().has('objid','{request.get('objid','')[0]}').out('desires').valueMap()"
+    query = f"g.V().has('objid','{request.get('objid','')[0]}').outE('desires').inV().dedup().path().by(values('name','objid').fold()).by('weight').by(values('type','objid','comment','leadingAttribute').fold())"
     c = get_client()
-    res = clean_nodes(run_query(c, query))
-    # if faction has people, get the factions (only the ones found on that planet)
-    response["desires"] = res
+    res = run_query(c, query)
     c.close()
+    regular_list = [flatten(d['objects']) for d in res]
+    columns=['name','objid','weight','type','objid','comment','leadingAttribute']
+    regular_dict = [{columns[j[0]]:j[1] for j in enumerate(i) if columns[j[0]]!='objid'} for i in regular_list]
+    if len(regular_dict)>0:
+        response["desires"] = regular_dict
     return JsonResponse(response)
