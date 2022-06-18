@@ -35,7 +35,8 @@ def index(request):
     c = get_client()
     all_count = run_query(c, query="g.V().count()")
     count_accounts = run_query(c, query="g.V().hasLabel('account').count()")
-    context = {"all_count": all_count, "count_accounts": count_accounts}
+    time_units = run_query(c, query="g.V().hasLabel('time').values('currentTime')")
+    context = {"all_count": all_count, "count_accounts": count_accounts, "time": time_units}
     c.close()
     return render(request, "app/index.html", context)
 
