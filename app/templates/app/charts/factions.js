@@ -11,6 +11,14 @@ var pop_table_lables = [{"label":"Name","value":"name"},
                             {"label":"Literacy","value":"literacy"}
                         ]
 
+var desire_table_lables = [{"Type":"Name","value":"type"}, 
+                            {"label":"Name","value":"name"},
+                            {"label":"Weight","value":"weight"},
+                            {"label":"type","value":"type"},
+                            {"label":"comment","value":"comment"},
+                            {"label":"leadingAttribute","value":"leadingAttribute"}
+                        ]
+
 // on load, get population
 $.ajax({
     url: '/ajax/pops-all',
@@ -70,6 +78,7 @@ function clickTableFaction(d) {
                     scaleToOne = false,
                     xy = {"x":"conformity",
                         "y":"aggression"},
+                    clickHandler = clickTablePopDesires
                 )
                 draw_scatter(
                     "peopleScatter",
@@ -81,7 +90,30 @@ function clickTableFaction(d) {
                     scaleToOne = false,
                     xy = {"x":"faction_loyalty",
                         "y":"constitution"},
+                    clickHandler = clickTablePopDesires
                 )
+            }
+        }
+    });
+}
+
+function clickTablePopDesires(d){
+    $.ajax({
+        url: '/ajax/pop-desires',
+        type: 'get',
+        data: d,
+        dataType: 'json',
+        beforeSend: function () {
+            d3.selectAll('#peopledesires').remove()
+        },
+        success: function(data){
+            console.log(data)
+            if ("desires" in data){
+                draw_table(
+                    "peopledesires",
+                    data['desires'],
+                    desire_table_lables
+                    )
             }
         }
     });
@@ -93,3 +125,4 @@ draw_table(
     faction_table_lables,
     tableClickHandler = clickTableFaction
 )
+

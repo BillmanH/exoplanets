@@ -28,7 +28,7 @@ g.V().has('objid','5720114744401').outE('desires').inV().hasLabel('objective')
 ```
 Getting all of the desires, weights and objectives for a pop
 ```
-g.V().has('objid','5720114744401').outE('desires').inV().hasLabel('objective').dedup().path().by('name').by('weight').by('type')
+g.V().has('objid','4253777177342').outE('desires').inV().dedup().path().by(values('name','objid').fold()).by('weight').by(values('type','objid','comment','leadingAttribute').fold())
 ```
 
 

@@ -5,10 +5,10 @@ import azure.functions as func
 from .db_functions import get_client, run_query, clean_node
 
 logger = logging.getLogger('azure.mgmt.resource')
-c = get_client()
 
 
 def main(mytimer: func.TimerRequest) -> None:
+    c = get_client()
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
 
@@ -28,3 +28,4 @@ def main(mytimer: func.TimerRequest) -> None:
 
     logging.info(f"currentTime was updated to: {currentTime}")
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
+    c.close()
