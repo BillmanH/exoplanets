@@ -42,6 +42,7 @@ def build_species(data):
 
 
 def vary_pops(species):
+    # population attributes vary in accordance with the species['conformity']
     pop_std = 0.2 * (1 - float(species["conformity"]))
     pop = {}
     for k in list(species.keys()):
@@ -50,6 +51,7 @@ def vary_pops(species):
         pop[k] = abs(round(random.normal(float(species[k]), pop_std), 3))
     pop["objid"] = maths.uuid(n=13)
     pop["label"] = "pop"
+    pop['isIdle'] = "False"
     return pop
 
 
