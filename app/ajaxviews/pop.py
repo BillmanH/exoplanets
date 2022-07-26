@@ -34,8 +34,13 @@ def set_pop_desires(request):
     desire_edges = homeworld.get_pop_desires(pops,objectives)
     data = {"nodes": [], "edges": desire_edges}
     upload_data(c, username, data)
-    c.close()
+    # # Set the actions for that POP
+    actions = run_query(c, query="g.V().hasLabel('action').valuemap()")
+    action_edges = homeworld.get_pop_actions(pops,actions)
+    data = {"nodes": [], "edges": action_edges}
+    upload_data(c, username, data)
     response = {}
+    c.close()
     return JsonResponse(response)
 
 

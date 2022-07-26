@@ -144,12 +144,23 @@ def get_desire(x):
 def get_pop_desires(pops, objectives):
     edges = []
     for p in pops:
-        for p in pops:
-            for o in objectives:
-                edge = {'label':'desires',
-                        'node1':p['objid'],
-                        'node2':o['objid'],
-                        'desire':o['type'],
-                        'weight':get_desire(p[o['leadingAttribute']])}
-                edges.append(edge)
+        for o in objectives:
+            edge = {'label':'desires',
+                    'node1':p['objid'],
+                    'node2':o['objid'],
+                    'desire':o['type'],
+                    'weight':get_desire(p[o['leadingAttribute']])}
+            edges.append(edge)
     return edges
+
+def get_pop_actions(pops, actions):
+    edges = []
+    for p in pops:
+        for a in actions:
+            edge = {'label':'hasAction',
+                    'node1':p['objid'],
+                    'node2':a['objid'],
+                    'desire':a['type']}
+            edges.append(edge)
+    return edges
+
