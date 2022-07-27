@@ -1,49 +1,64 @@
+explanation:
+  -
+    type: 'the name of the action, underscore lowercase'
+    label: "always `action`"
+    requirement: "The properties neededed to be able to perform that action"
+    leadingdesire: "there must be enough political will for the action, otherwise people won't do it."
+    comment: "Human readable comment. Used in UX buttons and tooltips."
+    result: "what happens when the action is taken. Must be a change in the property of the object"
 actions:
   -
     type: patriot_education
     label: action
-    required_desire: .5
-    leadingdesire: wealth
-    comment: "expand public education programs with a collective theme, increase literacy and faction loyalty"
+    requirement: "[(wealth,.05)]"
+    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
+    comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
   -
     type: safetynets
     label: action
-    required_desire: .7
+    requirement: "[(wealth,.05)]"
     leadingdesire: wealth
+    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
     comment: "increase the wealth and literacy of other populations within your faction"
   -
     type: charity
     label: action
-    required_desire: .8
+    requirement: "[(wealth,.05)]"
     leadingdesire: wealth
+    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
     comment: "increase the wealth and literacy of populations in other factions"
   -
     type: individual_education
     label: action
-    required_desire: .2
+    requirement: "[(wealth,.05)]"
     leadingdesire: wealth
+    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
     comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
   -
     type: patriot_propoganda
     label: action
-    required_desire: .2
+    requirement: "[(wealth,.05)]"
     leadingdesire: industry
+    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
     comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
   -
     type: attack
     label: action
-    required_desire: .8
+    requirement: "[(wealth,.05)]"
     leadingdesire: aggression
-    comment: "pointless loss of lives and wealth, possibly resulting in converting a population to this faction"
+    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
+    comment: "Declares war if not already at war. Pointless loss of lives and wealth, possibly resulting in converting a population to this faction or destroying it entirely"
   -
     type: betterliving
     label: action
-    required_desire: .3
+    requirement: "[(wealth,.05)]"
     leadingdesire: literacy
+    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
     comment: "researching advances in medication and domestic tranquligy, increases wealth"
   -
     type: buildinfra
     label: action
-    required_desire: .5
+    requirement: "[(wealth,.05)]"
     leadingdesire: wealth
+    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
     comment: "increase industry by investing in local infrastructure, increases industry"
