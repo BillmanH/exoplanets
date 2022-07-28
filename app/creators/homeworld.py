@@ -51,7 +51,8 @@ def vary_pops(species):
         pop[k] = abs(round(random.normal(float(species[k]), pop_std), 3))
     pop["objid"] = maths.uuid(n=13)
     pop["label"] = "pop"
-    pop['isIdle'] = "False"
+    pop['isIdle'] = "True"
+    pop['health'] = .5
     return pop
 
 
