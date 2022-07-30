@@ -1,4 +1,4 @@
-explanation:
+1qw`  explanation:
   -
     type: 'the name of the action, underscore lowercase'
     label: "always `action`"
@@ -10,21 +10,19 @@ actions:
   -
     type: patriot_education
     label: action
-    requirement: "[(wealth,.05)]"
+    requirement: "[(faction_loyalty,.05)]"
     result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
     comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
   -
     type: safetynets
     label: action
     requirement: "[(wealth,.05)]"
-    leadingdesire: wealth
-    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
-    comment: "increase the wealth and literacy of other populations within your faction"
+    result: "[(health,-.05),(ss,+.05)]"
+    comment: "increase the health and literacy of other populations within your faction"
   -
     type: charity
     label: action
-    requirement: "[(wealth,.05)]"
-    leadingdesire: wealth
+    requirement: "[(wealth,.05)]"  
     result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
     comment: "increase the wealth and literacy of populations in other factions"
   -
@@ -60,5 +58,5 @@ actions:
     label: action
     requirement: "[(wealth,.05)]"
     leadingdesire: wealth
-    result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
-    comment: "increase industry by investing in local infrastructure, increases industry"
+  result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
+  comment: "increase industry by investing in local infrastructure, increases industry"
