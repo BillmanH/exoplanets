@@ -15,11 +15,13 @@ actions:
     label: action
     applies_to: "pop"
     effort: 10
-    requirement_query: "g.V().has('objid',%self%).has('faction_loyalty',gt(0.1)).count()"
-    requirement_description: "self, if faction loyalty is greater than .1"
-    result_query: "g.V().has('objid',%self%).values('faction_loyalty','literacy','aggression');[0.05,0.01,0.05];g.V().has('objid',%self%).properties('faction_loyalty',%val+mod%);"
-    result: "[(faction_loyalty,+.05),(literacy,+.01),(aggression,+.05)]"
+    requires_attr: "faction_loyalty;.1"
+    requirement_description: "faction loyalty must be > .1"
+    augments_self_properties: "faction_loyalty,literacy,aggression;[0.05,0.01,0.05]"
     comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
+
+
+
   # -
   #   type: safetynets
   #   label: action
