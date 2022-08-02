@@ -10,7 +10,7 @@ from . import maths
 
 # Setup Params:
 n_steps = 6  # max factions
-meta = ["uuid", "name", "label"]
+meta = ["uuid", "name", "label", "isIdle"]
 starting_attributes = ["conformity", "literacy", "aggression", "constitution"]
 
 
@@ -42,6 +42,7 @@ def build_species(data):
 
 
 def vary_pops(species):
+    # population attributes vary in accordance with the species['conformity']
     pop_std = 0.2 * (1 - float(species["conformity"]))
     pop = {}
     for k in list(species.keys()):
@@ -50,6 +51,8 @@ def vary_pops(species):
         pop[k] = abs(round(random.normal(float(species[k]), pop_std), 3))
     pop["objid"] = maths.uuid(n=13)
     pop["label"] = "pop"
+    pop['isIdle'] = "True"
+    pop['health'] = .5
     return pop
 
 
@@ -142,12 +145,23 @@ def get_desire(x):
 def get_pop_desires(pops, objectives):
     edges = []
     for p in pops:
-        for p in pops:
-            for o in objectives:
-                edge = {'label':'desires',
-                        'node1':p['objid'],
-                        'node2':o['objid'],
-                        'desire':o['type'],
-                        'weight':get_desire(p[o['leadingAttribute']])}
-                edges.append(edge)
+        for o in objectives:
+            edge = {'label':'desires',
+                    'node1':p['objid'],
+                    'node2':o['objid'],
+                    'desire':o['type'],
+                    'weight':get_desire(p[o['leadingAttribute']])}
+            edges.append(edge)
     return edges
+
+def get_pop_actions(pops, actions):
+    edges = []
+    for p in pops:
+        for a in actions:
+            edge = {'label':'hasAction',
+                    'node1':p['objid'],
+                    'node2':a['objid'],
+                    'desire':a['type']}
+            edges.append(edge)
+    return edges
+

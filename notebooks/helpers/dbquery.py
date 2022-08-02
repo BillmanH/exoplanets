@@ -4,6 +4,14 @@ import pandas as pd
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
+# Don't convert these to floats
+notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
+# Nodes must have expected values
+expectedProperties = ['label','objid','name']
+
+class GraphFormatError(Exception):
+    """exodestiny data structure error graph error message for cosmos/gremlin checks"""
+    pass
 
 def get_client():
     '''
@@ -55,12 +63,16 @@ def qtodf (query):
 def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
 
-# Don't convert these to floats
-notFloats = ['id','objid','orbitsId','isSupportsLife','isPopulated','label']
 
 def create_vertex(node, username):
+    if (len(
+        [i for i in expectedProperties 
+            if i in list(node.keys())]
+            )>len(expectedProperties)
+        ):
+        raise GraphFormatError
     gaddv = f"g.addV('{node['label']}')"
-    properties = [k for k in node.keys()]
+    properties = [k for k in node.keys() if k not in expectedProperties]
     for k in properties:
         # try to convert objects that aren't ids
         if k not in notFloats:
@@ -75,7 +87,9 @@ def create_vertex(node, username):
         gaddv += substr
     gaddv += f".property('username','{username}')"
     gaddv += f".property('objtype','{node['label']}')"
+    gaddv += f".property('objid','{uuid(n=13)}')"
     return gaddv
+
 
 def create_edge(edge, username):
     gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}')"
@@ -88,21 +102,19 @@ def create_edge(edge, username):
     return gadde + gadde_fin
 
 
-def upload_data(data,verbose=True): 
-    c = get_client()
-    if len(data["nodes"])>0:
-        for node in data["nodes"]:
-            gadv = create_vertex(node, "notebook")
-            callback = c.submitAsync(gadv)
-            if verbose:
-                print(gadv)
-                # print(callback)
-    if len(data["edges"])>0:
-        for edge in data["edges"]:
-            gadde = create_edge(edge)
-            callback = c.submitAsync(gadde)
-            if verbose:
-                print(gadde)
-                # print(callback)
-    c.close()
+def upload_data(c,data,verbose=True): 
+    for node in data["nodes"]:
+        gadv = create_vertex(node, "notebook")
+        callback = c.submitAsync(gadv)
+        if verbose:
+            print(gadv)
+            print(callback)
+    for edge in data["edges"]:
+        gadde = create_edge(edge)
+        callback = c.submitAsync(gadde)
+        if verbose:
+            print(gadde)
+            print(callback)
     return
+
+c = get_client()

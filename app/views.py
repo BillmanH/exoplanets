@@ -43,8 +43,8 @@ def index(request):
 
 @login_required
 def new_universe(request):
-    # TODO: too many requests here. Makes the load time longer.
-    # Make this into a serires of loading ajax functions to give better feedback to user.
+    # Note, Only the planets are loaded here. 
+    # The Genesis process is now controlled by steps defined in app\templates\app\creation\genesis_view.html
     c = get_client()
     context = {}
     form = HomeSystemForm(request.POST or None)
@@ -72,12 +72,6 @@ def new_universe(request):
         upload_data(c, username, data)
         c.close()
         return redirect("genesis")
-
-        # # Get the global list of objectives (prerequisite of desires)
-        # res = run_query(c, query="g.V().hasLabel('objective').valueMap()")
-        # objectives = [clean_node(n) for n in res]
-        # # Get the pop desire for those objectives
-        # homeworld_edges = homeworld_edges + homeworld.get_pop_desires([p for p in homeworld_nodes if p['label']=='pop'],objectives)
 
     if request.method == "GET":
         form = HomeSystemForm()
