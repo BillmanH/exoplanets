@@ -10,7 +10,7 @@ from . import maths
 
 # Setup Params:
 n_steps = 6  # max factions
-meta = ["uuid", "name", "label"]
+meta = ["uuid", "name", "label", "isIdle"]
 starting_attributes = ["conformity", "literacy", "aggression", "constitution"]
 
 

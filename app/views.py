@@ -43,8 +43,8 @@ def index(request):
 
 @login_required
 def new_universe(request):
-    # TODO: too many requests here. Makes the load time longer.
-    # Make this into a serires of loading ajax functions to give better feedback to user.
+    # Note, Only the planets are loaded here. 
+    # The Genesis process is now controlled by steps defined in app\templates\app\creation\genesis_view.html
     c = get_client()
     context = {}
     form = HomeSystemForm(request.POST or None)
