@@ -57,8 +57,10 @@ function clickTableFaction(d) {
         data: d,
         dataType: 'json',
         beforeSend: function () {
+            console.log(d)
             d3.selectAll('#peopleTable').remove()
             d3.selectAll('#peopleScatter').remove()
+            d3.selectAll('#peopledesires').remove()
         },
         success: function (data) {
             console.log(data)
