@@ -117,3 +117,12 @@ def get_pop_desires(request):
     if len(regular_dict)>0:
         response["desires"] = regular_dict
     return JsonResponse(response)
+
+
+def get_pop_actions(request):
+    request = dict(request.GET)
+    response = {}
+    query = f"g.V().has('objid','{request.get('objid','')[0]}').outE('hasAction').inV().valuemap()"
+    c = get_client()
+    res = run_query(c, query)
+    c.close()

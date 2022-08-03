@@ -16,5 +16,6 @@ urlpatterns = [
     path("ajax/pops-all", pop.get_all_pops, name="get_all_pops"),
     path("ajax/genesis-homeworld", pop.make_homeworld, name="genesis_homeworld"),
     path("ajax/genesis-pop-desire", pop.set_pop_desires, name="genesis_pop_desires"),
-    path("ajax/pop-desires", pop.get_pop_desires, name="get_pop_desires")
+    path("ajax/pop-desires", pop.get_pop_desires, name="get_pop_desires"),
+    path("ajax/pop-actions", pop.get_pop_actions, name="get_pop_actions")
 ]
