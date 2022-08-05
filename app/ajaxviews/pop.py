@@ -22,6 +22,7 @@ def make_homeworld(request):
     return JsonResponse(response)
 
 def set_pop_desires(request):
+    # sets both desires and actions
     request = dict(request.GET)
     c = get_client()
     username = request.get('username')[0]
@@ -35,10 +36,10 @@ def set_pop_desires(request):
     data = {"nodes": [], "edges": desire_edges}
     upload_data(c, username, data)
     # # Set the actions for that POP
-    actions = run_query(c, query="g.V().hasLabel('action').valuemap()")
+    actions = clean_nodes(run_query(c, query="g.V().hasLabel('action').valuemap()"))
     action_edges = homeworld.get_pop_actions(pops,actions)
-    data = {"nodes": [], "edges": action_edges}
-    upload_data(c, username, data)
+    action_data = {"nodes": [], "edges": action_edges}
+    upload_data(c, username, action_data)
     response = {}
     c.close()
     return JsonResponse(response)
