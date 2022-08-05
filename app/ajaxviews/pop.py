@@ -21,6 +21,7 @@ def make_homeworld(request):
     c.close()
     return JsonResponse(response)
 
+
 def set_pop_desires(request):
     # sets both desires and actions
     request = dict(request.GET)
