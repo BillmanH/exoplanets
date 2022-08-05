@@ -13,6 +13,7 @@ var faction_table_lables = [
 ]
 
 function genesisPopDesire(d){
+    // Desires and actions are in the same call
     $.ajax({
         url: '/ajax/genesis-pop-desire',
         // Doesn't really need client data, but as a placeholder
@@ -24,6 +25,7 @@ function genesisPopDesire(d){
         }
     })
 }
+
 
 function genesisHomeworld(d) {
     $.ajax({

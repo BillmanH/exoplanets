@@ -154,14 +154,34 @@ def get_pop_desires(pops, objectives):
             edges.append(edge)
     return edges
 
+def validate_pop_action(p,a):
+    # will validate that a given pop (p) meets the requirement needed to take an action (a)
+    if "requires_attr" in a.keys():
+        n=2  # requirements are lists of 2 (propperty and value)
+        r = a["requires_attr"].split(";")
+        r=[r[i:i + n] for i in range(0, len(r), n)]
+        for ri in r:
+            if ri[0] not in p.keys():
+                return False # pop doesn't have the reqired propperty
+            if float(ri[1]) > 0:
+                if p[ri[0]] < float(ri[1]):
+                    return False # pop doesn't have the sufficient level of propperty
+            if float(ri[1]) < 0:
+                if p[ri[0]] > (float(ri[1])*-1):
+                    return False # pop has too high level of propperty
+            
+    # upon failing to in-validate, return true
+    return True
+
 def get_pop_actions(pops, actions):
     edges = []
     for p in pops:
         for a in actions:
-            edge = {'label':'hasAction',
-                    'node1':p['objid'],
-                    'node2':a['objid'],
-                    'desire':a['type']}
-            edges.append(edge)
+            if validate_pop_action(p,a):
+                edge = {'label':'hasAction',
+                        'node1':p['objid'],
+                        'node2':a['objid'],
+                        'desire':a['type']}
+                edges.append(edge)
     return edges
 
