@@ -1,4 +1,6 @@
 # Exoplanets
+
+[The work-in-progress game is here.](http://exodestiny.azurewebsites.net/)
 Exoplanets is a real-time, multi-player, online game where you manage a civilization and it's people. Starting at the moment where your technology makes it possible to launch an individual into outer space, you must make choices that guide your people on it's journey to the stars.
 
 The game is procedurally generated based on public datasets regarding space exploration. The back end is built to rely on open source tools that are common to the data science stack such as d3.js and Jupyter. Also, the goal is to make the platform easy to clone and extend into other games. 
