@@ -126,5 +126,10 @@ def get_pop_actions(request):
     response = {}
     query = f"g.V().has('objid','{request.get('objid','')[0]}').outE('hasAction').inV().valuemap()"
     c = get_client()
-    res = run_query(c, query)
+    res = clean_nodes(run_query(c, query))
     c.close()
+    if len(res)>0:
+        response["actions"] = res
+    else:
+        response["actions"] = ["no actions returned"]
+    return JsonResponse(response)

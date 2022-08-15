@@ -31,7 +31,7 @@ $.ajax({
         d3.selectAll('#peopleTable').remove()
     },
     success: function (data) {
-        console.log(data)
+        cnsl(data)
         if ("pops" in data) {
             var categoryScheme = d3.scaleOrdinal().domain(data["pops"]).range(["black", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"])
             allPopsCongig = new scatterConfig(
@@ -46,7 +46,7 @@ $.ajax({
                 circleSize = function (d) { return 5 },
                 strokeColor = function (d) { return "black" },
                 circleClass = function (d) { return "popCircle" },
-                clickHandler = clickTablePopDesires 
+                clickHandler = clickPop 
             )
             draw_scatter(allPopsCongig)
             }
@@ -75,7 +75,8 @@ function clickTableFaction(d) {
                 draw_table(
                     "peopleTable",
                     data['pops'],
-                    pop_table_lables
+                    pop_table_lables,
+                    tableClickHandler = clickPop
                 )
                 popScatterA = new scatterConfig(
                     objid = "peopleScatter",
@@ -141,4 +142,33 @@ draw_table(
     faction_table_lables,
     tableClickHandler = clickTableFaction
 )
+
+function clickPop(d){
+    console.log(d)
+    if(d["isIdle"]=="True"){
+        $.ajax({
+            url: '/ajax/pop-actions',
+            type: 'get',
+            data: d,
+            dataType: 'json',
+            beforeSend: function () {
+                d3.selectAll('#peopleScatter').remove()
+                d3.selectAll('#peopledesires').remove()
+                d3.selectAll('#action').remove()
+            },
+            success: function(data){
+                console.log(data)
+                if ("actions" in data){
+                    popActionConfig = new actionConfig(
+                        objid="action",
+                        height = height,
+                        width = width,
+                        data['actions'],
+                        )
+                    draw_action(popActionConfig)
+                }
+            }
+        })
+    }
+}
 
