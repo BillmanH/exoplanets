@@ -60,8 +60,6 @@ var g_objectColors = {
     "Haleakala Observatory":"#F4F1C9"
 }
 
-var categoryScheme = d3.scaleOrdinal().domain(galaxies).range(["black", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"])
-
 galScatterConfig = new scatterConfig(
     objid = "ggalaxy",
     nodes = galaxies,
