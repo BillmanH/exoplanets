@@ -60,17 +60,23 @@ var g_objectColors = {
     "Haleakala Observatory":"#F4F1C9"
 }
 
+var categoryScheme = d3.scaleOrdinal().domain(galaxies).range(["black", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"])
 
-
-ggalaxy = draw_scatter(
-    "ggalaxy",
-    galaxies,
-    height,
-    width,
-    xLabel='galactic longitude',
-    yLabel='galactic latitude',
+galScatterConfig = new scatterConfig(
+    objid = "ggalaxy",
+    nodes = galaxies,
+    height = height,
+    width = width,
+    xLabel = 'galactic longitude',
+    yLabel = 'galactic latitude',
     scaleToOne = false,
     xy = {"x":"glat",
-    "y":"glon"},
-    circleFill = function (d) { return g_objectColors[d.disc_facility] }
+        "y":"glon"},
+    circleFill = function (d) { return g_objectColors[d.disc_facility] },
+    circleSize = function (d) { return 5 },
+    strokeColor = function (d) { return "black" },
+    circleClass = function (d) { return "star" },
+    clickHandler = function (d) { console.log("no click handler") } 
 )
+
+ggalaxy = draw_scatter(galScatterConfig)

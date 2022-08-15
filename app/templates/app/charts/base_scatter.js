@@ -92,6 +92,16 @@ function draw_scatter(a=scatterConfig) {
             ).range([0, innerHeight]);
     }
 
+    var t = g.selectAll("text")
+        .data(a.nodes)
+        .enter()
+        .append("text")
+        .text(function(d) {return d["name"]})
+        .attr("x", function(d) {return glatScale(d[a.xy["x"]])})
+        .attr("y", function(d) {return glonScale(d[a.xy["y"]])})
+        .attr("font-size", "15px")
+        .attr("fill", "white")
+
     var u = g.selectAll('circle')
         .data(a.nodes)
 
