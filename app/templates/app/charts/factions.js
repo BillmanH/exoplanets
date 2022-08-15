@@ -19,6 +19,8 @@ var desire_table_lables = [{"Type":"Name","value":"type"},
                             {"label":"leadingAttribute","value":"leadingAttribute"}
                         ]
 
+
+
 // on load, get population
 $.ajax({
     url: '/ajax/pops-all',
@@ -31,6 +33,7 @@ $.ajax({
     success: function (data) {
         console.log(data)
         if ("pops" in data) {
+            var categoryScheme = d3.scaleOrdinal().domain(data["pops"]).range(["black", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"])
             allPopsCongig = new scatterConfig(
                 objid = "scatterpops",
                 nodes = data["pops"],
@@ -41,7 +44,7 @@ $.ajax({
                 scaleToOne = true,
                 xy = {"x":"conformity",
                     "y":"aggression"},
-                circleFill = function (d) { return "white" },
+                circleFill = function(d){return categoryScheme(d['isInFaction']) },
                 circleSize = function (d) { return 5 },
                 strokeColor = function (d) { return "black" },
                 circleClass = function (d) { return "popCircle" },

@@ -36,7 +36,7 @@ function scatterConfig(
         this.clickHandler = clickHandler;
 }
 
-function getColorRange(nodes,start,end){
+function getColorRange(nodes){
     var colorRange = d3.scaleLinear()
                         .domain([1,10])
                         .range([start, end])
