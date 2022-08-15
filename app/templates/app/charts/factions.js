@@ -39,16 +39,14 @@ $.ajax({
                 nodes = data["pops"],
                 height = height,
                 width = width,
-                xLabel = 'conformity',
-                yLabel = 'aggression',
-                scaleToOne = true,
+                scaleToOne = false,
                 xy = {"x":"conformity",
                     "y":"aggression"},
                 circleFill = function(d){return categoryScheme(d['isInFaction']) },
                 circleSize = function (d) { return 5 },
                 strokeColor = function (d) { return "black" },
                 circleClass = function (d) { return "popCircle" },
-                clickHandler = clickTableFaction 
+                clickHandler = clickTablePopDesires 
             )
             draw_scatter(allPopsCongig)
             }
@@ -79,13 +77,25 @@ function clickTableFaction(d) {
                     data['pops'],
                     pop_table_lables
                 )
-                popScatter = new scatterConfig(
+                popScatterA = new scatterConfig(
                     objid = "peopleScatter",
                     nodes = data['pops'],
                     height = height,
                     width = width,
-                    xLabel = 'faction_loyalty',
-                    yLabel = 'constitution',
+                    scaleToOne = false,
+                    xy = {"x":"conformity",
+                        "y":"aggression"},
+                    circleFill = function (d) { return "black" },
+                    circleSize = function (d) { return 5 },
+                    strokeColor = function (d) { return "white" },
+                    circleClass = function (d) { return "popCircle" },
+                    clickHandler = clickTablePopDesires 
+                )
+                popScatterB = new scatterConfig(
+                    objid = "peopleScatter",
+                    nodes = data['pops'],
+                    height = height,
+                    width = width,
                     scaleToOne = false,
                     xy = {"x":"faction_loyalty",
                         "y":"constitution"},
@@ -95,7 +105,8 @@ function clickTableFaction(d) {
                     circleClass = function (d) { return "popCircle" },
                     clickHandler = clickTablePopDesires 
                 )
-                draw_scatter(popScatter)
+                draw_scatter(popScatterA)
+                draw_scatter(popScatterB)
             }
         }
     });
@@ -108,6 +119,7 @@ function clickTablePopDesires(d){
         data: d,
         dataType: 'json',
         beforeSend: function () {
+            d3.selectAll('#peopleScatter').remove()
             d3.selectAll('#peopledesires').remove()
         },
         success: function(data){
