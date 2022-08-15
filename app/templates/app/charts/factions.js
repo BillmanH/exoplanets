@@ -19,6 +19,8 @@ var desire_table_lables = [{"Type":"Name","value":"type"},
                             {"label":"leadingAttribute","value":"leadingAttribute"}
                         ]
 
+
+
 // on load, get population
 $.ajax({
     url: '/ajax/pops-all',
@@ -31,17 +33,24 @@ $.ajax({
     success: function (data) {
         console.log(data)
         if ("pops" in data) {
-            draw_scatter(
-                "scatterpops",
-                data["pops"],
-                height,
-                width,
-                xLabel='conformity',
-                yLabel='aggression',
+            var categoryScheme = d3.scaleOrdinal().domain(data["pops"]).range(["black", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"])
+            allPopsCongig = new scatterConfig(
+                objid = "scatterpops",
+                nodes = data["pops"],
+                height = height,
+                width = width,
+                xLabel = 'conformity',
+                yLabel = 'aggression',
                 scaleToOne = true,
                 xy = {"x":"conformity",
-                    "y":"aggression"} 
+                    "y":"aggression"},
+                circleFill = function(d){return categoryScheme(d['isInFaction']) },
+                circleSize = function (d) { return 5 },
+                strokeColor = function (d) { return "black" },
+                circleClass = function (d) { return "popCircle" },
+                clickHandler = clickTableFaction 
             )
+            draw_scatter(allPopsCongig)
             }
         },
     error: function (jqXHR, status, err) {
@@ -70,30 +79,23 @@ function clickTableFaction(d) {
                     data['pops'],
                     pop_table_lables
                 )
-                draw_scatter(
-                    "peopleScatter",
-                    data['pops'],
-                    height,
-                    width,
-                    xLabel='conformity',
-                    yLabel='aggression',
-                    scaleToOne = false,
-                    xy = {"x":"conformity",
-                        "y":"aggression"},
-                    clickHandler = clickTablePopDesires
-                )
-                draw_scatter(
-                    "peopleScatter",
-                    data['pops'],
-                    height,
-                    width,
-                    xLabel='faction_loyalty',
-                    yLabel='constitution',
+                popScatter = new scatterConfig(
+                    objid = "peopleScatter",
+                    nodes = data['pops'],
+                    height = height,
+                    width = width,
+                    xLabel = 'faction_loyalty',
+                    yLabel = 'constitution',
                     scaleToOne = false,
                     xy = {"x":"faction_loyalty",
                         "y":"constitution"},
-                    clickHandler = clickTablePopDesires
+                    circleFill = function (d) { return "black" },
+                    circleSize = function (d) { return 5 },
+                    strokeColor = function (d) { return "white" },
+                    circleClass = function (d) { return "popCircle" },
+                    clickHandler = clickTablePopDesires 
                 )
+                draw_scatter(popScatter)
             }
         }
     });

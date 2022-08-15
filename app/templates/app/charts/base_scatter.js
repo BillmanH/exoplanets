@@ -1,4 +1,5 @@
-function draw_scatter(
+
+function scatterConfig(
     // Note when using: The arguments need to be present, in order. Even if not used. 
     objid,
     nodes,
@@ -18,18 +19,41 @@ function draw_scatter(
     circleSize = function (d) { return 5 },
     strokeColor = function (d) { return "black" },
     circleClass = function (d) { return "circle" },
-    clickHandler = function (d) { console.log("no click handler") },
+    clickHandler = function (d) { console.log("no click handler") }
 ) {
+        this.objid = objid;
+        this.nodes = nodes;
+        this.height = height;
+        this.width = width;
+        this.xLabel= xLabel;
+        this.yLabel= yLabel;
+        this.scaleToOne = scaleToOne;
+        this.xy = xy;
+        this.circleFill = circleFill;
+        this.circleSize = circleSize;
+        this.strokeColor = strokeColor;
+        this.circleClass = circleClass;
+        this.clickHandler = clickHandler;
+}
+
+function getColorRange(nodes){
+    var colorRange = d3.scaleLinear()
+                        .domain([1,10])
+                        .range([start, end])
+    return colorRange
+}
+
+function draw_scatter(a=scatterConfig) {
     const margin = { left: 120, right: 30, top: 20, bottom: 120 };
 
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+    const innerWidth = a.width - margin.left - margin.right;
+    const innerHeight = a.height - margin.top - margin.bottom;
 
     var svg = d3.select('body').append('svg')
-        .attr('width', width)
-        .attr('height', height)
+        .attr('width', a.width)
+        .attr('height', a.height)
         .classed('map', true)
-        .attr("id", objid);
+        .attr("id", a.objid);
 
     var g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -50,7 +74,7 @@ function draw_scatter(
         .attr('transform', `rotate(-90)`)
         .style('text-anchor', 'middle')
         .text(yLabel);
-    if (scaleToOne){
+    if (a.scaleToOne){
         glatScale = d3.scaleLinear().domain([0,1]).range([0, innerWidth]);
         glonScale = d3.scaleLinear().domain([0,1]).range([0, innerHeight]);   
     } else {
@@ -68,21 +92,31 @@ function draw_scatter(
             ).range([0, innerHeight]);
     }
 
-    var u = g.selectAll('circle')
-        .data(nodes)
+    var t = g.selectAll("text")
+        .data(a.nodes)
+        .enter()
+        .append("text")
+        .text(function(d) {return d["name"]})
+        .attr("x", function(d) {return glatScale(d[a.xy["x"]])})
+        .attr("y", function(d) {return glonScale(d[a.xy["y"]])})
+        .attr("font-size", "15px")
+        .attr("fill", "white")
 
-    console.log(xy)
+    var u = g.selectAll('circle')
+        .data(a.nodes)
+
+    console.log(a.xy)
     u.enter()
         .append('circle')
-        .attr('r', circleSize)
-        .style("fill", circleFill)
-        .attr("stroke", strokeColor)
-        .attr('class', circleClass)
+        .attr('r', a.circleSize)
+        .style("fill", a.circleFill)
+        .attr("stroke", a.strokeColor)
+        .attr('class', a.circleClass)
         .attr('cx', function (d) {
-            return glatScale(d[xy["x"]])
+            return glatScale(d[a.xy["x"]])
         })
         .attr('cy', function (d) {
-            return glonScale(d[xy["y"]])
+            return glonScale(d[a.xy["y"]])
         })
         .on("mouseover", (event, d) => {
             return tooltip.style("visibility", "visible").html(dictToHtml(d));
@@ -94,7 +128,7 @@ function draw_scatter(
             d3.pointer(event)
             return tooltip.style("visibility", "hidden");
         })
-        .on("click", (event, d) => {clickHandler(d)})
+        .on("click", (event, d) => {a.clickHandler(d)})
 
     return svg
 }
