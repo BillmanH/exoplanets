@@ -30,6 +30,6 @@ function draw_action(a) {
                     .append('a')
                     .classed('button',true)
                     .attr("href", "takeaction")
-                    .html(function(d) {return a.});
+                    .html(function(d) {return "a.something"});
     return svg
 }
