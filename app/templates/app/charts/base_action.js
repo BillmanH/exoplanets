@@ -19,11 +19,17 @@ function draw_action(a) {
     const innerWidth = a.width - margin.left - margin.right;
     const innerHeight = a.height - margin.top - margin.bottom;
 
-    var svg = d3.select('body').append('svg')
+    var svg = d3.select('body').append('p')
         .attr('width', a.width)
         .attr('height', a.height/2)
         .classed('action', true)
         .attr("id", a.objid);
 
+    var button = svg.selectAll('a')
+                    .data(a.nodes)
+                    .append('a')
+                    .classed('button',true)
+                    .attr("href", "takeaction")
+                    .html(function(d) {return a.});
     return svg
 }

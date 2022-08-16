@@ -43,14 +43,16 @@ table, th, td {
   border: 1px solid white;
 }
 
-.menu.button {
+.button {
+  color: whitesmoke;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   padding: 14px 25px;
+  border: 1px solid white;
 }
 
-.menu.button:hover {
+.button:hover {
   background-color: whitesmoke;
   color: black
 }
