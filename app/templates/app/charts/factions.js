@@ -90,7 +90,7 @@ function clickTableFaction(d) {
                     circleSize = function (d) { return 5 },
                     strokeColor = function (d) { return "white" },
                     circleClass = function (d) { return "popCircle" },
-                    clickHandler = clickTablePopDesires 
+                    clickHandler = clickPop 
                 )
                 popScatterB = new scatterConfig(
                     objid = "peopleScatter",
@@ -104,7 +104,7 @@ function clickTableFaction(d) {
                     circleSize = function (d) { return 5 },
                     strokeColor = function (d) { return "white" },
                     circleClass = function (d) { return "popCircle" },
-                    clickHandler = clickTablePopDesires 
+                    clickHandler = clickPop 
                 )
                 draw_scatter(popScatterA)
                 draw_scatter(popScatterB)
@@ -144,7 +144,7 @@ draw_table(
 )
 
 function clickPop(d){
-    console.log(d)
+    cnsl(d)
     if(d["isIdle"]=="True"){
         $.ajax({
             url: '/ajax/pop-actions',
@@ -165,7 +165,7 @@ function clickPop(d){
                         width = width,
                         data['actions'],
                         )
-                    draw_action(popActionConfig)
+                    draw_action(d,popActionConfig)
                 }
             }
         })
