@@ -133,3 +133,11 @@ def get_pop_actions(request):
     else:
         response["actions"] = ["no actions returned"]
     return JsonResponse(response)
+
+def take_action(request):
+    request = dict(request.GET)
+    agent = request["agent"]
+    action = request["action"]
+    response = {}
+    query = f"g.V().has('objid','{agent.get('objid','')[0]}').property('isIdle','false')"
+    return JsonResponse(response)
