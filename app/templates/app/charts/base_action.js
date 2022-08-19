@@ -68,14 +68,16 @@ function draw_action(p,a) {
 function takeAction(p,a){
     cnsl(p.name)
     cnsl(a)
+    var d = {"agent":p,
+        "action":a}
+    cnsl(d)
     $.ajax({
         url: '/ajax/take-action',
         type: 'get',
-        data: {"agent":p,
-                "action":a},
+        data: { 'values' : JSON.stringify(d) },
         dataType: 'json',
         success: function(data){
-
+            cnsl(data)
         }
         
     });

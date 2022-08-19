@@ -2,6 +2,7 @@ from app.models import clean_nodes, get_client, run_query, upload_data, flatten
 from django.http import JsonResponse
 
 from app.creators import homeworld
+import ast
 
 def make_homeworld(request):
     request = dict(request.GET)
@@ -135,7 +136,7 @@ def get_pop_actions(request):
     return JsonResponse(response)
 
 def take_action(request):
-    request = dict(request.GET)
+    request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     action = request["action"]
     response = {}
