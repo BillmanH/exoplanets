@@ -45,15 +45,15 @@ function draw_action(p,a) {
     var g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    var button = g.selectAll('a')
+    var button = g.selectAll('button')
                     .data(a.nodes)
                     .enter()
-                    .append('a')
+                    .append('div')
                     .classed('button',true)
-                    .attr("href", "takeaction")
-                    .html(function(d) {return d['objtype']+': '+d['type']});
+                    .html(function(d) {return d['objtype']+': '+d['type']})
+                    .on("click", (event, d) => {takeAction(p,d)});
 
-    var button = g.selectAll('text')
+    var action_text = g.selectAll('text')
                     .data(a.nodes)
                     .enter()
                     .append('text')
@@ -61,4 +61,22 @@ function draw_action(p,a) {
 
 
     return svg
+}
+
+
+// Takes an (agent) and an (action)
+function takeAction(p,a){
+    cnsl(p.name)
+    cnsl(a)
+    $.ajax({
+        url: '/ajax/take-action',
+        type: 'get',
+        data: {"agent":p,
+                "action":a},
+        dataType: 'json',
+        success: function(data){
+
+        }
+        
+    });
 }

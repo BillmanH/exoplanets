@@ -170,5 +170,8 @@ function clickPop(d){
             }
         })
     }
+    else {
+        cnsl("TODO: Get current action if pop is not idle")
+    }
 }
 
