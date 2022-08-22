@@ -78,6 +78,7 @@ function takeAction(p,a){
         dataType: 'json',
         success: function(data){
             cnsl(data)
+            document.location.reload()
         }
         
     });
