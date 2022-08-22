@@ -135,10 +135,37 @@ def get_pop_actions(request):
         response["actions"] = ["no actions returned"]
     return JsonResponse(response)
 
+
+def validate_action(pop,action):
+    # Validate that the population is capable of the action
+    # pop is ilde and can take action
+    if pop['isIdle']=='false':
+        return False
+    # action requires attribute using 'requires_attr'
+    if action.GET('requires_attr',False):
+        req = action['requires_attr'].split(';')
+        # Population does not have attribute
+        if pop.get(req[0],False):
+            return False
+        # Population does not have high enough attr
+        if pop[req[0]] >= pop[req[1]]:
+            return True
+    return False
+
 def take_action(request):
+    #### Phase : Validation
     request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     action = request["action"]
     response = {}
-    query = f"g.V().has('objid','{agent.get('objid','')[0]}').property('isIdle','false')"
+    #### Phase : Update Graph
+    if validate_action(agent,action):
+        response['result'] = 'valid: Pop is able to take action'
+        c = get_client()
+        # g.V().has('objid','0000000000').property('isIdle','true')
+        setIdle = f"g.V().has('objid','{agent.get('objid','')[0]}').property('isIdle','false')"
+        res = run_query(setIdle)
+    else:
+        response['result'] = 'invalid: Pop is not able to take action'
+
     return JsonResponse(response)
