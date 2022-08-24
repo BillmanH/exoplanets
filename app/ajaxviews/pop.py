@@ -135,7 +135,6 @@ def get_pop_actions(request):
         response["actions"] = ["no actions returned"]
     return JsonResponse(response)
 
-
 def validate_action(pop,action):
     # Validate that the population is capable of the action
     # pop is ilde and can take action
@@ -152,20 +151,31 @@ def validate_action(pop,action):
             return True
     return False
 
+def create_job(pop,action):
+    actionToTime = {"source":action['objid'][0],"target":pop['objid'][0],"label":"takingAction"}
+    popToAction = {"source":action['objid'][0],"target":pop['objid'][0],"label":"pending"}
+    edges = [actionToTime,popToAction]
+    return edges
+
+ 
 def take_action(request):
-    #### Phase : Validation
     request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     action = request["action"]
     response = {}
+    # g.V().has('objid','0000000000').property('isIdle','true')
+    #### Phase : validate action
+    if validate_action(agent,action):
+        response['result'] = 'valid: Pop is able to take action'
     #### Phase : Update Graph
     if validate_action(agent,action):
         response['result'] = 'valid: Pop is able to take action'
         c = get_client()
         # g.V().has('objid','0000000000').property('isIdle','true')
         setIdle = f"g.V().has('objid','{agent.get('objid','')[0]}').property('isIdle','false')"
-        res = run_query(setIdle)
-    else:
-        response['result'] = 'invalid: Pop is not able to take action'
-
-    return JsonResponse(response)
+    c = get_client()
+    data = {"nodes": [], "edges": create_job(agent,action)}
+    upload_data(c, agent['user'], data)
+    setIdleResp = run_query(c, setIdle)
+    response["setIdleResp"] = setIdleResp
+    return JsonResponse(response) 
