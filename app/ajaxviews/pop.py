@@ -1,3 +1,4 @@
+from distutils.command.clean import clean
 from app.models import clean_nodes, get_client, run_query, upload_data, flatten
 from django.http import JsonResponse
 
@@ -141,7 +142,7 @@ def validate_action(pop,action):
     if pop['isIdle']=='false':
         return False
     # action requires attribute using 'requires_attr'
-    if action.GET('requires_attr',False):
+    if action.get('requires_attr',False):
         req = action['requires_attr'].split(';')
         # Population does not have attribute
         if pop.get(req[0],False):
@@ -151,14 +152,19 @@ def validate_action(pop,action):
             return True
     return False
 
-def create_job(pop,action):
-    actionToTime = {"source":action['objid'][0],"target":pop['objid'][0],"label":"takingAction"}
+def create_job(pop,action,universalTime):
+    time_to_complete = int(universalTime['currentTime']) + int(action['effort'])
+    actionToTime = {"source":action['objid'][0],"target":pop['objid'][0],"label":"takingAction", 'weight':time_to_complete}
     popToAction = {"source":action['objid'][0],"target":pop['objid'][0],"label":"pending"}
     edges = [actionToTime,popToAction]
     return edges
 
  
 def take_action(request):
+    # define queries
+    setIdle = f"g.V().has('objid','{agent.get('objid','')[0]}').property('isIdle','false')"
+    getTime = "g.V().hasLabel('time').values('objid')"
+    # get output
     request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     action = request["action"]
@@ -167,15 +173,16 @@ def take_action(request):
     #### Phase : validate action
     if validate_action(agent,action):
         response['result'] = 'valid: Pop is able to take action'
-    #### Phase : Update Graph
-    if validate_action(agent,action):
-        response['result'] = 'valid: Pop is able to take action'
         c = get_client()
         # g.V().has('objid','0000000000').property('isIdle','true')
         setIdle = f"g.V().has('objid','{agent.get('objid','')[0]}').property('isIdle','false')"
-    c = get_client()
-    data = {"nodes": [], "edges": create_job(agent,action)}
-    upload_data(c, agent['user'], data)
-    setIdleResp = run_query(c, setIdle)
-    response["setIdleResp"] = setIdleResp
+
+        universalTime = clean_nodes(run_query(c,getTime))
+        data = {"nodes": [], "edges": create_job(agent,action,universalTime)}
+        upload_data(c, agent['username'], data)
+        setIdleResp = run_query(c, setIdle)
+        response["setIdleResp"] = setIdleResp
+    else:
+        response['error'] = "action validation failed"
+        response['result'] = 'valid: Pop is not to take action'
     return JsonResponse(response) 
