@@ -40,8 +40,20 @@ g.V().has('objid','4253777177342').outE('desires').inV().dedup().path().by(value
 
 # Actions
 ### Getting all unresolved actions
+
+Sorting by all of the populations who are not idle. 
 ```
-g.V().haslabel('pop').has('isIdle','false').outE('pending').inV().outE('takingAction').inV().path().by(values('name','objid').fold()).by('label').by(values('type','objid').fold()).by(values('label','weight').fold()).by(values('name','currentTime').fold())
+g.V().haslabel('pop').has('isIdle','false').as('agent')
+    .outE('pending').as('status')
+    .inV().as('job')
+    .outE('takingAction').as('completed')
+    .inV().as('time')
+        .path()
+        .by(values('name','objid').fold())
+        .by('label')
+        .by(values('type','objid').fold())
+        .by('weight')
+        .by(values('name','currentTime').fold())
 ```
 
 ## **NUCLEAR** delete and drop functions, use with caution.
