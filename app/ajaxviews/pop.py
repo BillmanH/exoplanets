@@ -139,44 +139,42 @@ def get_pop_actions(request):
 def validate_action(pop,action):
     # Validate that the population is capable of the action
     # pop is ilde and can take action
-    if pop['isIdle']=='false':
+    if pop['isIdle'].lower() == 'false':
         return False
     # action requires attribute using 'requires_attr'
     if action.get('requires_attr',False):
         req = action['requires_attr'].split(';')
         # Population does not have attribute
         if pop.get(req[0],False):
-            return False
-        # Population does not have high enough attr
-        if pop[req[0]] >= pop[req[1]]:
-            return True
+            if pop[req[0]] >= float(req[1]):
+                # Population does have high enough attr
+                return True
     return False
 
 def create_job(pop,action,universalTime):
+    if type(universalTime)==list:
+        universalTime = universalTime[0]
     time_to_complete = int(universalTime['currentTime']) + int(action['effort'])
-    actionToTime = {"source":action['objid'][0],"target":pop['objid'][0],"label":"takingAction", 'weight':time_to_complete}
-    popToAction = {"source":action['objid'][0],"target":pop['objid'][0],"label":"pending"}
+    actionToTime = {"node1":action['objid'],"node2":pop['objid'],"label":"takingAction", 'weight':time_to_complete}
+    popToAction = {"node1":action['objid'],"node2":pop['objid'],"label":"pending"}
     edges = [actionToTime,popToAction]
     return edges
 
  
 def take_action(request):
-    # define queries
-    setIdle = f"g.V().has('objid','{agent.get('objid','')[0]}').property('isIdle','false')"
-    getTime = "g.V().hasLabel('time').values('objid')"
-    # get output
     request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     action = request["action"]
-    response = {}
+    # define queries
     # g.V().has('objid','0000000000').property('isIdle','true')
+    setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
+    getTime = "g.V().hasLabel('time').valuemap()"
+    # get output
+    response = {}
     #### Phase : validate action
     if validate_action(agent,action):
         response['result'] = 'valid: Pop is able to take action'
         c = get_client()
-        # g.V().has('objid','0000000000').property('isIdle','true')
-        setIdle = f"g.V().has('objid','{agent.get('objid','')[0]}').property('isIdle','false')"
-
         universalTime = clean_nodes(run_query(c,getTime))
         data = {"nodes": [], "edges": create_job(agent,action,universalTime)}
         upload_data(c, agent['username'], data)
@@ -185,4 +183,6 @@ def take_action(request):
     else:
         response['error'] = "action validation failed"
         response['result'] = 'valid: Pop is not to take action'
+        error = JsonResponse(response).status_code = 403
+        return error
     return JsonResponse(response) 

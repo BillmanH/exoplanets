@@ -8,7 +8,8 @@ var pop_table_lables = [{"label":"Name","value":"name"},
                             {"label":"Aggression","value":"aggression"},
                             {"label":"Conformity","value":"conformity"},
                             {"label":"Constitution","value":"constitution"},
-                            {"label":"Literacy","value":"literacy"}
+                            {"label":"Literacy","value":"literacy"},
+                            {"label":"Idle","value":"isIdle"}
                         ]
 
 var desire_table_lables = [{"Type":"Name","value":"type"}, 
@@ -29,6 +30,7 @@ $.ajax({
     dataType: 'json',
     beforeSend: function () {
         d3.selectAll('#peopleTable').remove()
+        d3.selectAll('#action').remove()
     },
     success: function (data) {
         cnsl(data)
@@ -68,6 +70,7 @@ function clickTableFaction(d) {
             d3.selectAll('#peopleTable').remove()
             d3.selectAll('#peopleScatter').remove()
             d3.selectAll('#peopledesires').remove()
+            d3.selectAll('#action').remove()
         },
         success: function (data) {
             console.log(data)
@@ -122,6 +125,7 @@ function clickTablePopDesires(d){
         beforeSend: function () {
             d3.selectAll('#peopleScatter').remove()
             d3.selectAll('#peopledesires').remove()
+            d3.selectAll('#action').remove()
         },
         success: function(data){
             console.log(data)

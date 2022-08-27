@@ -41,6 +41,12 @@ function draw_action(p,a) {
         .classed('action', true)
         .classed('menu', true)
         .attr("id", a.objid);
+    
+    svg.append('div')
+        .classed('action', true)
+        .classed('header', true)
+        .html(function() {return p['name']});
+    
 
     var g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -77,9 +83,10 @@ function takeAction(p,a){
         data: { 'values' : JSON.stringify(d) },
         dataType: 'json',
         success: function(data){
-            cnsl(data)
             document.location.reload()
+        },
+        error: function(data){
+            cnsl(data)
         }
-        
     });
 }
