@@ -155,8 +155,8 @@ def create_job(pop,action,universalTime):
     if type(universalTime)==list:
         universalTime = universalTime[0]
     time_to_complete = int(universalTime['currentTime']) + int(action['effort'])
-    actionToTime = {"node1":action['objid'],"node2":pop['objid'],"label":"takingAction", 'weight':time_to_complete}
-    popToAction = {"node1":action['objid'],"node2":pop['objid'],"label":"pending"}
+    actionToTime = {"node1":action['objid'],"node2":universalTime['objid'],"label":"takingAction", 'weight':time_to_complete}
+    popToAction = {"node1":pop['objid'],"node2":action['objid'],"label":"pending"}
     edges = [actionToTime,popToAction]
     return edges
 
