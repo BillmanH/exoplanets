@@ -56,6 +56,18 @@ g.V().haslabel('pop').has('isIdle','false').as('agent')
         .by(values('name','currentTime').fold())
 ```
 
+Getting all pending actions, regardless of agent:
+```
+g.E().haslabel('pending').as('status')
+    .outV().as('agent')
+    .outE('hasAction').as('completed')
+    .inV().as('action')
+    .outE('takingAction').as('completed')
+    .inV().as('time')
+        .path()
+        .by(valueMap())
+```
+
 ## **NUCLEAR** delete and drop functions, use with caution.
 Drop an account, and everything asociated with it. Everything for a user has the 'username' property.  
 ```
