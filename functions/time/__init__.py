@@ -29,3 +29,4 @@ def main(mytimer: func.TimerRequest) -> None:
     logging.info(f"currentTime was updated to: {currentTime}")
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
     c.close()
+

@@ -168,7 +168,7 @@ def take_action(request):
     # define queries
     # g.V().has('objid','0000000000').property('isIdle','true')
     setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
-    getTime = "g.V().hasLabel('time').valuemap()"
+    getTime = " "
     # get output
     response = {}
     #### Phase : validate action
