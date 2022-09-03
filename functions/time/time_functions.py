@@ -11,5 +11,5 @@ def global_ticker(c,time):
     logging.info(f"time was discovered at: {time}")
 
     
-    updateRes = run_query(c, f"g.V().hasLabel('time').property('currentTime', {currentTime}).propperty('updatedFrom','azfunction')")
+    updateRes = run_query(c, f"g.V().hasLabel('time').property('currentTime', {currentTime}).property('updatedFrom','azfunction')")
     logging.info(f"currentTime was updated to: {currentTime}")
