@@ -7,16 +7,21 @@ def get_global_actions(c):
     Retrieve a list of the global actions.
     """
     # Autoincrement time by one:
-    query_actions = """
-    g.E().haslabel('pending').as('status')
-    .outV().as('agent')
-    .outE('hasAction').as('completed')
-    .inV().as('action')
-    .outE('takingAction').as('completed')
-    .inV().as('time')
-        .path()
-        .by(valueMap())
+    actions_query = """
+    g.E().haslabel('hasJob').as('hasJob')
+        .outV().as('action')
+        .inE('hasAction').as('hasAction')
+        .outV().as('agent')
+        .path().by(valueMap())
     """
     
-    updateRes = run_query(c, f"g.V().hasLabel('time').property('currentTime', {currentTime}).property('updatedFrom','azfunction')")
+    # Clenup the query results:    
+    act = []
+    for action in actions:
+        lab = {}
+        for itr,itm in enumerate(action['labels']):
+            lab[itm[0]] = db.clean_node(action['objects'][itr])
+        act.append(lab)
+        
+
     logging.info(f"currentTime was updated to: {currentTime}")

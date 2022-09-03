@@ -155,8 +155,19 @@ def create_job(pop,action,universalTime):
     if type(universalTime)==list:
         universalTime = universalTime[0]
     time_to_complete = int(universalTime['currentTime']) + int(action['effort'])
-    actionToTime = {"node1":action['objid'],"node2":universalTime['objid'],"label":"hasJob","name":"hasJob","actionType":action['type'], 'weight':time_to_complete}
-    popToAction = {"node1":pop['objid'],"node2":action['objid'],"label":"takingAction","name":"takingAction","actionType":action['type']}
+    actionToTime = {"node1":action['objid'],
+                    "node2":universalTime['objid'],
+                    "label":"hasJob",
+                    "name":"hasJob",
+                    "actionType":action['type'],
+                    'weight':time_to_complete ,
+                    "status":"pending"}
+    popToAction = {"node1":pop['objid'],
+                    "node2":action['objid'],
+                    "label":"takingAction",
+                    "name":"takingAction",
+                    "actionType":action['type'],
+                    "status":"pending"}
     edges = [actionToTime,popToAction]
     return edges
 
@@ -168,7 +179,7 @@ def take_action(request):
     # define queries
     # g.V().has('objid','0000000000').property('isIdle','true')
     setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
-    getTime = " "
+    getTime = "g.V().hasLabel('time').valueMap()"
     # get output
     response = {}
     #### Phase : validate action

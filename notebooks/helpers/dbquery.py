@@ -46,7 +46,8 @@ def clean_node(x):
     for k in list(x.keys()):
         if len(x[k]) == 1:
             x[k] = x[k][0]
-    x["id"] = x["objid"]
+    if 'objid' in x.keys():
+        x["id"] = x["objid"]
     return x
 
 def qtodf (query):

@@ -27,10 +27,15 @@ def run_query(client, query="g.V().count()"):
     res = callback.result().all().result()
     return res
 
+
 def clean_node(x):
+    '''
+    Can also be used to clean edges, but there won't be an objid. 
+    '''
     for k in list(x.keys()):
         if len(x[k]) == 1:
             x[k] = x[k][0]
-    x["id"] = x["objid"]
+    if 'objid' in x.keys():
+        x["id"] = x["objid"]
     return x
 
