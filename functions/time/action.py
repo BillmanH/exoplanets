@@ -8,7 +8,7 @@ def validate_action(time,a):
     Not the same as validation that the action can be taken. 
     If the `takingAction` edge has been applied to the agent `a`, then it is just a check of time completed. 
     '''
-    print(f"currentTime: {time['currentTime']}; weight: {a['weight']}")
+    
     if int(a['weight']) < int(time['currentTime']):
         return True
     else:
@@ -24,7 +24,7 @@ def get_global_actions(c):
         .outV().as('agent').path().by(valueMap())
     """
     
-    actions = run_query(actions_query)
+    actions = run_query(c, actions_query)
     # Clenup the query results:    
     act = []
     for action in actions:
