@@ -32,12 +32,12 @@ def main(mytimer: func.TimerRequest) -> None:
         if validate_action(time,a):
             validActionCounter += 1
             if 'augments_self_properties' in a['job'].keys():
-                patch = run_query(augments_self_properties(a['agent'],a['job']))
+                patch = run_query(c, augments_self_properties(a['agent'],a['job']))
             # set the job to resolved
-            run_query(f"g.V().has('objid','{a['agent']['objid']}').outE('takingAction').has('actionType', '{a['job']['actionType']}').has('status', 'pending').has('weight',{a['job']['weight']}).property('status', 'resolved')")
+            run_query(c, f"g.V().has('objid','{a['agent']['objid']}').outE('takingAction').has('actionType', '{a['job']['actionType']}').has('status', 'pending').has('weight',{a['job']['weight']}).property('status', 'resolved')")
             # set the agent to isIdle=True
             if 'isIdle' in a['agent'].keys():
-                run_query(f"g.V().has('objid','{a['agent']['objid']}').property('isIdle','true')")
+                run_query(c, f"g.V().has('objid','{a['agent']['objid']}').property('isIdle','true')")
 
     logging.info(f'Total ations resolved in this run: {validActionCounter}')
 
