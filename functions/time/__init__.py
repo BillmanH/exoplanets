@@ -25,18 +25,19 @@ def main(mytimer: func.TimerRequest) -> None:
 
     # Get all pending actions
     actions = get_global_actions(c)
+    logging.info(f'Total ations recieved: {len(actions)}')
 
     # resolve each actionn 
     validActionCounter = 0
     for a in actions:
         if validate_action(time,a):
             validActionCounter += 1
-            if 'augments_self_properties' in a['job'].keys():
+            if 'augments_self_properties' in list(a['job'].keys()):
                 patch = run_query(c, augments_self_properties(a['agent'],a['job']))
             # set the job to resolved
             res = run_query(c, f"g.V().has('objid','{a['agent']['objid']}').outE('takingAction').has('actionType', '{a['job']['actionType']}').has('status', 'pending').has('weight',{a['job']['weight']}).property('status', 'resolved')")
             # set the agent to isIdle=True
-            if 'isIdle' in a['agent'].keys():
+            if 'isIdle' in list(a['agent'].keys()):
                 res = run_query(c, f"g.V().has('objid','{a['agent']['objid']}').property('isIdle','true')")
 
     logging.info(f'Total ations resolved in this run: {validActionCounter}')
