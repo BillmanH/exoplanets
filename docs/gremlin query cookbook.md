@@ -43,11 +43,8 @@ g.V().has('objid','4253777177342').outE('desires').inV().dedup().path().by(value
 
 Getting all pending actions, regardless of agent:
 ```
-g.E().haslabel('hasJob').as('hasJob')
-    .outV().as('action')
-    .inE('hasAction').as('hasAction')
-    .outV().as('agent')
-    .path().by(valueMap())
+    g.E().haslabel('takingAction').has('status','pending').as('job')
+        .outV().as('agent').path().by(valueMap())
 ```
 
 ## **NUCLEAR** delete and drop functions, use with caution.

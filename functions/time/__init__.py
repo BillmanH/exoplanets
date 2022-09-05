@@ -4,6 +4,7 @@ import logging
 import azure.functions as func
 from .db_functions import get_client, run_query, clean_node
 from .time_functions import global_ticker
+from .action import get_global_actions, validate_action, augments_self_properties
 
 logger = logging.getLogger('azure.mgmt.resource')
 
@@ -20,12 +21,26 @@ def main(mytimer: func.TimerRequest) -> None:
     res = run_query(c,"g.V().hasLabel('time').valueMap()")
     time = [clean_node(n) for n in res][0]
 
-    ### Start of time_funtions here
+    ### START of time_funtions here
+
+    # Get all pending actions
+    actions = get_global_actions(c)
+
+    # resolve each actionn 
+    for a in actions:
+        if validate_action(time,a):
+            if 'augments_self_properties' in a['job'].keys():
+                patch = run_query(augments_self_properties(a['agent'],a['job']))
+            # set the job to resolved
+            run_query(f"g.V().has('objid',{a['agent']['objid']}).outE('takingAction').has('actionType', {a['job']['actionType']}).has('status', 'pending').has('weight',{a['job']['weight']}).property('status', 'resolved')")
+            # set the agent to isIdle=True
+            if 'isIdle' in a['agent'].keys():
+                run_query(f"g.V().has('objid',{a['agent']['objid']}).property('isIdle','true')")
+
+    # Increment global time
     global_ticker(c,time)
-
-
-    ### End of time_functions
-
+    
+    ### END of time_functions
 
 
     logging.info(f'Python timer trigger function ran at: {utc_timestamp}')
