@@ -155,20 +155,17 @@ def create_job(pop,action,universalTime):
     if type(universalTime)==list:
         universalTime = universalTime[0]
     time_to_complete = int(universalTime['currentTime']) + int(action['effort'])
-    actionToTime = {"node1":action['objid'],
-                    "node2":universalTime['objid'],
-                    "label":"hasJob",
-                    "name":"hasJob",
-                    "actionType":action['type'],
-                    'weight':time_to_complete ,
-                    "status":"pending"}
+    actionKeys = [a for a in list(action.keys()) if a not in ['objid','type']]
     popToAction = {"node1":pop['objid'],
                     "node2":action['objid'],
                     "label":"takingAction",
                     "name":"takingAction",
+                    'weight':time_to_complete ,
                     "actionType":action['type'],
                     "status":"pending"}
-    edges = [actionToTime,popToAction]
+    for a in actionKeys:
+        popToAction[a] = action[a]
+    edges = [popToAction]
     return edges
 
  
