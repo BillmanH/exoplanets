@@ -25,12 +25,12 @@ def main(mytimer: func.TimerRequest) -> None:
 
     # Get all pending actions
     actions = get_global_actions(c)
-    logging.info(f'Total ations recieved: {len(actions)}')
 
     # resolve each actionn 
     validActionCounter = 0
     for a in actions:
-        if validate_action(time,a):
+        if validate_action(time,a['job']):
+            logging.info(f'Total ations resolved in this run: {validActionCounter}')
             validActionCounter += 1
             if 'augments_self_properties' in list(a['job'].keys()):
                 patch = run_query(c, augments_self_properties(a['agent'],a['job']))
