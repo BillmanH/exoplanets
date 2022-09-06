@@ -8,7 +8,7 @@ def validate_action(time,a):
     Not the same as validation that the action can be taken. 
     If the `takingAction` edge has been applied to the agent `a`, then it is just a check of time completed. 
     '''
-    
+
     if int(a['weight']) < int(time['currentTime']):
         return True
     else:
@@ -57,4 +57,5 @@ def augments_self_properties(a,j):
     for n in new_a.keys():
         query += f".properties('{n}',{new_a[n]})"
 
+    logging.info(f"patch query: {query}")
     return query
