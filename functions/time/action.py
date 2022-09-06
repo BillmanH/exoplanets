@@ -55,7 +55,7 @@ def augments_self_properties(a,j):
     # building the update query
     query = f"g.V().has('objid','{a['objid']}')"
     for n in new_a.keys():
-        query += f".properties('{n}',{new_a[n]})"
+        query += f".property('{n}',{new_a[n]})"
 
     logging.info(f"patch query: {query}")
     return query
