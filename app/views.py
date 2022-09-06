@@ -11,6 +11,7 @@ from .forms import HomeSystemForm, SignUpForm
 
 
 # managing the connection (sync)
+# the client object `c` is located in models.py
 #   c = get_client()  <- Fetches the client object.
 #   c.close() closes the connection afterwards, to avoid lingering connections.
 
@@ -32,12 +33,10 @@ def signup(request):
 
 
 def index(request):
-    c = get_client()
     all_count = run_query(c, query="g.V().count()")
     count_accounts = run_query(c, query="g.V().hasLabel('account').count()")
     time_units = run_query(c, query="g.V().hasLabel('time').values('currentTime')")
     context = {"all_count": all_count, "count_accounts": count_accounts, "time": time_units}
-    c.close()
     return render(request, "app/index.html", context)
 
 
@@ -45,7 +44,6 @@ def index(request):
 def new_universe(request):
     # Note, Only the planets are loaded here. 
     # The Genesis process is now controlled by steps defined in app\templates\app\creation\genesis_view.html
-    c = get_client()
     context = {}
     form = HomeSystemForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -70,48 +68,38 @@ def new_universe(request):
         # Upload all of that data that was created.
         data = {"nodes": universe_nodes, "edges": universe_edges}
         upload_data(c, username, data)
-        c.close()
         return redirect("genesis")
 
     if request.method == "GET":
         form = HomeSystemForm()
         context["form"] = form
-    c.close()
     return render(request, "app/creation/new_universe.html", context)
 
 
 @login_required
 def genesis(request):
-    c = get_client()
     res = get_system(c, request.user.username)
     context = {"solar_system": res,
                 "username": request.user.username}
-    c.close()
     return render(request, "app/creation/genesis_view.html", context)
 
 
 @login_required
 def system_map(request):
-    c = get_client()
     res = get_system(c, request.user.username)
     context = {"solar_system": res}
-    c.close()
     return render(request, "app/system_map.html", context)
 
 
 @login_required
 def galaxy_map(request):
-    c = get_client()
     res = get_galaxy_nodes(c)
     context = {"galaxies": res}
-    c.close()
     return render(request, "app/galaxy_map.html", context)
 
 
 @login_required
 def populations_view(request):
-    c = get_client()
     res = get_factions(c, request.user.username)
-    c.close()
     context = {"factions": res}
     return render(request, "app/populations.html", context)
