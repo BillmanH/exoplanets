@@ -41,7 +41,7 @@ def main(mytimer: func.TimerRequest) -> None:
             g.V().has('objid','{a['agent']['objid']}')
                     .outE('takingAction')
                     .has('actionType', '{a['job']['actionType']}')
-                    .has('weight',{a['job']['weight']})
+                    .has('weight','{a['job']['weight']}')
                     .property('status', 'resolved')
             """
             logging.info(f'updating job: {patch_job}')
