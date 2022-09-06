@@ -65,8 +65,6 @@ galScatterConfig = new scatterConfig(
     nodes = galaxies,
     height = height,
     width = width,
-    xLabel = 'galactic longitude',
-    yLabel = 'galactic latitude',
     scaleToOne = false,
     xy = {"x":"glat",
         "y":"glon"},

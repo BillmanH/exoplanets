@@ -99,15 +99,18 @@ def check_vertex(node):
 def create_edge(edge, username):
     gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}')"
     for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
-        if i == 'weight':
-            gadde += f".property('{i}',{edge[i]})"
-        else:
-            gadde += f".property('{i}','{edge[i]}')"
+        gadde += f".property('{i}','{edge[i]}')"
     gadde_fin = f".to(g.V().has('objid','{cs(edge['node2'])}'))"
     return gadde + gadde_fin
 
 
 def upload_data(client, username, data):
+    """
+    uploads nodes and edges in a format {"nodes":nodes,"edges":edges}.
+    Each value is a list of dicts with all properties. 
+    Extra items are piped in as properties of the edge.
+    Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
+    """
     for node in data["nodes"]:
         callback = client.submitAsync(create_vertex(node, username))
     for edge in data["edges"]:
@@ -128,7 +131,8 @@ def clean_node(x):
     for k in list(x.keys()):
         if len(x[k]) == 1:
             x[k] = x[k][0]
-    x["id"] = x["objid"]
+    if 'objid' in x.keys():
+        x["id"] = x["objid"]
     return x
 
 def clean_nodes(nodes):

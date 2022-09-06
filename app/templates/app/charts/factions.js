@@ -8,7 +8,8 @@ var pop_table_lables = [{"label":"Name","value":"name"},
                             {"label":"Aggression","value":"aggression"},
                             {"label":"Conformity","value":"conformity"},
                             {"label":"Constitution","value":"constitution"},
-                            {"label":"Literacy","value":"literacy"}
+                            {"label":"Literacy","value":"literacy"},
+                            {"label":"Idle","value":"isIdle"}
                         ]
 
 var desire_table_lables = [{"Type":"Name","value":"type"}, 
@@ -29,9 +30,10 @@ $.ajax({
     dataType: 'json',
     beforeSend: function () {
         d3.selectAll('#peopleTable').remove()
+        d3.selectAll('#action').remove()
     },
     success: function (data) {
-        console.log(data)
+        cnsl(data)
         if ("pops" in data) {
             var categoryScheme = d3.scaleOrdinal().domain(data["pops"]).range(["black", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"])
             allPopsCongig = new scatterConfig(
@@ -39,16 +41,14 @@ $.ajax({
                 nodes = data["pops"],
                 height = height,
                 width = width,
-                xLabel = 'conformity',
-                yLabel = 'aggression',
-                scaleToOne = true,
+                scaleToOne = false,
                 xy = {"x":"conformity",
                     "y":"aggression"},
                 circleFill = function(d){return categoryScheme(d['isInFaction']) },
                 circleSize = function (d) { return 5 },
                 strokeColor = function (d) { return "black" },
                 circleClass = function (d) { return "popCircle" },
-                clickHandler = clickTableFaction 
+                clickHandler = clickPop 
             )
             draw_scatter(allPopsCongig)
             }
@@ -70,6 +70,7 @@ function clickTableFaction(d) {
             d3.selectAll('#peopleTable').remove()
             d3.selectAll('#peopleScatter').remove()
             d3.selectAll('#peopledesires').remove()
+            d3.selectAll('#action').remove()
         },
         success: function (data) {
             console.log(data)
@@ -77,15 +78,28 @@ function clickTableFaction(d) {
                 draw_table(
                     "peopleTable",
                     data['pops'],
-                    pop_table_lables
+                    pop_table_lables,
+                    tableClickHandler = clickPop
                 )
-                popScatter = new scatterConfig(
+                popScatterA = new scatterConfig(
                     objid = "peopleScatter",
                     nodes = data['pops'],
                     height = height,
                     width = width,
-                    xLabel = 'faction_loyalty',
-                    yLabel = 'constitution',
+                    scaleToOne = false,
+                    xy = {"x":"conformity",
+                        "y":"aggression"},
+                    circleFill = function (d) { return "black" },
+                    circleSize = function (d) { return 5 },
+                    strokeColor = function (d) { return "white" },
+                    circleClass = function (d) { return "popCircle" },
+                    clickHandler = clickPop 
+                )
+                popScatterB = new scatterConfig(
+                    objid = "peopleScatter",
+                    nodes = data['pops'],
+                    height = height,
+                    width = width,
                     scaleToOne = false,
                     xy = {"x":"faction_loyalty",
                         "y":"constitution"},
@@ -93,9 +107,10 @@ function clickTableFaction(d) {
                     circleSize = function (d) { return 5 },
                     strokeColor = function (d) { return "white" },
                     circleClass = function (d) { return "popCircle" },
-                    clickHandler = clickTablePopDesires 
+                    clickHandler = clickPop 
                 )
-                draw_scatter(popScatter)
+                draw_scatter(popScatterA)
+                draw_scatter(popScatterB)
             }
         }
     });
@@ -108,7 +123,9 @@ function clickTablePopDesires(d){
         data: d,
         dataType: 'json',
         beforeSend: function () {
+            d3.selectAll('#peopleScatter').remove()
             d3.selectAll('#peopledesires').remove()
+            d3.selectAll('#action').remove()
         },
         success: function(data){
             console.log(data)
@@ -129,4 +146,36 @@ draw_table(
     faction_table_lables,
     tableClickHandler = clickTableFaction
 )
+
+function clickPop(d){
+    cnsl(d)
+    if(d["isIdle"]=="True"){
+        $.ajax({
+            url: '/ajax/pop-actions',
+            type: 'get',
+            data: d,
+            dataType: 'json',
+            beforeSend: function () {
+                d3.selectAll('#peopleScatter').remove()
+                d3.selectAll('#peopledesires').remove()
+                d3.selectAll('#action').remove()
+            },
+            success: function(data){
+                console.log(data)
+                if ("actions" in data){
+                    popActionConfig = new actionConfig(
+                        objid="action",
+                        height = height,
+                        width = width,
+                        data['actions'],
+                        )
+                    draw_action(d,popActionConfig)
+                }
+            }
+        })
+    }
+    else {
+        cnsl("TODO: Get current action if pop is not idle")
+    }
+}
 

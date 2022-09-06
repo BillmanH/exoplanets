@@ -1,7 +1,9 @@
+from distutils.command.clean import clean
 from app.models import clean_nodes, get_client, run_query, upload_data, flatten
 from django.http import JsonResponse
 
 from app.creators import homeworld
+import ast
 
 def make_homeworld(request):
     request = dict(request.GET)
@@ -126,5 +128,69 @@ def get_pop_actions(request):
     response = {}
     query = f"g.V().has('objid','{request.get('objid','')[0]}').outE('hasAction').inV().valuemap()"
     c = get_client()
-    res = run_query(c, query)
+    res = clean_nodes(run_query(c, query))
     c.close()
+    if len(res)>0:
+        response["actions"] = res
+    else:
+        response["actions"] = ["no actions returned"]
+    return JsonResponse(response)
+
+def validate_action(pop,action):
+    # Validate that the population is capable of the action
+    # pop is ilde and can take action
+    if pop['isIdle'].lower() == 'false':
+        return False
+    # action requires attribute using 'requires_attr'
+    if action.get('requires_attr',False):
+        req = action['requires_attr'].split(';')
+        # Population does not have attribute
+        if pop.get(req[0],False):
+            if pop[req[0]] >= float(req[1]):
+                # Population does have high enough attr
+                return True
+    return False
+
+def create_job(pop,action,universalTime):
+    if type(universalTime)==list:
+        universalTime = universalTime[0]
+    time_to_complete = int(universalTime['currentTime']) + int(action['effort'])
+    actionKeys = [a for a in list(action.keys()) if a not in ['objid','type']]
+    popToAction = {"node1":pop['objid'],
+                    "node2":action['objid'],
+                    "label":"takingAction",
+                    "name":"takingAction",
+                    'weight':time_to_complete ,
+                    "actionType":action['type'],
+                    "status":"pending"}
+    for a in actionKeys:
+        popToAction[a] = action[a]
+    edges = [popToAction]
+    return edges
+
+ 
+def take_action(request):
+    request = ast.literal_eval(request.GET['values'])
+    agent = request["agent"]
+    action = request["action"]
+    # define queries
+    # g.V().has('objid','0000000000').property('isIdle','true')
+    setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
+    getTime = "g.V().hasLabel('time').valueMap()"
+    # get output
+    response = {}
+    #### Phase : validate action
+    if validate_action(agent,action):
+        response['result'] = 'valid: Pop is able to take action'
+        c = get_client()
+        universalTime = clean_nodes(run_query(c,getTime))
+        data = {"nodes": [], "edges": create_job(agent,action,universalTime)}
+        upload_data(c, agent['username'], data)
+        setIdleResp = run_query(c, setIdle)
+        response["setIdleResp"] = setIdleResp
+    else:
+        response['error'] = "action validation failed"
+        response['result'] = 'valid: Pop is not to take action'
+        error = JsonResponse(response).status_code = 403
+        return error
+    return JsonResponse(response) 

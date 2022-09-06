@@ -9,9 +9,8 @@ Azure functions run the backend of the game. All things happening that aren't co
 | HttpExample | http function. Just keeping it as a template. Not involved in the game. | template |
 
 # Dev Cycle Steps:
-**Note** I switched from container to regular az functions as I found them easier to troubleshoot and view logs . 
 
-![Alt text](/docs/img/container_cicd.png?raw=true "docker cicd")
+![Alt text](/docs/img/exodestiny.png?raw=true "docker cicd")
 
 ## Creating the local development environment
 The Azure Func Tools don't support conda environments, so I'm using a regular python env. This will need to be done anytime `requirements.txt` is updated OR when the environment variables are reset. This is just for the local environment. 
@@ -39,6 +38,7 @@ func new --name <name> --template "from the template list" [--authlevel "anonymo
 ```
 
 ## Test the function locally
+if it's an http request function you can test it here: 
 ```
 func start
 ```

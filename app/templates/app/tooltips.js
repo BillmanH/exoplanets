@@ -1,3 +1,9 @@
+function cnsl(a){
+    if (verbose){
+        console.log(a)
+    }
+}
+
 function popvalues(a, m) {
     delete a[m]
     return a
