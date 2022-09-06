@@ -37,12 +37,20 @@ def main(mytimer: func.TimerRequest) -> None:
                 patch_query = augments_self_properties(a['agent'],a['job'])
                 patch = run_query(c, patch_query)
             # set the job to resolved
-            res = run_query(c, f"g.V().has('objid','{a['agent']['objid']}').outE('takingAction').has('actionType', '{a['job']['actionType']}').has('status', 'pending').has('weight',{a['job']['weight']}).property('status', 'resolved')")
+            patch_job = f"""
+            g.V().has('objid','{a['agent']['objid']}')
+                    .outE('takingAction')
+                    .has('actionType', '{a['job']['actionType']}')
+                    .has('weight',{a['job']['weight']})
+                    .property('status', 'resolved')
+            """
+            logging.info(f'updating job: {patch_job}')
+            res = run_query(c, patch_job)
             # set the agent to isIdle=True
             if 'isIdle' in list(a['agent'].keys()):
                 res = run_query(c, f"g.V().has('objid','{a['agent']['objid']}').property('isIdle','true')")
-
-    logging.info(f'Total ations resolved in this run: {validActionCounter}')
+                logging.info(f"objid set to idle: {a['agent']['objid']}")
+            logging.info(f"Total ations resolved in this run: {validActionCounter}")
 
     # Increment global time
     global_ticker(c,time)
