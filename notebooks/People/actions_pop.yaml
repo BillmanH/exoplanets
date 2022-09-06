@@ -6,7 +6,6 @@ explanation:
     effort: "time in `universal time units` that the action will take to complete"
     requires_attr: "list of items required in format `item,item,item;value,value,value`"
     requirement_description: "Human readable definition of requirement"
-    result_query: "Gremlin queries, in a list, that 1) get to su 2) updates. Single query adds new nodes or edges"
     comment: "Human readable comment. Used in UX buttons and tooltips."
     augments_self_properties: "OPTIONAL, if action augments attribute values, list attributes required in format `item,item,item;value,value,value`"
 actions:
