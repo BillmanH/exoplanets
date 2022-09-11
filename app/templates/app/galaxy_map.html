@@ -3,10 +3,10 @@
 {% include "app/head.html" %}
 
 <body>
+    <div>
+        {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+    </div>
     <div class="menu">
-        <div>
-            {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
-        </div>
         <p>
             <a class="menu button" href="/systemmap">System</a>
         </p>
@@ -17,6 +17,7 @@
             <a class='menu button' href='/'>Quit</a>
         </p>
     </div>
+    {% include "app/overview.html" %}
 </body>
 
 <script>

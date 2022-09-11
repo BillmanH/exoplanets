@@ -17,7 +17,6 @@
             <a class='menu button' href='/'>Main Menu</a>
         </p>
     </div>
-
     {% include "app/overview.html" %}
 </body>
 
@@ -25,7 +24,7 @@
     {% include "app/tooltips.js" %}
 
     var factions = {{ factions | safe }}
-    var verbose = true
+
 
     cnsl(factions)
     var width = 640,
