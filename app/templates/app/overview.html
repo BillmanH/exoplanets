@@ -1,6 +1,5 @@
-<div>
-    {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
-</div>
+
+
 <div class="overview">
 
 </div>
@@ -17,10 +16,16 @@ $.ajax({
     },
     success: function (data) {
         cnsl(data)
+        var table = d3.select('.overview')
+                        .append('p')
+                        .attr("id", "overviewText")
+                        .html("At UTU (Universal Time Units): " + data['time'] + ", " + data['idle_population'] + " of your " + data['population'] + " populations are idle." )
+
+    },
     error: function (jqXHR, status, err) {
         console.log(status,err);
         }
-    }
+    
     });
 
 </script> 

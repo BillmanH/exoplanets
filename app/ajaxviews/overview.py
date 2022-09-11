@@ -11,6 +11,6 @@ def get_overview(request):
     totalPops = run_query(c, query=f"g.V().hasLabel('pop').has('username','{request.get('username')[0]}').count()")
     idlePops = run_query(c, query=f"g.V().hasLabel('pop').has('username','{request.get('username')[0]}').has('isIdle','True').count()")
 
-    response = {"time": time_units, "population": totalPops, "idle_population": idlePops}
+    response = {"time": time_units[0], "population": totalPops[0], "idle_population": idlePops[0]}
 
     return JsonResponse(response)
