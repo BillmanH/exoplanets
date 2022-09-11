@@ -10,8 +10,12 @@ def get_planet(request):
     """
     request = request.GET
     selected_planet = [dict(request)]
+    # if the user clicks on a star we'll just return the object.
+    if selected_planet[0]['objtype'][0] == 'star':
+        return JsonResponse({"nodes": [clean_nodes(selected_planet)], "links": [], "error":"objtype is star"})
     # some properties cause problems when they are the root node in d3.js
-    del selected_planet[0]['orbitsId']
+    if 'orbitsId' in selected_planet[0]:
+        del selected_planet[0]['orbitsId']
     del selected_planet[0]["x"]
     del selected_planet[0]["y"]
     del selected_planet[0]["vx"]
