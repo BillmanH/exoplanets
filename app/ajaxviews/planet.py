@@ -34,7 +34,10 @@ def get_planet(request):
 def get_planet_details(request):
     response = {}
     request = dict(request.GET)
-    queryplanet = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')[0]}').in().valueMap()"
+    queryplanet = f"""g.V().hasLabel('planet')
+                    .has('objid','{request.get('objid','')[0]}')
+                    .in('enhabits').hasLabel('pop').valueMap()
+    """
     respops = clean_nodes(run_query(c, queryplanet))
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
