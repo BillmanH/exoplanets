@@ -126,7 +126,7 @@ def get_pop_actions(request):
     if len(res)>0:
         response["actions"] = res
     else:
-        response["actions"] = ["no actions returned"]
+        response["error"] = "no actions returned"
     return JsonResponse(response)
 
 def validate_action(pop,action):

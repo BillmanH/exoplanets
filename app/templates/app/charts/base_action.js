@@ -16,15 +16,7 @@ function actionConfig(
 function draw_action(p,a) {
 
     if (a.nodes[0]=='no actions returned'){
-        var svg = d3.select('body').append('div')
-            .attr('width', a.width)
-            .attr('height', a.height/2)
-            .classed('action', true)
-            .classed('menu', true)
-            .attr("id", a.objid);       
 
-        var button = svg.append('text')
-            .html(function(d) {return p['name']+"has no actions available"});
 
         return svg
 

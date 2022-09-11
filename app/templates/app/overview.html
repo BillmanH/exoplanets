@@ -16,7 +16,7 @@ $.ajax({
     },
     success: function (data) {
         cnsl(data)
-        var table = d3.select('.overview')
+        var overviewtext = d3.select('.overview')
                         .append('p')
                         .attr("id", "overviewText")
                         .html("At UTU (Universal Time Units): " + data['time'] + ", " + data['idle_population'] + " of your " + data['population'] + " populations are idle." )
