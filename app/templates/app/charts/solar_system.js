@@ -32,10 +32,11 @@ function click_planet(d){
         },
         success: function(data){
             cnsl(data)
-            if (data['error'] != "objtype is star"){
+            if (data['error'] == "objtype is star"){}
+            else {
                 draw_planet(data)
                 addTextBox(d,data)
-        }
+            }
         }
     });
 }
