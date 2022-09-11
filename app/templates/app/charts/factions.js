@@ -30,6 +30,7 @@ $.ajax({
     dataType: 'json',
     beforeSend: function () {
         d3.selectAll('#peopleTable').remove()
+        d3.selectAll('#action').remove()
     },
     success: function (data) {
         cnsl(data)
@@ -69,6 +70,7 @@ function clickTableFaction(d) {
             d3.selectAll('#peopleTable').remove()
             d3.selectAll('#peopleScatter').remove()
             d3.selectAll('#peopledesires').remove()
+            d3.selectAll('#action').remove()
         },
         success: function (data) {
             console.log(data)
@@ -123,6 +125,7 @@ function clickTablePopDesires(d){
         beforeSend: function () {
             d3.selectAll('#peopleScatter').remove()
             d3.selectAll('#peopledesires').remove()
+            d3.selectAll('#action').remove()
         },
         success: function(data){
             console.log(data)
@@ -156,23 +159,28 @@ function clickPop(d){
                 d3.selectAll('#peopleScatter').remove()
                 d3.selectAll('#peopledesires').remove()
                 d3.selectAll('#action').remove()
+                d3.selectAll('#description').remove()
             },
             success: function(data){
                 console.log(data)
-                if ("actions" in data){
-                    popActionConfig = new actionConfig(
-                        objid="action",
-                        height = height,
-                        width = width,
-                        data['actions'],
-                        )
-                    draw_action(d,popActionConfig)
+                if (data['error'] == 'no actions returned'){
+                    d['hasActions'] = "no"
+                    addTextBox(d)
+                }
+                else {
+                        popActionConfig = new actionConfig(
+                            objid="action",
+                            height = height,
+                            width = width,
+                            data['actions'],
+                            )
+                        draw_action(d,popActionConfig)
                 }
             }
         })
     }
     else {
-        cnsl("TODO: Get current action if pop is not idle")
+        d3.selectAll('#description').remove()
+        addTextBox(d)
     }
 }
-
