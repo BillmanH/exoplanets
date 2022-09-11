@@ -1,0 +1,31 @@
+
+
+<div class="overview">
+
+</div>
+
+<script>
+// on load, get population
+$.ajax({
+    url: '/ajax/overview',
+    type: 'get',
+    data: {"username":"{{ user.username | safe }}"},
+    dataType: 'json',
+    beforeSend: function () {
+
+    },
+    success: function (data) {
+        cnsl(data)
+        var overviewtext = d3.select('.overview')
+                        .append('p')
+                        .attr("id", "overviewText")
+                        .html("At UTU (Universal Time Units): " + data['time'] + ", " + data['idle_population'] + " of your " + data['population'] + " populations are idle." )
+
+    },
+    error: function (jqXHR, status, err) {
+        console.log(status,err);
+        }
+    
+    });
+
+</script> 

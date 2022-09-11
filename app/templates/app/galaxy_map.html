@@ -3,10 +3,10 @@
 {% include "app/head.html" %}
 
 <body>
+    <div>
+        {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+    </div>
     <div class="menu">
-        <div>
-            {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
-        </div>
         <p>
             <a class="menu button" href="/systemmap">System</a>
         </p>
@@ -17,6 +17,7 @@
             <a class='menu button' href='/'>Quit</a>
         </p>
     </div>
+    {% include "app/overview.html" %}
 </body>
 
 <script>
@@ -27,8 +28,11 @@
         height = 480,
         defaultNodeSize = 10
 
+    // the last table in this sheet is the driver, that holds the business logic for the page. 
     {% include "app/charts/base_scatter.js" %}
+    {% include "app/charts/base_table.js" %}
     {% include "app/charts/galaxy.js" %}
+    {% include "app/text_description.js" %}
 </script>
 
 <script>

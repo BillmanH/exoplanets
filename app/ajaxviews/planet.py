@@ -1,5 +1,6 @@
-from app.models import clean_nodes, get_client, run_query
-from django.http import JsonResponse, response
+from app.models import clean_nodes, run_query, c
+from django.http import JsonResponse
+
 
 
 def get_planet(request):
@@ -9,16 +10,18 @@ def get_planet(request):
     """
     request = request.GET
     selected_planet = [dict(request)]
+    # if the user clicks on a star we'll just return the object.
+    if selected_planet[0]['objtype'][0] == 'star':
+        return JsonResponse({"nodes": [clean_nodes(selected_planet)], "links": [], "error":"objtype is star"})
     # some properties cause problems when they are the root node in d3.js
-    del selected_planet[0]['orbitsId']
+    if 'orbitsId' in selected_planet[0]:
+        del selected_planet[0]['orbitsId']
     del selected_planet[0]["x"]
     del selected_planet[0]["y"]
     del selected_planet[0]["vx"]
     del selected_planet[0]["vy"]
     query = f"g.V().has('objid','{request.get('objid','')}').in('orbits').valueMap()"
-    c = get_client()
     res = run_query(c, query)
-    c.close()
     edges = [
         {"source": i["objid"][0], "target": i["orbitsId"][0], "label": "orbits"}
         for i in res
@@ -32,7 +35,6 @@ def get_planet_details(request):
     response = {}
     request = dict(request.GET)
     queryplanet = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')[0]}').in().valueMap()"
-    c = get_client()
     respops = clean_nodes(run_query(c, queryplanet))
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
@@ -41,7 +43,6 @@ def get_planet_details(request):
         factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
         queryfaction = f"g.V().has('objid', within({factions})).valueMap()"
         resfaction = clean_nodes(run_query(c, queryfaction))
-        c.close()
         response["factions"] = resfaction
     return JsonResponse(response)
 

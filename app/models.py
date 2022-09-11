@@ -104,7 +104,7 @@ def create_edge(edge, username):
     return gadde + gadde_fin
 
 
-def upload_data(client, username, data):
+def upload_data(c, username, data):
     """
     uploads nodes and edges in a format {"nodes":nodes,"edges":edges}.
     Each value is a list of dicts with all properties. 
@@ -112,17 +112,17 @@ def upload_data(client, username, data):
     Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
     """
     for node in data["nodes"]:
-        callback = client.submitAsync(create_vertex(node, username))
+        callback = c.submitAsync(create_vertex(node, username))
     for edge in data["edges"]:
-        callback = client.submitAsync(create_edge(edge, username))
+        callback = c.submitAsync(create_edge(edge, username))
     return
 
 
-def get_galaxy_nodes(client):
+def get_galaxy_nodes(c):
     # TODO: Add Glat and glon to systems when created
     # TODO: Create edge from user that connects to systems that have been discovered
     query="g.V().haslabel('system').valueMap('hostname','objid','disc_facility','glat','glon')"
-    callback = client.submitAsync(query)
+    callback = c.submitAsync(query)
     res = callback.result().all().result()
     return clean_nodes(res)
 
@@ -138,14 +138,14 @@ def clean_node(x):
 def clean_nodes(nodes):
     return [clean_node(n) for n in nodes]
 
-def get_system(client, username):
+def get_system(c, username):
     # TODO: This process just assumes there is only one system per account. Eventually will need to expand to take 
     # a system parameter to specify which system the user would like to fetch. 
     nodes_query = (
         f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
     )
     
-    node_callback = client.submitAsync(nodes_query)
+    node_callback = c.submitAsync(nodes_query)
     nodes = node_callback.result().all().result()
     edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
     system = {"nodes": clean_nodes(nodes), "edges": edges}
@@ -153,11 +153,11 @@ def get_system(client, username):
     return system
 
 
-def get_factions(client, username):
+def get_factions(c, username):
     nodes_query = (
         f"g.V().has('username','{username}').has('label','faction').valuemap()"
     )
-    node_callback = client.submitAsync(nodes_query)
+    node_callback = c.submitAsync(nodes_query)
     nodes = node_callback.result().all().result()
     system = {"nodes": clean_nodes(nodes), "edges": []}
     return system
@@ -169,3 +169,4 @@ def flatten(list_of_lists):
         return flatten(list_of_lists[0]) + flatten(list_of_lists[1:])
     return list_of_lists[:1] + flatten(list_of_lists[1:])
 
+c = get_client()

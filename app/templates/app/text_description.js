@@ -1,4 +1,21 @@
 // TODO: Once this gets more complicated, each `describe` function could easily be brought out to other files. 
+function evalueateLevels(x){
+    var evaluation = "normal"
+    if (x < .5) {
+        if (x < .2){
+            evaluation = "very low"
+        } else {
+            evaluation = "low"
+        }
+    }
+    if (x >= .5) {
+        if (x >= .8){
+            evaluation = "very high"
+        } else {
+            evaluation = "high"
+        }
+    }
+}
 
 function describePlanet(d,nodes){
     var desc = "<p>Orbiting " + d.orbitsName + " , at ~" + d.orbitsDistance + " AUs</p>"
@@ -11,7 +28,7 @@ function describePlanet(d,nodes){
 }
 
 function describeMoon(d,nodes){
-    console.log(d)
+    cnsl(d)
     var desc = "<p>Orbiting " + d.orbitsName + " , at ~" + d.orbitsDistance + " AUs</p>"
     if (d.isSupportsLife=="True"){
         desc += "<p> " + d.name + " is capable of supporting life.</p>" 
@@ -20,6 +37,22 @@ function describeMoon(d,nodes){
     }
     return desc
 }
+
+
+function describePop(d,nodes){
+    cnsl(d)
+    if (d['isIdle'] == "True"){
+        var desc = "<p>is idle"
+        if (d['hasActions'] = "no"){
+            desc += ", but has no actions available to take"
+        }
+    } else {
+        var desc = "<p>is not idle"
+    }
+    desc += "</p>"
+    return desc
+}
+
 
 function addTextBox(d, nodes){
     // d = a single item, like a planet that will be described
@@ -31,9 +64,11 @@ function addTextBox(d, nodes){
         break;
         case "moon":
             description += describeMoon(d,nodes)
+        case "pop":
+            description += describePop(d)
         break;
         default:
-            console.log(d)
+            cnsl("error: a discription was called that has no known objecttype")
             description = d.name + " can not be identified"
     }
 

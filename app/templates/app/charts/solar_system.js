@@ -16,7 +16,7 @@ function s_objectStrokes (d) {
     return objectStrokes[d.isSupportsLife] 
 }
 
-var testvar = "d"
+
 function click_planet(d){
     $.ajax({
         url: '/ajax/planet',
@@ -31,8 +31,12 @@ function click_planet(d){
             d3.selectAll('#description').remove()
         },
         success: function(data){
-            draw_planet(data)
-            addTextBox(d,data)
+            cnsl(data)
+            if (data['error'] == "objtype is star"){}
+            else {
+                draw_planet(data)
+                addTextBox(d,data)
+            }
         }
     });
 }

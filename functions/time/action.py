@@ -8,7 +8,6 @@ def validate_action(time,a):
     Not the same as validation that the action can be taken. 
     If the `takingAction` edge has been applied to the agent `a`, then it is just a check of time completed. 
     '''
-
     if int(a['weight']) < int(time['currentTime']):
         return True
     else:
@@ -23,7 +22,6 @@ def get_global_actions(c):
     g.E().haslabel('takingAction').has('status','pending').as('job')
         .outV().as('agent').path().by(valueMap())
     """
-    
     actions = run_query(c, actions_query)
     # Clenup the query results:    
     act = []
@@ -32,8 +30,6 @@ def get_global_actions(c):
         for itr,itm in enumerate(action['labels']):
             lab[itm[0]] = clean_node(action['objects'][itr])
         act.append(lab)
-
-
     logging.info(f"number of pending actions found: {len(act)}")
     return act
 
