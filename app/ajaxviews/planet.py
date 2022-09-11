@@ -1,5 +1,5 @@
 from app.models import clean_nodes, run_query, c
-from django.http import JsonResponse, response
+from django.http import JsonResponse
 
 
 

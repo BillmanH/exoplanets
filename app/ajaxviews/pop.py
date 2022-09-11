@@ -1,4 +1,3 @@
-from distutils.command.clean import clean
 from app.models import clean_nodes, get_client, run_query, upload_data, flatten, c
 from django.http import JsonResponse
 

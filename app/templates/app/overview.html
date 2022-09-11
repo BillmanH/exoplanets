@@ -1,0 +1,26 @@
+<div>
+    {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+</div>
+<div class="overview">
+
+</div>
+
+<script>
+// on load, get population
+$.ajax({
+    url: '/ajax/overview',
+    type: 'get',
+    data: {"username":"{{ user.username | safe }}"},
+    dataType: 'json',
+    beforeSend: function () {
+
+    },
+    success: function (data) {
+        cnsl(data)
+    error: function (jqXHR, status, err) {
+        console.log(status,err);
+        }
+    }
+    });
+
+</script> 
