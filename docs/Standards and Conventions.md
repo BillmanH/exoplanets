@@ -29,4 +29,49 @@ Edges, when created in python have this shape:
 ```
  {"node1": p["objid"], "node2": homeworld["objid"], "label": "enhabits", "weight":.45}
 ```
- note that the edge automatically links two objects by `objid`. 
+ The edge automatically links two objects by `objid`. 
+
+ ## Ajax requests
+
+ ### The front end
+ To keep management costs low, we wanted to keep the request format simple.
+ ```js
+ $.ajax({
+    url: '/ajax/pops-all',
+    type: 'get',
+    // make a dict for your function
+    data: {"username":"{{ user.username | safe }}"},
+    dataType: 'json',
+    beforeSend: function () {
+        // remove the elements that you want to get rid of
+        d3.selectAll('#peopleTable').remove()
+    },
+    success: function (data) {
+        cnsl(data)
+        // Do cool stuff with that data
+        },
+    error: function (jqXHR, status, err) {
+        cnsl(status,err);
+        // Do error stuff
+        },
+    });
+```
+* make a dict for your function, containing the info for the backend logic
+* remove the elements that you want to get rid of, this will prevent double clicking or crowded UI
+* Do cool stuff with that data. Visualize, or add elements. Can also make other ajax queries. 
+    * you can check for the existance of something with `if ("thing" in data){}`. If the backend doesn't return that thing, then it will ignore your rules. 
+    * alternatively, you can have the backend pass an `error` if you want to check for it explicitly. `if (data['error'] == "objtype is star"){}`
+
+### The back end
+The backend functions are all in `app/ajaxviews`. 
+```python
+def get_some_data(request):
+    response = {}
+    request = dict(request.GET)
+    # Do a query with the info in an f-string
+    query = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')[0]}').in().valueMap()"
+    res = clean_nodes(run_query(c, query))
+    # Other logic that you do with the results of your query
+    response['data thing'] = res
+    return JsonResponse(response)
+```
