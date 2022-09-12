@@ -1,4 +1,4 @@
-from app.models import clean_nodes, get_client, run_query, upload_data, flatten, c
+from app.models import clean_nodes, get_client, run_query, upload_data, flatten, query_to_dict, c
 from django.http import JsonResponse
 
 from app.creators import homeworld
@@ -187,3 +187,17 @@ def take_action(request):
         error = JsonResponse(response).status_code = 403
         return error
     return JsonResponse(response) 
+
+def get_all_actions(request):
+    query = f"""
+    g.E().haslabel('takingAction')
+        .has('status',within('pending','resolved')).as('job')
+            .outV().has('username','{request.get('username','')[0]}').as('agent')
+        .out('enhabits').as('location')
+        .path().by(values('name','status','weight','comment').fold())
+            .by(values('name').fold())
+            .by(values('name','class','objtype').fold())
+    """
+    res = query_to_dict(run_query(c, query))
+    return res
+    

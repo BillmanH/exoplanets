@@ -47,6 +47,18 @@ Getting all pending actions, regardless of agent:
         .outV().as('agent').path().by(valueMap())
 ```
 
+Getting the pop, planet and action being taken.
+
+```
+g.E().haslabel('takingAction')
+	.has('status',within('pending','resolved')).as('job')
+        .outV().as('agent')
+	.out('enhabits').as('location')
+	.path().by(values('name','status','weight','comment').fold())
+		.by(values('name').fold())
+		.by(values('name','class','objtype').fold())
+```
+
 ## **NUCLEAR** delete and drop functions, use with caution.
 Drop an account, and everything asociated with it. Everything for a user has the 'username' property.  
 ```

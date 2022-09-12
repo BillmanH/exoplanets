@@ -169,4 +169,14 @@ def flatten(list_of_lists):
         return flatten(list_of_lists[0]) + flatten(list_of_lists[1:])
     return list_of_lists[:1] + flatten(list_of_lists[1:])
 
+def query_to_dict(res):
+    d = []
+    for r in res:
+        lab = {}
+        for itr,itm in enumerate(r['labels']):
+            lab[itm[0]] = clean_node(r['objects'][itr])
+        d.append(lab)
+    return d
+
 c = get_client()
+
