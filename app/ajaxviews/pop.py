@@ -1,4 +1,4 @@
-from app.models import clean_nodes, get_client, run_query, run_multiple_queries, upload_data, flatten, query_to_dict, c
+from app.models import CosmosdbClient
 from django.http import JsonResponse
 
 from app.creators import homeworld
@@ -10,14 +10,19 @@ def make_homeworld(request):
     username = request.get('username')[0]
     queryform = f"g.V().has('form','username','{username}').valuemap()"
     queryhomeworld = f"g.V().haslabel('planet').has('isHomeworld').has('username','{username}').valueMap()"
-    form = clean_nodes(run_query(c, queryform))[0]
-    homeplanet = clean_nodes(run_query(c, queryhomeworld))[0]
+    c = CosmosdbClient()
+    c.add_query(queryform)
+    c.add_query(queryhomeworld)
+    c.run_queries()
+
+    form = c.clean_nodes(c.res[queryform])[0]
+    homeplanet = c.clean_nodes(c.res[queryhomeworld])[0]
     homeworld_nodes, homeworld_edges = homeworld.build_people(form)
     homeworld_edges = homeworld_edges + homeworld.attach_people_to_world(homeworld_nodes,homeplanet)
     response = {'pops':[p for p in homeworld_nodes if p.get('label')=='pop']}
     response['factions'] = [p for p in homeworld_nodes if p.get('label')=='faction']
     data = {"nodes": homeworld_nodes, "edges": homeworld_edges}
-    upload_data(c, username, data)
+    c.upload_data(username, data)
     return JsonResponse(response)
 
 
@@ -25,20 +30,26 @@ def set_pop_desires(request):
     # sets both desires and actions
     request = dict(request.GET)
     username = request.get('username')[0]
-    poquery = f"g.V().haslabel('pop').has('username','{request.get('username')[0]}').valuemap()"
-    objectives = run_query(c, query="g.V().hasLabel('objective').valuemap()")
-    pops = run_query(c, query=poquery)
-    objectives = clean_nodes(objectives)
-    pops = clean_nodes(pops)
+    pop_query = f"g.V().haslabel('pop').has('username','{request.get('username')[0]}').valuemap()"
+    objectives_query = "g.V().hasLabel('objective').valuemap()"
+    actions_query = "g.V().hasLabel('action').valuemap()"
+    c = CosmosdbClient()
+    c.add_query(objectives_query)
+    c.add_query(pop_query)
+    c.add_query(actions_query)
+    c.run_queries()
+
+    pops = c.clean_nodes(c.res[pop_query])
+    objectives = c.clean_nodes(c.res[objectives_query])
+    actions = c.clean_nodes(c.res[actions_query])
     # # Get the pop desire for those objectives
     desire_edges = homeworld.get_pop_desires(pops,objectives)
     data = {"nodes": [], "edges": desire_edges}
-    upload_data(c, username, data)
+    c.upload_data(username, data)
     # # Set the actions for that POP
-    actions = clean_nodes(run_query(c, query="g.V().hasLabel('action').valuemap()"))
     action_edges = homeworld.get_pop_actions(pops,actions)
     action_data = {"nodes": [], "edges": action_edges}
-    upload_data(c, username, action_data)
+    c.upload_data(c, username, action_data)
     response = {}
     return JsonResponse(response)
 
@@ -50,15 +61,18 @@ def get_pop_text(request):
     """
     response = {}
     request = dict(request.GET)
-    queryplanet = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')[0]}').in().valueMap()"
-    respops = clean_nodes(run_query(c, queryplanet))
+    planet_query = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')[0]}').in().valueMap()"
+    faction_query = f"g.V().has('objid', within({factions})).valueMap()"
+    c = CosmosdbClient()
+    c.run_query(planet_query, leave_open=True)
+    respops = c.clean_nodes(c.res)
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
         response["pops"] = pops
         factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
-        queryfaction = f"g.V().has('objid', within({factions})).valueMap()"
-        resfaction = clean_nodes(run_query(c, queryfaction))
+        c.run_query(faction_query)
+        resfaction = c.clean_nodes(c.res)
         response["factions"] = resfaction
     return JsonResponse(response)
 
