@@ -100,108 +100,95 @@ class CosmosdbClient():
         return x
 
     def clean_nodes(self, nodes):
-        return [clean_node(n) for n in nodes]
+        return [self.clean_node(n) for n in nodes]
 
-    def query_to_dict(res):
+    def query_to_dict(self, res):
         d = []
         for r in res:
             lab = {}
             for itr,itm in enumerate(r['labels']):
-                lab[itm[0]] = clean_node(r['objects'][itr])
+                lab[itm[0]] = self.clean_node(r['objects'][itr])
             d.append(lab)
         return d
 
-def cs(s):
-    # Clean String
-    s = str(s).replace("'", "")
-    return s
+    def flatten(self, list_of_lists):
+        if len(list_of_lists) == 0:
+            return list_of_lists
+        if isinstance(list_of_lists[0], list):
+            return self.flatten(list_of_lists[0]) + self.flatten(list_of_lists[1:])
+        return list_of_lists[:1] + self.flatten(list_of_lists[1:])
 
-
-def create_vertex(node, username):
-    if (len(
-        [i for i in expectedProperties 
-            if i in list(node.keys())]
-            )>len(expectedProperties)
-        ):
-        raise GraphFormatError
-    gaddv = f"g.addV('{node['label']}')"
-    properties = [k for k in node.keys()]
-    for k in properties:
-        # try to convert objects that aren't ids
-        if k not in notFloats:
-            #first try to upload it as a float.
-            try:
-                rounded = np.round_(node[k],4)
-                substr = f".property('{k}',{rounded})"
-            except:
+    # creating strings for uploading data
+    def create_vertex(self,node, username):
+        if (len(
+            [i for i in expectedProperties 
+                if i in list(node.keys())]
+                )>len(expectedProperties)
+            ):
+            raise GraphFormatError
+        gaddv = f"g.addV('{node['label']}')"
+        properties = [k for k in node.keys()]
+        for k in properties:
+            # try to convert objects that aren't ids
+            if k not in notFloats:
+                #first try to upload it as a float.
+                try:
+                    rounded = np.round_(node[k],4)
+                    substr = f".property('{k}',{rounded})"
+                except:
+                    substr = f".property('{k}','{cs(node[k])}')"
+            else:
                 substr = f".property('{k}','{cs(node[k])}')"
-        else:
-            substr = f".property('{k}','{cs(node[k])}')"
-        gaddv += substr
-    gaddv += f".property('username','{username}')"
-    gaddv += f".property('objtype','{node['label']}')"
-    return gaddv
+            gaddv += substr
+        gaddv += f".property('username','{username}')"
+        gaddv += f".property('objtype','{node['label']}')"
+        return gaddv
+
+    def create_edge(self, edge, username):
+        gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}')"
+        for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
+            gadde += f".property('{i}','{edge[i]}')"
+        gadde_fin = f".to(g.V().has('objid','{cs(edge['node2'])}'))"
+        return gadde + gadde_fin
 
 
-def check_vertex(node):
-    gaddv = f"g.V().has('objid',{node['objid']})"
-    return gaddv
+    def upload_data(self, username, data):
+        """
+        uploads nodes and edges in a format {"nodes":nodes,"edges":edges}.
+        Each value is a list of dicts with all properties. 
+        Extra items are piped in as properties of the edge.
+        Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
+        """
+        self.open_client()
+        for node in data["nodes"]:
+            callback = self.c.submitAsync(self.create_vertex(node, username))
+        for edge in data["edges"]:
+            callback = self.c.submitAsync(self.create_edge(edge, username))
+        self.close_client()
+        return
 
 
-def create_edge(edge, username):
-    gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}')"
-    for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
-        gadde += f".property('{i}','{edge[i]}')"
-    gadde_fin = f".to(g.V().has('objid','{cs(edge['node2'])}'))"
-    return gadde + gadde_fin
-
-
-def upload_data(c, username, data):
-    """
-    uploads nodes and edges in a format {"nodes":nodes,"edges":edges}.
-    Each value is a list of dicts with all properties. 
-    Extra items are piped in as properties of the edge.
-    Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
-    """
-    for node in data["nodes"]:
-        callback = c.submitAsync(create_vertex(node, username))
-    for edge in data["edges"]:
-        callback = c.submitAsync(create_edge(edge, username))
-    return
-
-
-def get_galaxy_nodes(c):
+def get_galaxy_nodes():
     # TODO: Add Glat and glon to systems when created
     # TODO: Create edge from user that connects to systems that have been discovered
     query="g.V().haslabel('system').valueMap('hostname','objid','disc_facility','glat','glon')"
-    callback = c.submitAsync(query)
-    res = callback.result().all().result()
-    return clean_nodes(res)
+    c = CosmosdbClient()
+    c.run_query(query)
+    return c.clean_nodes(c.res)
 
 
-def clean_node(x):
-    for k in list(x.keys()):
-        if len(x[k]) == 1:
-            x[k] = x[k][0]
-    if 'objid' in x.keys():
-        x["id"] = x["objid"]
-    return x
 
-def clean_nodes(nodes):
-    return [clean_node(n) for n in nodes]
-
-def get_system(c, username):
+def get_system(username):
     # TODO: This process just assumes there is only one system per account. Eventually will need to expand to take 
     # a system parameter to specify which system the user would like to fetch. 
     nodes_query = (
         f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
     )
-    
-    node_callback = c.submitAsync(nodes_query)
-    nodes = node_callback.result().all().result()
+    c = CosmosdbClient()
+    c.run_query(nodes_query)   
+    nodes = c.res
     edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
-    system = {"nodes": clean_nodes(nodes), "edges": edges}
-
+    system = {"nodes": c.clean_nodes(nodes), "edges": edges}
     return system
 
 
@@ -209,26 +196,12 @@ def get_factions(c, username):
     nodes_query = (
         f"g.V().has('username','{username}').has('label','faction').valuemap()"
     )
-    node_callback = c.submitAsync(nodes_query)
-    nodes = node_callback.result().all().result()
-    system = {"nodes": clean_nodes(nodes), "edges": []}
+    c = CosmosdbClient()
+    c.run_query(nodes_query)   
+    nodes = c.res
+    system = {"nodes": c.clean_nodes(nodes), "edges": []}
     return system
 
-def flatten(list_of_lists):
-    if len(list_of_lists) == 0:
-        return list_of_lists
-    if isinstance(list_of_lists[0], list):
-        return flatten(list_of_lists[0]) + flatten(list_of_lists[1:])
-    return list_of_lists[:1] + flatten(list_of_lists[1:])
-
-def query_to_dict(res):
-    d = []
-    for r in res:
-        lab = {}
-        for itr,itm in enumerate(r['labels']):
-            lab[itm[0]] = clean_node(r['objects'][itr])
-        d.append(lab)
-    return d
 
 
 
