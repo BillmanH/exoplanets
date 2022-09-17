@@ -1,4 +1,4 @@
-from app.models import clean_nodes, get_client, run_query, upload_data, flatten, query_to_dict, c
+from app.models import clean_nodes, get_client, run_query, run_multiple_queries, upload_data, flatten, query_to_dict, c
 from django.http import JsonResponse
 
 from app.creators import homeworld
@@ -70,7 +70,7 @@ def get_faction_details(request):
     response = {}
     request = dict(request.GET)
     queryplanet = f"g.V().hasLabel('faction').has('objid','{request.get('objid','')[0]}').in().valueMap()"
-    respops = clean_nodes(run_query(c, queryplanet))
+    respops = clean_nodes(run_query(queryplanet))
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
@@ -85,7 +85,7 @@ def get_all_pops(request):
     response = {}
     request = dict(request.GET)
     queryplanet = f"g.V().hasLabel('pop').has('username','{request.get('username','')[0]}').valueMap()"
-    respops = clean_nodes(run_query(c, queryplanet))
+    respops = clean_nodes(run_query(queryplanet))
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
@@ -109,7 +109,7 @@ def get_pop_desires(request):
             .by('weight')
             .by(values('type','objid','comment','leadingAttribute').fold())
     """
-    res = run_query(c, query)
+    res = run_query(query)
     regular_list = [flatten(d['objects']) for d in res]
     columns=['name','objid','weight','type','objid','comment','leadingAttribute']
     regular_dict = [{columns[j[0]]:j[1] for j in enumerate(i) if columns[j[0]]!='objid'} for i in regular_list]
@@ -122,7 +122,7 @@ def get_pop_actions(request):
     request = dict(request.GET)
     response = {}
     query = f"g.V().has('objid','{request.get('objid','')[0]}').outE('hasAction').inV().valuemap()"
-    res = clean_nodes(run_query(c, query))
+    res = clean_nodes(run_query(query))
     if len(res)>0:
         response["actions"] = res
     else:
@@ -176,11 +176,12 @@ def take_action(request):
     if validate_action(agent,action):
         response['result'] = 'valid: Pop is able to take action'
         c = get_client()
-        universalTime = clean_nodes(run_query(c,getTime))
+        universalTime = clean_nodes(run_multiple_queries(c,getTime))
         data = {"nodes": [], "edges": create_job(agent,action,universalTime)}
         upload_data(c, agent['username'], data)
-        setIdleResp = run_query(c, setIdle)
+        setIdleResp = run_multiple_queries(c, setIdle)
         response["setIdleResp"] = setIdleResp
+        c.close()
     else:
         response['error'] = "action validation failed"
         response['result'] = 'valid: Pop is not to take action'
@@ -198,6 +199,6 @@ def get_all_actions(request):
             .by(values('name').fold())
             .by(values('name','class','objtype').fold())
     """
-    res = query_to_dict(run_query(c, query))
+    res = query_to_dict(run_query(query))
     return res
     

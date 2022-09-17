@@ -32,32 +32,84 @@ class GraphFormatError(Exception):
 
 # NOTE: in order not to delay load times, try making small queries to populate the page first, 
 # then handle additional queries in `axajviews`. This will be better for the clint in the long run. 
-def get_client():
-    '''
-    c = get_client()
-    '''
-    endpoint = os.getenv("endpoint","env vars not set")
-    username = os.getenv("dbusername","env vars not set")
-    password = os.getenv("dbkey","env vars not set")+"=="
-    client_g = client.Client(
-        endpoint,
-        "g",
-        username=username,
-        password=password,
-        message_serializer=serializer.GraphSONSerializersV2d0(),
-    )
-    return client_g
 
-
-def run_query(client, query="g.V().count()"):
+class CosmosdbClient():
     """
-    run_query(client, query)
-    run_query(c, query)
+    cb = CosmosdbClient()
+    cb.add_query()
+    cb.run_queries()
     """
-    callback = client.submitAsync(query)
-    res = callback.result().all().result()
-    return res
+    def __init__(self) -> None:
+        self.endpoint = os.getenv("endpoint","env vars not set")
+        self.username = os.getenv("dbusername","env vars not set")
+        self.password = os.getenv("dbkey","env vars not set")+"=="
+        self.c = None
+        self.res = "no query"
+        self.stack = []
+        self.res_stack = {}
 
+    ## Managing the client
+    def open_client(self):
+            self.c = client.Client(
+                self.endpoint,
+                "g",
+                username=self.username,
+                password=self.password,
+                message_serializer=serializer.GraphSONSerializersV2d0(),
+            )
+    def close_client(self):
+        self.c.close()
+
+    ## Managing the queries
+    def run_query(self, query="g.V().count()"):
+        self.open_client()
+        callback = self.c.submitAsync(query)
+        res = callback.result().all().result()
+        self.close_client()
+        self.res = res
+
+    def run_query_from_list(self, query="g.V().count()"):
+        callback = self.c.submitAsync(query)
+        res = callback.result().all().result()
+        self.res = res
+
+    def add_query(self, query="g.V().count()"):
+        self.stack.append(query)
+
+    def run_queries(self):
+        self.open_client()
+        res = {}
+        for q in self.stack:
+            self.run_query_from_list(q)
+            res[q] = self.res
+        self.res = res
+        self.close_client()
+
+    ## cleaning results
+    def cs(self, s):
+        # Clean String
+        s = str(s).replace("'", "")
+        return s
+
+    def clean_node(self, x):
+        for k in list(x.keys()):
+            if len(x[k]) == 1:
+                x[k] = x[k][0]
+        if 'objid' in x.keys():
+            x["id"] = x["objid"]
+        return x
+
+    def clean_nodes(self, nodes):
+        return [clean_node(n) for n in nodes]
+
+    def query_to_dict(res):
+        d = []
+        for r in res:
+            lab = {}
+            for itr,itm in enumerate(r['labels']):
+                lab[itm[0]] = clean_node(r['objects'][itr])
+            d.append(lab)
+        return d
 
 def cs(s):
     # Clean String
@@ -178,5 +230,5 @@ def query_to_dict(res):
         d.append(lab)
     return d
 
-c = get_client()
+
 
