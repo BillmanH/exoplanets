@@ -23,14 +23,14 @@ def get_planet(request):
 
     query = f"g.V().has('objid','{request.get('objid','')}').in('orbits').valueMap()"
     c = CosmosdbClient()
-    res = c.run_query(query)
+    c.run_query(query)
 
     edges = [
         {"source": i["objid"][0], "target": i["orbitsId"][0], "label": "orbits"}
-        for i in res
+        for i in c.res
         if "orbitsId" in i.keys()
     ]
-    nodes = res + selected_planet
+    nodes =  c.res + selected_planet
     system = {"nodes": clean_nodes(nodes), "links": edges}
     return JsonResponse(system)
 
@@ -41,7 +41,6 @@ def get_planet_details(request):
                     .has('objid','{request.get('objid','')[0]}')
                     .in('enhabits').hasLabel('pop').valueMap()
     """
-    c = CosmosdbClient()
     respops = clean_nodes(c.run_query(queryplanet))
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
@@ -49,7 +48,9 @@ def get_planet_details(request):
         response["pops"] = pops
         factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
         queryfaction = f"g.V().has('objid', within({factions})).valueMap()"
-        resfaction = clean_nodes(c.run_query(c, queryfaction))
+        c = CosmosdbClient()
+        c.run_query(queryfaction)
+        resfaction = c.clean_nodes(c.res)
         response["factions"] = resfaction
     return JsonResponse(response)
 
