@@ -118,4 +118,3 @@ def upload_data(c,data,verbose=True):
             print(callback)
     return
 
-c = get_client()

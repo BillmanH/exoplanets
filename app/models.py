@@ -61,12 +61,10 @@ class CosmosdbClient():
         self.c.close()
 
     ## Managing the queries
-    def run_query(self, query="g.V().count()", leave_open=False):
+    def run_query(self, query="g.V().count()"):
         self.open_client()
         callback = self.c.submitAsync(query)
         res = callback.result().all().result()
-        if leave_open==False:
-            self.close_client()
         self.res = res
 
     def run_query_from_list(self, query="g.V().count()"):
