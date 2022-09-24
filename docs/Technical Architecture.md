@@ -1,7 +1,7 @@
 # exoplanets
 A Gremlin Graph database driven strategy game. Get your civilization out into space. 
 
-![Alt text](/docs/img/Infra.png?raw=true "solar system")
+![Alt text](/docs/img/Infra.png?raw=true "infra")
 
 * Azure App Service
 * Django Web Server
