@@ -1,4 +1,4 @@
-from app.models import clean_nodes, CosmosdbClient
+from app.models import CosmosdbClient, clean_nodes
 from django.http import JsonResponse
 
 # TODO: Need to clean up the `clean_nodes`
@@ -20,9 +20,9 @@ def get_planet(request):
     del selected_planet[0]["y"]
     del selected_planet[0]["vx"]
     del selected_planet[0]["vy"]
-    c = CosmosdbClient()
-    query = f"g.V().has('objid','{request.get('objid','')}').in('orbits').valueMap()"
 
+    query = f"g.V().has('objid','{request.get('objid','')}').in('orbits').valueMap()"
+    c = CosmosdbClient()
     res = c.run_query(query)
 
     edges = [

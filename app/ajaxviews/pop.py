@@ -49,7 +49,7 @@ def set_pop_desires(request):
     # # Set the actions for that POP
     action_edges = homeworld.get_pop_actions(pops,actions)
     action_data = {"nodes": [], "edges": action_edges}
-    c.upload_data(c, username, action_data)
+    c.upload_data(username, action_data)
     response = {}
     return JsonResponse(response)
 
@@ -84,7 +84,9 @@ def get_faction_details(request):
     response = {}
     request = dict(request.GET)
     queryplanet = f"g.V().hasLabel('faction').has('objid','{request.get('objid','')[0]}').in().valueMap()"
-    respops = clean_nodes(run_query(queryplanet))
+    c = CosmosdbClient()
+    c.run_query(queryplanet)
+    respops = c.clean_nodes(c.res)
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
@@ -97,9 +99,11 @@ def get_all_pops(request):
     get the pop info for the pops in that faction.
     """
     response = {}
+    c = CosmosdbClient()
     request = dict(request.GET)
     queryplanet = f"g.V().hasLabel('pop').has('username','{request.get('username','')[0]}').valueMap()"
-    respops = clean_nodes(run_query(queryplanet))
+    c.run_query(queryplanet)
+    respops = c.clean_nodes(c.res)
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
@@ -123,8 +127,9 @@ def get_pop_desires(request):
             .by('weight')
             .by(values('type','objid','comment','leadingAttribute').fold())
     """
-    res = run_query(query)
-    regular_list = [flatten(d['objects']) for d in res]
+    c = CosmosdbClient()
+    c.run_query(query)
+    regular_list = [c.flatten(d['objects']) for d in c.res]
     columns=['name','objid','weight','type','objid','comment','leadingAttribute']
     regular_dict = [{columns[j[0]]:j[1] for j in enumerate(i) if columns[j[0]]!='objid'} for i in regular_list]
     if len(regular_dict)>0:
@@ -133,10 +138,12 @@ def get_pop_desires(request):
 
 
 def get_pop_actions(request):
+    c = CosmosdbClient()
     request = dict(request.GET)
     response = {}
     query = f"g.V().has('objid','{request.get('objid','')[0]}').outE('hasAction').inV().valuemap()"
-    res = clean_nodes(run_query(query))
+    c.run_query(query)
+    res = c.clean_nodes(c.res)
     if len(res)>0:
         response["actions"] = res
     else:
@@ -182,20 +189,20 @@ def take_action(request):
     action = request["action"]
     # define queries
     # g.V().has('objid','0000000000').property('isIdle','true')
-    setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
-    getTime = "g.V().hasLabel('time').valueMap()"
     # get output
     response = {}
     #### Phase : validate action
     if validate_action(agent,action):
+        c = CosmosdbClient()
+        setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
+        getTime = "g.V().hasLabel('time').valueMap()"
         response['result'] = 'valid: Pop is able to take action'
-        c = get_client()
-        universalTime = clean_nodes(run_multiple_queries(c,getTime))
+        c.run_query(getTime)
+        universalTime = c.clean_nodes(c.res)
         data = {"nodes": [], "edges": create_job(agent,action,universalTime)}
-        upload_data(c, agent['username'], data)
-        setIdleResp = run_multiple_queries(c, setIdle)
+        c.upload_data(agent['username'], data)
+        setIdleResp = c.run_query(setIdle)
         response["setIdleResp"] = setIdleResp
-        c.close()
     else:
         response['error'] = "action validation failed"
         response['result'] = 'valid: Pop is not to take action'
@@ -213,6 +220,7 @@ def get_all_actions(request):
             .by(values('name').fold())
             .by(values('name','class','objtype').fold())
     """
-    res = query_to_dict(run_query(query))
-    return res
+    c = CosmosdbClient()
+    c.run_query(query)
+    return c.query_to_dict(c.res)
     

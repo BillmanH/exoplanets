@@ -137,19 +137,19 @@ class CosmosdbClient():
                     rounded = np.round_(node[k],4)
                     substr = f".property('{k}',{rounded})"
                 except:
-                    substr = f".property('{k}','{cs(node[k])}')"
+                    substr = f".property('{k}','{self.cs(node[k])}')"
             else:
-                substr = f".property('{k}','{cs(node[k])}')"
+                substr = f".property('{k}','{self.cs(node[k])}')"
             gaddv += substr
         gaddv += f".property('username','{username}')"
         gaddv += f".property('objtype','{node['label']}')"
         return gaddv
 
     def create_edge(self, edge, username):
-        gadde = f"g.V().has('objid','{edge['node1']}').addE('{cs(edge['label'])}').property('username','{username}')"
+        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('username','{username}')"
         for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
             gadde += f".property('{i}','{edge[i]}')"
-        gadde_fin = f".to(g.V().has('objid','{cs(edge['node2'])}'))"
+        gadde_fin = f".to(g.V().has('objid','{self.cs(edge['node2'])}'))"
         return gadde + gadde_fin
 
 
@@ -169,6 +169,19 @@ class CosmosdbClient():
         return
 
 
+# Even though `clean_nodes` is a part of the CosmosdbClient, there are use cases where you need it independanty
+# for example, cleaning nodes that were returned from the ajax-requests. 
+def clean_node(x):
+    for k in list(x.keys()):
+        if len(x[k]) == 1:
+            x[k] = x[k][0]
+    if 'objid' in x.keys():
+        x["id"] = x["objid"]
+    return x
+
+def clean_nodes(nodes):
+    return [clean_node(n) for n in nodes]
+    
 def get_galaxy_nodes():
     # TODO: Add Glat and glon to systems when created
     # TODO: Create edge from user that connects to systems that have been discovered
@@ -193,7 +206,7 @@ def get_system(username):
     return system
 
 
-def get_factions(c, username):
+def get_factions(username):
     nodes_query = (
         f"g.V().has('username','{username}').has('label','faction').valuemap()"
     )
