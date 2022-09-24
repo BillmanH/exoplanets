@@ -184,4 +184,3 @@ function clickPop(d){
         addTextBox(d)
     }
 }
-

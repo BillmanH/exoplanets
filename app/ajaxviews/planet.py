@@ -1,7 +1,7 @@
-from app.models import clean_nodes, run_query, c
+from app.models import CosmosdbClient, clean_nodes
 from django.http import JsonResponse
 
-
+# TODO: Need to clean up the `clean_nodes`
 
 def get_planet(request):
     """
@@ -20,8 +20,11 @@ def get_planet(request):
     del selected_planet[0]["y"]
     del selected_planet[0]["vx"]
     del selected_planet[0]["vy"]
+
     query = f"g.V().has('objid','{request.get('objid','')}').in('orbits').valueMap()"
-    res = run_query(c, query)
+    c = CosmosdbClient()
+    res = c.run_query(query)
+
     edges = [
         {"source": i["objid"][0], "target": i["orbitsId"][0], "label": "orbits"}
         for i in res
@@ -34,15 +37,19 @@ def get_planet(request):
 def get_planet_details(request):
     response = {}
     request = dict(request.GET)
-    queryplanet = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')[0]}').in().valueMap()"
-    respops = clean_nodes(run_query(c, queryplanet))
+    queryplanet = f"""g.V().hasLabel('planet')
+                    .has('objid','{request.get('objid','')[0]}')
+                    .in('enhabits').hasLabel('pop').valueMap()
+    """
+    c = CosmosdbClient()
+    respops = clean_nodes(c.run_query(queryplanet))
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
         response["pops"] = pops
         factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
         queryfaction = f"g.V().has('objid', within({factions})).valueMap()"
-        resfaction = clean_nodes(run_query(c, queryfaction))
+        resfaction = clean_nodes(c.run_query(c, queryfaction))
         response["factions"] = resfaction
     return JsonResponse(response)
 

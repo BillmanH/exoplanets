@@ -15,10 +15,6 @@ A Gremlin Graph database driven strategy game. Get your civilization out into sp
 
 ![Alt text](../docs/img/Exodestiny.png?raw=true "solar system")
 
-## Features:
-* `dev` and `prod` systems set up for easy switching. `dev` is the local machine and `prod` is online with `DEBUG=False`.
-* [Solar systems with stars, planets and moons](/notebooks/Analysis%20-%20planet%20summary%20stats.ipynb)
-* [Populations (pops) with factions, and spiecies attributes](/notebooks/People/Generating%20Populations.ipynb)
 
 ## Dataset
 Exoplanet data Data is gathered from here. 

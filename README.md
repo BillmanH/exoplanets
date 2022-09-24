@@ -37,7 +37,8 @@ of course, you can also just clone it on your local machine and run for free. Fe
 | Document |
 | ----------- |
 | [Building the Azure infrastructure](docs/Technical%20Architecture.md) | 
-| [Building the Local (dev) infrastructure](docs/Technical%20Architecture.md) | 
+| [Building the Local (dev) infrastructure](docs/Local_setup.md) | 
+| [Standards and Conventions](docs/Standards%20and%20Conventions.md) | 
 | The graph has lots of core elements that need to be set up for the game to function. All of that is in the notebooks. |
 | the `docs` and `infra` folders contain everything else that you would need to know |
 

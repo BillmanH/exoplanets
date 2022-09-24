@@ -22,7 +22,8 @@ var table_lables = [{"label":"Name","value":"name"},
                             {"label":"Aggression","value":"aggression"},
                             {"label":"Conformity","value":"conformity"},
                             {"label":"Constitution","value":"constitution"},
-                            {"label":"Literacy","value":"literacy"}
+                            {"label":"Literacy","value":"literacy"},
+                            {"label":"Idle","value":"isIdle"}
                         ]
      
 var desire_table_lables = [{"Type":"Name","value":"type"}, 

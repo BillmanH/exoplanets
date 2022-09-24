@@ -33,10 +33,17 @@ def signup(request):
 
 
 def index(request):
-    all_count = run_query(c, query="g.V().count()")
-    count_accounts = run_query(c, query="g.V().hasLabel('account').count()")
-    time_units = run_query(c, query="g.V().hasLabel('time').values('currentTime')")
-    context = {"all_count": all_count, "count_accounts": count_accounts, "time": time_units}
+    all_count_query = "g.V().count()"
+    count_accounts_query = "g.V().hasLabel('account').count()"
+    time_units_query = "g.V().hasLabel('time').values('currentTime')"
+    c = CosmosdbClient()
+    c.add_query(all_count_query)
+    c.add_query(count_accounts_query)
+    c.add_query(time_units_query)
+    c.run_queries()
+    context = {"all_count": c.res[all_count_query], 
+                "count_accounts": c.res[count_accounts_query], 
+                "time": c.res[time_units_query]}
     return render(request, "app/index.html", context)
 
 
@@ -48,6 +55,7 @@ def new_universe(request):
     form = HomeSystemForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         # Get some info from the client
+        c = CosmosdbClient()
         form = HomeSystemForm(request.POST)
         username = request.user.username
         # Delete the old sytem
@@ -67,7 +75,7 @@ def new_universe(request):
         universe_edges.append(formEdge)
         # Upload all of that data that was created.
         data = {"nodes": universe_nodes, "edges": universe_edges}
-        upload_data(c, username, data)
+        c.upload_data(username, data)
         return redirect("genesis")
 
     if request.method == "GET":
@@ -78,7 +86,7 @@ def new_universe(request):
 
 @login_required
 def genesis(request):
-    res = get_system(c, request.user.username)
+    res = get_system(request.user.username)
     context = {"solar_system": res,
                 "username": request.user.username}
     return render(request, "app/creation/genesis_view.html", context)
@@ -86,20 +94,20 @@ def genesis(request):
 
 @login_required
 def system_map(request):
-    res = get_system(c, request.user.username)
+    res = get_system(request.user.username)
     context = {"solar_system": res}
     return render(request, "app/system_map.html", context)
 
 
 @login_required
 def galaxy_map(request):
-    res = get_galaxy_nodes(c)
+    res = get_galaxy_nodes()
     context = {"galaxies": res}
     return render(request, "app/galaxy_map.html", context)
 
 
 @login_required
 def populations_view(request):
-    res = get_factions(c, request.user.username)
+    res = get_factions(request.user.username)
     context = {"factions": res}
     return render(request, "app/populations.html", context)
