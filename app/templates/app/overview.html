@@ -1,31 +1,58 @@
-
-
 <div class="overview">
 
 </div>
 
 <script>
-// on load, get population
-$.ajax({
-    url: '/ajax/overview',
-    type: 'get',
-    data: {"username":"{{ user.username | safe }}"},
-    dataType: 'json',
-    beforeSend: function () {
+    // on load, get population
+    $.ajax({
+        url: '/ajax/overview',
+        type: 'get',
+        data: { "username": "{{ user.username | safe }}" },
+        dataType: 'json',
+        beforeSend: function () {
 
-    },
-    success: function (data) {
-        cnsl(data)
-        var overviewtext = d3.select('.overview')
-                        .append('p')
-                        .attr("id", "overviewText")
-                        .html("At UTU (Universal Time Units): " + data['time'] + ", " + data['idle_population'] + " of your " + data['population'] + " populations are idle." )
+        },
+        success: function (data) {
+            cnsl(data)
+            var overviewtext = d3.select('.overview')
+                .append('p')
+                .attr("id", "overviewText")
+                .html("At UTU (Universal Time Units): " + data['time'] + ", " + data['idle_population'] + " of your " + data['population'] + " populations are idle.")
 
-    },
-    error: function (jqXHR, status, err) {
-        console.log(status,err);
+        },
+        error: function (jqXHR, status, err) {
+            console.log(status, err);
         }
-    
+
     });
 
-</script> 
+
+
+    function getNewsFeed() {
+        $.ajax({
+            url: '/ajax/newsfeed',
+            type: 'get',
+            data: { "username": "{{ user.username | safe }}" },
+            dataType: 'json',
+            beforeSend: function () {
+                d3.selectAll('#newsfeed').remove()
+            },
+            success: function (data) {
+                console.log(data)
+                if (data['error'] == 'no actions returned') {
+                }
+                else {
+                    console.log(data)
+                    // draw_table(
+                    //     "newsfeed",
+                    //     data,
+                    //     titles,  // an array of values that you want shown
+                    //     tableClickHandler = function(d){console.log(d)} // default function to handle hover 
+                    // )
+                }
+            }
+        })
+    }
+
+    getNewsFeed()
+</script>

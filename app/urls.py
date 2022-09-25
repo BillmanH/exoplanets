@@ -19,5 +19,6 @@ urlpatterns = [
     path("ajax/pop-desires", pop.get_pop_desires, name="get_pop_desires"),
     path("ajax/pop-actions", pop.get_pop_actions, name="get_pop_actions"),
     path("ajax/take-action", pop.take_action, name="pop_take_action"),
-    path("ajax/overview", overview.get_overview, name="overview")
+    path("ajax/overview", overview.get_overview, name="overview"),
+    path("ajax/newsfeed", overview.get_newsfeed, name="newsfeed")
 ]
