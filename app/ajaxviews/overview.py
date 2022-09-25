@@ -31,6 +31,6 @@ def get_newsfeed(request):
             .outV().as('agent').has('username','{request.get('username')[0]}').path().by(valueMap())
     """
     c = CosmosdbClient()
-    c.run_query()
-    res = c.query_to_dict(c.res)
-    return res
+    c.run_query(newsfeed_query)
+    response = {"newsfeed":c.query_to_dict(c.res)}
+    return JsonResponse(response)
