@@ -1,6 +1,9 @@
 <div class="overview">
 
 </div>
+<div>
+    <p class='button' onclick="getNewsFeed()">Refresh news</p>
+</div>
 
 <script>
     // on load, get population
@@ -13,7 +16,6 @@
 
         },
         success: function (data) {
-            cnsl(data)
             var overviewtext = d3.select('.overview')
                 .append('p')
                 .attr("id", "overviewText")
@@ -42,16 +44,10 @@
                 if (data['error'] == 'no actions returned') {
                 }
                 else {
-                    // draw_table(
-                    //     "newsfeed",
-                    //     data,
-                    //     titles,  // an array of values that you want shown
-                    //     tableClickHandler = function(d){console.log(d)} // default function to handle hover 
-                    // )
+                    addNewsBox(data)
                 }
             }
         })
     }
 
-    getNewsFeed()
 </script>
