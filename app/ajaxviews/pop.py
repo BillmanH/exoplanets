@@ -201,8 +201,9 @@ def take_action(request):
         universalTime = c.clean_nodes(c.res)
         data = {"nodes": [], "edges": create_job(agent,action,universalTime)}
         c.upload_data(agent['username'], data)
+        response["uploadresp"] = str(c.res)
         setIdleResp = c.run_query(setIdle)
-        response["setIdleResp"] = setIdleResp
+        response["setIdleResp"] = str(setIdleResp)
     else:
         response['error'] = "action validation failed"
         response['result'] = 'valid: Pop is not to take action'

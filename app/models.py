@@ -9,9 +9,9 @@ from django.db import models
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
+
 #Local modules:
 from .GraphOperations import account
-
 
 # ASSERTIONS: 
 
@@ -159,12 +159,21 @@ class CosmosdbClient():
         Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
         """
         self.open_client()
+        self.nodes = []
+        self.edges = []
+        self.res = []
         for node in data["nodes"]:
-            callback = self.c.submitAsync(self.create_vertex(node, username))
+            n = self.create_vertex(node, username)
+            self.nodes.append(n)
+            callback = self.c.submitAsync(n)
+            self.res.append(callback.result().all().result())
         for edge in data["edges"]:
-            callback = self.c.submitAsync(self.create_edge(edge, username))
+            e = self.create_edge(edge, username)
+            self.nodes.append(e)
+            callback = self.c.submitAsync(e)
+            self.res.append(callback.result().all().result())
         self.close_client()
-        return
+
 
 
 # Even though `clean_nodes` is a part of the CosmosdbClient, there are use cases where you need it independanty
