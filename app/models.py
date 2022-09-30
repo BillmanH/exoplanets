@@ -57,6 +57,7 @@ class CosmosdbClient():
                 password=self.password,
                 message_serializer=serializer.GraphSONSerializersV2d0(),
             )
+            
     def close_client(self):
         self.c.close()
 
@@ -65,6 +66,7 @@ class CosmosdbClient():
         self.open_client()
         callback = self.c.submitAsync(query)
         res = callback.result().all().result()
+        self.close_client()
         self.res = res
 
     def run_query_from_list(self, query="g.V().count()"):
