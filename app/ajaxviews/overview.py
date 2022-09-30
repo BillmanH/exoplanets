@@ -34,3 +34,16 @@ def get_newsfeed(request):
     c.run_query(newsfeed_query)
     response = {"newsfeed":c.query_to_dict(c.res)}
     return JsonResponse(response)
+
+
+
+def clear_news_item(request):
+    request = dict(request.GET)
+    response = {}
+    newsfeed_query  = f"""
+        TODO
+    """
+    c = CosmosdbClient()
+    c.run_query(newsfeed_query)
+    response = {"item":"was cleared"}
+    return JsonResponse(response)

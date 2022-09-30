@@ -95,7 +95,7 @@ function completed(d){
 
 function newsItem(d){
     // console.log(d)
-    description = "<p>" + d['agent']['name'] + completed(d) + ct(d['job']['actionType']) + "</p>"
+    description = d['agent']['name'] + completed(d) + ct(d['job']['actionType'])
     return description
 }
 
@@ -108,5 +108,9 @@ function addNewsBox(d){
     var overviewtext = d3.select('.overview')
     .append('p')
     .attr("id", "newsfeed")
+    .append('p')
+        .enter()
+        .data()
     .html(description)
+    .on("click", (event, d) => {marknewsasdone(d)})
 }   

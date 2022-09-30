@@ -44,7 +44,13 @@
                 if (data['error'] == 'no actions returned') {
                 }
                 else {
-                    addNewsBox(data)
+                    nodes = data
+                    draw_table(
+                    "newsfeedtable",
+                    nodes,
+                    titles,  // an array of values that you want shown
+                    tableClickHandler = function(d){console.log(d)} // default function to handle hover 
+)
                 }
             }
         })
