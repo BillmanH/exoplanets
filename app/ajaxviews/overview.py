@@ -21,3 +21,29 @@ def get_overview(request):
     response = {"time": c.res[time_units][0], "population": c.res[totalPops][0], "idle_population": c.res[idlePops][0]}
 
     return JsonResponse(response)
+
+
+def get_newsfeed(request):
+    request = dict(request.GET)
+    response = {}
+    newsfeed_query  = f"""
+        g.E().haslabel('takingAction').has('status',within('pending','resolved')).as('job')
+            .outV().as('agent').has('username','{request.get('username')[0]}').path().by(valueMap())
+    """
+    c = CosmosdbClient()
+    c.run_query(newsfeed_query)
+    response = {"newsfeed":c.query_to_dict(c.res)}
+    return JsonResponse(response)
+
+
+
+def clear_news_item(request):
+    request = dict(request.GET)
+    response = {}
+    newsfeed_query  = f"""
+        TODO
+    """
+    c = CosmosdbClient()
+    c.run_query(newsfeed_query)
+    response = {"item":"was cleared"}
+    return JsonResponse(response)

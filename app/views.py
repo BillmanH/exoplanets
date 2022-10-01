@@ -10,12 +10,6 @@ from .creators import universe
 from .forms import HomeSystemForm, SignUpForm
 
 
-# managing the connection (sync)
-# the client object `c` is located in models.py
-#   c = get_client()  <- Fetches the client object.
-#   c.close() closes the connection afterwards, to avoid lingering connections.
-
-
 def signup(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)

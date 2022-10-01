@@ -41,14 +41,15 @@ def get_planet_details(request):
                     .has('objid','{request.get('objid','')[0]}')
                     .in('enhabits').hasLabel('pop').valueMap()
     """
-    respops = clean_nodes(c.run_query(queryplanet))
+    c = CosmosdbClient()
+    c.run_query(queryplanet)
+    respops = clean_nodes(c.res)
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
         response["pops"] = pops
         factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
         queryfaction = f"g.V().has('objid', within({factions})).valueMap()"
-        c = CosmosdbClient()
         c.run_query(queryfaction)
         resfaction = c.clean_nodes(c.res)
         response["factions"] = resfaction
