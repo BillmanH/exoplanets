@@ -43,7 +43,7 @@
             data: { "username": "{{ user.username | safe }}" },
             dataType: 'json',
             beforeSend: function () {
-                d3.selectAll('#newsfeed').remove()
+                d3.selectAll('#newsfeedtable').remove()
             },
             success: function (data) {
                 console.log(data)
