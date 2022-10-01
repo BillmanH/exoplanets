@@ -29,6 +29,12 @@
     });
 
 
+    var newsfeed_table_lables = [
+        { "label": "Status", "value": "status" },
+        { "label": "Description", "value": "description" },
+        { "label": "Completion date", "value": "weight" }
+        // { "label": "Comment", "value": "comment" }  // TODO: Comment returns NaN for some reason
+    ]
 
     function getNewsFeed() {
         $.ajax({
@@ -44,13 +50,16 @@
                 if (data['error'] == 'no actions returned') {
                 }
                 else {
-                    nodes = data
+                    nodes = []
+                    for (var i = 0; i < data['newsfeed'].length; i++) {
+                        nodes.push(newsItem(data['newsfeed'][i]));
+                    }
                     draw_table(
-                    "newsfeedtable",
-                    nodes,
-                    titles,  // an array of values that you want shown
-                    tableClickHandler = function(d){console.log(d)} // default function to handle hover 
-)
+                        "newsfeedtable",
+                        nodes,
+                        newsfeed_table_lables,  // an array of values that you want shown
+                        tableClickHandler = function (d) { console.log(d) } // default function to handle hover 
+                    )
                 }
             }
         })

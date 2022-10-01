@@ -96,21 +96,8 @@ function completed(d){
 function newsItem(d){
     // console.log(d)
     description = d['agent']['name'] + completed(d) + ct(d['job']['actionType'])
-    return description
+    var res = {"status":d['job']['status'],"description":description, "weight":d['job']['weight']}
+    // var res = {"status":d['job']['status'],"description":description,"comment":d['job']['comment']}
+    return res
 }
 
-function addNewsBox(d){
-    // console.log(d['newsfeed'])
-    var description = "<div>"
-    for (i = 0; i < d['newsfeed'].length; i++) {
-        description += newsItem(d['newsfeed'][i])
-    }
-    var overviewtext = d3.select('.overview')
-    .append('p')
-    .attr("id", "newsfeed")
-    .append('p')
-        .enter()
-        .data()
-    .html(description)
-    .on("click", (event, d) => {marknewsasdone(d)})
-}   
