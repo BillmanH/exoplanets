@@ -18,15 +18,18 @@ actions:
     requirement_description: "faction loyalty must be > .1"
     augments_self_properties: "faction_loyalty,literacy,aggression;0.05,0.01,0.05"
     comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
+  -
+    type: healthcare_initialtives
+    label: action
+    applies_to: "pop"
+    effort: 10
+    requires_attr: "faction_loyalty;.1"
+    requirement_description: "faction loyalty must be > .1"
+    augments_self_properties: "faction_loyalty,literacy,aggression;0.05,0.01,0.05"
+    comment: "increase the health and literacy of other populations within your faction"
 
 
 
-  # -
-  #   type: safetynets
-  #   label: action
-  #   requirement: "g.V().has('objid',%self%).has('wealth',gt(0.1)).count()"
-  #   result: "[(health,.05),(wealth,-.05)]"
-  #   comment: "increase the health and literacy of other populations within your faction"
   # -
   #   type: charity
   #   label: action
