@@ -31,7 +31,9 @@ actions:
     type: individual_education
     label: action
     requires_attr: "wealth;.1"
+    applies_to: "pop"
     requirement_description: "population wealth > .1"
+    effort: 15
     augments_self_properties: "wealth,literacy,faction_loyalty;-.1,0.01,-.01"
     comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
 

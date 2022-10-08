@@ -1,5 +1,8 @@
 import yaml 
 
+must_have_attrs = ['type','label','effort','comment','applies_to']
+
+
 # content of test_sample.py
 def load_actions():
     actions_yaml = yaml.safe_load(open(r"..\notebooks\People\actions_pop.yaml"))['actions']
@@ -25,7 +28,6 @@ def action_requires_attr(action):
 def action_type_test(action):
     pass
 
-must_have_attrs = ['type','label']
 
 def test_action_properties():
     for action in actions: 
