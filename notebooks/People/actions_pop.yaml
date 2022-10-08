@@ -22,7 +22,7 @@ actions:
     type: healthcare_initialtives
     label: action
     applies_to: "pop"
-    effort: 10
+    effort: 15
     requires_attr: "faction_loyalty;.1"
     requirement_description: "faction loyalty must be > .1"
     augments_self_properties: "faction_loyalty,literacy,aggression;0.05,0.01,0.05"
