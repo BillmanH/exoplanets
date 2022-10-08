@@ -55,7 +55,7 @@ function draw_action(p,a) {
                     .data(a.nodes)
                     .enter()
                     .append('text')
-                    .html(function(d) {return d['comment']});
+                    .html(function(d) {return "<p>"+d['type']+': '+d['comment']+"</p>"});
 
 
     return svg
