@@ -22,9 +22,15 @@ def action_requires_attr(action):
     mods = items[1].split(',')
     assert len(properties)==len(mods)
 
+def action_type_test(action):
+    pass
+
+must_have_attrs = ['type','label']
 
 def test_action_properties():
     for action in actions: 
+        assert len([atr for atr in must_have_attrs if atr in action.keys()])==len(must_have_attrs)
+        assert action['label']=='action'
         if "augments_self_properties" in action.keys():
             action_augments_self_properties(action)
         if "requires_attr" in action.keys():
