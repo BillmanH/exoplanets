@@ -1,31 +1,68 @@
-
-
 <div class="overview">
 
 </div>
+<div>
+    <p class='button' onclick="getNewsFeed()">Refresh news</p>
+</div>
 
 <script>
-// on load, get population
-$.ajax({
-    url: '/ajax/overview',
-    type: 'get',
-    data: {"username":"{{ user.username | safe }}"},
-    dataType: 'json',
-    beforeSend: function () {
+    // on load, get population
+    $.ajax({
+        url: '/ajax/overview',
+        type: 'get',
+        data: { "username": "{{ user.username | safe }}" },
+        dataType: 'json',
+        beforeSend: function () {
 
-    },
-    success: function (data) {
-        cnsl(data)
-        var overviewtext = d3.select('.overview')
-                        .append('p')
-                        .attr("id", "overviewText")
-                        .html("At UTU (Universal Time Units): " + data['time'] + ", " + data['idle_population'] + " of your " + data['population'] + " populations are idle." )
+        },
+        success: function (data) {
+            var overviewtext = d3.select('.overview')
+                .append('p')
+                .attr("id", "overviewText")
+                .html("At UTU (Universal Time Units): " + data['time'] + ", " + data['idle_population'] + " of your " + data['population'] + " populations are idle.")
 
-    },
-    error: function (jqXHR, status, err) {
-        console.log(status,err);
+        },
+        error: function (jqXHR, status, err) {
+            console.log(status, err);
         }
-    
+
     });
 
-</script> 
+
+    var newsfeed_table_lables = [
+        { "label": "Status", "value": "status" },
+        { "label": "Description", "value": "description" },
+        { "label": "Completion date", "value": "weight" }
+        // { "label": "Comment", "value": "comment" }  // TODO: Comment returns NaN for some reason
+    ]
+
+    function getNewsFeed() {
+        $.ajax({
+            url: '/ajax/newsfeed',
+            type: 'get',
+            data: { "username": "{{ user.username | safe }}" },
+            dataType: 'json',
+            beforeSend: function () {
+                d3.selectAll('#newsfeedtable').remove()
+            },
+            success: function (data) {
+                console.log(data)
+                if (data['error'] == 'no actions returned') {
+                }
+                else {
+                    nodes = []
+                    for (var i = 0; i < data['newsfeed'].length; i++) {
+                        nodes.push(newsItem(data['newsfeed'][i]));
+                    }
+                    draw_table(
+                        "newsfeedtable",
+                        nodes,
+                        newsfeed_table_lables,  // an array of values that you want shown
+                        tableClickHandler = function (d) { console.log(d) } // default function to handle hover 
+                    )
+                }
+            }
+        })
+    }
+
+</script>

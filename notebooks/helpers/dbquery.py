@@ -103,7 +103,8 @@ def create_edge(edge, username):
     return gadde + gadde_fin
 
 
-def upload_data(c,data,verbose=True): 
+def upload_data(data,verbose=True): 
+    c = get_client()
     for node in data["nodes"]:
         gadv = create_vertex(node, "notebook")
         callback = c.submitAsync(gadv)
@@ -116,6 +117,6 @@ def upload_data(c,data,verbose=True):
         if verbose:
             print(gadde)
             print(callback)
+    c.close()
     return
 
-c = get_client()

@@ -15,7 +15,7 @@ actions:
     applies_to: "pop"
     effort: 10
     requires_attr: "faction_loyalty;.1"
-    requirement_description: "faction loyalty must be > .1"
+    requirement_description: "population loyalty to faction must be > .1"
     augments_self_properties: "faction_loyalty,literacy,aggression;0.05,0.01,0.05"
     comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
   -
@@ -52,15 +52,41 @@ actions:
     leadingdesire: wealth
     augments_self_properties: "wealth,industrial_resources;-0.05,1"
     comment: "increase industry by investing in local infrastructure, increases industry"
+  -
+    type: healthcare_initialtives
+    label: action
+    applies_to: "pop"
+    effort: 15
+    requires_attr: "wealth;.1"
+    requirement_description: "population wealth > .1"
+    augments_self_properties: "health,wealth;0.01,-.01"
+    comment: "increase the health and literacy of other populations within your faction"
+  -
+    type: individual_education
+    label: action
+    requires_attr: "wealth;.1"
+    applies_to: "pop"
+    requirement_description: "population wealth > .1"
+    effort: 15
+    augments_self_properties: "wealth,literacy,faction_loyalty;-.1,0.01,-.01"
+    comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
 
 
 
+  # -
   #   type: charity
   #   label: action
   #   requirement: "[(wealth,.05)]"  
   #   result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
   #   comment: "increase the wealth and literacy of populations in other factions"
-
+  # -
+  #   type: patriot_propoganda
+  #   label: action
+  #   requirement: "[(wealth,.05)]"
+  #   leadingdesire: industry
+  #   result: "[(faction_loyalty,+.05),(literacy,+.05),(aggression,+.05)]"
+  #   comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
+  # -
   #   type: attack
   #   label: action
   #   requirement: "[(wealth,.05)]"

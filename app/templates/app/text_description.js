@@ -1,4 +1,10 @@
 // TODO: Once this gets more complicated, each `describe` function could easily be brought out to other files. 
+
+function ct(x){
+    var newStr = x.replace(/_/g, " ");
+    return newStr
+}
+
 function evalueateLevels(x){
     var evaluation = "normal"
     if (x < .5) {
@@ -78,3 +84,20 @@ function addTextBox(d, nodes){
         .classed('details', true)
         .html(description);
 }
+
+function completed(d){
+    if (d['job']['status']=="pending"){
+        return " is working on "
+    } else if (d['job']['status']=="resolved"){
+        return " has completed working on "
+    }
+}
+
+function newsItem(d){
+    // console.log(d)
+    description = d['agent']['name'] + completed(d) + ct(d['job']['actionType'])
+    var res = {"status":d['job']['status'],"description":description, "weight":d['job']['weight']}
+    // var res = {"status":d['job']['status'],"description":description,"comment":d['job']['comment']}
+    return res
+}
+

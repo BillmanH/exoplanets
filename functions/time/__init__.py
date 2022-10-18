@@ -48,7 +48,7 @@ def main(mytimer: func.TimerRequest) -> None:
             res = run_query(c, patch_job)
             # set the agent to isIdle=True
             if 'isIdle' in list(a['agent'].keys()):
-                res = run_query(c, f"g.V().has('objid','{a['agent']['objid']}').property('isIdle','true')")
+                res = run_query(c, f"g.V().has('objid','{a['agent']['objid']}').property('isIdle','True')")
                 logging.info(f"objid set to idle: {a['agent']['objid']}")
             logging.info(f"Total ations resolved in this run: {validActionCounter}")
 
