@@ -11,6 +11,7 @@ dependencies:
   - django==3.2.7
   - black
   - scikit-learn
+  - cryptography
   - pip:
     - nb_black
     - gremlinpython==3.5.1

@@ -6,3 +6,4 @@ scikit-learn
 pyyaml
 pandas
 psycopg2-binary==2.9.2
+cryptography
