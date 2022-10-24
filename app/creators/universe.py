@@ -5,9 +5,9 @@ from . import maths
 from . import language
 from . import account
 
-pdata = yaml.safe_load(open('app/creators/specs/planet.yaml'))["planet_types"]
-mdata = yaml.safe_load(open('app/creators/specs/moon.yaml'))["moon_types"]
-sdata = yaml.safe_load(open('app/creators/specs/star.yaml'))
+pdata = yaml.safe_load(open('notebooks/planets/planet.yaml'))["planet_types"]
+mdata = yaml.safe_load(open('notebooks/planets/moon.yaml'))["moon_types"]
+sdata = yaml.safe_load(open('notebooks/planets/star.yaml'))
 
 
 def sort_planets(t):
