@@ -96,7 +96,7 @@ def system_map(request):
 def system_ui(request):
     res = get_system(request.user.username)
     context = {"solar_system": res}
-    return render(request, "app/system_map.html", context)
+    return render(request, "app/system_ui.html", context)
 
 @login_required
 def galaxy_map(request):
