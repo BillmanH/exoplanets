@@ -15,7 +15,7 @@ var scale_radius = d3.scaleLog()
             .domain(get_values(solar_system["nodes"],"radius"))
             .range([1,20]);
 
-var scale_distance = d3.scaleLinear()
+var scale_distance = d3.scaleLog()
             .domain(get_values(solar_system["nodes"],"orbitsDistance"))
             .range([20,100]);
 
