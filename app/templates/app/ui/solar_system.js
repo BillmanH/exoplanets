@@ -1,37 +1,44 @@
+// const planet = BABYLON.SceneLoader.Append("static/app/objects/", "planet.gltf", scene, function (scene) { });
+// https://doc.babylonjs.com/typedoc/classes/BABYLON.SceneLoader#Append
 
-    BABYLON.SceneLoader.Append("static/app/objects/", "planet.gltf", scene, function (scene) {
+function createStar(n){
+    const star = BABYLON.MeshBuilder.CreateSphere(n.name, {diameter: (n.radius+n.radius)}, scene);
+    star.scaling = new BABYLON.Vector3(n.radius,n.radius,n.radius);
+    return star
+}
+
+function createPlanet(n){
+    const planet = BABYLON.MeshBuilder.CreateSphere(n.name, {diameter: (n.radius+n.radius)}, scene);
+    planet.position = new BABYLON.Vector3(0,n.orbitsDistance,n.orbitsDistance);
+    return planet
+}
+
+for (let i = 0; i < solar_system.nodes.length; i++) {
+    n = solar_system["nodes"][i]
+    if (n["objtype"]=="star"){
+        createStar(n)
+        console.log("star created")
+    }
+    if (n["objtype"]=="planet"){
+        console.log("planet created: " + n.name)
+        createPlanet(n)
+    }
+  }
 
 
-    });
 
+// // GUI gonna come back to it. 
+// var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+   
+// var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Click Me");
+// button1.width = "150px"
+// button1.height = "40px";
+// button1.position.y
+// button1.color = "white";
+// button1.cornerRadius = 10;
+// button1.background = "black";
+// button1.onPointerUpObservable.add(function() {
+//     alert("you did it!");
+// });
 
-// // var planet;
-// // BABYLON.SceneLoader.ImportMesh("", "static/app/objects/", "planet.gltf", scene, function(object) {
-// //         planet = object[0];
-// //     });
-// const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", 
-//                 {diameter: 2, segments: 32}, scene);
-//             // Move the sphere upward 1/2 its height
-//             sphere.position.y = 1;
-
-// const planet = BABYLON.SceneLoader.Append("", "static/app/objects/", "planet.gltf", scene, function (scene){})
-// const box = BABYLON.MeshBuilder.CreateBox("box", {});
-
-// planet.position.x = 0.5;
-// planet.position.y = 1;
-
-// box.position.x = 0.5;
-// box.position.y = 1;
-
-// box.actionManager = new BABYLON.ActionManager(scene);
-// box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
-//     BABYLON.ActionManager.OnPickTrigger,
-//     function (evt) {
-//         const sourceBox = evt.meshUnderPointer;
-
-//         //move the box upright
-//         sourceBox.position.x += 0.1;
-//         sourceBox.position.y += 0.1;
-//     }
-// )
-// );
+// advancedTexture.addControl(button1);
