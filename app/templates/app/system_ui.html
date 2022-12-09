@@ -17,8 +17,41 @@
             <a class='menu button' href='/'>Quit</a>
         </p>
     </div>
-        <canvas id="renderCanvas"></canvas>
+    <canvas id="renderCanvas"></canvas>
 </body>
+<script>
+    var solar_system = {{ solar_system | safe }}
+    console.log(solar_system['edges'])
+    var width = 640,
+        height = 480,
+        defaultNodeSize = 10
 
+    const canvas = document.getElementById("renderCanvas");
+    const engine = new BABYLON.Engine(canvas, true);
+
+    const createScene = function () {
+        const scene = new BABYLON.Scene(engine);
+        scene.clearColor = new BABYLON.Color3.Black;
+
+        const alpha = Math.PI / 4;
+        const beta = Math.PI / 3;
+        const radius = 8;
+        const target = new BABYLON.Vector3(0, 0, 0);
+
+        const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
+        camera.attachControl(canvas, true);
+        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+        
+        {% include "app/ui/solar_system.js" %}
+
+        return scene;
+    }
+
+    const sceneToRender = createScene();
+
+    engine.runRenderLoop(function () {
+        sceneToRender.render();
+    });
+</script>
 
 </html>
