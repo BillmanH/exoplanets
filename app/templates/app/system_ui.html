@@ -20,9 +20,9 @@
     <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 <script>
-    {% include "app/ui/globals.js" %}
     var solar_system = {{ solar_system | safe }}
     console.log(solar_system['nodes'])
+    {% include "app/ui/globals.js" %}
     var width = 640,
         height = 480,
         defaultNodeSize = 10
@@ -36,7 +36,7 @@
 
         const alpha = Math.PI / 4;
         const beta = Math.PI / 3;
-        const radius = 8;
+        const radius = 600;
         const target = new BABYLON.Vector3(0, 0, 0);
 
         const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
@@ -45,6 +45,7 @@
 
         {% include "app/ui/skybox.js" %}
         {% include "app/ui/solar_system.js" %}
+        {% include "app/ui/controls.js" %}
 
         return scene;
     }
