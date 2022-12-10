@@ -17,7 +17,7 @@
             <a class='menu button' href='/'>Quit</a>
         </p>
     </div>
-    <canvas id="renderCanvas"></canvas>
+    <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 <script>
     var solar_system = {{ solar_system | safe }}
@@ -42,7 +42,7 @@
         camera.attachControl(canvas, true);
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
-        // {% include "app/ui/skybox.js" %}
+        {% include "app/ui/skybox.js" %}
         {% include "app/ui/solar_system.js" %}
 
         return scene;
