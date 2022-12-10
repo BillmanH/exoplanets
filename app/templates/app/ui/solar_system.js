@@ -3,12 +3,12 @@
 
 
 var scale_radius = d3.scaleLinear()
-            .domain(get_values(solar_system["nodes"],"radius"))
+            .domain(get_values(solar_system["nodes"],"radius", "planet"))
             .range([1,20]);
 
 
 var scale_distance = d3.scaleLog()
-            .domain(get_values(solar_system["nodes"],"orbitsDistance"))
+            .domain(get_values(solar_system["nodes"],"orbitsDistance", "planet"))
             .range([20,100]);
 
 function createStar(n){
