@@ -1,15 +1,6 @@
 // const planet = BABYLON.SceneLoader.Append("static/app/objects/", "planet.gltf", scene, function (scene) { });
 // https://doc.babylonjs.com/typedoc/classes/BABYLON.SceneLoader#Append
 
-function get_values(l,v){
-    var mylist = []
-    for (let i = 0; i < l.length; i++){
-        if(l[i][v]!=undefined){
-            mylist.push(l[i][v])
-        }
-    } 
-    return mylist
-}
 
 var scale_radius = d3.scaleLinear()
             .domain(get_values(solar_system["nodes"],"radius"))
