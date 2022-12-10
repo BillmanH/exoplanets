@@ -1,0 +1,63 @@
+{% load static %}
+<html>
+{% include "app/head.html" %}
+
+<body>
+    <div>
+        {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+    </div>
+    <div class="menu">
+        <p>
+            <a class="menu button" href="/galaxymap">Galaxy</a>
+        </p>
+        <p>
+            <a class="menu button" href="/systemmap">System</a>
+        </p>
+        <p>
+            <a class="menu button" href="/populations">Population</a>
+        </p>
+        <p>
+            <a class='menu button' href='/'>Quit</a>
+        </p>
+    </div>
+    <canvas id="renderCanvas" touch-action="none"></canvas>
+</body>
+<script>
+    var solar_system = {{ solar_system | safe }}
+    console.log(solar_system['nodes'])
+    {% include "app/ui/globals.js" %}
+    var width = 640,
+        height = 480,
+        defaultNodeSize = 10
+
+    const canvas = document.getElementById("renderCanvas");
+    const engine = new BABYLON.Engine(canvas, true);
+
+    const createScene = function () {
+        const scene = new BABYLON.Scene(engine);
+        scene.clearColor = new BABYLON.Color3.Black;
+
+        const alpha = Math.PI / 4;
+        const beta = Math.PI / 3;
+        const radius = 600;
+        const target = new BABYLON.Vector3(0, 0, 0);
+
+        const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
+        camera.attachControl(canvas, true);
+        // const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+        {% include "app/ui/skybox.js" %}
+        {% include "app/ui/solar_system.js" %}
+        {% include "app/ui/controls.js" %}
+
+        return scene;
+    }
+
+    const sceneToRender = createScene();
+
+    engine.runRenderLoop(function () {
+        sceneToRender.render();
+    });
+</script>
+
+</html>

@@ -5,10 +5,64 @@ from . import maths
 from . import language
 from . import account
 
-pdata = yaml.safe_load(open('app/creators/specs/planet.yaml'))["planet_types"]
-mdata = yaml.safe_load(open('app/creators/specs/moon.yaml'))["moon_types"]
-sdata = yaml.safe_load(open('app/creators/specs/star.yaml'))
+pdata = yaml.safe_load(open('notebooks/planets/planet.yaml'))["planet_types"]
+mdata = yaml.safe_load(open('notebooks/planets/moon.yaml'))["moon_types"]
+sdata = yaml.safe_load(open('notebooks/planets/star.yaml'))
 
+class Body:
+    def __init__(self):
+        self.objid = maths.uuid(n=13)
+        self.type = "celestial body"
+        self.label = "body"
+        self.name = "unnamed"
+    def make_name(self,n1,n2):
+        return language.make_word(maths.rnd(n1, n2))
+    def get_fundimentals(self):
+        return {
+            "name":self.name,
+            "class":self.type,
+            "objid":self.objid,
+            "label":self.label
+        }
+    def __repr__(self) -> str:
+        return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"
+
+
+class Star(Body):
+    def form_star(self,sdata):
+        self.name = self.make_name(1,1)
+        self.label = "star"
+        self.type = sdata["class"]
+        self.radius = sdata["radius"]
+
+    def get_data(self):
+        fund = self.get_fundimentals()
+        fund["radius"] = self.radius
+        return fund
+    
+class Planet(Body):
+    def form_planet(self,t,orbiting):
+        self.name = self.make_name(2,1)
+        self.label = "planet"
+        self.type = t
+        self.radius = abs(r.normal(pdata[t]["radius_mean"], pdata[t]["radius_std"]))
+        self.mass = abs(r.normal(pdata[t]["mass_mean"], pdata[t]["mass_std"]))
+        self.orbitsDistance = maths.rnd(pdata[t]["distance_min"], pdata[t]["distance_max"])
+        self.orbitsId = orbiting["objid"]
+        self.orbitsName = orbiting["name"]
+        self.isSupportsLife = False
+        self.isPopulated = False
+
+    def get_data(self):
+        fund = self.get_fundimentals()
+        fund["radius"] = self.radius
+        fund["mass"] = self.mass
+        fund["orbitsDistance"] = self.orbitsDistance
+        fund["orbitsId"] = self.orbitsId
+        fund["orbitsName"] = self.orbitsName
+        fund["isSupportsLife"] = self.isSupportsLife
+        fund["isPopulated"] = self.isPopulated
+        return fund
 
 def sort_planets(t):
     if t == "terrestrial":
@@ -22,25 +76,14 @@ def sort_planets(t):
 
 
 def make_star():
-    star = sdata
-    star["name"] = language.make_word(maths.rnd(1, 1))
-    star["objid"] = maths.uuid(n=13)
-    star["label"] = "star"
-    return star
-
+    s = Star()
+    s.form_star(sdata)
+    return s.get_data()
 
 def make_planet(t, orbiting):
-    planet = {"class": t, "name": language.make_word(maths.rnd(2, 1))}
-    planet["label"] = "planet"
-    planet["objid"] = maths.uuid(n=13)
-    planet["mass"] = abs(r.normal(pdata[t]["mass_mean"], pdata[t]["mass_std"]))
-    planet["radius"] = abs(r.normal(pdata[t]["radius_mean"], pdata[t]["radius_std"]))
-    planet["orbitsDistance"] = maths.rnd(pdata[t]["distance_min"], pdata[t]["distance_max"])
-    planet["orbitsId"] = orbiting["objid"]
-    planet["orbitsName"] = orbiting["name"]
-    planet["isSupportsLife"] = False
-    planet["isPopulated"] = False
-    return planet
+    p = Planet()
+    p.form_planet(t, orbiting)
+    return p.get_data()
 
 def make_homeworld(orbiting, data):
     planet = make_planet("terrestrial", orbiting)
