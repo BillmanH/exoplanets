@@ -11,9 +11,10 @@ function get_values(l,v){
     return mylist
 }
 
-var scale_radius = d3.scaleLog()
+var scale_radius = d3.scaleLinear()
             .domain(get_values(solar_system["nodes"],"radius"))
             .range([1,20]);
+
 
 var scale_distance = d3.scaleLog()
             .domain(get_values(solar_system["nodes"],"orbitsDistance"))
@@ -28,9 +29,9 @@ function createStar(n){
 
 function createPlanet(n){
     const planet = BABYLON.MeshBuilder.CreateSphere(n.name,  {diameter: scale_radius(n.radius)});
-    planet.position = new BABYLON.Vector3(0,0,n.orbitsDistance*2);
+    planet.position = new BABYLON.Vector3(0,0,scale_distance(n.orbitsDistance));
 
-    const torus = BABYLON.MeshBuilder.CreateTorus(n.name+"-ring", {diameter: n.orbitsDistance*2});
+    const torus = BABYLON.MeshBuilder.CreateTorus(n.name+"-ring", {diameter: scale_distance(n.orbitsDistance)});
     return planet
 }
 
