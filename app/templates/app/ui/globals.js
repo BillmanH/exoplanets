@@ -21,3 +21,7 @@ var scale_distance = d3.scaleSymlog()
             .constant(0.1)    
             .domain([d3.min(distances),d3.max(distances)])
             .range([20,2000]);
+
+var scale_jitter = d3.scaleLinear() 
+            .domain([0,1])
+            .range([100,200]);
