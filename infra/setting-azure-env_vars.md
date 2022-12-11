@@ -51,7 +51,7 @@ az ad sp create-for-rbac --name "exodestinyAppAction" --role contributor \
 * Replace {subscription-id}, {resource-group} with the subscription, resource group details
 
 The command should output a JSON object similar to this:
-This is what you put into github. 
+This is what you put into github. **The Whole json**
 ```
 {
   "clientId": "<GUID>",
