@@ -62,11 +62,17 @@ class Pop(Creature):
         self.isIdle = "True"
         self.health = .5
         self.isOfSpecies = {"node1": self.objid, "node2": species.objid, "label": "isOfSpecies"}
+        self.isInFaction = None
         self.factionNo = None
 
     def set_faction(self, n):
         self.factionNo = n
         
+    def set_pop_name(self, faction):
+        # the pop name is the faction name plus an extra syllable.
+        name = f"{faction.name} {self.make_word(random.choice([1, 2]))}"
+        return name
+
     def get_data(self):
         fund = self.get_fundimentals()
         fund["conformity"] = self.conformity
@@ -74,15 +80,30 @@ class Pop(Creature):
         fund["aggression"] = self.aggression
         fund["constitution"] = self.constitution
         return fund
-    def set_pop_name(self, faction):
-        # the pop name is the faction name plus an extra syllable.
-        name = f"{faction.name} {self.make_word(random.choice([1, 2]))}"
-        return name
 
 class Faction(baseobjects.Baseobject):
-    def __init__(self):
+    def __init__(self, i):
         super().__init__()
-        self.name = self.make_word(1,2)
+        self.name = self.make_word(2,2)
+        self.label = "faction"
+        self.faction_no = (i)
+        self.pops = []
+
+    def get_data(self):
+        fund = self.get_fundimentals()
+        # fund["faction_no"] = self.faction_no
+        return fund
+    
+    def assign_pop_to_faction(self, pop):
+        pop.isInFaction = self.objid
+        self.pops.append(pop.objid)
+
+    def get_faction_pop_edge(self):
+        return [{"node1": pop["objid"], "node2": pop["isInFaction"], "label": "isInFaction"} for pop in self.pops]
+
+def make_factions(kmeans):
+    factions = [Faction(i) for i in range(kmeans.n_clusters)]
+    return factions
 
 def compare_values(values, gr1, gr2):
     distance = []
@@ -98,26 +119,11 @@ def get_faction_loyalty(x, pops, factions):
 
 
 
-
-
-
-
 def get_n_factions(n_steps, conf):
     x = interp((1 - conf), linspace(0, 1, num=n_steps), [i for i in range(n_steps)])
     return int(round(x))
 
 
-def make_factions(kmeans):
-    factions = [
-        {
-            "name": language.make_dist_word(2),
-            "objid": maths.uuid(n=13),
-            "label": "faction",
-            "faction_no": i,
-        }
-        for i in range(kmeans.n_clusters)
-    ]
-    return factions
 
 
 def get_faction_objid(df, faction_no):
@@ -132,24 +138,28 @@ def build_people(data):
 
     # Build the populations (note that pops is a DataFrame)
     pops = [Pop(species) for i in range(int(data["starting_pop"]))]
-    pops_df = pd.DataFrame([p.get_data() for p in pops])
     
     # Build the factions based on Kmeans Clustering
+    pops_df = pd.DataFrame([p.get_data() for p in pops])
     n_factions = get_n_factions(n_steps, float(data["conformity"]))
     kmeans = KMeans(n_clusters=n_factions).fit(pops_df[[c for c in pops_df.columns if c not in meta]])
 
+    factions = [Faction(i) for i in range(kmeans.n_clusters)]
+
     for i,n in enumerate(kmeans.labels_):
+        faction = [i for i in factions if i.faction_no]
         pops[i].set_faction(n)
         
-    
-    factions = make_factions(kmeans)
-    factions_df = pd.DataFrame(factions)
-    pops["name"] = pops["faction_no"].apply(lambda x: get_pop_name(factions_df, x))
+    # Set the name of the population to comply with the faction it is in. 
+    for f in factions:
+        pops.set_pop_name(f)
+
     pops["isInFaction"] = pops["faction_no"].apply(
+    
         lambda x: get_faction_objid(factions_df, x)
     )
     # sum up the nodes and edges for return
-    isOfSpecies = [p.isOfSpecies for p in pops.to_dict("records")]
+    isOfSpecies = [p.isOfSpecies for p in pops]
     isInFaction = [
         {"node1": p["objid"], "node2": p["isInFaction"], "label": "isInFaction"}
         for p in pops.to_dict("records")
