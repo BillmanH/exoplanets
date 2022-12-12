@@ -62,15 +62,15 @@ class Pop(Creature):
         self.isIdle = "True"
         self.health = .5
         self.isOfSpecies = {"node1": self.objid, "node2": species.objid, "label": "isOfSpecies"}
-        self.isInFaction = None
         self.factionNo = None
+        self.isInFaction = None
 
     def set_faction(self, n):
         self.factionNo = n
         
     def set_pop_name(self, faction):
         # the pop name is the faction name plus an extra syllable.
-        name = f"{faction.name} {self.make_word(random.choice([1, 2]))}"
+        name = f"{faction.name} {self.make_name(random.choice([1, 2]))}"
         return name
 
     def get_data(self):
@@ -84,11 +84,10 @@ class Pop(Creature):
 class Faction(baseobjects.Baseobject):
     def __init__(self, i):
         super().__init__()
-        self.name = self.make_word(2,2)
+        self.name = self.make_name(2,2)
         self.label = "faction"
         self.faction_no = (i)
         self.pops = []
-
     def get_data(self):
         fund = self.get_fundimentals()
         # fund["faction_no"] = self.faction_no
@@ -101,9 +100,8 @@ class Faction(baseobjects.Baseobject):
     def get_faction_pop_edge(self):
         return [{"node1": pop["objid"], "node2": pop["isInFaction"], "label": "isInFaction"} for pop in self.pops]
 
-def make_factions(kmeans):
-    factions = [Faction(i) for i in range(kmeans.n_clusters)]
-    return factions
+    def get_faction_loyalty(self, )
+
 
 def compare_values(values, gr1, gr2):
     distance = []
@@ -118,11 +116,9 @@ def get_faction_loyalty(x, pops, factions):
     return compare_values(starting_attributes, g1, f2)
 
 
-
 def get_n_factions(n_steps, conf):
     x = interp((1 - conf), linspace(0, 1, num=n_steps), [i for i in range(n_steps)])
     return int(round(x))
-
 
 
 
@@ -146,24 +142,20 @@ def build_people(data):
 
     factions = [Faction(i) for i in range(kmeans.n_clusters)]
 
+    # Assign the pop to that faction number, not yet matched to an ID. 
     for i,n in enumerate(kmeans.labels_):
-        faction = [i for i in factions if i.faction_no]
         pops[i].set_faction(n)
         
     # Set the name of the population to comply with the faction it is in. 
-    for f in factions:
-        pops.set_pop_name(f)
+    for p in pops:
+        faction = [i for i in factions if i.faction_no == p.factionNo][0]
+        p.set_pop_name(faction)
+        faction.assign_pop_to_faction(p)
 
-    pops["isInFaction"] = pops["faction_no"].apply(
-    
-        lambda x: get_faction_objid(factions_df, x)
-    )
     # sum up the nodes and edges for return
     isOfSpecies = [p.isOfSpecies for p in pops]
-    isInFaction = [
-        {"node1": p["objid"], "node2": p["isInFaction"], "label": "isInFaction"}
-        for p in pops.to_dict("records")
-    ]
+    isInFaction = [f.get_faction_pop_edge() for f in factions]
+
     pops["industry"] = (pops["aggression"] + pops["constitution"]) / 2
     pops["wealth"] = (pops["literacy"] + pops["industry"]) / 2
     pops["faction_loyalty"] = [
