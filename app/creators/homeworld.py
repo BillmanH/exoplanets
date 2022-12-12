@@ -7,12 +7,82 @@ from sklearn.cluster import KMeans
 
 from . import language
 from . import maths
+from . import baseobjects
 
 # Setup Params:
 n_steps = 6  # max factions
 meta = ["uuid", "name", "label", "isIdle"]
 starting_attributes = ["conformity", "literacy", "aggression", "constitution"]
 
+class Creature(baseobjects.Baseobject):
+    def __init__(self):
+        super().__init__()
+        self.label = "creature"
+
+    def get_fundimentals(self):
+        return {
+            "name":self.name,
+            "objid":self.objid,
+            "label":self.label
+        }
+
+        
+class Species(baseobjects.Baseobject):
+    def build_attr(self, data):
+        self.conformity = data["conformity"]
+        self.literacy = data["literacy"]
+        self.aggression = data["aggression"]
+        self.constitution  = data["constitution"]
+        self.label = "species"
+        self.name = self.make_name(1,2)
+        self.consumes = "organic"
+        self.effuses = "organic waste"
+        self.viral_resilience = .7
+        self.habitat_resilience = .2
+        self.pop_std = 0.2 * (1 - float(self.conformity))
+        self.name = self.make_name(1,2)
+
+    def get_data(self):
+        fund = self.get_fundimentals()
+        fund["consumes"] = self.consumes
+        fund["effuses"] = self.effuses
+        fund["viral_resilience"] = self.viral_resilience
+        fund["habitat_resilience"] = self.habitat_resilience
+        return fund
+
+class Pop(Creature):
+    def __init__(self, species):
+        super().__init__()
+        self.conformity = abs(round(random.normal(float(species.conformity), species.pop_std), 3))
+        self.literacy = abs(round(random.normal(float(species.conformity), species.pop_std), 3))
+        self.aggression = abs(round(random.normal(float(species.conformity), species.pop_std), 3))
+        self.constitution  = abs(round(random.normal(float(species.conformity), species.pop_std), 3))
+        self.label = "pop"
+        self.type = "pop"
+        self.isIdle = "True"
+        self.health = .5
+        self.isOfSpecies = {"node1": self.objid, "node2": species.objid, "label": "isOfSpecies"}
+        self.factionNo = None
+
+    def set_faction(self, n):
+        self.factionNo = n
+        
+    def get_data(self):
+        fund = self.get_fundimentals()
+        fund["conformity"] = self.conformity
+        fund["literacy"] = self.literacy
+        fund["aggression"] = self.aggression
+        fund["constitution"] = self.constitution
+        return fund
+    def set_pop_name(self, faction):
+        # the pop name is the faction name plus an extra syllable.
+        name = f"{faction.name} {self.make_word(random.choice([1, 2]))}"
+        return name
+
+class Faction(baseobjects.Baseobject):
+    def __init__(self):
+        super().__init__()
+        self.name = self.make_word(1,2)
 
 def compare_values(values, gr1, gr2):
     distance = []
@@ -27,43 +97,9 @@ def get_faction_loyalty(x, pops, factions):
     return compare_values(starting_attributes, g1, f2)
 
 
-def build_species(data):
-    # TODO: Replace attributes with something more meaninful, like what kinds of resources they consume
-    species = {}
-    # pulling out the parts of the genesis-form that are specific to species
-    [
-        species.update({attr: data[attr]})
-        for attr in ["conformity", "literacy", "aggression", "constitution",]
-    ]
-    species["objid"] = maths.uuid(n=13)
-    species["label"] = "species"
-    species["name"] = language.make_dist_word(random.choice([1, 2]))
-    return species
 
 
-def vary_pops(species):
-    # population attributes vary in accordance with the species['conformity']
-    pop_std = 0.2 * (1 - float(species["conformity"]))
-    pop = {}
-    for k in list(species.keys()):
-        if k in meta:
-            continue
-        pop[k] = abs(round(random.normal(float(species[k]), pop_std), 3))
-    pop["objid"] = maths.uuid(n=13)
-    pop["label"] = "pop"
-    pop['isIdle'] = "True"
-    pop['health'] = .5
-    return pop
 
-
-def get_pop_name(df, faction_no):
-    # the pop name is the faction name plus an extra syllable.
-    name = (
-        df[df["faction_no"] == faction_no]["name"].values[0]
-        + " "
-        + language.make_dist_word(random.choice([1, 2]))
-    )
-    return name
 
 
 def get_n_factions(n_steps, conf):
@@ -91,15 +127,21 @@ def get_faction_objid(df, faction_no):
 
 def build_people(data):
     # Get the Species
-    species = build_species(data)
+    species = Species()
+    species.build_attr(data)
+
     # Build the populations (note that pops is a DataFrame)
-    pops = pd.DataFrame([vary_pops(species) for i in range(int(data["starting_pop"]))])
-    # Build the factions
+    pops = [Pop(species) for i in range(int(data["starting_pop"]))]
+    pops_df = pd.DataFrame([p.get_data() for p in pops])
+    
+    # Build the factions based on Kmeans Clustering
     n_factions = get_n_factions(n_steps, float(data["conformity"]))
-    kmeans = KMeans(n_clusters=n_factions).fit(
-        pops[[c for c in pops.columns if c not in meta]]
-    )
-    pops["faction_no"] = kmeans.labels_
+    kmeans = KMeans(n_clusters=n_factions).fit(pops_df[[c for c in pops_df.columns if c not in meta]])
+
+    for i,n in enumerate(kmeans.labels_):
+        pops[i].set_faction(n)
+        
+    
     factions = make_factions(kmeans)
     factions_df = pd.DataFrame(factions)
     pops["name"] = pops["faction_no"].apply(lambda x: get_pop_name(factions_df, x))
@@ -107,10 +149,7 @@ def build_people(data):
         lambda x: get_faction_objid(factions_df, x)
     )
     # sum up the nodes and edges for return
-    isOfSpecies = [
-        {"node1": p["objid"], "node2": species["objid"], "label": "isOfSpecies"}
-        for p in pops.to_dict("records")
-    ]
+    isOfSpecies = [p.isOfSpecies for p in pops.to_dict("records")]
     isInFaction = [
         {"node1": p["objid"], "node2": p["isInFaction"], "label": "isInFaction"}
         for p in pops.to_dict("records")
