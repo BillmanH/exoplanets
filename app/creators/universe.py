@@ -29,7 +29,7 @@ class Body:
 
 
 class Star(Body):
-    def form_star(self,sdata):
+    def build_attr(self,sdata):
         self.name = self.make_name(1,1)
         self.label = "star"
         self.type = sdata["class"]
@@ -41,7 +41,7 @@ class Star(Body):
         return fund
     
 class Planet(Body):
-    def form_planet(self,t,orbiting):
+    def build_attr(self,t,orbiting):
         self.name = self.make_name(2,1)
         self.label = "planet"
         self.type = t
@@ -64,25 +64,15 @@ class Planet(Body):
         fund["isPopulated"] = self.isPopulated
         return fund
 
-def sort_planets(t):
-    if t == "terrestrial":
-        return maths.rnd(0.39, 1.52)
-    if t == "gas":
-        return maths.rnd(5.2, 10)
-    if t == "ice":
-        return maths.rnd(15, 29)
-    if t == "dwarf":
-        return maths.rnd(30, 50)
-
 
 def make_star():
     s = Star()
-    s.form_star(sdata)
+    s.build_attr(sdata)
     return s.get_data()
 
 def make_planet(t, orbiting):
     p = Planet()
-    p.form_planet(t, orbiting)
+    p.build_attr(t, orbiting)
     return p.get_data()
 
 def make_homeworld(orbiting, data):
