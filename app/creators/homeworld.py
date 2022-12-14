@@ -84,8 +84,8 @@ class Pop(Creature):
 
     def set_pop_name(self, faction):
         # the pop name is the faction name plus an extra syllable.
-        name = f"{faction.name} {self.make_name(1, 2)}"
-        return name
+        self.name = f"{faction.name} {self.make_name(1, 2)}"
+
 
     def get_data(self):
         fund = self.get_fundimentals()
@@ -93,6 +93,12 @@ class Pop(Creature):
         fund["literacy"] = self.literacy
         fund["aggression"] = self.aggression
         fund["constitution"] = self.constitution
+        fund["health"] = self.health
+        fund["isInFaction"] = self.isInFaction
+        fund["industry"] = self.industry
+        fund["wealth"] = self.wealth
+        fund["factionLoyalty"] = self.factionLoyalty
+        fund["isIdle"] = self.isIdle
         return fund
 
 
@@ -115,7 +121,7 @@ class Faction(baseobjects.Baseobject):
 
     def get_faction_pop_edge(self):
         return [
-            {"node1": pop, "node2": pop, "label": "isInFaction"}
+            {"node1": pop, "node2": self.objid, "label": "isInFaction"}
             for pop in self.pops
         ]
 
@@ -156,7 +162,7 @@ def build_people(data):
     pops_df = pd.DataFrame([p.get_data() for p in pops])
     n_factions = get_n_factions(n_steps, float(data["conformity"]))
     kmeans = KMeans(n_clusters=n_factions).fit(
-        pops_df[[c for c in pops_df.columns if c not in meta]]
+        pops_df[[c for c in pops_df.columns if c in starting_attributes]]
     )
 
     factions = [Faction(i) for i in range(kmeans.n_clusters)]

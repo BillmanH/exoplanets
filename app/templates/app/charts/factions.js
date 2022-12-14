@@ -1,5 +1,4 @@
 var faction_table_lables = [
-    { "label": "Faction #", "value": "faction_no" },
     { "label": "Name", "value": "name" },
     { "label": "Type", "value": "objtype" }
 ]
@@ -9,6 +8,8 @@ var pop_table_lables = [{"label":"Name","value":"name"},
                             {"label":"Conformity","value":"conformity"},
                             {"label":"Constitution","value":"constitution"},
                             {"label":"Literacy","value":"literacy"},
+                            {"label":"Wealth","value":"wealth"},
+                            {"label":"Health","value":"health"},
                             {"label":"Idle","value":"isIdle"}
                         ]
 
