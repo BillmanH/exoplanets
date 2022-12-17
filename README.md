@@ -14,6 +14,7 @@ The game is procedurally generated based on public datasets regarding space expl
 * Azure App Service for Hosting
 * Azure Cosmos DB (Gremlin)
 * D3.js for visualization
+* Babylon.js for 3d scene rendering
 
 
 ## Dataset
