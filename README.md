@@ -16,6 +16,7 @@ The game is procedurally generated based on public datasets regarding space expl
 * D3.js for visualization
 * Babylon.js for 3d scene rendering
 
+![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
 ## Dataset
 Exoplanet data Data is gathered from here. 
