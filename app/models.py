@@ -90,6 +90,7 @@ class CosmosdbClient():
     def cs(self, s):
         # Clean String
         s = str(s).replace("'", "")
+        s = str(s).replace("\\","-")
         return s
 
     def clean_node(self, x):
