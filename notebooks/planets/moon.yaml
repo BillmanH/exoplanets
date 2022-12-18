@@ -1,20 +1,22 @@
 moon_types:
-  moon: 
-    count: 13.0
-    prob: 0.8125
-    mass_mean: 0.005513153846153847
-    mass_std: 0.009417033882333949
-    radius_mean: 0.17966153846153846
-    radius_std: 0.12918538706358867
-    distance_min: 30
-    distance_max: 50
-
-  terrestrial: 
+  ice:
+    count: 4.0
+    mass_mean: 0.01722475
+    mass_std: 0.00951270642789597
+    prob: 0.25
+    radius_mean: 0.04282547027839588
+    radius_std: 0.009033669196529754
+  rocky:
+    count: 9.0
+    mass_mean: 0.000308
+    mass_std: 0.00015929453851278142
+    prob: 0.5625
+    radius_mean: 0.0733373375016315
+    radius_std: 0.16342090345859747
+  terrestrial:
     count: 3.0
-    prob: 0.1875
     mass_mean: 0.011778333333333333
     mass_std: 0.0035116816959020257
-    radius_mean: 0.26786666666666664
-    radius_std: 0.020873987001369262
-    distance_min: 30
-    distance_max: 50
+    prob: 0.1875
+    radius_mean: 0.10703187481008812
+    radius_std: 0.14348491532725952

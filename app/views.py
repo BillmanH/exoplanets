@@ -110,3 +110,5 @@ def populations_view(request):
     res = get_factions(request.user.username)
     context = {"factions": res}
     return render(request, "app/populations.html", context)
+
+
