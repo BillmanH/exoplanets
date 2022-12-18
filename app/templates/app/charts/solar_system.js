@@ -1,7 +1,7 @@
 
 var s_objectColors = {
     'G': '#FDB813',
-    'moon':'#F4F1C9',
+    'rocky':'#F4F1C9',
     'terrestrial':'#73513C',
     'ice':'#A7DEDA',
     'dwarf':'#0EC0A6',

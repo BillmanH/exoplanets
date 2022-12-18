@@ -18,7 +18,7 @@ class Body:
         self.name = "unnamed"
 
     def make_name(self, n1, n2):
-        return language.make_word(maths.rnd(n1, n2))
+        self.name = language.make_word(maths.rnd(n1, n2))
 
     def get_fundimentals(self):
         return {
@@ -34,7 +34,7 @@ class Body:
 
 class Star(Body):
     def build_attr(self, sdata):
-        self.name = self.make_name(1, 1)
+        self.make_name(1, 1)
         self.label = "star"
         self.type = sdata["class"]
         self.radius = sdata["radius"]
@@ -47,7 +47,7 @@ class Star(Body):
 
 class Planet(Body):
     def build_attr(self, t, orbiting):
-        self.name = self.make_name(2, 1)
+        self.make_name(2, 1)
         self.label = "planet"
         self.type = t
         self.radius = abs(r.normal(pdata[t]["radius_mean"], pdata[t]["radius_std"]))
@@ -69,6 +69,7 @@ class Planet(Body):
         fund["orbitsName"] = self.orbitsName
         fund["isSupportsLife"] = self.isSupportsLife
         fund["isPopulated"] = self.isPopulated
+        fund["type"] = self.type
         return fund
 
 
@@ -76,6 +77,7 @@ class Moon(Body):
     def build_attr(self, t, planets):
         self.make_name(2, 1)
         self.label = "moon"
+        self.type = t
         self.orbiting = r.choice(planets)
         self.orbitsId = self.orbiting["objid"]
         self.distance = 0.005  # TODO: Make dynamic moon distance
@@ -92,11 +94,12 @@ class Moon(Body):
         fund = self.get_fundimentals()
         fund["orbitsId"] = self.orbitsId
         fund["orbitsName"] = self.orbitsName
-        fund["distance"] = self.distance
+        fund["orbitsDistance"] = self.distance
         fund["mass"] = self.mass
         fund["radius"] = self.radius
         fund["isSupportsLife"] = self.isSupportsLife
         fund["isPopulated"] = self.isPopulated
+        fund["class"] = self.type
         return fund
 
 
