@@ -14,8 +14,12 @@ star_base = 100
 shinyness = 0.05
 
 function createStar(n){
-    const star = BABYLON.MeshBuilder.CreateSphere(n.name, {diameter: star_base});
-    var sunlight = new BABYLON.PointLight("sunlight", new BABYLON.Vector3(0, 0, 0));
+    n.diameter = star_base
+    n.x = 0
+    n.y = 0
+    n.z = 0
+    const star = BABYLON.MeshBuilder.CreateSphere(n.objid, {diameter: n.diameter});
+    var sunlight = new BABYLON.PointLight("sunlight", new BABYLON.Vector3(n.x, n.y, n.z));
     const surface = new BABYLON.StandardMaterial("surface");
     surface.diffuseTexture =  new BABYLON.Texture(sphere_textures[n.class]);
     
@@ -30,8 +34,12 @@ function createStar(n){
 }
 
 function createPlanet(n){
-    const planet = BABYLON.MeshBuilder.CreateSphere(n.name,  {diameter: scale_radius(n.radius)});
-    planet.position = new BABYLON.Vector3(scale_distance(Math.random()),0,scale_distance(n.orbitsDistance));
+    n.diameter = scale_radius(n.radius)/2  // should be r*2 but I want smaller plantets. 
+    n.x = scale_distance(Math.random())
+    n.y = 0
+    n.z = scale_distance(n.orbitsDistance)
+    const planet = BABYLON.MeshBuilder.CreateSphere(n.name,  {diameter: n.diameter});
+    planet.position = new BABYLON.Vector3(n.x, n.y, n.z);
 
     // texture
     const surface = new BABYLON.StandardMaterial("surface");
@@ -56,16 +64,22 @@ function createPlanet(n){
 
     var label = new BABYLON.GUI.TextBlock();
         label.text = n.name;
-        rect1.addControl(label);    
+        rect1.addControl(label);   
 }
 
+var guiIter = 0
 for (let i = 0; i < solar_system.nodes.length; i++) {
     n = solar_system["nodes"][i]
     if (n["objtype"]=="star"){
+        guiIter++
         createStar(n)
+        createButton(n, guiIter)
     }
     if (n["objtype"]=="planet"){
+        guiIter++
         createPlanet(n)
+        createButton(n, guiIter)
+        // console.log(n.name, i)
     }
   }
 

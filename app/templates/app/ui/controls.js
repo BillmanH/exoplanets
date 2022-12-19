@@ -1,23 +1,30 @@
-// // https://doc.babylonjs.com/features/featuresDeepDive/gui/gui
+// https://doc.babylonjs.com/features/featuresDeepDive/gui/gui
+
+
+var createButton = function(n,i) {
+    // n = name of the planet
+    // i = iteration #
+    // console.log(n.name, i)
+    var button = BABYLON.GUI.Button.CreateSimpleButton("btn" + toString(i), n.name);
+    button.width = "150px"
+    button.height = "40px"
+    button.top = 50 * i
+    button.left = 50
+    
+    button.color = "white";
+    button.cornerRadius = 10;
+    button.background = "black";
+    button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    advancedTexture.addControl(button);
+
+    button.onPointerUpObservable.add(function() {
+        console.log(n.name, n.objid, " button was pushed")
+        camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
+    });
+
+}
+
+var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
 
 
-
-// // // GUI gonna come back to it. 
-// var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-// var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Center on Homeworld");
-
-// button1.width = "150px"
-// button1.height = "40px"
-// button1.top = "-100"
-// button1.left = "-100"
-
-// button1.color = "white";
-// button1.cornerRadius = 10;
-// button1.background = "black";
-
-// // button1.onPointerUpObservable.add(function() {
-// //     alert("you did it!");
-// // });
-
-// advancedTexture.addControl(button1);
