@@ -36,7 +36,7 @@ function createPlanet(n){
     n.x = scale_distance(guiIter)
     n.y = 0
     n.z = scale_distance(n.orbitsDistance)
-    const planet = BABYLON.MeshBuilder.CreateSphere(n.name,  {diameter: n.diameter});
+    const planet = BABYLON.MeshBuilder.CreateSphere(n.objid,  {diameter: n.diameter});
     planet.position = new BABYLON.Vector3(n.x, n.y, n.z);
 
     // texture
@@ -46,18 +46,18 @@ function createPlanet(n){
     planet.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 
 
-    var rect1 = new BABYLON.GUI.Rectangle();
+    var rect1 = new BABYLON.GUI.Rectangle(n.objid+"nameplate");
         rect1.width = .06;
         rect1.height = .03;
         rect1.cornerRadius = 10;
         rect1.color = "white";
         rect1.thickness = 4;
         rect1.background = "black";
-        advancedTexture.addControl(rect1);
+        dashboard.addControl(rect1);
         rect1.linkWithMesh(planet);   
         rect1.linkOffsetY = -15;
 
-    var label = new BABYLON.GUI.TextBlock(n.name+"nameplate");
+    var label = new BABYLON.GUI.TextBlock(n.objid+"nameplatetext");
         // https://playground.babylonjs.com/#XCPP9Y#121
         label.text = n.name;
         label.height = "40px"
@@ -79,7 +79,6 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
         n.iter = guiIter
         createPlanet(n)
         createButton(n, guiIter)
-        // console.log(n.name, i)
     }
   }
 
