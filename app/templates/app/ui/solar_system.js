@@ -45,10 +45,7 @@ function createPlanet(n){
     planet.material = surface
     planet.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 
-    // GUI
-    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    advancedTexture.idealWidth = 600;
-    
+
     var rect1 = new BABYLON.GUI.Rectangle();
         rect1.width = .06;
         rect1.height = .03;
