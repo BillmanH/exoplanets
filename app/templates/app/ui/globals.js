@@ -17,8 +17,8 @@ console.log("radiuses: ", radiuses)
 
 distances = get_values(solar_system["nodes"],"orbitsDistance", "planet")
 console.log("distances: ", distances)            
-var scale_distance = d3.scaleSymlog()
-            .constant(0.1)    
+var scale_distance = d3.scaleSqrt()
+            // .constant(0.1)    
             .domain([d3.min(distances),d3.max(distances)])
             .range([20,2000]);
 

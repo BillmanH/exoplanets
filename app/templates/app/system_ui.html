@@ -43,20 +43,23 @@
         const target = new BABYLON.Vector3(0, 0, 0);
 
         const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
+        camera.useFramingBehavior = true;
         camera.attachControl(canvas, true);
-        // const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+        
+        var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
+    
+        {% include "app/ui/controls.js" %}
         {% include "app/ui/skybox.js" %}
         {% include "app/ui/solar_system.js" %}
-        {% include "app/ui/controls.js" %}
 
         return scene;
     }
 
-    const sceneToRender = createScene();
+    const system = createScene();
 
     engine.runRenderLoop(function () {
-        sceneToRender.render();
+        system.render();
     });
 </script>
 
