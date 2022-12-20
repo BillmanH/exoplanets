@@ -22,7 +22,7 @@ var createButton = function(n,i) {
         camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
         camera.radius = n.diameter + 25  
         label = dashboard.getControlByName(n.objid+"nameplate")
-        label.isVisible = false
+        if(label){label.isVisible = false}
     });
 
 }
