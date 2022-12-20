@@ -20,11 +20,11 @@ var createButton = function(n,i) {
     button.onPointerUpObservable.add(function() {
         console.log(n.name, n.objid, " button was pushed")
         camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
+        camera.radius = n.diameter + 25  
+        
     });
 
 }
 
 var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-
 

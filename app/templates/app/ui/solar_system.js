@@ -27,15 +27,13 @@ function createStar(n){
     surface.emissiveColor = new BABYLON.Color3(0, 1, 1);
     sunlight.diffuse = new BABYLON.Color3(0, 1, 1);
     sunlight.specular = new BABYLON.Color3(0, 1, 1);
-
     star.material = surface
-
     return star
 }
 
 function createPlanet(n){
     n.diameter = scale_radius(n.radius)/2  // should be r*2 but I want smaller plantets. 
-    n.x = scale_distance(Math.random())
+    n.x = scale_distance(guiIter)
     n.y = 0
     n.z = scale_distance(n.orbitsDistance)
     const planet = BABYLON.MeshBuilder.CreateSphere(n.name,  {diameter: n.diameter});
@@ -62,21 +60,26 @@ function createPlanet(n){
         rect1.linkWithMesh(planet);   
         rect1.linkOffsetY = -15;
 
-    var label = new BABYLON.GUI.TextBlock();
+    var label = new BABYLON.GUI.TextBlock(n.name+"nameplate");
+        // https://playground.babylonjs.com/#XCPP9Y#121
         label.text = n.name;
+        label.height = "40px"
         rect1.addControl(label);   
 }
+// scene.getMeshByName("bloom").isVisible = false;
 
 var guiIter = 0
 for (let i = 0; i < solar_system.nodes.length; i++) {
     n = solar_system["nodes"][i]
     if (n["objtype"]=="star"){
         guiIter++
+        n.iter = guiIter
         createStar(n)
         createButton(n, guiIter)
     }
     if (n["objtype"]=="planet"){
         guiIter++
+        n.iter = guiIter
         createPlanet(n)
         createButton(n, guiIter)
         // console.log(n.name, i)
