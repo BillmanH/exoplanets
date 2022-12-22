@@ -8,6 +8,7 @@ sphere_textures = {
     "dwarf":"{% static 'app/objects/planet/dwarf.png' %}",
     "gas":"{% static 'app/objects/planet/gas_giant_blue.png' %}",
     "ice":"{% static 'app/objects/planet/ice.png' %}",
+    "rocky":"{% static 'app/objects/planet/dwarf.png' %}"
 }
 
 star_base = 100
@@ -45,7 +46,6 @@ function createPlanet(n){
     planet.material = surface
     planet.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 
-
     var rect1 = new BABYLON.GUI.Rectangle(n.objid+"nameplate");
         rect1.width = .06;
         rect1.height = .03;
@@ -63,8 +63,27 @@ function createPlanet(n){
         label.height = "40px"
         rect1.addControl(label);   
 }
-// scene.getMeshByName("bloom").isVisible = false;
 
+function createMoon(n){
+    var orbiting = scene.getMeshByName(n.orbitsId);
+    var o_n = get_node(solar_system["nodes"], n.orbitsId)
+    n.diameter = scale_radius(n.radius)/2  // should be r*2 but I want smaller plantets. 
+    n.x = (scale_distance_ln(n.orbitsDistance) + 20) * flipper()
+    n.y = (scale_distance_ln(n.orbitsDistance) + 20) * flipper()
+    n.z = (scale_distance_ln(n.orbitsDistance) + 20) * flipper()
+    if(n.orbitsName=="Earth"){console.log("orbiting", o_n)}
+    const moon = BABYLON.MeshBuilder.CreateSphere(n.objid,  {diameter: n.diameter});
+    moon.parent = orbiting
+    moon.position = new BABYLON.Vector3(n.x, n.y, n.z);
+
+    // texture
+    const surface = new BABYLON.StandardMaterial("surface");
+    surface.diffuseTexture =  new BABYLON.Texture(sphere_textures[n.class]);
+    moon.material = surface
+    moon.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
+}
+
+// Primary objects that don't rely on the relative position
 var guiIter = 0
 for (let i = 0; i < solar_system.nodes.length; i++) {
     n = solar_system["nodes"][i]
@@ -78,8 +97,15 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
         guiIter++
         n.iter = guiIter
         createPlanet(n)
-        createButton(n, guiIter)
+        createButton(n)
     }
   }
 
 
+// Secondary objects that do rely on a position of something else.
+for (let i = 0; i < solar_system.nodes.length; i++) {
+    n = solar_system["nodes"][i]
+    if (n["objtype"]=="moon"){
+        createMoon(n)
+    }
+}

@@ -1,14 +1,11 @@
 // https://doc.babylonjs.com/features/featuresDeepDive/gui/gui
 
 
-var createButton = function(n,i) {
-    // n = name of the planet
-    // i = iteration #
-    // console.log(n.name, i)
-    var button = BABYLON.GUI.Button.CreateSimpleButton("btn" + toString(i), n.name);
+var createButton = function(n) {
+    var button = BABYLON.GUI.Button.CreateSimpleButton("btn" + toString(n.iter), n.name);
     button.width = "150px"
     button.height = "40px"
-    button.top = 50 * i
+    button.top = 50 * n.iter
     button.left = 50
     
     button.color = "white";
@@ -27,3 +24,6 @@ var createButton = function(n,i) {
 
 }
 
+// TODO: Things I want to implement later: 
+// https://forum.babylonjs.com/t/get-mesh-name-on-mesh-click/794
+// https://doc.babylonjs.com/features/featuresDeepDive/animation/animation_design
