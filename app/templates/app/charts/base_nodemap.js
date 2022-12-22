@@ -6,8 +6,8 @@ function draw_node(
     orbitalStrength = .15,
     height,
     width,
-    clickHandler=function(d){console.log("no click handler")},
-    strokesFunc = function(d){return "black"}  // strokes logic can be customized
+    clickHandler = function (d) { console.log("no click handler") },
+    strokesFunc = function (d) { return "black" }  // strokes logic can be customized
 ) {
     var svg = d3.select('body').append('svg')
         .attr('width', width)
@@ -15,12 +15,14 @@ function draw_node(
         .classed('map', true)
         .attr("id", objid);
 
-    radiusScale = d3.scaleLog()
+    radiusScale = d3.scaleSqrt()
         .domain(
             [
                 d3.min(nodes, function (d) { return d.radius; }),
                 d3.max(nodes, function (d) { return d.radius; })]
-        ).range([0, 20]);
+        ).range([1, 20]);
+
+    console.log(d3.min(nodes, function (d) { return d.radius; }),d3.max(nodes, function (d) { return d.radius; }),radiusScale(2))
 
     orbitScale = d3.scaleLinear()
         .domain(
@@ -42,16 +44,16 @@ function draw_node(
 
     var point = {}
     function planet_ticked() {
-        var u = d3.select('#'+objid)
+        var u = d3.select('#' + objid)
             .selectAll('circle')
             .data(nodes)
 
         u.enter()
             .append('circle')
-            .attr('r', function (d) { return radiusScale(d.radius) })
+            .attr('r', function (d) { return Math.abs(radiusScale(d.radius))+5 })
             .style("fill", function (d) { return objectColors[d.class] })
-            .attr("stroke",  function (d) {return strokesFunc(d)})
-            .attr('class', function (d) { return d.class + " " + d.objtype})
+            .attr("stroke", function (d) { return strokesFunc(d) })
+            .attr('class', function (d) { return d.class + " " + d.objtype })
             .merge(u)
             .attr('cx', function (d) {
                 return d.x
@@ -69,7 +71,7 @@ function draw_node(
                 d3.pointer(event)
                 return tooltip.style("visibility", "hidden");
             })
-            .on("click", (event, d) => {clickHandler(d)})
+            .on("click", (event, d) => { clickHandler(d) })
 
         u.exit().remove()
     }

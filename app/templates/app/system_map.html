@@ -26,7 +26,11 @@
     {% include "app/tooltips.js" %}
 
     var solar_system = {{ solar_system | safe }}
-    console.log(solar_system['edges'])
+    
+    account = solar_system['nodes'].filter(function(d){return d['objtype']=='account'})[0]
+    solar_system['nodes'] = solar_system['nodes'].filter(function(d){return d['objtype']!='account'})
+    console.log(solar_system['nodes'])
+
     var width = 640,
         height = 480,
         defaultNodeSize = 10
