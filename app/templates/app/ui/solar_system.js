@@ -8,6 +8,7 @@ sphere_textures = {
     "dwarf":"{% static 'app/objects/planet/dwarf.png' %}",
     "gas":"{% static 'app/objects/planet/gas_giant_blue.png' %}",
     "ice":"{% static 'app/objects/planet/ice.png' %}",
+    "rocky":"{% static 'app/objects/planet/dwarf.png' %}"
 }
 
 star_base = 100
@@ -36,7 +37,7 @@ function createPlanet(n){
     n.x = scale_distance(guiIter)
     n.y = 0
     n.z = scale_distance(n.orbitsDistance)
-    const planet = BABYLON.MeshBuilder.CreateSphere("p-"+n.objid,  {diameter: n.diameter});
+    const planet = BABYLON.MeshBuilder.CreateSphere(n.objid,  {diameter: n.diameter});
     planet.position = new BABYLON.Vector3(n.x, n.y, n.z);
 
     // texture
@@ -64,15 +65,22 @@ function createPlanet(n){
 }
 
 function createMoon(n){
-    var orbiting = scene.getMeshByName("p-"+n.orbitsId);
+    var orbiting = scene.getMeshByName(n.orbitsId);
     var o_n = get_node(solar_system["nodes"], n.orbitsId)
     n.diameter = scale_radius(n.radius)/2  // should be r*2 but I want smaller plantets. 
-    n.x = orbiting.position.x + scale_distance_ln(n.orbitsDistance) + scale_jitter(Math.random()) * flipper()
-    n.y = orbiting.position.y + scale_distance_ln(n.orbitsDistance) + scale_jitter(Math.random()) * flipper()
-    n.z = orbiting.position.z + scale_distance_ln(n.orbitsDistance) + scale_jitter(Math.random()) * flipper()
+    n.x = (scale_distance_ln(n.orbitsDistance) + 20) * flipper()
+    n.y = (scale_distance_ln(n.orbitsDistance) + 20) * flipper()
+    n.z = (scale_distance_ln(n.orbitsDistance) + 20) * flipper()
     if(n.orbitsName=="Earth"){console.log("orbiting", o_n)}
     const moon = BABYLON.MeshBuilder.CreateSphere(n.objid,  {diameter: n.diameter});
+    moon.parent = orbiting
     moon.position = new BABYLON.Vector3(n.x, n.y, n.z);
+
+    // texture
+    const surface = new BABYLON.StandardMaterial("surface");
+    surface.diffuseTexture =  new BABYLON.Texture(sphere_textures[n.class]);
+    moon.material = surface
+    moon.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 }
 
 // Primary objects that don't rely on the relative position
