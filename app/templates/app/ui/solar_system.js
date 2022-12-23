@@ -5,9 +5,9 @@
 sphere_textures = {
     "G":"{% static 'app/objects/planet/synthetic_star_g.png' %}",
     "terrestrial":"{% static 'app/objects/planet/synthetic_terrestrial.png' %}",
-    "dwarf":"{% static 'app/objects/planet/synthetic_rocky2.png' %}",
+    "dwarf":"{% static 'app/objects/planet/synthetic_rocky.png' %}",
     "gas":"{% static 'app/objects/planet/synthetic_gas_giant.png' %}",
-    "ice":"{% static 'app/objects/planet/ice.png' %}",
+    "ice":"{% static 'app/objects/planet/synthetic_ice.png' %}",
     "rocky":"{% static 'app/objects/planet/synthetic_rocky.png' %}"
 }
 
