@@ -3,12 +3,12 @@
 {% load static %}
 
 sphere_textures = {
-    "G":"{% static 'app/objects/planet/star_g.png' %}",
-    "terrestrial":"{% static 'app/objects/planet/terrestrial_oceanic.png' %}",
-    "dwarf":"{% static 'app/objects/planet/dwarf.png' %}",
-    "gas":"{% static 'app/objects/planet/gas_giant_blue.png' %}",
+    "G":"{% static 'app/objects/planet/synthetic_star_g.png' %}",
+    "terrestrial":"{% static 'app/objects/planet/synthetic_terrestrial.png' %}",
+    "dwarf":"{% static 'app/objects/planet/synthetic_rocky2.png' %}",
+    "gas":"{% static 'app/objects/planet/synthetic_gas_giant.png' %}",
     "ice":"{% static 'app/objects/planet/ice.png' %}",
-    "rocky":"{% static 'app/objects/planet/dwarf.png' %}"
+    "rocky":"{% static 'app/objects/planet/synthetic_rocky.png' %}"
 }
 
 star_base = 100
