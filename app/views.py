@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from app.models import *
-
+from app.creators.account import Account
 from .creators import universe
 
 
@@ -76,6 +76,16 @@ def new_universe(request):
         form = HomeSystemForm()
         context["form"] = form
     return render(request, "app/creation/new_universe.html", context)
+
+@login_required
+def new_game_02(request):
+    context = {}
+    c = CosmosdbClient()
+    if request.method == "GET":
+        acc = Account(request.user.username)
+        acc.sync_to_graph(c)
+        context['account'] = acc.get_json()
+    return render(request, "app/creation/genesis_view_02.html", context)
 
 
 @login_required
