@@ -16,7 +16,7 @@ class Account:
 
     def fetch_from_graph(self,c):
         pass
-    
+
     def get_json(self):
         return {
             "objid": self.objid,
@@ -43,7 +43,7 @@ class Account:
             c.run_query(query)
         else:
             data = {"nodes":[self.get_json()],"edges":[]}
-            c.upload_data(data)
+            c.upload_data(self.username,data)
 
 
     def drop_system(self,c):
