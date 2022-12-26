@@ -2,9 +2,11 @@ from datetime import datetime
 
 from . import maths
 
+strFormat = r'%Y-%m-%dT%H:%M:%S'
 class Account:
-    def __init__(self, username, get_from_graph=False, c=None) -> None:
-        if get_from_graph:
+    def __init__(self, username, c) -> None:
+        self.username = username
+        if self.check_account_exists(c):
             self.fetch_from_graph(c)
         else:
             self.objid = maths.uuid(n=13)
@@ -12,10 +14,16 @@ class Account:
             self.created = datetime.now()
             self.last_used = datetime.now()
             self.label = "account"
-            self.username = username
 
     def fetch_from_graph(self,c):
-        pass
+        query = f"g.V().has('label','account').has('username','{self.username}').valueMap()"
+        c.run_query(query)
+        self.objid = c.res[0]['objid'][0]
+        self.type = c.res[0]['type'][0]
+        self.created = datetime.strptime(c.res[0]['created'][0],strFormat)
+        self.last_used = datetime.strptime(c.res[0]['last_used'][0],strFormat)
+        self.label = c.res[0]['objtype'][0]
+
 
     def get_json(self):
         return {
@@ -23,8 +31,8 @@ class Account:
             "label": self.label,
             "type": self.type,
             "username": self.username,
-            "created": self.created.strftime('%Y-%m-%dT%H:%M:%S.%f%z'),
-            "last_used": self.last_used.strftime('%Y-%m-%dT%H:%M:%S.%f%z'),
+            "created": self.created.strftime(strFormat),
+            "last_used": self.last_used.strftime(strFormat),
         }
 
     def check_account_exists(self,c):
@@ -38,7 +46,7 @@ class Account:
     def sync_to_graph(self, c):
         self.last_used = datetime.now()
         if self.check_account_exists(c):
-            updatetime = self.last_used.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+            updatetime = self.last_used.strftime(strFormat)
             query = f"g.V().has('label','account').has('username','{self.username}').property('last_updated','{updatetime}')"
             c.run_query(query)
         else:
