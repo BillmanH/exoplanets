@@ -82,7 +82,7 @@ def new_game_02(request):
     context = {}
     c = CosmosdbClient()
     if request.method == "GET":
-        acc = Account(request.user.username)
+        acc = Account(request.user.username, c)
         acc.sync_to_graph(c)
         context['account'] = acc.get_json()
     return render(request, "app/creation/genesis_view_02.html", context)
