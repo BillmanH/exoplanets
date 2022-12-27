@@ -15,8 +15,13 @@ var form = {
     "objid":Math.floor(Math.random()*10000000000000),  // 13 char GUID
     "owner":"{{ user.username }}",
     "username": "{{ user.username }}",
-    "accountid":account.objid
+    "accountid":account.objid,
+    "conformity":.5,
+    "literacy":.5,
+    "aggression":.5,
+    "constitution":.5
     }
+
 
 function add_menu(t,c) {
     var menu = document.createElement("p")
