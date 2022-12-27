@@ -1,16 +1,20 @@
 from django.urls import path
 
 from . import views
-from .ajaxviews import planet, pop, overview
+from .ajaxviews import planet, pop, overview, genesis
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("new", views.new_universe),
+    path("new", views.new_game_02),
     path("genesis_view", views.genesis, name="genesis"),
     path("galaxymap", views.galaxy_map, name="galaxy_map"),
     path("systemmap", views.system_map, name="system_map"),
     path("systemui", views.system_ui, name="system_ui"),
     path("populations", views.populations_view, name="populations"),
+    path("ajax/refreshaccount", genesis.refreshaccount, name="refreshaccount"),
+    path("ajax/genesissystem", genesis.build_solar_system, name="genesissystem"),
+    path("ajax/genesispopulation", genesis.build_population, name="genesispopulation"),
+    
     path("ajax/planet", planet.get_planet, name="get_planet"),
     path("ajax/planet-details", planet.get_planet_details, name="get_planet_details"),
     path("ajax/faction-details", pop.get_faction_details, name="get_faction_details"),
