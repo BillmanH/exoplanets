@@ -136,6 +136,8 @@ dmypy.json
 .pyre/
 
 .vscode/*
+host.json
+
 
 # Excel files
 data/~$*.xlsx
@@ -155,4 +157,5 @@ functions/application_settings.json
 # Local blobstore values
 __blobstorage__/*
 __azurite_db*
+
 
