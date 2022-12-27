@@ -3,7 +3,7 @@ from numpy import random as r
 
 from . import maths
 from . import language
-from . import account
+
 
 pdata = yaml.safe_load(open("notebooks/planets/planet.yaml"))["planet_types"]
 mdata = yaml.safe_load(open("notebooks/planets/moon.yaml"))["moon_types"]
@@ -117,7 +117,8 @@ def make_planet(t, orbiting):
 
 def make_homeworld(orbiting, data):
     planet = make_planet("terrestrial", orbiting)
-    planet["name"] = data["planet_name"]
+    if "planet_name" in data.keys():
+        planet["name"] = data["planet_name"]
     planet["isSupportsLife"] = True
     planet["isPopulated"] = True
     planet["isHomeworld"] = True
@@ -131,7 +132,6 @@ def make_moon(t, planets):
 
 
 def build_homeSystem(data, username):
-    user = account.create_account(username)
 
     systemid = maths.uuid(n=13)
     system = {
@@ -156,7 +156,7 @@ def build_homeSystem(data, username):
         )
         for p in range(int(data["num_moons"]))
     ]
-    nodes = [user] + [system] + [star] + moons + planets
+    nodes = [data] + [system] + [star] + moons + planets
     system_edges = [
         {"node1": p["objid"], "node2": system["objid"], "label": "isInSystem"}
         for p in nodes
@@ -172,12 +172,17 @@ def build_homeSystem(data, username):
         for p in nodes
         if p.get("orbitsId")
     ]
-    # TODO: Move account to it's own module
-    accountEdge = {
+
+    formEdge = {
         "node1": systemid,
-        "node2": user["objid"],
-        "label": "belongsToUser",
+        "node2": data["objid"],
+        "label": "created_from_form",
     }
-    edges = system_edges + orbits + [accountEdge]
+    accountEdge = {
+        "node1": data["accountid"],
+        "node2": data["objid"],
+        "label": "submitted",
+    }
+    edges = system_edges + orbits + [formEdge]
     return nodes, edges
 
