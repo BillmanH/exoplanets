@@ -10,11 +10,8 @@ from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
 
-#Local modules:
-from .GraphOperations import account
 
 # ASSERTIONS: 
-
 # Nodes must have expected values
 expectedProperties = ['label','objid','name']
 
@@ -143,7 +140,8 @@ class CosmosdbClient():
             else:
                 substr = f".property('{k}','{self.cs(node[k])}')"
             gaddv += substr
-        gaddv += f".property('username','{username}')"
+        if 'username' not in properties:
+            gaddv += f".property('username','{username}')"
         gaddv += f".property('objtype','{node['label']}')"
         return gaddv
 

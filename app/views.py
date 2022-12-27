@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from app.models import *
-
+from app.creators.account import Account
 from .creators import universe
 
 
@@ -42,40 +42,14 @@ def index(request):
 
 
 @login_required
-def new_universe(request):
-    # Note, Only the planets are loaded here. 
-    # The Genesis process is now controlled by steps defined in app\templates\app\creation\genesis_view.html
+def new_game(request):
     context = {}
-    form = HomeSystemForm(request.POST or None)
-    if request.method == "POST" and form.is_valid():
-        # Get some info from the client
-        c = CosmosdbClient()
-        form = HomeSystemForm(request.POST)
-        username = request.user.username
-        # Delete the old sytem
-        account.drop_account(c, username)
-        # Create the new system
-        universe_nodes, universe_edges = universe.build_homeSystem(
-            request.POST, username
-        )
-        # Adding the form to the graph
-        requestedSystem = form.formToNode(request.POST)
-        universe_nodes.append(requestedSystem)
-        formEdge = {
-            "node1": [u for u in universe_nodes if u["label"] == "account"][0]["objid"],
-            "node2": requestedSystem["objid"],
-            "label": "requestedSystem",
-        }
-        universe_edges.append(formEdge)
-        # Upload all of that data that was created.
-        data = {"nodes": universe_nodes, "edges": universe_edges}
-        c.upload_data(username, data)
-        return redirect("genesis")
-
+    c = CosmosdbClient()
     if request.method == "GET":
-        form = HomeSystemForm()
-        context["form"] = form
-    return render(request, "app/creation/new_universe.html", context)
+        acc = Account(request.user.username, c)
+        acc.sync_to_graph(c)
+        context['account'] = acc.get_json()
+    return render(request, "app/creation/genesis_view.html", context)
 
 
 @login_required

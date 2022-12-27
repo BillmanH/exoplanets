@@ -174,6 +174,8 @@ def build_people(data):
     # Set the name of the population to comply with the faction it is in.
     for p in pops:
         faction = [i for i in factions if i.faction_no == p.factionNo][0]
+        if p.name == '':
+            p.name = p.make_name(2,2)
         p.set_pop_name(faction)
         faction.assign_pop_to_faction(p)
 
