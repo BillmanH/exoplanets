@@ -14,6 +14,7 @@ var form = {
     "name":"worldgenform",
     "objid":Math.floor(Math.random()*10000000000000),  // 13 char GUID
     "owner":"{{ user.username }}",
+    "username": "{{ user.username }}",
     "accountid":account.objid
     }
 
@@ -236,13 +237,25 @@ function build_population(c,n) {
 }
 
 function goto_system(c,n){
-    window.location.href = '/systemui';
+    $.ajax({
+        url: '/ajax/genesis-pop-desire',
+        data: form,
+        dataType: 'json',
+        beforeSend: function () {
+            d3.selectAll('#finalize').remove()
+
+        },
+        success: function (data) {
+            console.log("pop desires, was created")
+            window.location.href = '/systemui';
+        }
+    })
 }
 
 
 function finalize_world(){
     add_menu("Feel free to click around, but the game hasn't started yet.", "finalize")
-    add_button("finalize",1,1, goto_system)
+    add_button("finalize",1,"continue to the game", goto_system)
 }
 
 // An example `data` set:

@@ -4,42 +4,31 @@
 
 
 <body>
+    <p>{% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}</p>
     <h1>In the beginning there was nothing</h1>
-    This process can take some time. Sit back and watch the universe expand.
+    This process can take some time. 
     </br>Or you can quit back to the main menu, but you will need to start the creation process again. 
-    <p>
-        <a class='menu button' href='/'>Quit</a>
+    <h2>NOTE: If you start the creation process, it will distroy your previous world. A half-created world may be unplayable.</h2>
+    <p class='menu' id='startmenu'>
+        <a class='menu button' href='/'>Quit back to main menu</a>
     </p>
 
     <script>
         {% include "app/tooltips.js" %}
-    
-        var solar_system = {{ solar_system | safe }}
-        var username = "{{ username | safe }}"
+        {% include "app/table_lables.js" %}
+        var account = {{ account | safe }}
         var width = 640,
             height = 480,
             defaultNodeSize = 10
-    
+        console.log(account)
         {% include "app/charts/base_nodemap.js" %}
-        {% include "app/charts/solar_system.js" %}
-    </script>
-      <h2>Life has formed...</h2>
-      
-      </br>A civilization has somehow risen out of the muck 
-    <script>
         {% include "app/charts/base_table.js" %}
-        {% include "app/creation/homeworld_ajax.js" %}
+        {% include "app/creation/genesis.js" %}
     </script>
-        <h2 class="blinking">Slowly that life learned to use tools</h2>
 
-        <div id="pleasewait">please wait ...</div>
+
 </body>
 
-<script type="text/javascript">
-    var blink = document.getElementById('pleasewait');
-    setInterval(function() {
-        blink.style.opacity = (blink.style.opacity == 0 ? 1 : 0);
-    }, 100);
-</script>
+
 
 </html>
