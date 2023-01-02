@@ -39,7 +39,7 @@ var faction_table_lables = [{"label":"Faction Name","value":"name"}]
 
 function clickTablePlanet(d){
     $.ajax({
-        url: '/ajax/planet-details',
+        url: '/ajax/planet-enhabitants',
         type: 'get',
         data: d,
         dataType: 'json',

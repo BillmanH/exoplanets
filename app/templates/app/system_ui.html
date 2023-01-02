@@ -51,10 +51,10 @@
         var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
     
+        {% include "app/tooltips.js" %}
         {% include "app/ui/controls.js" %}
         {% include "app/ui/skybox.js" %}
         {% include "app/ui/solar_system.js" %}
-
         return scene;
     }
 

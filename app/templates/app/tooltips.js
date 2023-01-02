@@ -51,6 +51,27 @@ function dictToHtml(d) {
     return html
 }
 
+function dictToSimpleText(d) {
+    html = d['name'] + " : "+ d['objtype'] +["\n"]
+    var dt = Object.assign({}, d);
+    dt = limitDict(dt)
+    for (var k in dt) {
+        x = k.replace(/_/g, " ")
+        y = dt[k]
+        if (y.toString().indexOf(".") != -1) {y = parseFloat(y.toString())};
+        if (typeof (y) == "string") {
+            y = dt[k].replace(/_/g, " ")
+        } else if (typeof (y) == "number") {
+            y = r(y)
+        } else if (typeof (y) == "object") {
+            y = dt[k].toString().replace(/_/g, " ")
+        }
+        html += x + ": " + y + "\n"
+    }
+    return html
+}
+
+
 var tooltip = d3.select("body")
     .append("div")
     .style("background-color", 'white')

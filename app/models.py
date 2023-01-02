@@ -31,6 +31,7 @@ class GraphFormatError(Exception):
 # then handle additional queries in `axajviews`. This will be better for the clint in the long run. 
 
 class CosmosdbClient():
+    # TODO: build capability to 'upsert' nodes instead of drop and replace. 
     """
     cb = CosmosdbClient()
     cb.add_query()
