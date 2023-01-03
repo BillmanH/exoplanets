@@ -50,11 +50,23 @@
         
         var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-    
+
+        
+        var textblock = new BABYLON.GUI.TextBlock("textblock")
+            textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+            textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+            textblock.fontSize = 24;    
+            textblock.background = "black";
+            textblock.color = "white";    
+            dashboard.addControl(textblock);
+
+        console.log(textblock)
+
         {% include "app/tooltips.js" %}
         {% include "app/ui/controls.js" %}
         {% include "app/ui/skybox.js" %}
         {% include "app/ui/solar_system.js" %}
+
         return scene;
     }
 
