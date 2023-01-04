@@ -1,0 +1,27 @@
+<div>
+    {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
+</div>
+<div class="menu">2D Menu
+    <p>
+        <a class="menu button" href="/galaxymap">Full Galaxy</a>
+    </p>
+    <p>
+        <a class="menu button" href="/systemmap">Solar System</a>
+    </p>
+    <p>
+        <a class="menu button" href="/populations">Populations</a>
+    </p>
+</div>
+<div class="menu">3D Menu
+    <p>
+        <a class="menu button" href="/systemui">3D System View</a>
+    </p>
+    <p>
+        <a class="menu button" href="/popui">3D Population</a>
+    </p>
+</div>
+<div class="menu">System
+    <p>
+        <a class='menu button' href='/'>Quit</a>
+    </p>
+</div>
