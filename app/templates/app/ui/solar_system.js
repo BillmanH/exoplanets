@@ -5,10 +5,10 @@
 sphere_textures = {
     "G":"{% static 'app/objects/planet/synthetic_star_g.png' %}",
     "terrestrial":"{% static 'app/objects/planet/synthetic_terrestrial.png' %}",
-    "dwarf":"{% static 'app/objects/planet/synthetic_rocky.png' %}",
+    "dwarf":"{% static 'app/objects/planet/synthetic_dwarf_2.png' %}",
     "gas":"{% static 'app/objects/planet/synthetic_gas_giant.png' %}",
     "ice":"{% static 'app/objects/planet/synthetic_ice.png' %}",
-    "rocky":"{% static 'app/objects/planet/synthetic_rocky.png' %}"
+    "rocky":"{% static 'app/objects/planet/synthetic_moon_rocky_2.png' %}"
 }
 
 star_base = 100
