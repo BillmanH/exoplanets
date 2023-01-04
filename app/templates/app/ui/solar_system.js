@@ -5,10 +5,10 @@
 sphere_textures = {
     "G":"{% static 'app/objects/planet/synthetic_star_g.png' %}",
     "terrestrial":"{% static 'app/objects/planet/synthetic_terrestrial.png' %}",
-    "dwarf":"{% static 'app/objects/planet/synthetic_rocky.png' %}",
+    "dwarf":"{% static 'app/objects/planet/synthetic_dwarf_2.png' %}",
     "gas":"{% static 'app/objects/planet/synthetic_gas_giant.png' %}",
     "ice":"{% static 'app/objects/planet/synthetic_ice.png' %}",
-    "rocky":"{% static 'app/objects/planet/synthetic_rocky.png' %}"
+    "rocky":"{% static 'app/objects/planet/synthetic_moon_rocky_2.png' %}"
 }
 
 star_base = 100
@@ -46,7 +46,7 @@ function createPlanet(n){
     planet.material = surface
     planet.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 
-    var rect1 = new BABYLON.GUI.Rectangle(n.objid+"nameplate");
+    var rect1 = new BABYLON.GUI.Rectangle(n.objid+"_nameplate");
         rect1.width = .06;
         rect1.height = .03;
         rect1.cornerRadius = 10;
@@ -57,7 +57,7 @@ function createPlanet(n){
         rect1.linkWithMesh(planet);   
         rect1.linkOffsetY = -15;
 
-    var label = new BABYLON.GUI.TextBlock(n.objid+"nameplatetext");
+    var label = new BABYLON.GUI.TextBlock(n.objid+"_nameplatetext");
         // https://playground.babylonjs.com/#XCPP9Y#121
         label.text = n.name;
         label.height = "40px"

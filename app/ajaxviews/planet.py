@@ -34,7 +34,22 @@ def get_planet(request):
     system = {"nodes": clean_nodes(nodes), "links": edges}
     return JsonResponse(system)
 
+
 def get_planet_details(request):
+    response = {}
+    request = dict(request.GET)
+    queryplanet = f"""g.V().hasLabel('planet')
+                    .has('objid','{request.get('objid','')[0]}')
+                    .valueMap()
+    """
+    c = CosmosdbClient()
+    c.run_query(queryplanet)
+    planet = clean_nodes(c.res)
+    response['planet'] = planet
+
+    return JsonResponse(response)
+
+def get_planet_enhabitants(request):
     response = {}
     request = dict(request.GET)
     queryplanet = f"""g.V().hasLabel('planet')
