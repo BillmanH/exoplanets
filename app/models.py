@@ -227,5 +227,14 @@ def get_factions(username):
     return system
 
 
+def get_local_population(username):
+    nodes_query = (
+        f"g.V().has('username','{username}').has('label','faction').valuemap()"
+    )
+    c = CosmosdbClient()
+    c.run_query(nodes_query)   
+    nodes = c.res
+    system = {"nodes": c.clean_nodes(nodes), "edges": []}
+    return system
 
 

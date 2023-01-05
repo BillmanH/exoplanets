@@ -10,6 +10,7 @@ urlpatterns = [
     path("galaxymap", views.galaxy_map, name="galaxy_map"),
     path("systemmap", views.system_map, name="system_map"),
     path("systemui", views.system_ui, name="system_ui"),
+    path("popuilocal", views.pop_ui_local, name="pop_ui_local"),
     path("populations", views.populations_view, name="populations"),
     path("ajax/refreshaccount", genesis.refreshaccount, name="refreshaccount"),
     path("ajax/genesissystem", genesis.build_solar_system, name="genesissystem"),
