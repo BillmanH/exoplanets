@@ -77,7 +77,7 @@ def system_ui(request):
 def pop_ui_local(request):
     res = get_local_population(request.user.username)
     context = {"data": res}
-    return render(request, "app/system_ui.html", context)
+    return render(request, "app/population_local.html", context)
 
 
 
