@@ -28,6 +28,20 @@ Get the average agression for a faction (average of pop['agression'])
 g.V().has('faction','name','factionName').in('isInFaction').values('aggression').mean()
 ```
 
+get the peopl of a given local, including thier faction and species:
+```
+g.V().has('objid','7615388501660').as('location')
+	.in('enhabits').as('population')
+	.local(
+		union(
+			out('isInFaction').as('faction'),
+			out('isOfSpecies').as('species')
+			)
+			.fold()).as('faction','species')
+			.path()
+			.by(unfold().valueMap().fold())
+```
+
 ##  Desires
 ### Get all of the desired objectives of a pop
 ```
@@ -58,6 +72,7 @@ g.E().haslabel('takingAction')
 		.by(values('name').fold())
 		.by(values('name','class','objtype').fold())
 ```
+
 
 ## **NUCLEAR** delete and drop functions, use with caution.
 Drop an account, and everything asociated with it. Everything for a user has the 'username' property.  
