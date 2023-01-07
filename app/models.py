@@ -122,14 +122,15 @@ class CosmosdbClient():
         return list_of_lists[:1] + self.flatten(list_of_lists[1:])
 
     def reduce_res(self, res):
-        fab = {}
+        fab = []
         for n,r in enumerate(res): 
-            fab[n] = {}
+            t = {}
             labels = reduce(operator.concat, r['labels'])
             objects = reduce(operator.concat, r['objects'])
 
             for i,l in enumerate(labels):
-                fab[n][l]=self.clean_node(objects[i])
+                t[l]=self.clean_node(objects[i])
+            fab.append(t)
         return fab
 
 
