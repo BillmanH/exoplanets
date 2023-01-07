@@ -10,13 +10,13 @@
     var solar_system = {{ solar_system | safe }}
     // console.log(solar_system['nodes'])
     
-
     {% include "app/ui/globals.js" %}
+    {% include "app/ui/system_globals.js" %}
     var width = 640,
         height = 480,
         defaultNodeSize = 10
 
-    const canvas = document.getElementById("renderCanvas");
+    const canvas = document.getElementById("renderCanvas");     
     const engine = new BABYLON.Engine(canvas, true);
 
     const createScene = function () {

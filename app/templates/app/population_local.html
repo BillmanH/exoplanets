@@ -9,9 +9,8 @@
 </body>
 <script>
     var data = {{ data | safe }}
-    // console.log(solar_system['nodes'])
+    console.log(data)
     
-
     {% include "app/ui/globals.js" %}
     var width = 640,
         height = 480,
@@ -48,9 +47,9 @@
         console.log(textblock)
 
         {% include "app/tooltips.js" %}
-        {% include "app/ui/controls.js" %}
-        {% include "app/ui/skybox.js" %}
-        {% include "app/ui/solar_system.js" %}
+
+
+
 
         return scene;
     }
