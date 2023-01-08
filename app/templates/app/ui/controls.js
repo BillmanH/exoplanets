@@ -8,7 +8,7 @@ var createButton = function(n) {
         button.top = 50 * n.iter
         button.left = 50
         
-        button.color = "white";
+        button.color = n.gui.buttonColor;
         button.cornerRadius = 10;
         button.background = "black";
         button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;

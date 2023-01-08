@@ -33,6 +33,7 @@ function createStar(n){
 }
 
 function createPlanet(n){
+
     n.diameter = scale_radius(n.radius)/2  // should be r*2 but I want smaller plantets. 
     n.x = scale_distance(guiIter)
     n.y = 0
@@ -56,6 +57,7 @@ function createPlanet(n){
         dashboard.addControl(rect1);
         rect1.linkWithMesh(planet);   
         rect1.linkOffsetY = -15;
+
 
     var label = new BABYLON.GUI.TextBlock(n.objid+"_nameplatetext");
         // https://playground.babylonjs.com/#XCPP9Y#121
@@ -87,6 +89,7 @@ function createMoon(n){
 var guiIter = 0
 for (let i = 0; i < solar_system.nodes.length; i++) {
     n = solar_system["nodes"][i]
+    n.gui = {buttonColor:"white"}
     if (n["objtype"]=="star"){
         guiIter++
         n.iter = guiIter
@@ -97,6 +100,11 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
         guiIter++
         n.iter = guiIter
         createPlanet(n)
+        
+        if(n.isSupportsLife=="True"){
+            console.log(n.name,n.isPopulated)
+            n.gui.buttonColor = "green"
+        }
         createButton(n)
     }
   }
