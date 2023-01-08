@@ -40,3 +40,14 @@ function distinct_list(nodes,element,field){
     }     
     return mylist
 }
+
+// coordinate makers
+function pivotLocal(){
+    var min = -150;
+    var max = 150;
+    coord = {}
+    coord.x = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
+    coord.y = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
+    coord.z = Math.floor(Math.random() * (+max + 1 - +min)) + +min; 
+    return coord
+  }
