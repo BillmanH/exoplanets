@@ -42,12 +42,34 @@ function distinct_list(nodes,element,field){
 }
 
 // coordinate makers
-function pivotLocal(){
-    var min = -150;
-    var max = 150;
+function pivotLocal(min,max){
     coord = {}
     coord.x = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
     coord.y = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
     coord.z = Math.floor(Math.random() * (+max + 1 - +min)) + +min; 
     return coord
   }
+
+function get_specific_node_list(nodes,name){
+    var mylist = []
+    for (let i = 0; i < nodes.length; i++){
+        if(nodes[i].hasOwnProperty(name)){
+            mylist.push = nodes[i][name]
+        }
+    }
+    return null
+}
+
+function get_specific_node(nodes,objid){
+    var mylist = []
+    for (let i = 0; i < nodes.length; i++){
+        l = nodes[i]
+        Object.keys(l).forEach(key=>{
+            n = l[key]
+            if(n.objid == objid){
+                mylist.push(n)
+            }
+        }) 
+    }
+    return mylist
+}
