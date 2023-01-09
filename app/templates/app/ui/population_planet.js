@@ -7,12 +7,12 @@ const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0)
 // ground
 const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:500, height:500});
 const groundMat = new BABYLON.StandardMaterial("groundMat");
-groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green.png' %}");
-ground.material = groundMat; //Place the material property of the ground
+    groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green.png' %}");
+    ground.material = groundMat; //Place the material property of the ground
 
 // center
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
-
+    center.isVisible = false
 
 function createFaction(n){
     const box = BABYLON.MeshBuilder.CreateBox(n.objid+"box", 
