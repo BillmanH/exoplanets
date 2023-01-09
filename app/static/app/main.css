@@ -43,11 +43,11 @@ td {
   color: whitesmoke;
   padding: 5px 5px;
   border: 1px solid white;
+  display: inline-block;
 }
 
 .button {
   color: whitesmoke;
-  text-align: center;
   text-decoration: none;
   display: inline-block;
   padding: 14px 25px;

@@ -72,6 +72,15 @@ def system_ui(request):
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
+
+@login_required
+def pop_ui_local(request):
+    res = get_local_population(request.GET['objid'])
+    context = {"data": res}
+    return render(request, "app/population_local.html", context)
+
+
+
 @login_required
 def galaxy_map(request):
     res = get_galaxy_nodes()

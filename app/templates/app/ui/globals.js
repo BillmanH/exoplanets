@@ -1,3 +1,4 @@
+// filtering data formats like [{},{},{}]
 function get_values(l,v,t){
     /// l = list; v = value to return; t = type to filter on; 
     var mylist = []
@@ -18,31 +19,57 @@ function get_node(nodes,oid){
     return null
 }
 
-function flipper(){
-    x = Math.random()
-    if(x<=.5){
-        return -1
-    } else {
-        return 1
-    }
+// filtering data formats like [{location: {…}, population: {…}, faction: {…}, species: {…}}]
+function filter_nodes_res(nodes,element,field, value){
+    // element = 'location', field = 'isPopulated', value = 'true'
+    var mylist = []
+    for (let i = 0; i < nodes.length; i++){
+        if(nodes[i][element][field]!=undefined & nodes[i][element][field]==value){
+            mylist.push(nodes[i])
+        }
+    } 
+    return mylist
 }
 
-radiuses = get_values(solar_system["nodes"],"radius", "planet")
-var scale_radius = d3.scaleLinear()
-            .domain([d3.min(radiuses),d3.max(radiuses)])
-            .range([10,100]);
-// console.log("radiuses: ", radiuses)   
+function distinct_list(nodes,element,field){
+    var mylist = []
+    for (let i = 0; i < nodes.length; i++){
+        if(nodes[i][element][field]!=undefined & mylist.indexOf(nodes[i][element][field]) === -1){
+            mylist.push(nodes[i][element][field])
+        }
+    }     
+    return mylist
+}
 
-distances = get_values(solar_system["nodes"],"orbitsDistance", "planet")
-// console.log("distances: ", distances)            
-var scale_distance = d3.scaleSqrt()
-            .domain([d3.min(distances),d3.max(distances)])
-            .range([20,2000]);
+// coordinate makers
+function pivotLocal(min,max){
+    coord = {}
+    coord.x = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
+    coord.y = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
+    coord.z = Math.floor(Math.random() * (+max + 1 - +min)) + +min; 
+    return coord
+  }
 
-var scale_distance_ln = d3.scaleLinear()
-    .domain([d3.min(distances),d3.max(distances)])
-    .range([2,5]);
+function get_specific_node_list(nodes,name){
+    var mylist = []
+    for (let i = 0; i < nodes.length; i++){
+        if(nodes[i].hasOwnProperty(name)){
+            mylist.push = nodes[i][name]
+        }
+    }
+    return null
+}
 
-var scale_jitter = d3.scaleLinear() 
-            .domain([0,1])
-            .range([10,30]);
+function get_specific_node(nodes,objid){
+    var mylist = []
+    for (let i = 0; i < nodes.length; i++){
+        l = nodes[i]
+        Object.keys(l).forEach(key=>{
+            n = l[key]
+            if(n.objid == objid){
+                mylist.push(n)
+            }
+        }) 
+    }
+    return mylist
+}

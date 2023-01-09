@@ -8,7 +8,7 @@ var createButton = function(n) {
         button.top = 50 * n.iter
         button.left = 50
         
-        button.color = "white";
+        button.color = n.gui.buttonColor;
         button.cornerRadius = 10;
         button.background = "black";
         button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -22,8 +22,29 @@ var createButton = function(n) {
             label = dashboard.getControlByName(n.objid+"_nameplate")
             if(label){label.isVisible = false}
             objectDetails(n)
-    });
+        });
 
+}
+
+var createVisitButton = function(n){
+    console.log("visit button")
+    var button = BABYLON.GUI.Button.CreateSimpleButton("btn_v" + toString(n.iter), "visit");
+        button.width = "50px"
+        button.height = "40px"
+        button.top = 50 * n.iter
+        button.left = 200  
+        
+        button.color = n.gui.buttonColor;
+        button.cornerRadius = 10;
+        button.background = "black";
+        button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        dashboard.addControl(button);
+
+        button.onPointerUpObservable.add(function() {
+            console.log(n.name, n.objid, " visit button was pushed")
+            window.location.href = '/popuilocal' + '?objid=' + n.objid;
+        });
 }
 
 

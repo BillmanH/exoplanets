@@ -1,6 +1,8 @@
 import os
 # Pickle isn't used, but I might use it. 
 import pickle
+from functools import reduce
+import operator
 
 import yaml
 import numpy as np
@@ -119,6 +121,19 @@ class CosmosdbClient():
             return self.flatten(list_of_lists[0]) + self.flatten(list_of_lists[1:])
         return list_of_lists[:1] + self.flatten(list_of_lists[1:])
 
+    def reduce_res(self, res):
+        fab = []
+        for n,r in enumerate(res): 
+            t = {}
+            labels = reduce(operator.concat, r['labels'])
+            objects = reduce(operator.concat, r['objects'])
+
+            for i,l in enumerate(labels):
+                t[l]=self.clean_node(objects[i])
+            fab.append(t)
+        return fab
+
+
     # creating strings for uploading data
     def create_vertex(self,node, username):
         if (len(
@@ -227,5 +242,22 @@ def get_factions(username):
     return system
 
 
-
-
+def get_local_population(objid):
+    # objid is the id of the object which contains ('enhabits') the population/s
+    nodes_query = (
+        f"""g.V().has('objid','{objid}').as('location')
+            .in('enhabits').as('population')
+            .local(
+                union(
+                    out('isInFaction').as('faction'),
+                    out('isOfSpecies').as('species')
+                    )
+                    .fold()).as('faction','species')
+                    .path()
+                    .by(unfold().valueMap().fold())"""
+    )
+    c = CosmosdbClient()
+    c.run_query(nodes_query)   
+    nodes = c.reduce_res(c.res)
+    data = {"nodes": nodes, "edges": []}
+    return data

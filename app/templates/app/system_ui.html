@@ -3,36 +3,20 @@
 {% include "app/head.html" %}
 
 <body>
-    <div>
-        {% if user.is_authenticated %}Greetings, {{ user.username }}.{% endif %}
-    </div>
-    <div class="menu">
-        <p>
-            <a class="menu button" href="/galaxymap">Galaxy</a>
-        </p>
-        <p>
-            <a class="menu button" href="/systemmap">System</a>
-        </p>
-        <p>
-            <a class="menu button" href="/populations">Population</a>
-        </p>
-        <p>
-            <a class='menu button' href='/'>Quit</a>
-        </p>
-    </div>
+    {% include "app/menu_top.html" %}
     <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 <script>
     var solar_system = {{ solar_system | safe }}
     // console.log(solar_system['nodes'])
     
-
     {% include "app/ui/globals.js" %}
+    {% include "app/ui/system_globals.js" %}
     var width = 640,
         height = 480,
         defaultNodeSize = 10
 
-    const canvas = document.getElementById("renderCanvas");
+    const canvas = document.getElementById("renderCanvas");     
     const engine = new BABYLON.Engine(canvas, true);
 
     const createScene = function () {
