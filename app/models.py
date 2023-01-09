@@ -242,9 +242,10 @@ def get_factions(username):
     return system
 
 
-def get_local_population(username):
+def get_local_population(objid):
+    # objid is the id of the object which contains ('enhabits') the population/s
     nodes_query = (
-        f"""g.V().has('objid','7615388501660').as('location')
+        f"""g.V().has('objid','{objid}').as('location')
             .in('enhabits').as('population')
             .local(
                 union(
@@ -260,5 +261,3 @@ def get_local_population(username):
     nodes = c.reduce_res(c.res)
     data = {"nodes": nodes, "edges": []}
     return data
-
-

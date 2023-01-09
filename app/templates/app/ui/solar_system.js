@@ -106,6 +106,7 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
             n.gui.buttonColor = "green"
         }
         createButton(n)
+        if(n.isSupportsLife=="True"){createVisitButton(n)}
     }
   }
 

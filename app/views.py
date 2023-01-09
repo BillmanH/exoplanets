@@ -75,7 +75,7 @@ def system_ui(request):
 
 @login_required
 def pop_ui_local(request):
-    res = get_local_population(request.user.username)
+    res = get_local_population(request.GET['objid'])
     context = {"data": res}
     return render(request, "app/population_local.html", context)
 
