@@ -14,6 +14,7 @@ sphere_textures = {
 star_base = 100
 shinyness = 0.05
 
+// Star
 function createStar(n){
     n.diameter = star_base
     n.x = 0
@@ -32,6 +33,8 @@ function createStar(n){
     return star
 }
 
+
+// Planet
 function createPlanet(n){
 
     n.diameter = scale_radius(n.radius)/2  // should be r*2 but I want smaller plantets. 
@@ -66,6 +69,7 @@ function createPlanet(n){
         rect1.addControl(label);   
 }
 
+// Moon
 function createMoon(n){
     var orbiting = scene.getMeshByName(n.orbitsId);
     var o_n = get_node(solar_system["nodes"], n.orbitsId)
@@ -85,16 +89,26 @@ function createMoon(n){
     moon.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 }
 
+
+// Main -- rendering loops
 // Primary objects that don't rely on the relative position
 var guiIter = 0
 for (let i = 0; i < solar_system.nodes.length; i++) {
     n = solar_system["nodes"][i]
     n.gui = {buttonColor:"white"}
+    n.gui.clickButton = function(n) {
+        console.log(n.name, n.objid, " button was pushed")
+        camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
+        camera.radius = n.diameter + 25  
+        label = dashboard.getControlByName(n.objid+"_nameplate")
+        if(label){label.isVisible = false}
+        objectDetails(n)
+    };
     if (n["objtype"]=="star"){
         guiIter++
         n.iter = guiIter
         createStar(n)
-        createButton(n, guiIter)
+        createButton(n)
     }
     if (n["objtype"]=="planet"){
         guiIter++

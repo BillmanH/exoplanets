@@ -15,14 +15,7 @@ var createButton = function(n) {
         button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         
         dashboard.addControl(button);
-        button.onPointerUpObservable.add(function() {
-            console.log(n.name, n.objid, " button was pushed")
-            camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
-            camera.radius = n.diameter + 25  
-            label = dashboard.getControlByName(n.objid+"_nameplate")
-            if(label){label.isVisible = false}
-            objectDetails(n)
-        });
+        button.onPointerUpObservable.add(function() {n.gui.clickButton(n)});
 
 }
 
