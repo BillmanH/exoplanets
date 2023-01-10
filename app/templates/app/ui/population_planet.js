@@ -14,6 +14,11 @@ const groundMat = new BABYLON.StandardMaterial("groundMat");
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
     center.isVisible = false
 
+// pointer 
+const pointer = BABYLON.MeshBuilder.CreateSphere("pointer", {diameter: 20});
+pointer.position = new BABYLON.Vector3(0,0,0)
+pointer.isVisible = false
+
 function createFaction(n){
     const box = BABYLON.MeshBuilder.CreateBox(n.objid+"box", 
         {"height":factionbuildingHeight,
@@ -55,11 +60,23 @@ var guiIter = 0
 factions = distinct_list(data.nodes,'faction','objid')
 console.log(factions)
 for (let i = 0; i < factions.length; i++) {
+    guiIter ++
     f = get_specific_node(data.nodes,factions[i])[0]   
+    f.iter = guiIter
     pops = filter_nodes_res(data.nodes,'faction','name', f.name)
     console.log(pops)
     f.coord = pivotLocal(-150,150)
     createFaction(f)
+    f.gui = {buttonColor:"white"}
+    f.gui.clickButton = function(f) {
+        console.log(f.name, f.objid, " button was pushed", f.coord)
+        pointer.position = new BABYLON.Vector3(f.coord.x, 100, f.coord.z) 
+        pointer.isVisible = true
+        label = dashboard.getControlByName(n.objid+"_nameplate")
+        if(label){label.isVisible = false}
+        objectDetails(f)
+    };
+    createButton(f)
     for (let j = 0; j < pops.length; j++) {
         p = pops[j]
         p.coord = pivotLocal(-15,15)
