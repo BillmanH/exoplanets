@@ -32,6 +32,14 @@ function add_menu(t,c) {
     document.body.insertBefore(menu, document.getElementById("startmenu"));
 }
 
+function add_please_wait(){
+    var plzwt = document.createElement("p")
+    plzwt.id = "loading"
+    var text = document.createTextNode(" Please Wait, while the system is loading ... ");
+    plzwt.appendChild(text);
+    document.body.insertBefore(plzwt, document.getElementById("startmenu"));
+}
+
 function add_button(c,n,t,f) {
     // id of parent, n = iteration number, text, onlcick funtion
   var button = document.createElement("div")
@@ -145,9 +153,11 @@ function delete_existing_game(c,n) {
         dataType: 'json',
         beforeSend: function () {
             d3.selectAll('#accountinfo').remove()
+            add_please_wait()
         },
         success: function(data){
             cnsl(data)
+            d3.selectAll('#loading').remove()
             form_solar_system()
         }
     });
@@ -163,12 +173,14 @@ function build_solar_system(c,n) {
             d3.selectAll('#num_planets').remove()
             d3.selectAll('#num_moons').remove()
             d3.selectAll('#createsystem').remove()
+            add_please_wait()
         },
         success: function(data){
             var solar_system = data.solar_system
             {% include "app/charts/solar_system.js" %}
             form_population()
             form_people_culture()
+            d3.selectAll('#loading').remove()
         }
     });
 }
@@ -220,6 +232,7 @@ function build_population(c,n) {
             d3.selectAll('#home_world').remove()
             d3.selectAll('#starting_pop').remove()
             d3.selectAll('#createpeople').remove()
+            add_please_wait()
         },
         success: function (data) {
             console.log("pops, were created")
@@ -237,6 +250,7 @@ function build_population(c,n) {
                 )
             }
             finalize_world()
+            d3.selectAll('#loading').remove()
         }
     });
 }
@@ -248,11 +262,13 @@ function goto_system(c,n){
         dataType: 'json',
         beforeSend: function () {
             d3.selectAll('#finalize').remove()
-
+            add_please_wait()
         },
         success: function (data) {
             console.log("pop desires, was created")
+            d3.selectAll('#loading').remove()
             window.location.href = '/systemui';
+
         }
     })
 }

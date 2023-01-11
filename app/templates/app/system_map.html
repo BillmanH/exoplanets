@@ -5,13 +5,12 @@
 <body>
     {% include "app/menu_top.html" %}
     <p></p>
-    <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 
 <script>
     {% include "app/tooltips.js" %}
+    // var solar_system = {{ solar_system | safe }}
 
-    var solar_system = {{ solar_system | safe }}
     
     account = solar_system['nodes'].filter(function(d){return d['objtype']=='account'})[0]
     solar_system['nodes'] = solar_system['nodes'].filter(function(d){return d['objtype']!='account'})
