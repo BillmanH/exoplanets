@@ -14,6 +14,9 @@ const groundMat = new BABYLON.StandardMaterial("groundMat");
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
     center.isVisible = false
 
+ButtonBox = createRectangle()
+ButtonBox.isVisible = false
+
 // pointer 
 const pointer = BABYLON.MeshBuilder.CreateSphere("pointer", {diameter: 20});
 pointer.position = new BABYLON.Vector3(0,0,0)
@@ -67,7 +70,8 @@ for (let i = 0; i < factions.length; i++) {
     console.log(pops)
     f.coord = pivotLocal(-150,150)
     createFaction(f)
-    f.gui = {buttonColor:"white"}
+    f.gui = {buttonColor:"white",
+            depth:0}
     f.gui.clickButton = function(f) {
         console.log(f.name, f.objid, " button was pushed", f.coord)
         pointer.position = new BABYLON.Vector3(f.coord.x, 100, f.coord.z) 
