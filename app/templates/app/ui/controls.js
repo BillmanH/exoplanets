@@ -79,7 +79,7 @@ var createRectangle = function(){
             closeButton.left = control_panel.left + 70
             closeButton.width = "20px"
             closeButton.height = "20px"
-
+            closeButton.color = "white"
             closeButton.cornerRadius = control_panel.cornerRadius
             closeButton.thickness = control_panel.thickness
             closeButton.linkOffsetY = control_panel.linkOffsetY
