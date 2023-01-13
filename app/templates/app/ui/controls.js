@@ -1,5 +1,14 @@
 // https://doc.babylonjs.com/features/featuresDeepDive/gui/gui
 
+control_panel = {top:50,
+                left:300,
+                width:"400px",
+                height:"600px",
+                alpha:0.5,
+                cornerRadius:5,
+                thickness:1,
+                linkOffsetY:30}
+
 
 var createButton = function(n) {
     var button = BABYLON.GUI.Button.CreateSimpleButton("btn_" + n.objid, n.name);
@@ -48,27 +57,54 @@ var createVisitButton = function(n){
 
 var createRectangle = function(){
         const label = new BABYLON.GUI.Rectangle("Window")
-        label.background = 'black'
-        label.top = 50 
-        label.left = 300 
-        
-        label.width = "400px"
-        label.height = "600px"
-        label.alpha = 0.5;
+            label.background = 'black'
+            label.top = control_panel.top 
+            label.left = control_panel.left 
+            
+            label.width = control_panel.width
+            label.height = control_panel.height
+            label.alpha = control_panel.alpha
 
-        label.cornerRadius = 5;
-        label.thickness = 1;
-        label.linkOffsetY = 30;
-
+            label.cornerRadius = control_panel.cornerRadius
+            label.thickness = control_panel.thickness
+            label.linkOffsetY = control_panel.linkOffsetY
 
         label.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         dashboard.addControl(label);
+
+        var closeButton = BABYLON.GUI.Button.CreateSimpleButton("btn_close", "X");
+            closeButton.background = 'black'
+            closeButton.top = control_panel.top - 45
+            closeButton.left = control_panel.left + 70
+            closeButton.width = "20px"
+            closeButton.height = "20px"
+
+            closeButton.cornerRadius = control_panel.cornerRadius
+            closeButton.thickness = control_panel.thickness
+            closeButton.linkOffsetY = control_panel.linkOffsetY
+
+            closeButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+            closeButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+        label.addControl(closeButton);
+
+        closeButton.onPointerUpObservable.add(function() {
+            dashboard.getControlByName("Window").dispose()
+        });
+
         return label
 }
+
 
 var objectDetails = function(d){
     textblock.text = dictToSimpleText(d);
 }
+
+ButtonBox = createRectangle(control_panel)
+ButtonBox.isVisible = false
+dashboard.getControlByName("btn_close").isVisible = false
+
+
 // TODO: Things I want to implement later: 
 // https://doc.babylonjs.com/features/featuresDeepDive/animation/animation_design

@@ -18,8 +18,6 @@ shinyness = 0.05
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
     center.isVisible = false
 
-ButtonBox = createRectangle()
-ButtonBox.isVisible = false
 
 // Star
 function createStar(n){
@@ -115,6 +113,7 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
             label = dashboard.getControlByName(n.objid+"_nameplate")
             if(label){label.isVisible = false}
             objectDetails(n)
+            ButtonBox.dispose()
         }
         guiIter++
         n.iter = guiIter
