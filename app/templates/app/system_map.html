@@ -9,7 +9,7 @@
 
 <script>
     {% include "app/tooltips.js" %}
-    // var solar_system = {{ solar_system | safe }}
+    var solar_system = {{ solar_system | safe }}
 
     
     account = solar_system['nodes'].filter(function(d){return d['objtype']=='account'})[0]
