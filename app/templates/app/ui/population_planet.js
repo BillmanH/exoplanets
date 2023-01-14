@@ -36,27 +36,29 @@ pointer.position = new BABYLON.Vector3(0,0,0)
 pointer.isVisible = false
 
 function createFaction(n){
-    const box = BABYLON.MeshBuilder.CreateBox(n.objid+"_box", 
+    const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_box", 
         {"height":factionbuildingHeight,
         "size":5}
       );
       box.parent = center
       box.position = new BABYLON.Vector3(n.coord.x, factionbuildingHeight/2, n.coord.z) 
-      const boxMat = new BABYLON.StandardMaterial(n.objid + "_groundMat");
+      const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
       boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
       box.material = boxMat; 
       
-    var disc = BABYLON.MeshBuilder.CreateCylinder(n.objid + "disc", {diameter:50, height:1});
+    var disc = BABYLON.MeshBuilder.CreateCylinder(n.data.objid + "disc", {diameter:50, height:1});
         disc.position.y = factionbuildingHeight/2*-1
         disc.parent = box
-    const discMat = new BABYLON.StandardMaterial(n.objid + "_groundMat");
+    const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
         discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
         disc.material = discMat; 
 }
 
-function createPop(n,f){
-    var faction = scene.getMeshByName(f.objid+"_box");
-    const box = BABYLON.MeshBuilder.CreateBox(n.objid+"_box", 
+function createPop(n){
+    console.log("pop",n)
+    var faction = scene.getMeshByName(n.data.faction.objid+"_box");
+    console.log("faction", faction)
+    const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_box", 
         {"height":factionbuildingHeight/2,
         "size":5}
     );
@@ -65,7 +67,7 @@ function createPop(n,f){
     var phi = Math.random() * 2 * Math.PI; 
     box.rotation.y = phi;
 
-    const boxMat = new BABYLON.StandardMaterial(n.objid + "_groundMat");
+    const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
         box.material = boxMat; 
 }
@@ -123,9 +125,10 @@ for (let i = 0; i < factions.length; i++) {
     };
     createButton(f)
     for (let j = 0; j < pops.length; j++) {
-        p = pops[j]
+        p = {}
+        p.data = pops[j]
         p.coord = pivotLocal(-15,15)
-        createPop(p,f)
+        createPop(p)
     }
 
   }
