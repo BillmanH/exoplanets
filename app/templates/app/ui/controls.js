@@ -71,6 +71,7 @@ var createVisitButton = function(n){
 
         dashboard.addControl(button);
         button.onPointerUpObservable.add(function() {
+            pleaseWaiter(dashboard)
             console.log(n.name, n.objid, " visit button was pushed")
             window.location.href = '/popuilocal' + '?objid=' + n.data.objid;
         });

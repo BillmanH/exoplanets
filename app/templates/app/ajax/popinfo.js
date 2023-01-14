@@ -6,10 +6,12 @@ function ajax_getActions(d){
             data: d,
             dataType: 'json',
             beforeSend: function () {
-
+                plz = pleaseWaiter(dashboard)
             },
             success: function(data){
                 console.log(data)
+                plz = dashboard.getControlByName("loadingpleasewait")
+                plz.dispose()
                 return data
             }
         })
