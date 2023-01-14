@@ -1,17 +1,19 @@
 // https://doc.babylonjs.com/features/featuresDeepDive/gui/gui
 
-control_panel = {top:50,
+generic_control_panel = {top:50,
                 left:300,
                 width:"400px",
                 height:"600px",
                 alpha:0.5,
                 cornerRadius:5,
                 thickness:1,
-                linkOffsetY:30}
+                linkOffsetY:30,
+                close_offset_left:75}
 
 
+// for buttons creatd dynamically, for example the children of an item
 var createButton = function(n) {
-    var button = BABYLON.GUI.Button.CreateSimpleButton("btn_" + n.objid, n.name);
+    var button = BABYLON.GUI.Button.CreateSimpleButton("btn_" + n.data.objid, n.data.name);
         button.width = "150px"
         button.height = "40px"
         button.top = 50 * n.iter
@@ -32,9 +34,28 @@ var createButton = function(n) {
             ButtonBox.addControl(button)
         }
         button.onPointerUpObservable.add(function() {n.gui.clickButton(n)});
-
 }
 
+// for buttons created with a specific use case, like get actions. 
+var createSpecificButton = function(n,window){
+    // TODO
+    var button = BABYLON.GUI.Button.CreateSimpleButton("btn_visit_" + n.data.objid, n.gui.buttontext);
+    button.width = "100px"
+    button.height = "40px"
+    button.top = 50 * n.iter
+    button.left = 200  + n.gui.depth
+    
+    button.color = n.gui.buttonColor;
+    button.cornerRadius = 10;
+    button.background = "black";
+    button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+    window.addControl(button);
+    return button
+}
+
+// button that visits a local pop. 
 var createVisitButton = function(n){
     var button = BABYLON.GUI.Button.CreateSimpleButton("btn_visit_" + n.objid, "visit");
         button.width = "50px"
@@ -51,11 +72,11 @@ var createVisitButton = function(n){
         dashboard.addControl(button);
         button.onPointerUpObservable.add(function() {
             console.log(n.name, n.objid, " visit button was pushed")
-            window.location.href = '/popuilocal' + '?objid=' + n.objid;
+            window.location.href = '/popuilocal' + '?objid=' + n.data.objid;
         });
 }
 
-var createRectangle = function(){
+function createRectangle(control_panel){
         const label = new BABYLON.GUI.Rectangle("Window")
             label.background = 'black'
             label.top = control_panel.top 
@@ -76,7 +97,7 @@ var createRectangle = function(){
         var closeButton = BABYLON.GUI.Button.CreateSimpleButton("btn_close", "X");
             closeButton.background = 'black'
             closeButton.top = control_panel.top - 45
-            closeButton.left = control_panel.left + 70
+            closeButton.left = control_panel.left + control_panel.close_offset_left
             closeButton.width = "20px"
             closeButton.height = "20px"
             closeButton.color = "white"
@@ -101,7 +122,7 @@ var objectDetails = function(d){
     textblock.text = dictToSimpleText(d);
 }
 
-ButtonBox = createRectangle(control_panel)
+ButtonBox = createRectangle(generic_control_panel)
 ButtonBox.isVisible = false
 dashboard.getControlByName("btn_close").isVisible = false
 
