@@ -9,14 +9,15 @@ function ajax_getActions(d){
                 plz = pleaseWaiter(dashboard)
             },
             success: function(data){
-                console.log(data)
                 plz = dashboard.getControlByName("loadingpleasewait")
                 plz.dispose()
+                console.log(data)
+                make_actions_screen(data)
                 return data
             }
         })
     }
     else {
-        cnsl('object not idle')
+        console.log('object not idle')
     }
 }

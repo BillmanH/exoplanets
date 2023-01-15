@@ -5,7 +5,7 @@ factionbuildingHeight = 10
 
 faction_control_panel = {top:50,
     left:300,
-    width:"800px",
+    width:"400px",
     height:"600px",
     alpha:0.5,
     cornerRadius:5,
@@ -13,6 +13,17 @@ faction_control_panel = {top:50,
     linkOffsetY:30,
     close_offset_left:465}
 
+actions_control_panel = {
+    name:"action_window", 
+    top:50,
+    left:720,
+    width:"400px",
+    height:"600px",
+    alpha:0.5,
+    cornerRadius:5,
+    thickness:1,
+    linkOffsetY:30,
+    close_offset_left:465}
 
 // light
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
@@ -29,6 +40,7 @@ const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
 
 ButtonBox = createRectangle(faction_control_panel)
 ButtonBox.isVisible = false
+
 
 // pointer 
 const pointer = BABYLON.MeshBuilder.CreateSphere("pointer", {diameter: 12});
@@ -55,9 +67,7 @@ function createFaction(n){
 }
 
 function createPop(n){
-    console.log("pop",n)
     var faction = scene.getMeshByName(n.data.faction.objid+"_box");
-    console.log("faction", faction)
     const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_box", 
         {"height":factionbuildingHeight/2,
         "size":5}
@@ -73,16 +83,18 @@ function createPop(n){
 }
 
 function getPopBox(f){
+    aw = dashboard.getControlByName("action_window")
+    w = dashboard.getControlByName("window")
+    if(aw!=undefined){aw.dispose()}
+    if(w!=undefined){w.dispose()}
     ButtonBox.dispose()
     ButtonBox = createRectangle(faction_control_panel)
     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-    console.log(pops)
     var guiIter = 0
     for (let si = 0; si < pops.length; si++) {
         guiIter++
         o = {}
         o.data = pops[si].population
-        console.log(si,"pop", o)
         o.iter = guiIter
         o.gui = {buttonColor:"white",
             depth:1}
@@ -96,16 +108,35 @@ function getPopBox(f){
             o.gui.buttontext = "get actions"
             actionsButton = createSpecificButton(o, ButtonBox)}
             actionsButton.onPointerUpObservable.clear()
-            actionsButton.onPointerUpObservable.add(function() {ajax_getActions(o.data)});
+            objectDetails(o.data)
+            actionsButton.onPointerUpObservable.add(function() {
+                res = ajax_getActions(o.data)
+            });
         }
     ButtonBox.isVisible = true
 }
 
+function make_actions_screen(actions){
+    ButtonBox = createRectangle(actions_control_panel)
+    for (let i = 0; i < actions.actions.length; i++) {
+        f = {}
+        f.gui = {
+            buttonColor:"white",
+            depth:0,
+            returnButton:true,
+            width:"200px"}
+        f.iter = i+1
+        f.data = actions.actions[i]
+        console.log("f", f)
+        button = createButton(f)
+        ButtonBox.addControl(button)
+    }
+}
 
 // main - actually loads the content
 var guiIter = 0
 factions = distinct_list(data.nodes,'faction','objid')
-console.log(factions)
+
 for (let i = 0; i < factions.length; i++) {
     guiIter ++
     f = {}
@@ -121,7 +152,7 @@ for (let i = 0; i < factions.length; i++) {
         pointer.position = new BABYLON.Vector3(f.coord.x, 100, f.coord.z) 
         pointer.isVisible = true
         getPopBox(f)
-        objectDetails(f)
+        objectDetails(f.data)
     };
     createButton(f)
     for (let j = 0; j < pops.length; j++) {

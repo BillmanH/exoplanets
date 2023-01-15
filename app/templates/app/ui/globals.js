@@ -1,3 +1,8 @@
+function cs(s){
+    r = s.replace('_', ' ')
+    return r
+}
+
 // filtering data formats like [{},{},{}]
 function get_values(l,v,t){
     /// l = list; v = value to return; t = type to filter on; 

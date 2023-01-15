@@ -13,8 +13,13 @@ generic_control_panel = {top:50,
 
 // for buttons creatd dynamically, for example the children of an item
 var createButton = function(n) {
+    if (n.data.hasOwnProperty('name')==false){
+        n.data.name = cs(n.data.type)
+    }
     var button = BABYLON.GUI.Button.CreateSimpleButton("btn_" + n.data.objid, n.data.name);
-        button.width = "150px"
+        if(n.gui.hasOwnProperty('width')){
+            button.width = n.gui.width
+        } else {button.width = "150px"}
         button.height = "40px"
         button.top = 50 * n.iter
         button.left = 50
@@ -25,15 +30,19 @@ var createButton = function(n) {
         button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 
-        BABYLON.Tags.AddTagsTo(button, "button_"+n.gui.depth);
-
-        if (n.gui.depth < 1){
-            dashboard.addControl(button);
+        
+        if (n.gui.returnButton){
+            return button
         }
         else {
-            ButtonBox.addControl(button)
+            if (n.gui.depth < 1){
+                dashboard.addControl(button);
+            }
+            else {
+                ButtonBox.addControl(button)
+            }
+            button.onPointerUpObservable.add(function() {n.gui.clickButton(n)});
         }
-        button.onPointerUpObservable.add(function() {n.gui.clickButton(n)});
 }
 
 // for buttons created with a specific use case, like get actions. 
@@ -78,7 +87,10 @@ var createVisitButton = function(n){
 }
 
 function createRectangle(control_panel){
-        const label = new BABYLON.GUI.Rectangle("Window")
+        if (control_panel.hasOwnProperty('name')==false){
+            control_panel.name = "window"
+        }
+        const label = new BABYLON.GUI.Rectangle(control_panel.name)
             label.background = 'black'
             label.top = control_panel.top 
             label.left = control_panel.left 
