@@ -135,7 +135,7 @@ function createRectangle(control_panel){
         label.addControl(closeButton);
 
         closeButton.onPointerUpObservable.add(function() {
-            dashboard.getControlByName("window").dispose()
+            dashboard.getControlByName(control_panel.name).dispose()
         });
 
         return label
