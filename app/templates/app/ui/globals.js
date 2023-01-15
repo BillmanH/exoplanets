@@ -1,3 +1,8 @@
+function cs(s){
+    r = s.replace('_', ' ')
+    return r
+}
+
 // filtering data formats like [{},{},{}]
 function get_values(l,v,t){
     /// l = list; v = value to return; t = type to filter on; 
@@ -72,4 +77,36 @@ function get_specific_node(nodes,objid){
         }) 
     }
     return mylist
+}
+
+
+function pleaseWaiter(d){
+    const label = new BABYLON.GUI.Rectangle("loadingpleasewait")
+    label.background = 'black'
+    label.top = 50
+    label.left = 50
+    
+    label.width = "600px"
+    label.height = "600px"
+
+    label.thickness = 1
+    label.linkOffsetY = 30
+
+    label.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+    label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    d.addControl(label);
+
+    var textblock = new BABYLON.GUI.TextBlock("loadingpleasewait_text")
+        textblock.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+        textblock.textVerticalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER
+        textblock.fontSize = 24;    
+        textblock.background = "black";
+        textblock.color = "white";   
+        
+        textblock.text = "Loading please wait ..."
+        textblock.text += "\n"
+        
+    label.addControl(textblock);
+
+    return label
 }
