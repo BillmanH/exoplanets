@@ -99,6 +99,7 @@ function createRectangle(control_panel){
         if (control_panel.hasOwnProperty('name')==false){
             control_panel.name = "window"
         }
+        console.log(control_panel.name, control_panel.hasOwnProperty('name'))
         const label = new BABYLON.GUI.Rectangle(control_panel.name)
             label.background = 'black'
             label.top = control_panel.top 
@@ -116,6 +117,7 @@ function createRectangle(control_panel){
         label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         dashboard.addControl(label);
 
+        // TODO: Close button not always on screen. 
         var closeButton = BABYLON.GUI.Button.CreateSimpleButton("btn_close", "X");
             closeButton.background = 'black'
             closeButton.top = control_panel.top - 45
@@ -133,7 +135,7 @@ function createRectangle(control_panel){
         label.addControl(closeButton);
 
         closeButton.onPointerUpObservable.add(function() {
-            dashboard.getControlByName("Window").dispose()
+            dashboard.getControlByName("window").dispose()
         });
 
         return label
