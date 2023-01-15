@@ -46,9 +46,8 @@ var createButton = function(n) {
 }
 
 // for buttons created with a specific use case, like get actions. 
-var createSpecificButton = function(n,window){
-    // TODO
-    var button = BABYLON.GUI.Button.CreateSimpleButton("btn_visit_" + n.data.objid, n.gui.buttontext);
+var createSpecificButton = function(n){
+    var button = BABYLON.GUI.Button.CreateSimpleButton(n.gui.buttonName + n.data.objid, n.gui.buttontext);
     button.width = "100px"
     button.height = "40px"
     button.top = 50 * n.iter
@@ -59,14 +58,24 @@ var createSpecificButton = function(n,window){
     button.background = "black";
     button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-
-    window.addControl(button);
-    return button
+    // console.log(n.gui.returnButton)
+    if (n.gui.returnButton){
+        return button
+    }
+    else {
+        if (n.gui.depth < 1){
+            dashboard.addControl(button);
+        }
+        else {
+            ButtonBox.addControl(button)
+        }
+    }
 }
 
 // button that visits a local pop. 
 var createVisitButton = function(n){
     var button = BABYLON.GUI.Button.CreateSimpleButton("btn_visit_" + n.objid, "visit");
+    // TODO cleanup, I found you don't need to put the "50px" as a string. 
         button.width = "50px"
         button.height = "40px"
         button.top = 50 * n.iter

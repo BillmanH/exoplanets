@@ -3,6 +3,7 @@
 
 factionbuildingHeight = 10
 
+
 faction_control_panel = {top:50,
     left:300,
     width:"400px",
@@ -17,7 +18,7 @@ actions_control_panel = {
     name:"action_window", 
     top:50,
     left:720,
-    width:"400px",
+    width:"600px",
     height:"600px",
     alpha:0.5,
     cornerRadius:5,
@@ -82,6 +83,12 @@ function createPop(n){
         box.material = boxMat; 
 }
 
+function GetActionClickbuttion(p){
+        console.log(p)
+        console.log(p.data.name, p.data.objid, " button was pushed")
+        prep_actions(p)
+}
+
 function getPopBox(f){
     aw = dashboard.getControlByName("action_window")
     w = dashboard.getControlByName("window")
@@ -90,46 +97,66 @@ function getPopBox(f){
     ButtonBox.dispose()
     ButtonBox = createRectangle(faction_control_panel)
     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-    var guiIter = 0
     for (let si = 0; si < pops.length; si++) {
-        guiIter++
-        o = {}
-        o.data = pops[si].population
-        o.iter = guiIter
-        o.gui = {buttonColor:"white",
+        p = {}
+        p.data = pops[si].population
+        p.iter = si+1
+        p.gui = {buttonColor:"white",
             depth:1}
-        o.gui.clickButton = function(o) {
-            console.log(o.data.name, o.data.objid, " button was pushed")
-            objectDetails(o.data)
+        p.gui.clickButton = function(p) {
+            console.log(p.data.name, p.data.objid, " button was pushed")
+            objectDetails(p.data)
         };
-        createButton(o)
-        if(o.data.isIdle=="True"){
-            o.gui.buttonColor = "green"
-            o.gui.buttontext = "get actions"
-            actionsButton = createSpecificButton(o, ButtonBox)}
-            actionsButton.onPointerUpObservable.clear()
-            objectDetails(o.data)
-            actionsButton.onPointerUpObservable.add(function() {
-                res = ajax_getActions(o.data)
+        createButton(p)
+        
+        if(p.data.isIdle=="True"){
+            p.gui.buttonColor = "green"
+            p.gui.buttontext = "get actions"
+            p.gui.buttonName = "get_actions_"
+            p.gui.returnButton = true
+            console.log("p",p)
+            actionsButton = createSpecificButton(p)
+            // console.log('button',p.data.name,actionsButton)
+            ButtonBox.addControl(actionsButton)
+            actionsButton.onPointerUpObservable.add(function(p) {
+                p.data = pops[si].population
+                prep_actions(p)
             });
-        }
+            }
+    }
     ButtonBox.isVisible = true
 }
 
 function make_actions_screen(actions){
+    aw = dashboard.getControlByName("action_window")
+    if(aw!=undefined){aw.dispose()}
     ButtonBox = createRectangle(actions_control_panel)
+
+    var textblock = new BABYLON.GUI.TextBlock("actions_textblock")
+        textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+        textblock.textWrapping = true;
+        ButtonBox.addControl(textblock);
+
+        textblock.paddingTop = 10 
+        textblock.paddingLeft = 260 
+        textblock.fontSize = 18;    
+        textblock.background = "black";
+        textblock.color = "white";    
+        textblock.text = actions.pop.objtype + ": " + actions.pop.name + "\n" + "\n"
+
     for (let i = 0; i < actions.actions.length; i++) {
-        f = {}
-        f.gui = {
+        a = {}
+        a.gui = {
             buttonColor:"white",
-            depth:0,
+            depth:1,
             returnButton:true,
             width:"200px"}
-        f.iter = i+1
-        f.data = actions.actions[i]
-        console.log("f", f)
-        button = createButton(f)
+        a.iter = i+1
+        a.data = actions.actions[i]
+        button = createButton(a)
         ButtonBox.addControl(button)
+        textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
     }
 }
 
@@ -161,7 +188,6 @@ for (let i = 0; i < factions.length; i++) {
         p.coord = pivotLocal(-15,15)
         createPop(p)
     }
-
   }
 
 

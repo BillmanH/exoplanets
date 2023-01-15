@@ -1,3 +1,8 @@
+function prep_actions(o){
+        objectDetails(o.data)
+        res = ajax_getActions(o.data)
+}
+
 function ajax_getActions(d){
     if(d["isIdle"]=="True"){
         $.ajax({
@@ -11,6 +16,7 @@ function ajax_getActions(d){
             success: function(data){
                 plz = dashboard.getControlByName("loadingpleasewait")
                 plz.dispose()
+                data.pop = d
                 console.log(data)
                 make_actions_screen(data)
                 return data
