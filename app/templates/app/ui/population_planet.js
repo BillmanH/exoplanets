@@ -83,11 +83,6 @@ function createPop(n){
         box.material = boxMat; 
 }
 
-function GetActionClickbuttion(p){
-        console.log(p)
-        console.log(p.data.name, p.data.objid, " button was pushed")
-        prep_actions(p)
-}
 
 function getPopBox(f){
     aw = dashboard.getControlByName("action_window")
@@ -114,7 +109,6 @@ function getPopBox(f){
             p.gui.buttontext = "get actions"
             p.gui.buttonName = "get_actions_"
             p.gui.returnButton = true
-            console.log("p",p)
             actionsButton = createSpecificButton(p)
             // console.log('button',p.data.name,actionsButton)
             ButtonBox.addControl(actionsButton)
