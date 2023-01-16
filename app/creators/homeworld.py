@@ -112,7 +112,6 @@ class Faction(baseobjects.Baseobject):
 
     def get_data(self):
         fund = self.get_fundimentals()
-        # fund["faction_no"] = self.faction_no
         return fund
 
     def assign_pop_to_faction(self, pop):
