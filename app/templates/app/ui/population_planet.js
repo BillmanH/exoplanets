@@ -139,18 +139,22 @@ function make_actions_screen(actions){
         textblock.color = "white";    
         textblock.text = actions.pop.objtype + ": " + actions.pop.name + "\n" + "\n"
 
-    for (let i = 0; i < actions.actions.length; i++) {
-        a = {}
-        a.gui = {
-            buttonColor:"white",
-            depth:1,
-            returnButton:true,
-            width:"200px"}
-        a.iter = i+1
-        a.data = actions.actions[i]
-        button = createButton(a)
-        ButtonBox.addControl(button)
-        textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
+    if(actions.hasOwnProperty('actions')){
+        for (let i = 0; i < actions.actions.length; i++) {
+            a = {}
+            a.gui = {
+                buttonColor:"white",
+                depth:1,
+                returnButton:true,
+                width:"200px"}
+            a.iter = i+1
+            a.data = actions.actions[i]
+            button = createButton(a)
+            ButtonBox.addControl(button)
+            textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
+        }
+    } else {
+        textblock.text = "This population has no actions available to it as this time"
     }
 }
 
