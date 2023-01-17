@@ -4,26 +4,6 @@ from django.http import JsonResponse
 from app.creators import homeworld
 import ast
 
-# def make_homeworld(request):
-#     request = dict(request.GET)
-#     # WARNING: user can only have one form. 
-#     username = request.get('username')[0]
-#     queryform = f"g.V().has('form','username','{username}').valuemap()"
-#     queryhomeworld = f"g.V().haslabel('planet').has('isHomeworld').has('username','{username}').valueMap()"
-#     c = CosmosdbClient()
-#     c.add_query(queryform)
-#     c.add_query(queryhomeworld)
-#     c.run_queries()
-
-#     form = c.clean_nodes(c.res[queryform])[0]
-#     homeplanet = c.clean_nodes(c.res[queryhomeworld])[0]
-#     homeworld_nodes, homeworld_edges = homeworld.build_people(form)
-#     homeworld_edges = homeworld_edges + homeworld.attach_people_to_world(homeworld_nodes,homeplanet)
-#     response = {'pops':[p for p in homeworld_nodes if p.get('label')=='pop']}
-#     response['factions'] = [p for p in homeworld_nodes if p.get('label')=='faction']
-#     data = {"nodes": homeworld_nodes, "edges": homeworld_edges}
-#     c.upload_data(username, data)
-#     return JsonResponse(response)
 
 
 def set_pop_desires(request):
