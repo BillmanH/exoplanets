@@ -4,7 +4,7 @@
 import pandas as pd
 from numpy import interp, linspace, random
 from sklearn.cluster import KMeans
-
+from sklearn.decomposition import PCA
 
 from . import baseobjects
 
@@ -26,8 +26,8 @@ class Creature(baseobjects.Baseobject):
 class Species(baseobjects.Baseobject):
     def build_attr(self, data):
         self.conformity = data["conformity"]
-        self.literacy = data["literacy"]
         self.aggression = data["aggression"]
+        self.literacy = data["literacy"]
         self.constitution = data["constitution"]
         self.label = "species"
         self.name = self.make_name(1, 2)
@@ -86,7 +86,6 @@ class Pop(Creature):
         # the pop name is the faction name plus an extra syllable.
         self.name = f"{faction.name} {self.make_name(1, 2)}"
 
-
     def get_data(self):
         fund = self.get_fundimentals()
         fund["conformity"] = self.conformity
@@ -117,6 +116,8 @@ class Faction(baseobjects.Baseobject):
     def assign_pop_to_faction(self, pop):
         pop.isInFaction = self.objid
         self.pops.append(pop.objid)
+
+        
 
     def get_faction_pop_edge(self):
         return [
@@ -177,6 +178,24 @@ def build_people(data):
             p.name = p.make_name(2,2)
         p.set_pop_name(faction)
         faction.assign_pop_to_faction(p)
+
+    # using PCA to set populations on map:
+    for f in factions:
+        faction_stats = pd.DataFrame([
+            [
+                [{'faction':f.name,d:p.get_data()[d]} 
+                    for d in list(p.get_data().keys()) if d in starting_attributes
+                    ] 
+                        for p in pops if p.objid in f.pops] 
+                            for f in factions
+                        ])
+                            
+        # PCA Part
+        pca = PCA(n_components=2)
+        X_r = pca.fit(faction_stats).transform(faction_stats)
+        f.pca_explained_variance_ratio = pca.explained_variance_ratio_
+        f.pca_X_r = X_r        
+
 
     # sum up the nodes and edges for return
     isOfSpecies = [p.isOfSpecies for p in pops]
