@@ -108,16 +108,18 @@ class Faction(baseobjects.Baseobject):
         self.label = "faction"
         self.faction_no = i
         self.pops = []
+        self.lat = 0
+        self.long = 0
 
     def get_data(self):
         fund = self.get_fundimentals()
+        fund['lat'] = self.lat
+        fund['long'] = self.long
         return fund
 
     def assign_pop_to_faction(self, pop):
         pop.isInFaction = self.objid
         self.pops.append(pop.objid)
-
-        
 
     def get_faction_pop_edge(self):
         return [
@@ -180,21 +182,14 @@ def build_people(data):
         faction.assign_pop_to_faction(p)
 
     # using PCA to set populations on map:
-    for f in factions:
-        faction_stats = pd.DataFrame([
-            [
-                [{'faction':f.name,d:p.get_data()[d]} 
-                    for d in list(p.get_data().keys()) if d in starting_attributes
-                    ] 
-                        for p in pops if p.objid in f.pops] 
-                            for f in factions
-                        ])
                             
-        # PCA Part
-        pca = PCA(n_components=2)
-        X_r = pca.fit(faction_stats).transform(faction_stats)
+    # PCA Part
+    pca = PCA(n_components=2)
+    X_r = pca.fit(kmeans.cluster_centers_).transform(kmeans.cluster_centers_)
+    for i,f in enumerate(factions):
         f.pca_explained_variance_ratio = pca.explained_variance_ratio_
-        f.pca_X_r = X_r        
+        f.latlong = X_r[i][0]
+        f.latlong = X_r[i][1]
 
 
     # sum up the nodes and edges for return
