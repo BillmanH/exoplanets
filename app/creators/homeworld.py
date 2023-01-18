@@ -188,8 +188,8 @@ def build_people(data):
     X_r = pca.fit(kmeans.cluster_centers_).transform(kmeans.cluster_centers_)
     for i,f in enumerate(factions):
         f.pca_explained_variance_ratio = pca.explained_variance_ratio_
-        f.latlong = X_r[i][0]
-        f.latlong = X_r[i][1]
+        f.lat = X_r[i][0]
+        f.long = X_r[i][1]
 
 
     # sum up the nodes and edges for return

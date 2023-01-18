@@ -2,7 +2,7 @@
 {% include "app/ajax/popinfo.js" %}
 
 factionbuildingHeight = 10
-
+ground_dimensions = 500
 
 faction_control_panel = {top:50,
     left:300,
@@ -30,7 +30,7 @@ actions_control_panel = {
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
 // ground
-const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:500, height:500});
+const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:ground_dimensions, height:ground_dimensions});
 const groundMat = new BABYLON.StandardMaterial("groundMat");
     groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green.png' %}");
     ground.material = groundMat; //Place the material property of the ground
@@ -168,7 +168,12 @@ for (let i = 0; i < factions.length; i++) {
     f.data = get_specific_node(data.nodes,factions[i])[0]   
     f.iter = guiIter
     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-    f.coord = pivotLocal(-150,150)
+    f.coord = {
+        x:f.data.lat*ground_dimensions,
+        y:0,
+        z:f.data.lat*ground_dimensions
+    }
+    console.log(f.coord)
     createFaction(f)
     f.gui = {buttonColor:"white",
             depth:0}
@@ -183,7 +188,7 @@ for (let i = 0; i < factions.length; i++) {
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
-        p.coord = pivotLocal(-15,15)
+        p.coord = pivotLocal(-30,30)
         createPop(p)
     }
   }
