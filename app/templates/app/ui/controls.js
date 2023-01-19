@@ -99,7 +99,7 @@ function createRectangle(control_panel){
         if (control_panel.hasOwnProperty('name')==false){
             control_panel.name = "window"
         }
-        console.log(control_panel.name, control_panel.hasOwnProperty('name'))
+        // console.log(control_panel.name, control_panel.hasOwnProperty('name'))
         const label = new BABYLON.GUI.Rectangle(control_panel.name)
             label.background = 'black'
             label.top = control_panel.top 

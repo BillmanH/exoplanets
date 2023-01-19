@@ -1,5 +1,5 @@
 {% load static %}
-{% include "app/ajax/popinfo.js" %}
+{% include "app/ajax/population_info.js" %}
 
 factionbuildingHeight = 10
 ground_dimensions = 500
@@ -149,7 +149,13 @@ function make_actions_screen(actions){
                 width:"200px"}
             a.iter = i+1
             a.data = actions.actions[i]
+            a.gui.clickButton = function(a) {
+              console.log(actions.pop.name,": ", a.type, " button was pushed")
+              console.log("action", a)
+              takeAction(actions.pop,a.data)
+            };
             button = createButton(a)
+            button.onPointerUpObservable.add(function() {a.gui.clickButton(a)});
             ButtonBox.addControl(button)
             textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
         }
@@ -173,7 +179,7 @@ for (let i = 0; i < factions.length; i++) {
         y:0,
         z:f.data.lat*ground_dimensions
     }
-    console.log(f.coord)
+    // console.log(f.coord)
     createFaction(f)
     f.gui = {buttonColor:"white",
             depth:0}
