@@ -1,8 +1,8 @@
 {% load static %}
-{% include "app/ajax/popinfo.js" %}
+{% include "app/ajax/population_info.js" %}
 
 factionbuildingHeight = 10
-
+ground_dimensions = 500
 
 faction_control_panel = {top:50,
     left:300,
@@ -30,7 +30,7 @@ actions_control_panel = {
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
 // ground
-const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:500, height:500});
+const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:ground_dimensions, height:ground_dimensions});
 const groundMat = new BABYLON.StandardMaterial("groundMat");
     groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green.png' %}");
     ground.material = groundMat; //Place the material property of the ground
@@ -139,18 +139,28 @@ function make_actions_screen(actions){
         textblock.color = "white";    
         textblock.text = actions.pop.objtype + ": " + actions.pop.name + "\n" + "\n"
 
-    for (let i = 0; i < actions.actions.length; i++) {
-        a = {}
-        a.gui = {
-            buttonColor:"white",
-            depth:1,
-            returnButton:true,
-            width:"200px"}
-        a.iter = i+1
-        a.data = actions.actions[i]
-        button = createButton(a)
-        ButtonBox.addControl(button)
-        textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
+    if(actions.hasOwnProperty('actions')){
+        for (let i = 0; i < actions.actions.length; i++) {
+            a = {}
+            a.gui = {
+                buttonColor:"white",
+                depth:1,
+                returnButton:true,
+                width:"200px"}
+            a.iter = i+1
+            a.data = actions.actions[i]
+            a.gui.clickButton = function(a) {
+              console.log(actions.pop.name,": ", a.type, " button was pushed")
+              console.log("action", a)
+              takeAction(actions.pop,a.data)
+            };
+            button = createButton(a)
+            button.onPointerUpObservable.add(function() {a.gui.clickButton(a)});
+            ButtonBox.addControl(button)
+            textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
+        }
+    } else {
+        textblock.text = "This population has no actions available to it as this time"
     }
 }
 
@@ -164,7 +174,12 @@ for (let i = 0; i < factions.length; i++) {
     f.data = get_specific_node(data.nodes,factions[i])[0]   
     f.iter = guiIter
     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-    f.coord = pivotLocal(-150,150)
+    f.coord = {
+        x:f.data.lat*ground_dimensions,
+        y:0,
+        z:f.data.lat*ground_dimensions
+    }
+    // console.log(f.coord)
     createFaction(f)
     f.gui = {buttonColor:"white",
             depth:0}
@@ -179,7 +194,7 @@ for (let i = 0; i < factions.length; i++) {
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
-        p.coord = pivotLocal(-15,15)
+        p.coord = pivotLocal(-30,30)
         createPop(p)
     }
   }

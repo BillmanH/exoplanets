@@ -4,7 +4,7 @@
 import pandas as pd
 from numpy import interp, linspace, random
 from sklearn.cluster import KMeans
-
+from sklearn.decomposition import PCA
 
 from . import baseobjects
 
@@ -26,8 +26,8 @@ class Creature(baseobjects.Baseobject):
 class Species(baseobjects.Baseobject):
     def build_attr(self, data):
         self.conformity = data["conformity"]
-        self.literacy = data["literacy"]
         self.aggression = data["aggression"]
+        self.literacy = data["literacy"]
         self.constitution = data["constitution"]
         self.label = "species"
         self.name = self.make_name(1, 2)
@@ -86,7 +86,6 @@ class Pop(Creature):
         # the pop name is the faction name plus an extra syllable.
         self.name = f"{faction.name} {self.make_name(1, 2)}"
 
-
     def get_data(self):
         fund = self.get_fundimentals()
         fund["conformity"] = self.conformity
@@ -109,10 +108,13 @@ class Faction(baseobjects.Baseobject):
         self.label = "faction"
         self.faction_no = i
         self.pops = []
+        self.lat = 0
+        self.long = 0
 
     def get_data(self):
         fund = self.get_fundimentals()
-        # fund["faction_no"] = self.faction_no
+        fund['lat'] = self.lat
+        fund['long'] = self.long
         return fund
 
     def assign_pop_to_faction(self, pop):
@@ -178,6 +180,17 @@ def build_people(data):
             p.name = p.make_name(2,2)
         p.set_pop_name(faction)
         faction.assign_pop_to_faction(p)
+
+    # using PCA to set populations on map:
+                            
+    # PCA Part
+    pca = PCA(n_components=2)
+    X_r = pca.fit(kmeans.cluster_centers_).transform(kmeans.cluster_centers_)
+    for i,f in enumerate(factions):
+        f.pca_explained_variance_ratio = pca.explained_variance_ratio_
+        f.lat = X_r[i][0]
+        f.long = X_r[i][1]
+
 
     # sum up the nodes and edges for return
     isOfSpecies = [p.isOfSpecies for p in pops]

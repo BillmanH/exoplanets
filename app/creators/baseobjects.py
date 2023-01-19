@@ -15,4 +15,8 @@ class Baseobject:
             "label":self.label
         }
     def __repr__(self) -> str:
-        return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"
+        try:
+            t = self.type
+        except:
+            t = "no type"
+        return f"<{self.label}: {t}; {self.objid}; {self.name}>"
