@@ -1,0 +1,12 @@
+﻿Object,Carbon Dioxide,Nitrogen,Oxygen,Argon,Methane,Sodium,Hydrogen,Helium
+Mercury,,, 0.42 ,,, 0.22 , 0.22 , 0.06 
+Venus, 0.96 , 0.04 ,,,,,,
+Earth,, 0.78 , 0.21 , 0.01 ,,,,
+Moon,,,, 0.70 , 0.01 , 0.29 ,,
+Mars, 0.95 , 0.03 ,, 0.02 ,,,,
+Jupiter,,,,,,, 0.90 , 0.10 
+Saturn,,,,,,, 0.96 , 0.03 
+Titan,, 0.97 ,,, 0.02 ,,,
+Uranus,,,,, 0.02 ,, 0.83 , 0.15 
+Neptune,,,,, 0.01 ,, 0.80 , 0.19 
+Pluto, 0.08 , 0.90 ,,, 0.02 ,,,
