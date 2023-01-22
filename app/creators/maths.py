@@ -13,6 +13,7 @@ def rnd(n, s,min_val=1):
     return y
 
 def rnd_dist(set):
+    # Input should be a list of dicts, with a key annd percent 
     dist = []
     vals = []
     for i in set.keys():
