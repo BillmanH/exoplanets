@@ -92,7 +92,8 @@ def main(mytimer: func.TimerRequest) -> None:
         edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOfSpecies"})
         
     upload_data = {'nodes':nodes,'edges':edges}
-    c.upload_data()
+    c.upload_data(upload_data)
+    
     ### END 
     logging.info(f'Population Growth trigger ran at: {utc_timestamp}')
     c.close()
