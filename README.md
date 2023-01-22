@@ -48,9 +48,11 @@ of course, you can also just clone it on your local machine and run for free. Fe
 
 
 # Contributing
-Pretty early in the design right now, but feel free to make a PR and I'll review. Also feel free to make suggestions in the `issues`. I'm so early in this concept that there are lots of design decisions still remaining. 
+I designed this game as a good project for a junior developer. This might be a bit much if you've never done any programming at all, but if you know basic data transformations and logic then this game should be a good project for you. [Feel free to reach out](mailto:william.jeffrey.harding@gmail.com) or just fork the `dev` branch and make a PR. I'll test everything in `dev` before pulling it into the website. 
+
+Pretty early in the design right now as I have a lot to do before I have a legit game. Also feel free to make suggestions in the `issues`. I'm so early in this concept that there are lots of design decisions still remaining. 
 
 Make sure to update the `environment.yaml` if you add python packages:
 ```
 conda env export --name exoplanets --from-history > environment.yaml
-```
+``` 
