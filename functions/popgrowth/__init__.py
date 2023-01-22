@@ -6,7 +6,7 @@ import numpy as np
 
 import azure.functions as func
 from .cmdb_graph import CosmosdbClient
-from .time_functions import global_ticker
+
 
 
 params = yaml.safe_load(open('settings.yaml'))
@@ -23,7 +23,6 @@ def make_word(n):
     word = "".join(syl)
     return word.capitalize()
 
-changing_values = ['conformity','literacy','aggression','constitution','wealth','factionLoyalty']
 
 
 def grow_pop(p,species):
@@ -93,7 +92,7 @@ def main(mytimer: func.TimerRequest) -> None:
         
     upload_data = {'nodes':nodes,'edges':edges}
     c.upload_data(upload_data)
-    
+
     ### END 
     logging.info(f'Population Growth trigger ran at: {utc_timestamp}')
     c.close()
