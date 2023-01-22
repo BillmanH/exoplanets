@@ -1,2 +1,10 @@
 # minimum health required to grow population
 pop_health_requirement: .3
+
+changing_values:
+  - conformity
+  - literacy
+  - aggression
+  - constitution
+  - wealth
+  - factionLoyalty
