@@ -1,6 +1,8 @@
 import datetime
 import logging
 import yaml
+import pandas as pd
+import numpy as np
 
 import azure.functions as func
 from .db_functions import get_client, run_query, clean_node
@@ -22,8 +24,11 @@ def main(mytimer: func.TimerRequest) -> None:
     
 
     healthy_pops_query = f"g.V().has('label','pop').has('health',gt({params['pop_health_requirement']}))"
-    res = run_query(healthy_pops_query)
-
+    c.run_query(healthy_pops_query)
+    data = c.reduce_res(c.res)
+    
+    pops_df = pd.DataFrame([d['pop'] for d in data])
+    pops_df.head()
 
     ### END 
     logging.info(f'Population update trigger ran at: {utc_timestamp}')
