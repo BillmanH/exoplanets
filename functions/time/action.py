@@ -45,8 +45,13 @@ def augments_self_properties(a,j):
 
     # creating a dict of the new, patched values
     new_a = {}
+
     for itr,itm in enumerate(patched_properties):
-        new_a[itm] = round(a[itm]+patched_values[itr], 4)
+        try: 
+            new_a[itm] = round(a[itm]+patched_values[itr], 4)
+        except:
+            logging.info(f"patched_properties: {patched_properties}")
+            logging.error(f'unable to create a patch for: {a}')
 
     # building the update query
     query = f"g.V().has('objid','{a['objid']}')"

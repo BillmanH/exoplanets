@@ -7,7 +7,7 @@ import operator
 import yaml
 import numpy as np
 import pandas as pd
-from django.db import models
+
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
@@ -43,6 +43,7 @@ class CosmosdbClient():
         # Note username is removed when performing in Azure Functions
         self.endpoint = os.getenv("endpoint","env vars not set")
         self.password = os.getenv("dbkey","env vars not set")+"=="
+        self.username = os.getenv("dbusername","env vars not set")
         self.c = None
         self.res = "no query"
         self.stack = []
@@ -53,6 +54,7 @@ class CosmosdbClient():
             self.c = client.Client(
                 self.endpoint,
                 "g",
+                username=self.username,
                 password=self.password,
                 message_serializer=serializer.GraphSONSerializersV2d0(),
             )
@@ -134,7 +136,7 @@ class CosmosdbClient():
 
 
     # creating strings for uploading data
-    def create_vertex(self,node, username):
+    def create_vertex(self,node):
         if (len(
             [i for i in expectedProperties 
                 if i in list(node.keys())]
@@ -156,19 +158,19 @@ class CosmosdbClient():
                 substr = f".property('{k}','{self.cs(node[k])}')"
             gaddv += substr
         if 'username' not in properties:
-            gaddv += f".property('username','{username}')"
+            gaddv += f".property('username','azfunction')"
         gaddv += f".property('objtype','{node['label']}')"
         return gaddv
 
-    def create_edge(self, edge, username):
-        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('username','{username}')"
+    def create_edge(self, edge):
+        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('username','azfunction')"
         for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
             gadde += f".property('{i}','{edge[i]}')"
         gadde_fin = f".to(g.V().has('objid','{self.cs(edge['node2'])}'))"
         return gadde + gadde_fin
 
 
-    def upload_data(self, username, data):
+    def upload_data(self, data):
         """
         uploads nodes and edges in a format {"nodes":nodes,"edges":edges}.
         Each value is a list of dicts with all properties. 
@@ -180,12 +182,12 @@ class CosmosdbClient():
         self.edges = []
         self.res = []
         for node in data["nodes"]:
-            n = self.create_vertex(node, username)
+            n = self.create_vertex(node)
             self.nodes.append(n)
             callback = self.c.submitAsync(n)
             self.res.append(callback.result().all().result())
         for edge in data["edges"]:
-            e = self.create_edge(edge, username)
+            e = self.create_edge(edge)
             self.nodes.append(e)
             callback = self.c.submitAsync(e)
             self.res.append(callback.result().all().result())
