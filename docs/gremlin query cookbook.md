@@ -42,6 +42,20 @@ g.V().has('objid','7615388501660').as('location')
 			.by(unfold().valueMap().fold())
 ```
 
+get all populations that have enough health, where they live and the species
+```
+g.V().has('label','pop')
+    .has('health',gt(0.2)).as('pop')
+    .local(
+        union(
+            out('enhabits').as('location'),
+            out('isOfSpecies').as('species')
+            )
+		    .fold()).as('location','species')
+	    .path()
+		.by(unfold().valueMap().fold())
+```
+
 ##  Desires
 ### Get all of the desired objectives of a pop
 ```

@@ -14,14 +14,29 @@ Azure functions run the backend of the game. All things happening that aren't co
 
 ## Creating the local development environment
 The Azure Func Tools don't support conda environments, so I'm using a regular python env. This will need to be done anytime `requirements.txt` is updated OR when the environment variables are reset. This is just for the local environment. 
+
+### 1. activate the env
 ```
 python -m venv .venv
 .venv\scripts\activate
 pip install -r requirements.txt
 ```
 
-## Updating the environment in the cloud:
+### 2. start the listeners
+start the `[azurite table service]`, `[azurite queue service]`, and `[azurite blob service]`
 
+### 3. set the function to run on start
+timer functions don't run unless the timer goes off. in order to set them to run automatically, use `"RunOnStartup":true`
+This is automatically commented out in the `function.json`. Don't forget to remove after testing before you deploy. 
+
+### 4. run the function
+```
+func start
+```
+Then you can execute the functions locally to test them.
+
+
+## Updating the environment in the cloud:
 to get the settings into your local file:
 ```
 az webapp config appsettings list --name <app-name> --resource-group <group-name> > application_settings.json

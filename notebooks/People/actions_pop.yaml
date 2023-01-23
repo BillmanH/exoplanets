@@ -14,9 +14,9 @@ actions:
     label: action
     applies_to: "pop"
     effort: 10
-    requires_attr: "faction_loyalty;.1"
+    requires_attr: "factionLoyalty;.1"
     requirement_description: "population loyalty to faction must be > .1"
-    augments_self_properties: "faction_loyalty,literacy,aggression;0.05,0.01,0.05"
+    augments_self_properties: "factionLoyalty,literacy,aggression;0.05,0.01,0.05"
     comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
   -
     type: safety_nets
@@ -41,7 +41,7 @@ actions:
     label: action
     applies_to: "pop"
     effort: 10
-    augments_self_properties: "faction_loyalty,conformity,aggression;.1,0.1,.1"
+    augments_self_properties: "factionLoyalty,conformity,aggression;.1,0.1,.1"
     comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
   -
     type: build_infrastructure
@@ -69,7 +69,7 @@ actions:
     applies_to: "pop"
     requirement_description: "population wealth > .1"
     effort: 15
-    augments_self_properties: "wealth,literacy,faction_loyalty;-.1,0.01,-.01"
+    augments_self_properties: "wealth,literacy,factionLoyalty;-.1,0.01,-.01"
     comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
 
 

@@ -158,6 +158,7 @@ class CosmosdbClient():
             gaddv += substr
         if 'username' not in properties:
             gaddv += f".property('username','{username}')"
+        # TODO: Add defaults for objid 
         gaddv += f".property('objtype','{node['label']}')"
         return gaddv
 

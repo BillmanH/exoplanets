@@ -5,9 +5,15 @@ from . import maths
 from . import language
 
 
-pdata = yaml.safe_load(open("notebooks/planets/planet.yaml"))["planet_types"]
-mdata = yaml.safe_load(open("notebooks/planets/moon.yaml"))["moon_types"]
-sdata = yaml.safe_load(open("notebooks/planets/star.yaml"))
+try: 
+    pdata = yaml.safe_load(open("notebooks/planets/planet.yaml"))["planet_types"]
+    mdata = yaml.safe_load(open("notebooks/planets/moon.yaml"))["moon_types"]
+    sdata = yaml.safe_load(open("notebooks/planets/star.yaml"))
+# Running from notebooks, different path. 
+except:
+    pdata = yaml.safe_load(open("planet.yaml"))["planet_types"]
+    mdata = yaml.safe_load(open("moon.yaml"))["moon_types"]
+    sdata = yaml.safe_load(open("star.yaml"))    
 
 
 class Body:
@@ -60,6 +66,9 @@ class Planet(Body):
         self.isSupportsLife = False
         self.isPopulated = False
 
+    def detail_planet(self):
+        pass
+    
     def get_data(self):
         fund = self.get_fundimentals()
         fund["radius"] = self.radius
