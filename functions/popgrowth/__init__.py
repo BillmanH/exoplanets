@@ -94,11 +94,13 @@ def main(mytimer: func.TimerRequest) -> None:
         for i in reproducing_pops.index.to_list():
             p = reproducing_pops.loc[i].to_dict()
             species = species_df.loc[i].to_dict()
+            location = locations_df.loc[i].to_dict()
             child = grow_pop(p,species)
             nodes.append(child)
             edges.append({"node1": child["objid"], "node2": p["objid"], "label": "childOf"})
             edges.append({"node1": child["objid"], "node2": child["isInFaction"], "label": "isInFaction"})
             edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOfSpecies"})
+            edges.append({"node1": child["objid"], "node2": location["objid"], "label": "enhabits"})
             
         upload_data = {'nodes':nodes,'edges':edges}
         c.upload_data(upload_data)
