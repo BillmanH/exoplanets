@@ -1,5 +1,5 @@
 # minimum health required to grow population
-pop_health_requirement: .4
+pop_health_requirement: .6
 
 changing_values:
   - conformity
