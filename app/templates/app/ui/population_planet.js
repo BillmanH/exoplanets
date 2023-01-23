@@ -51,7 +51,7 @@ pointer.isVisible = false
 function createFaction(n){
     const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_box", 
         {"height":factionbuildingHeight,
-        "size":5}
+        "size":10}
       );
       box.parent = center
       box.position = new BABYLON.Vector3(n.coord.x, factionbuildingHeight/2, n.coord.z) 
@@ -194,7 +194,7 @@ for (let i = 0; i < factions.length; i++) {
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
-        p.coord = pivotLocal(-30,30)
+        p.coord = pivotLocal((j+5)*-1,(j+5))
         createPop(p)
     }
   }
