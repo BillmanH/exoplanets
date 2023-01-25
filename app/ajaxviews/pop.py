@@ -6,33 +6,6 @@ import ast
 
 
 
-def set_pop_desires(request):
-    # sets both desires and actions
-    request = dict(request.GET)
-    username = request.get('username')[0]
-    pop_query = f"g.V().haslabel('pop').has('username','{request.get('username')[0]}').valuemap()"
-    objectives_query = "g.V().hasLabel('objective').valuemap()"
-    actions_query = "g.V().hasLabel('action').valuemap()"
-    c = CosmosdbClient()
-    c.add_query(objectives_query)
-    c.add_query(pop_query)
-    c.add_query(actions_query)
-    c.run_queries()
-
-    pops = c.clean_nodes(c.res[pop_query])
-    objectives = c.clean_nodes(c.res[objectives_query])
-    actions = c.clean_nodes(c.res[actions_query])
-    # # Get the pop desire for those objectives
-    desire_edges = homeworld.get_pop_desires(pops,objectives)
-    data = {"nodes": [], "edges": desire_edges}
-    c.upload_data(username, data)
-    # # Set the actions for that POP
-    action_edges = homeworld.get_pop_actions(pops,actions)
-    action_data = {"nodes": [], "edges": action_edges}
-    c.upload_data(username, action_data)
-    response = {}
-    return JsonResponse(response)
-
 
 def get_pop_text(request):
     """
@@ -90,31 +63,6 @@ def get_all_pops(request):
         response["pops"] = pops
     return JsonResponse(response)
 
-
-def get_pop_desires(request):
-    """
-    given a specific pop,
-    get all of the desires of that pop. 
-    """
-    response = {}
-    request = dict(request.GET)
-    query = f"""
-    g.V().has('objid','{request.get('objid','')[0]}')
-        .outE('desires')
-        .inV().dedup()
-        .path()
-        .by(values('name','objid').fold())
-            .by('weight')
-            .by(values('type','objid','comment','leadingAttribute').fold())
-    """
-    c = CosmosdbClient()
-    c.run_query(query)
-    regular_list = [c.flatten(d['objects']) for d in c.res]
-    columns=['name','objid','weight','type','objid','comment','leadingAttribute']
-    regular_dict = [{columns[j[0]]:j[1] for j in enumerate(i) if columns[j[0]]!='objid'} for i in regular_list]
-    if len(regular_dict)>0:
-        response["desires"] = regular_dict
-    return JsonResponse(response)
 
 
 def get_pop_actions(request):
