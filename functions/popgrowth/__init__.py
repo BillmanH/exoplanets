@@ -9,7 +9,7 @@ from .cmdb_graph import CosmosdbClient
 import os
 
 logger = logging.getLogger('azure.mgmt.resource')
-logging.info(os.listdir())
+
 
 
 try:
