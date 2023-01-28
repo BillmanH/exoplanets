@@ -4,72 +4,87 @@ explanation:
     label: "always `action`"
     applies_to: "label of the object type that can perform this action"
     effort: "time in `universal time units` that the action will take to complete"
-    requires_attr: "list of items required in format `item,item,item;value,value,value`"
-    requirement_description: "Human readable definition of requirement"
     comment: "Human readable comment. Used in UX buttons and tooltips."
     augments_self_properties: "OPTIONAL, if action augments attribute values, list attributes required in format `item,item,item;value,value,value`"
 actions:
   -
     type: patriot_education
     label: action
-    applies_to: "pop"
+    applies_to: pop
     effort: 10
-    requires_attr: "factionLoyalty;.1"
-    requirement_description: "population loyalty to faction must be > .1"
-    augments_self_properties: "factionLoyalty,literacy,aggression;0.05,0.01,0.05"
+    requires_attr: 
+      factionLoyalty: .1
+    augments_self_properties: 
+      factionLoyalty: 0.05
+      literacy: 0.01
+      aggression: 0.05
     comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
   -
     type: safety_nets
     label: action
     applies_to: "pop"
     effort: 15
-    requires_attr: "wealth;.1"
-    requirement_description: "population wealth must be > .1"
-    augments_self_properties: "constitution,wealth;0.05,-.05"
+    requires_attr: 
+      wealth: .1
+    augments_self_properties: 
+      constitution: 0.05
+      wealth: -.05
     comment: "increase the general health of the population"
   -
     type: individual_education
     label: action
     applies_to: "pop"
     effort: 10
-    requires_attr: "wealth;.1"
-    requirement_description: "population wealth must be > .1"
-    augments_self_properties: "conformity,literacy;-0.05,0.1"
+    requires_attr: 
+      wealth: .1
+    augments_self_properties: 
+      conformity: -0.05
+      literacy: 0.1
     comment: "increase the general health of the population"
   -
     type: patriot_propoganda
     label: action
     applies_to: "pop"
     effort: 10
-    augments_self_properties: "factionLoyalty,conformity,aggression;.1,0.1,.1"
+    augments_self_properties: 
+      factionLoyalty: .1
+      conformity: .1
+      aggression: .1
     comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
   -
     type: build_infrastructure
     label: action
     applies_to: "pop"
     effort: 20
-    requires_attr: "wealth;.5"
-    requirement_description: "population wealth must be > .5"
+    requires_attr: 
+      wealth: .5
     leadingdesire: wealth
-    augments_self_properties: "wealth,industrial_infrastructure;-0.05,1"
+    augments_self_properties: 
+      wealth: -0.05
+      industrial_infrastructure: 1
     comment: "increase industry by investing in local infrastructure, increases industry"
   -
     type: healthcare_initialtives
     label: action
     applies_to: "pop"
     effort: 15
-    requires_attr: "wealth;.1"
-    requirement_description: "population wealth > .1"
-    augments_self_properties: "health,wealth;0.01,-.01"
+    requires_attr: 
+      wealth: .1
+    augments_self_properties:
+      health: 0.01
+      wealth: -.01
     comment: "increase the health and literacy of other populations within your faction"
   -
     type: individual_education
     label: action
-    requires_attr: "wealth;.1"
-    applies_to: "pop"
-    requirement_description: "population wealth > .1"
+    requires_attr: 
+      wealth: .1
+    applies_to: pop
     effort: 15
-    augments_self_properties: "wealth,literacy,factionLoyalty;-.1,0.01,-.01"
+    augments_self_properties: 
+      wealth: -.1
+      literacy: 0.01
+      factionLoyalty: -.01
     comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
 
 

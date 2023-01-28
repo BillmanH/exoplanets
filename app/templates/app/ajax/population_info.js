@@ -1,6 +1,7 @@
 function prep_actions(o){
-        objectDetails(o.data)
-        res = ajax_getActions(o.data)
+    console.log("agent: ",o)
+    res = ajax_getActions(o.data)
+
 }
 
 function ajax_getActions(d){
@@ -27,3 +28,5 @@ function ajax_getActions(d){
         console.log('object not idle')
     }
 }
+
+// {"objid" : "1947664857899"}
