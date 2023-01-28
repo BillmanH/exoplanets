@@ -30,7 +30,6 @@ def main(mytimer: func.TimerRequest) -> None:
     validActionCounter = 0
     for a in actions:
         if validate_action(time,a['job']):
-            logging.info(f'Total ations resolved in this run: {validActionCounter}')
             validActionCounter += 1
             if 'augments_self_properties' in list(a['job'].keys()):
                 logging.info(f"resolving augments_self_properties for: {a['agent']}")
@@ -49,9 +48,9 @@ def main(mytimer: func.TimerRequest) -> None:
             # set the agent to isIdle=True
             if 'isIdle' in list(a['agent'].keys()):
                 res = run_query(c, f"g.V().has('objid','{a['agent']['objid']}').property('isIdle','True')")
-                logging.info(f"objid set to idle: {a['agent']['objid']}")
-            logging.info(f"Total ations resolved in this run: {validActionCounter}")
+                logging.info(f"agent set to idle: {a['agent']['objid']}")
 
+    logging.info(f'Total ations resolved in this run: {validActionCounter}')
     # Increment global time
     global_ticker(c,time)
     
@@ -61,3 +60,5 @@ def main(mytimer: func.TimerRequest) -> None:
     logging.info(f'Python timer trigger function ran at: {utc_timestamp}')
     c.close()
 
+# Example action query:
+# 6816154304433

@@ -40,7 +40,7 @@ def augments_self_properties(a,j):
     takes an agent `a` and a job `j`.
     requires that job has, for example, 'augments_self_properties': 'faction_loyalty,literacy,aggression;0.05,0.01,0.05'
     """
-    patched_properties = j['augments_self_properties'].split(";")[0].split(",")
+    patched_properties = j['augments_self_properties']
     patched_values = [float(f) for f in j['augments_self_properties'].split(";")[1].split(",")]
 
     # creating a dict of the new, patched values
