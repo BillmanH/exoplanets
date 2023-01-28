@@ -7,7 +7,7 @@ function prep_actions(o){
 function ajax_getActions(d){
     if(d["isIdle"]=="True"){
         $.ajax({
-            url: '/ajax/pop-actions',
+            url: '/ajax/get-actions',
             type: 'get',
             data: d,
             dataType: 'json',

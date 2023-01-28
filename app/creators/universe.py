@@ -1,19 +1,14 @@
 import yaml
 from numpy import random as r
+import os
 
 from . import maths
 from . import language
 
 
-try: 
-    pdata = yaml.safe_load(open("notebooks/planets/planet.yaml"))["planet_types"]
-    mdata = yaml.safe_load(open("notebooks/planets/moon.yaml"))["moon_types"]
-    sdata = yaml.safe_load(open("notebooks/planets/star.yaml"))
-# Running from notebooks, different path. 
-except:
-    pdata = yaml.safe_load(open("planet.yaml"))["planet_types"]
-    mdata = yaml.safe_load(open("moon.yaml"))["moon_types"]
-    sdata = yaml.safe_load(open("star.yaml"))    
+mdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/planet.yaml")))["planet_types"]
+pdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/moon.yaml")))["moon_types"]
+sdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/star.yaml")))
 
 
 class Body:
