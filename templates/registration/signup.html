@@ -1,7 +1,8 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'app/main.css' %}">
-  <h2>Sign up</h2>
+  <h2>Create an account so that I can save your game.</h2>
+  <p>There is no charge to users in any way. In development I am only allowing one account per user. When you create a new game, your old civilization will be destroyed. </p>
   <form method="post">
     {% csrf_token %}
     {% for field in form %}
