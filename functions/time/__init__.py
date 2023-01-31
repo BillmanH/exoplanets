@@ -25,7 +25,7 @@ def main(mytimer: func.TimerRequest) -> None:
         logging.info('The timer is past due!')
     
     # Time is constant, pulled in once at the begining of the function
-    c.run_query(c,"g.V().hasLabel('time').valueMap()")
+    c.run_query("g.V().hasLabel('time').valueMap()")
     time = c.clean_nodes(c.res)[0]
 
     ### START of time_funtions here
@@ -33,13 +33,15 @@ def main(mytimer: func.TimerRequest) -> None:
     # Get all pending actions
     actions = get_global_actions(c)
     actions_df = pd.DataFrame(actions)
-
+    
+    logging.info(f'total jobs: {actions_df.shape[0]}')
     validActionCounter = 0
     for i in actions_df.index:
         agent = parse_properties(actions_df.loc[i].agent)
         action = parse_properties(actions_df.loc[i].action)
-        job = parse_properties(actions_df.loc[i].job)
+        job = actions_df.loc[i].job['properties']
 
+        logging.info(f'job: {job}')
         if validate_action_time(time,job):
             validActionCounter += 1
             resolve_action(c,agent,action)
@@ -59,7 +61,6 @@ def main(mytimer: func.TimerRequest) -> None:
 
 
     logging.info(f'Python timer trigger function ran at: {utc_timestamp}')
-    c.close()
 
 # Example action query:
 # 6816154304433

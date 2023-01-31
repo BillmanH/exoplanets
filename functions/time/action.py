@@ -20,7 +20,7 @@ def get_global_actions(c):
     # Autoincrement time by one:
     actions_query = """
         g.V().haslabel('action').as('action')
-                    .inE('takingAction').as('job')
+                    .inE('takingAction').has('status','pending').as('job')
                     .outV().as('agent')
                     .select('action','job','agent')
     """
@@ -31,7 +31,7 @@ def get_global_actions(c):
 
 def mark_action_as_resolved(c,agent, job):
     patch_job = f"""
-    g.V().has('objid','{a['agent']['objid']}')
+    g.V().has('objid','{agent['objid']}')
             .outE('takingAction')
             .has('actionType', '{job['actionType']}')
             .has('weight','{job['weight']}')
