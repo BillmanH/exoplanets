@@ -6,8 +6,8 @@ from . import maths
 from . import language
 
 
-mdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/planet.yaml")))["planet_types"]
-pdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/moon.yaml")))["moon_types"]
+pdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/planet.yaml")))["planet_types"]
+mdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/moon.yaml")))["moon_types"]
 sdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/star.yaml")))
 
 
