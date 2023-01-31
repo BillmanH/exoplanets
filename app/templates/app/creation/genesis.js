@@ -256,21 +256,7 @@ function build_population(c,n) {
 }
 
 function goto_system(c,n){
-    $.ajax({
-        url: '/ajax/genesis-pop-desire',
-        data: form,
-        dataType: 'json',
-        beforeSend: function () {
-            d3.selectAll('#finalize').remove()
-            add_please_wait()
-        },
-        success: function (data) {
-            console.log("pop desires, was created")
-            d3.selectAll('#loading').remove()
             window.location.href = '/systemui';
-
-        }
-    })
 }
 
 

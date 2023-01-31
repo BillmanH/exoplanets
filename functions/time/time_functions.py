@@ -1,7 +1,6 @@
 import logging
 import datetime
 
-from .db_functions import run_query
 
 def global_ticker(c,time):
     """
@@ -12,8 +11,7 @@ def global_ticker(c,time):
     logging.info(f"time was discovered at: {time}")
 
     
-    updateRes = run_query(c, 
-                            f"""g.V().hasLabel('time')
+    updateRes = c.run_query(f"""g.V().hasLabel('time')
                                 .property('currentTime', {currentTime})
                                 .property('updatedFrom','azfunction')
                                 .property('updatedAt','{str(datetime.datetime.now())}')

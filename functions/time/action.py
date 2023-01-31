@@ -1,8 +1,8 @@
 import logging
+import yaml
 
-from .db_functions import run_query, clean_node
 
-def validate_action(time,a):
+def validate_action_time(time,a):
     '''
     validate that the time to complete the task has passed. 
     Not the same as validation that the action can be taken. 
@@ -19,44 +19,59 @@ def get_global_actions(c):
     """
     # Autoincrement time by one:
     actions_query = """
-    g.E().haslabel('takingAction').has('status','pending').as('job')
-        .outV().as('agent').path().by(valueMap())
+        g.V().haslabel('action').as('action')
+                    .inE('takingAction').has('status','pending').as('job')
+                    .outV().as('agent')
+                    .select('action','job','agent')
     """
-    actions = run_query(c, actions_query)
-    # Clenup the query results:    
-    act = []
-    for action in actions:
-        lab = {}
-        for itr,itm in enumerate(action['labels']):
-            lab[itm[0]] = clean_node(action['objects'][itr])
-        act.append(lab)
-    logging.info(f"number of pending actions found: {len(act)}")
-    return act
 
+    c.run_query(actions_query)
+    actions = c.res
+    return actions
 
-def augments_self_properties(a,j):
-    """
-    builds the query that updates the object according to the properties that it has. 
-    takes an agent `a` and a job `j`.
-    requires that job has, for example, 'augments_self_properties': 'faction_loyalty,literacy,aggression;0.05,0.01,0.05'
-    """
-    patched_properties = j['augments_self_properties'].split(";")[0].split(",")
-    patched_values = [float(f) for f in j['augments_self_properties'].split(";")[1].split(",")]
+def mark_action_as_resolved(c,agent, job):
+    patch_job = f"""
+    g.V().has('objid','{agent['objid']}')
+            .outE('takingAction')
+            .has('actionType', '{job['actionType']}')
+            .has('weight','{job['weight']}')
+            .property('status', 'resolved')
+    """    
+    logging.info(f"updating job: {job['actionType']}:{job['weight']}")
+    c.add_query(patch_job)
 
-    # creating a dict of the new, patched values
-    new_a = {}
+def mark_agent_idle(c, agent):
+    if 'isIdle' in agent.keys():
+        idleQuery = f"""
+        "g.V().has('objid','{agent['objid']}').property('isIdle','True')"
+        """
+        c.add_query(idleQuery)
 
-    for itr,itm in enumerate(patched_properties):
-        try: 
-            new_a[itm] = round(a[itm]+patched_values[itr], 4)
-        except:
-            logging.info(f"patched_properties: {patched_properties}")
-            logging.error(f'unable to create a patch for: {a}')
+def parse_properties(node):
+    n = {}
+    for k in node["properties"].keys():
+        if len(node["properties"][k]) == 1:
+            n[k] = node["properties"][k][0]["value"]
+    return n
 
-    # building the update query
-    query = f"g.V().has('objid','{a['objid']}')"
-    for n in new_a.keys():
-        query += f".property('{n}',{new_a[n]})"
+def resolve_augments_self_properties(agent, action):
+    agent = agent.copy()
+    self_properties = yaml.safe_load(action["augments_self_properties"])
+    for p in self_properties.keys():
+        agent[p] = agent[p] + float(self_properties[p])
+    return agent
 
-    logging.info(f"patch query: {query}")
+def query_patch_properties(agent, action):
+    query = f"g.V().has('objid','{agent['objid']}')"
+    for n in yaml.safe_load(action["augments_self_properties"]):
+        query += f".property('{n}',{agent[n]})"
     return query
+
+def resolve_action(c,agent,action):
+    if "augments_self_properties" in action.keys():
+        agent = resolve_augments_self_properties(agent, action)
+        property_patch = query_patch_properties(agent, action)
+        c.run_query(property_patch)
+
+    
+

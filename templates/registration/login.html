@@ -1,4 +1,6 @@
 <!-- templates/registration/login.html -->
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/main.css' %}">
 <h2>Login</h2>
 <form method="post">
   {% csrf_token %}
@@ -8,4 +10,9 @@
         <a href="../../signup?next=/">Do you need to create an account?</a>
     </p>
 
+    <p>
+      A note: passwords are hashed and stored in a separate PostgreSQL database completely outside of the game’s ecosystem. The only account data that is stored in the game’s database graph is the ‘username’ field, which is used to map the logged in user to the game. 
+There are no individual user metrics, or attempts to identify the logged in user in any way, nor will there ever be. That’s just not within my curiosity for this game.  
+    </p>
+    <a href="https://github.com/BillmanH/exoplanets">The code base for the game, in it’s entirety, is here. </a>
 </form>

@@ -6,7 +6,7 @@
       "type": "timerTrigger",
       "direction": "in",
       // "RunOnStartup":true,
-      "schedule": "0 */30 * * * *"
+      "schedule": "0 0 * * * *"
     }
   ]
 }

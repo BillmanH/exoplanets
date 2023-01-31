@@ -1,5 +1,8 @@
 {% block content %}
-  <h2>Sign up</h2>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/main.css' %}">
+  <h2>Create an account so that I can save your game.</h2>
+  <p>There is no charge to users in any way. In development I am only allowing one account per user. When you create a new game, your old civilization will be destroyed. </p>
   <form method="post">
     {% csrf_token %}
     {% for field in form %}
@@ -19,4 +22,9 @@
   <p>An important note about passwords:</p>
   <p>I'm using Django's native password management, not my own system (which I think is the more secure choice). That being said, I am the sole owner and super user of the infrastructure so I could, in theory, unhash your password. I've never done this and have no curiosity about it. Also, I'll never ask for money on this site or for any personally identifying information. I just need a user/password system to save content and preferences.</p>
   <p>Additionally I'll encourage you to read more about <a href="https://docs.djangoproject.com/en/3.0/topics/auth/passwords/">Django's password management process</a></p>
+  <p>
+    Passwords are hashed and stored in a separate PostgreSQL database completely outside of the game’s ecosystem. The only account data that is stored in the game’s database graph is the ‘username’ field, which is used to map the logged in user to the game. 
+There are no individual user metrics, or attempts to identify the logged in user in any way, nor will there ever be. That’s just not within my curiosity for this game. 
+  </p>
+  <a href="https://github.com/BillmanH/exoplanets">The code base for the game, in it’s entirety, is here. </a>
 {% endblock %}
