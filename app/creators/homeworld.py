@@ -36,7 +36,6 @@ class Species(baseobjects.Baseobject):
         self.viral_resilience = 0.7
         self.habitat_resilience = 0.2
         self.pop_std = 0.2 * (1 - float(self.conformity))
-        self.name = self.make_name(1, 2)
 
     def get_data(self):
         fund = self.get_fundimentals()
