@@ -10,6 +10,22 @@ pdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configuration
 mdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/moon.yaml")))["moon_types"]
 sdata = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/star.yaml")))
 
+class Resource:
+    def __init__(self, conf):
+        self.objid = maths.uuid(n=13)
+        self.label = "resource"
+        self.conf = conf
+        self.name = conf["name"]
+        self.description = conf["description"]
+        self.volume = maths.rnd(conf["mean"],conf["std"], min_val=0)
+    def get_data(self):
+        return {
+            "name": self.name,
+            "objid": self.objid,
+            "label": self.label,
+            "volume": self.volume,
+            "description": self.description
+        }        
 
 class Body:
     def __init__(self):
@@ -17,6 +33,7 @@ class Body:
         self.type = "celestial body"
         self.label = "body"
         self.name = "unnamed"
+        self.resources = []
 
     def make_name(self, n1, n2):
         self.name = language.make_word(maths.rnd(n1, n2))
@@ -28,6 +45,10 @@ class Body:
             "objid": self.objid,
             "label": self.label,
         }
+    
+    def scan_body(self):
+        for n in pdata[self.type]['resources'].keys():
+            self.resources.append(Resource(pdata[self.type]['resources'][n]))
 
     def __repr__(self) -> str:
         return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"
@@ -51,8 +72,8 @@ class Planet(Body):
         self.make_name(2, 1)
         self.label = "planet"
         self.type = t
-        self.radius = abs(r.normal(pdata[t]["radius_mean"], pdata[t]["radius_std"]))
-        self.mass = abs(r.normal(pdata[t]["mass_mean"], pdata[t]["mass_std"]))
+        self.radius = maths.rnd(pdata[t]["radius_mean"], pdata[t]["radius_std"], min_val=0,type='float')
+        self.mass = maths.rnd(pdata[t]["mass_mean"], pdata[t]["mass_std"],min_val=0,type='float')
         self.orbitsDistance = maths.rnd(
             pdata[t]["distance_min"], pdata[t]["distance_max"]
         )
@@ -60,10 +81,9 @@ class Planet(Body):
         self.orbitsName = orbiting["name"]
         self.isSupportsLife = False
         self.isPopulated = False
+        self.isSurveyed = False
 
-    def detail_planet(self):
-        pass
-    
+
     def get_data(self):
         fund = self.get_fundimentals()
         fund["radius"] = self.radius
@@ -120,7 +140,10 @@ def make_planet(t, orbiting):
 
 
 def make_homeworld(orbiting, data):
-    planet = make_planet("terrestrial", orbiting)
+    p = Planet()
+    p.build_attr("terrestrial", orbiting)
+    # p.scan_body()
+    planet = p.get_data()
     if "planet_name" in data.keys():
         planet["name"] = data["planet_name"]
     planet["isSupportsLife"] = True
