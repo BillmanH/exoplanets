@@ -38,5 +38,26 @@ planet_types:
     radius_std: 0.3056014070648236
     distance_min: 0.39
     distance_max: 1.52
+    resources:
+      vegitation:
+        mean: 1000
+        std: 100
+      minerals_common:
+        description: "Iron and other common material used in constructuion of infrastructure" 
+        mean: 100
+        std: 10
+      minerals_rare:
+        description: "lithium, silver and other rare minerals used in infrastructure and technology"
+        mean: 50
+        std: 10
+      water:
+        description: "H2O ready to be consumed, either frozen or in ice format"
+        mean: 10000
+        std: 1000  
+
+
+
+
+
 
 
