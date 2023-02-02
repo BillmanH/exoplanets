@@ -154,11 +154,11 @@ def make_homeworld(orbiting, data):
     planet["isPopulated"] = True
     planet["isHomeworld"] = True
     p.scan_body()
-    homeworld_nodes = [r.get_data() for r in p.resources] + [planet]
+    homeworld_nodes = [r.get_data() for r in p.resources] 
     homeworld_edges = [
         {"node1": p.objid, "node2": r.objid, "label": "hasResource"} for r in p.resources
     ]
-    return homeworld_nodes,homeworld_edges
+    return planet, homeworld_nodes, homeworld_edges
 
 
 def make_moon(t, planets):
@@ -183,8 +183,8 @@ def build_homeSystem(data, username):
         )
         for p in range(int(data["num_planets"]) - 1)
     ]
-    homeworld_nodes,homeworld_edges = make_homeworld(star, data)
-    planets += homeworld_nodes
+    homeworld, homeworld_nodes,homeworld_edges = make_homeworld(star, data)
+    planets.append(homeworld)
     moons = [
         make_moon(
             r.choice(list(mdata.keys()), p=[mdata[t]["prob"] for t in mdata.keys()]),
@@ -192,7 +192,7 @@ def build_homeSystem(data, username):
         )
         for p in range(int(data["num_moons"]))
     ]
-    nodes = [data] + [system] + [star] + moons + planets
+    nodes = [data] + [system] + [star] + moons + planets + homeworld_nodes
     system_edges = [
         {"node1": p["objid"], "node2": system["objid"], "label": "isInSystem"}
         for p in nodes
@@ -219,6 +219,6 @@ def build_homeSystem(data, username):
         "node2": data["objid"],
         "label": "submitted",
     }
-    edges = system_edges + orbits + [formEdge] + homeworld_edges + accountEdge
+    edges = system_edges + orbits + [formEdge] + homeworld_edges + [accountEdge]
     return nodes, edges
 
