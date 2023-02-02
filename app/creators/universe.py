@@ -18,6 +18,8 @@ class Resource:
         self.name = conf["name"]
         self.description = conf["description"]
         self.volume = maths.rnd(conf["mean"],conf["std"], min_val=0)
+        if conf.get('replenish_rate'):
+            self.replenish_rate = conf['replenish_rate']
     def get_data(self):
         return {
             "name": self.name,
@@ -25,7 +27,9 @@ class Resource:
             "label": self.label,
             "volume": self.volume,
             "description": self.description
-        }        
+        }
+    def __repr__(self) -> str:
+        return f"<{self.label}: {self.objid}; {self.name}>"  
 
 class Body:
     def __init__(self):
@@ -149,7 +153,12 @@ def make_homeworld(orbiting, data):
     planet["isSupportsLife"] = True
     planet["isPopulated"] = True
     planet["isHomeworld"] = True
-    return planet
+    p.scan_body()
+    homeworld_nodes = [r.get_data() for r in p.resources] + [planet]
+    homeworld_edges = [
+        {"node1": p.objid, "node2": r.objid, "label": "hasResource"} for r in p.resources
+    ]
+    return homeworld_nodes,homeworld_edges
 
 
 def make_moon(t, planets):
@@ -174,8 +183,8 @@ def build_homeSystem(data, username):
         )
         for p in range(int(data["num_planets"]) - 1)
     ]
-    homeworld = make_homeworld(star, data)
-    planets += [homeworld]
+    homeworld_nodes,homeworld_edges = make_homeworld(star, data)
+    planets += homeworld_nodes
     moons = [
         make_moon(
             r.choice(list(mdata.keys()), p=[mdata[t]["prob"] for t in mdata.keys()]),
@@ -210,6 +219,6 @@ def build_homeSystem(data, username):
         "node2": data["objid"],
         "label": "submitted",
     }
-    edges = system_edges + orbits + [formEdge]
+    edges = system_edges + orbits + [formEdge] + homeworld_edges + accountEdge
     return nodes, edges
 
