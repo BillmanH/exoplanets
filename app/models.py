@@ -1,6 +1,5 @@
 import os
-# Pickle isn't used, but I might use it. 
-import pickle
+
 from functools import reduce
 import operator
 
