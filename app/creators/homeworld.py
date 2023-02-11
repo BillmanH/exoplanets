@@ -31,8 +31,8 @@ class Species(baseobjects.Baseobject):
         self.constitution = data["constitution"]
         self.label = "species"
         self.name = self.make_name(1, 2)
-        self.consumes = "organic"
-        self.effuses = "organic waste"
+        self.consumes = ["Organic"]
+        self.effuses = ["Organic waste","Plastics"]
         self.viral_resilience = 0.7
         self.habitat_resilience = 0.2
         self.pop_std = 0.2 * (1 - float(self.conformity))
