@@ -19,7 +19,7 @@ function ajax_getActions(d){
                 plz.dispose()
                 data.pop = d
                 console.log(data)
-                make_actions_screen(data)
+                make_actions_box(data)
                 return data
             }
         })
