@@ -35,6 +35,7 @@ function createStar(n){
     sunlight.diffuse = new BABYLON.Color3(0, 1, 1);
     sunlight.specular = new BABYLON.Color3(0, 1, 1);
     star.material = surface
+    star.metadata = n
     return star
 }
 
@@ -56,7 +57,7 @@ function createPlanet(n){
     surface.diffuseTexture =  new BABYLON.Texture(sphere_textures[n.data.class]);
     planet.material = surface
     planet.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
-
+    planet.metadata = n
     var rect1 = new BABYLON.GUI.Rectangle(n.data.objid+"_nameplate");
         rect1.width = .06;
         rect1.height = .03;
@@ -95,6 +96,8 @@ function createMoon(n){
         surface.diffuseTexture =  new BABYLON.Texture(sphere_textures[n.data.class]);
         moon.material = surface
         moon.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
+
+        moon.metadata = n
 }
 
 
@@ -114,12 +117,10 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
             label = dashboard.getControlByName(n.data.objid+"_nameplate")
             if(label){label.isVisible = false}
             objectDetails(n.data)
-            ButtonBox.dispose()
         }
         guiIter++
         n.iter = guiIter
         createStar(n)
-        createButton(n)
     }
     if (n.data.objtype=="planet"){
         guiIter++
@@ -131,18 +132,15 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
             label = dashboard.getControlByName(n.data.objid+"_nameplate")
             if(label){label.isVisible = false}
             objectDetails(n.data)
-            ButtonBox.dispose()
-            ButtonBox = createRectangle(generic_control_panel)
 
             satellites = scene.getMeshByName(n.data.objid).getChildren()
             // console.log(satellites)
             var guiIter = 0
             for (let si = 0; si < satellites.length; si++) {
-                guiIter++
                 o = {}
                 o.data = get_node(solar_system["nodes"],satellites[si].id)
                 console.log(o)
-                o.iter = guiIter
+                o.iter = si+1
                 o.gui = {buttonColor:"white",
                     depth:1}
                 o.gui.clickButton = function(o) {
@@ -158,17 +156,11 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
                 if(o.isSupportsLife=="True"){
                     o.gui.buttonColor = "green"
                 }
-                createButton(o)
                 if(o.data.isSupportsLife=="True"){createVisitButton(o)}
             }
         }
         createPlanet(n)
-        
-        if(n.data.isSupportsLife=="True"){
-            n.gui.buttonColor = "green"
-        }
-        createButton(n)
-        if(n.data.isSupportsLife=="True"){createVisitButton(n)}
+
     }
   }
 

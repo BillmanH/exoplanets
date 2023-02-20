@@ -25,6 +25,11 @@ function dropAllControls(){
     dropControlIfExists("action_window")
     dropControlIfExists("faction_window")
     dropControlIfExists("window")
+    dropControlIfExists("planets_window")
+}
+
+var objectDetails = function(d){
+    textblock.text = dictToSimpleText(d);
 }
 
 function createControlBox(control_panel){
@@ -124,13 +129,22 @@ var addButtonToBox = function(n,control) {
         button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 
         control.addControl(button)
-        if(n.gui.buttonName=="get_actions_"){
-            button.onPointerUpObservable.add(function() {n.gui.actionButton(n)});
-        } else {
-            button.onPointerUpObservable.add(function() {n.gui.clickButton(n)});
+        switch(n.gui.buttonName){
+            case "get_actions_":
+                if (n.gui.hasOwnProperty('actionButton')){
+                    button.onPointerUpObservable.add(function() {n.gui.actionButton(n)});
+                }
+            case "visit_":
+                if (n.gui.hasOwnProperty('visitButton')){
+                    button.onPointerUpObservable.add(function() {n.gui.visitButton(n)});
+                }
+            default:
+                button.onPointerUpObservable.add(function() {n.gui.clickButton(n)});
         }
-    return button
-}
+    }
+
+
+
 
 var addTextToControl = function(n,control){
     // TODO: Missing text for actions
