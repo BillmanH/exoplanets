@@ -29,4 +29,3 @@ function ajax_getActions(d){
     }
 }
 
-// {"objid" : "1947664857899"}

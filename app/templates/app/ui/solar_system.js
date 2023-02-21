@@ -36,6 +36,15 @@ function createStar(n){
     sunlight.specular = new BABYLON.Color3(0, 1, 1);
     star.material = surface
     star.metadata = n
+
+    star.actionManager = new BABYLON.ActionManager(scene);
+    star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(star)
+    }));
+    star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+        dropControlIfExists("uiTooltip")
+    }));
+
     return star
 }
 
@@ -75,6 +84,16 @@ function createPlanet(n){
         label.text = n.data.name;
         label.height = "40px"
         rect1.addControl(label);    
+
+    planet.actionManager = new BABYLON.ActionManager(scene);
+    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(planet)
+    }));
+    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+        dropControlIfExists("uiTooltip")
+    }));
+
+    return planet
 }
 
 // Moon
@@ -97,7 +116,14 @@ function createMoon(n){
         moon.material = surface
         moon.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 
-        moon.metadata = n
+    moon.metadata = n
+    moon.actionManager = new BABYLON.ActionManager(scene);
+    moon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(moon)
+    }));
+    moon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+        dropControlIfExists("uiTooltip")
+    }));
 }
 
 

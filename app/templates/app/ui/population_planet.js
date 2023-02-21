@@ -38,6 +38,15 @@ function createFaction(n){
     const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
         discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
         disc.material = discMat; 
+
+    box.metadata = n.data
+    box.actionManager = new BABYLON.ActionManager(scene);
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(box)
+    }));
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+        dropControlIfExists("uiTooltip")
+    }));
 }
 
 function createPop(n){
@@ -54,6 +63,15 @@ function createPop(n){
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
         box.material = boxMat; 
+
+    box.metadata = n.data.population
+    box.actionManager = new BABYLON.ActionManager(scene);
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(box)
+    }));
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+        dropControlIfExists("uiTooltip")
+    }));
 }
 
 

@@ -12,8 +12,8 @@ textblock.paddingRight = 20
 textblock.paddingTop = 20
 
 
-
 dashboard.addControl(textblock);
+
 
 function dropControlIfExists(name){
     if(dashboard.getControlByName(name)){
@@ -74,7 +74,7 @@ function createControlBox(control_panel){
 
     label.addControl(closeButton);
 
-    var textblock = new BABYLON.GUI.TextBlock("actions_textblock")
+    var textblock = new BABYLON.GUI.TextBlock("title_textblock")
         textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
         textblock.textWrapping = true;
@@ -179,4 +179,43 @@ function pleaseWaiter(d){
     label.addControl(textblock);
 
     return label
+}
+
+function hoverTooltip(obj){
+    dropControlIfExists("uiTooltip")
+    if(obj.hasOwnProperty('metadata')){
+        // console.log(obj.metadata.name)
+        
+        var rect1 = new BABYLON.GUI.Rectangle("uiTooltip");
+            dashboard.addControl(rect1);
+            rect1.width = "300px";
+            rect1.height ="200px";
+            rect1.thickness = 2;        
+            rect1.linkOffsetX = "200px";
+            rect1.linkOffsetY = "-100px";
+            rect1.background = "black";
+            rect1.alpha = 0.7;
+            rect1.cornerRadius = 5
+            rect1.linkWithMesh(obj);    
+
+        var text1 = new BABYLON.GUI.TextBlock();
+        if(obj.metadata.hasOwnProperty("data")){
+            text1.text = dictToSimpleText(obj.metadata.data)
+        } else {
+            text1.text = dictToSimpleText(obj.metadata)
+        }
+            text1.color = "White";
+            text1.fontSize = 14;
+            text1.textWrapping = true;
+            text1.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+            text1.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_LEFT;
+            text1.background = '#006994'
+            rect1.addControl(text1)
+            text1.alpha = (1/text1.parent.alpha);
+            text1.paddingTop = "20px";
+            text1.paddingBottom = "20px";
+            text1.paddingLeft = "20px";
+            text1.paddingRight = "20px";
+    }
+
 }
