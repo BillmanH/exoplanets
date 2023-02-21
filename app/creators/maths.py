@@ -2,18 +2,25 @@ import numpy as np
 from numpy import random as r
 
 
-def rnd(n, s,min_val=1):
+def rnd(n, s,min_val=1,type='int'):
     """
     returns positive int, within normal distribution
-    n = mean, s = std
+    n = mean
+    s = std
+    min_val = the lowest possible value
+    type = type of return value. `int` will round to nearest whole number, `float` will round to three decimal places. 
     """
-    y = int(abs(np.ceil(r.normal(n, s))))
+    if type=='int':
+        y = int(abs(np.ceil(r.normal(n, s))))
+    if type=='float':
+        y = np.round(r.normal(n, s),3)
     if y < min_val:
         y=min_val
     return y
 
+
 def rnd_dist(set):
-    # Input should be a list of dicts, with a key annd percent 
+    # Input should be a list of dicts, with a key and percent 
     dist = []
     vals = []
     for i in set.keys():

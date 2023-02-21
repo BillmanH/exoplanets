@@ -32,7 +32,6 @@ def make_word(n):
     return word.capitalize()
 
 
-
 def grow_pop(p,species):
     child = p.copy()
     child['label'] = 'pop'

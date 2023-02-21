@@ -8,7 +8,7 @@
 </body>
 <script>
     var solar_system = {{ solar_system | safe }}
-    // console.log(solar_system['nodes'])
+    console.log(solar_system)
     
     {% include "app/ui/globals.js" %}
     {% include "app/ui/system_globals.js" %}
@@ -32,24 +32,10 @@
         camera.useFramingBehavior = true;
         camera.attachControl(canvas, true);
         
-        var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-
-        
-        var textblock = new BABYLON.GUI.TextBlock("textblock")
-            textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-            textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-            textblock.fontSize = 24;    
-            textblock.background = "black";
-            textblock.color = "white";    
-            textblock.paddingRight = 20
-            textblock.paddingTop = 20
-            dashboard.addControl(textblock);
-
-        console.log(textblock)
+        {% include "app/ui/global_ui.js" %}
+        {% include "app/ui/system_ui.js" %}
 
         {% include "app/tooltips.js" %}
-        {% include "app/ui/controls.js" %}
         {% include "app/ui/skybox.js" %}
         {% include "app/ui/solar_system.js" %}
 

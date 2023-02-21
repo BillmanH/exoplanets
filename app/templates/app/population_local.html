@@ -32,21 +32,11 @@
         camera.useFramingBehavior = true;
         camera.attachControl(canvas, true);
         
-        var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+        // User interface
+        {% include "app/ui/global_ui.js" %}
+        {% include "app/ui/population_ui.js" %}
 
-
-        
-        var textblock = new BABYLON.GUI.TextBlock("textblock")
-            textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-            textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-            textblock.fontSize = 24;  
-            textblock.paddingTop = 10
-            textblock.paddingRight = 10  
-            textblock.background = "black";
-            textblock.color = "white";    
-            dashboard.addControl(textblock);
-
-        {% include "app/ui/controls.js" %}
+        // generatiors
         {% include "app/tooltips.js" %}
         {% include "app/ajax/population_action.js" %}
         {% include "app/ui/population_planet.js" %}

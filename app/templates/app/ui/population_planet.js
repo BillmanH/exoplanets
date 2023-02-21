@@ -4,27 +4,7 @@
 factionbuildingHeight = 10
 ground_dimensions = 500
 
-faction_control_panel = {top:50,
-    left:300,
-    width:"400px",
-    height:"600px",
-    alpha:0.5,
-    cornerRadius:5,
-    thickness:1,
-    linkOffsetY:30,
-    close_offset_left:465}
 
-actions_control_panel = {
-    name:"action_window", 
-    top:50,
-    left:720,
-    width:"600px",
-    height:"600px",
-    alpha:0.5,
-    cornerRadius:5,
-    thickness:1,
-    linkOffsetY:30,
-    close_offset_left:465}
 
 // light
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
@@ -39,14 +19,7 @@ const groundMat = new BABYLON.StandardMaterial("groundMat");
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
     center.isVisible = false
 
-ButtonBox = createRectangle(faction_control_panel)
-ButtonBox.isVisible = false
 
-
-// pointer 
-const pointer = BABYLON.MeshBuilder.CreateSphere("pointer", {diameter: 12});
-pointer.position = new BABYLON.Vector3(0,0,0)
-pointer.isVisible = false
 
 function createFaction(n){
     const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_box", 
@@ -65,6 +38,15 @@ function createFaction(n){
     const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
         discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
         disc.material = discMat; 
+
+    box.metadata = n.data
+    box.actionManager = new BABYLON.ActionManager(scene);
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(box)
+    }));
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+        dropControlIfExists("uiTooltip")
+    }));
 }
 
 function createPop(n){
@@ -81,88 +63,18 @@ function createPop(n){
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
         box.material = boxMat; 
+
+    box.metadata = n.data.population
+    box.actionManager = new BABYLON.ActionManager(scene);
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(box)
+    }));
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+        dropControlIfExists("uiTooltip")
+    }));
 }
 
 
-function getPopBox(f){
-    aw = dashboard.getControlByName("action_window")
-    w = dashboard.getControlByName("window")
-    if(aw!=undefined){aw.dispose()}
-    if(w!=undefined){w.dispose()}
-    ButtonBox.dispose()
-    ButtonBox = createRectangle(faction_control_panel)
-    pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-    for (let si = 0; si < pops.length; si++) {
-        p = {}
-        p.data = pops[si].population
-        p.iter = si+1
-        p.gui = {buttonColor:"white",
-            depth:1}
-        p.gui.clickButton = function(p) {
-            console.log(p.data.name, p.data.objid, " button was pushed")
-            objectDetails(p.data)
-        };
-        createButton(p)
-        
-        if(p.data.isIdle=="True"){
-            p.gui.buttonColor = "green"
-            p.gui.buttontext = "get actions"
-            p.gui.buttonName = "get_actions_"
-            p.gui.returnButton = true
-            actionsButton = createSpecificButton(p)
-            // console.log('button',p.data.name,actionsButton)
-            ButtonBox.addControl(actionsButton)
-            actionsButton.onPointerUpObservable.add(function(p) {
-                p.data = pops[si].population
-                prep_actions(p)
-            });
-            }
-    }
-    ButtonBox.isVisible = true
-}
-
-function make_actions_screen(actions){
-    aw = dashboard.getControlByName("action_window")
-    if(aw!=undefined){aw.dispose()}
-    ButtonBox = createRectangle(actions_control_panel)
-
-    var textblock = new BABYLON.GUI.TextBlock("actions_textblock")
-        textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-        textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-        textblock.textWrapping = true;
-        ButtonBox.addControl(textblock);
-
-        textblock.paddingTop = 10 
-        textblock.paddingLeft = 260 
-        textblock.fontSize = 18;    
-        textblock.background = "black";
-        textblock.color = "white";    
-        textblock.text = actions.pop.objtype + ": " + actions.pop.name + "\n" + "\n"
-
-    if(actions.hasOwnProperty('actions')){
-        for (let i = 0; i < actions.actions.length; i++) {
-            a = {}
-            a.gui = {
-                buttonColor:"white",
-                depth:1,
-                returnButton:true,
-                width:"200px"}
-            a.iter = i+1
-            a.data = actions.actions[i]
-            a.gui.clickButton = function(a) {
-              console.log(actions.pop.name,": ", a.type, " button was pushed")
-              console.log("action", a)
-              takeAction(actions.pop,a.data)
-            };
-            button = createButton(a)
-            button.onPointerUpObservable.add(function() {a.gui.clickButton(a)});
-            ButtonBox.addControl(button)
-            textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
-        }
-    } else {
-        textblock.text = "This population has no actions available to it as this time"
-    }
-}
 
 // main - actually loads the content
 var guiIter = 0
@@ -181,16 +93,7 @@ for (let i = 0; i < factions.length; i++) {
     }
     // console.log(f.coord)
     createFaction(f)
-    f.gui = {buttonColor:"white",
-            depth:0}
-    f.gui.clickButton = function(f) {
-        console.log(f.data.name, f.data.objid, " button was pushed")
-        pointer.position = new BABYLON.Vector3(f.coord.x, 100, f.coord.z) 
-        pointer.isVisible = true
-        getPopBox(f)
-        objectDetails(f.data)
-    };
-    createButton(f)
+
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
