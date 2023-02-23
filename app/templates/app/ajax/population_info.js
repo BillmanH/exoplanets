@@ -5,7 +5,7 @@ function prep_actions(o){
 }
 
 function ajax_getActions(d){
-    if(d["isIdle"]=="True"){
+    if(d["isIdle"].toLowerCase()=="true"){
         $.ajax({
             url: '/ajax/get-actions',
             type: 'get',

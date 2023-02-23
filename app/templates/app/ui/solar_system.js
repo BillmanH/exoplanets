@@ -179,10 +179,10 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
                     // camera.setTarget(new BABYLON.Vector3(moon.position.x, moon.position.y, moon.position.z));
                     // camera.radius = 25
                 };
-                if(o.isSupportsLife=="True"){
+                if(o.isSupportsLife.toLowerCase()=="true"){
                     o.gui.buttonColor = "green"
                 }
-                if(o.data.isSupportsLife=="True"){createVisitButton(o)}
+                if(o.data.isSupportsLife.toLowerCase()=="true"){createVisitButton(o)}
             }
         }
         createPlanet(n)

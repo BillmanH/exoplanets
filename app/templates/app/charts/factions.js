@@ -117,7 +117,7 @@ draw_table(
 
 function clickPop(d){
     cnsl(d)
-    if(d["isIdle"]=="True"){
+    if(d["isIdle"].toLowerCase()=="true"){
         $.ajax({
             url: '/ajax/pop-actions',
             type: 'get',
