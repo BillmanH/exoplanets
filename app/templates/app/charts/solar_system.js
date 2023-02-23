@@ -10,10 +10,10 @@ var s_objectColors = {
 
 function s_objectStrokes (d) { 
     var objectStrokes = {
-        "True":"#6b93d6",
-        "False":"black"
+        "true":"#6b93d6",
+        "false":"black"
     }
-    return objectStrokes[d.isSupportsLife] 
+    return objectStrokes[d.isSupportsLife.toLowerCase()] 
 }
 
 

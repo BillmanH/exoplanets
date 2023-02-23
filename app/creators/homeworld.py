@@ -63,7 +63,7 @@ class Pop(Creature):
         )
         self.label = "pop"
         self.type = "pop"
-        self.isIdle = "True"
+        self.isIdle = "true"
         self.health = 0.5
         self.isOfSpecies = {
             "node1": self.objid,

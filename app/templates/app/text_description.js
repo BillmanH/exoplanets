@@ -25,7 +25,7 @@ function evalueateLevels(x){
 
 function describePlanet(d,nodes){
     var desc = "<p>Orbiting " + d.orbitsName + " , at ~" + d.orbitsDistance + " AUs</p>"
-    if (d.isSupportsLife=="True"){
+    if (d.isSupportsLife.toLowerCase()=="true"){
         desc += "<p> " + d.name + " is capable of supporting life.</p>" 
     } else {
         desc += "<p> " + d.name + " is not known to support life.</p>" 
@@ -36,7 +36,7 @@ function describePlanet(d,nodes){
 function describeMoon(d,nodes){
     cnsl(d)
     var desc = "<p>Orbiting " + d.orbitsName + " , at ~" + d.orbitsDistance + " AUs</p>"
-    if (d.isSupportsLife=="True"){
+    if (d.isSupportsLife.toLowerCase()=="true"){
         desc += "<p> " + d.name + " is capable of supporting life.</p>" 
     } else {
         desc += "<p> " + d.name + " is not known to support life.</p>" 
@@ -47,7 +47,7 @@ function describeMoon(d,nodes){
 
 function describePop(d,nodes){
     cnsl(d)
-    if (d['isIdle'] == "True"){
+    if (d['isIdle'].toLowerCase() == "true"){
         var desc = "<p>is idle"
         if (d['hasActions'] = "no"){
             desc += ", but has no actions available to take"

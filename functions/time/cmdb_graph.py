@@ -10,7 +10,7 @@ import pandas as pd
 
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
-
+import logging
 
 
 # ASSERTIONS: 
@@ -72,7 +72,9 @@ class CosmosdbClient():
 
     def run_query_from_list(self, query="g.V().count()"):
         callback = self.c.submitAsync(query)
+        status = callback.result().status_attributes
         res = callback.result().all().result()
+        logging.info(f'{query} query status: {status}')
         self.res = res
 
     def add_query(self, query="g.V().count()"):

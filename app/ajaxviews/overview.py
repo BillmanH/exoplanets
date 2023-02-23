@@ -10,7 +10,7 @@ def get_overview(request):
 
     time_units = "g.V().hasLabel('time').values('currentTime')"
     totalPops = f"g.V().hasLabel('pop').has('username','{request.get('username')[0]}').count()"
-    idlePops = f"g.V().hasLabel('pop').has('username','{request.get('username')[0]}').has('isIdle','True').count()"
+    idlePops = f"g.V().hasLabel('pop').has('username','{request.get('username')[0]}').has('isIdle','true').count()"
 
     c = CosmosdbClient()
     c.add_query(time_units)

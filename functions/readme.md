@@ -22,7 +22,7 @@ pip install -r requirements.txt
 
 ### 1. activate the env
 ```
-python -m venv .venv
+.venv\scripts\activate
 ```
 
 

@@ -46,7 +46,7 @@ var planets_icon = BABYLON.GUI.Button.CreateImageOnlyButton("pop_icon", icons["p
                 objectDetails(p.data)
             }
             addButtonToBox(p,planet_control)
-            if(p.data.isSupportsLife=="True"){
+            if(p.data.isSupportsLife.toLowerCase()=="true"){
                 p.gui.buttonColor = "green"
                 p.gui.buttontext = "visit"
                 p.gui.buttonName = "visit_"
