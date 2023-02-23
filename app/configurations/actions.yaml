@@ -11,7 +11,7 @@ actions:
     type: patriot_education
     label: action
     applies_to: pop
-    effort: 10
+    effort: 1
     requires_attr: 
       factionLoyalty: .1
     augments_self_properties: 
@@ -23,7 +23,7 @@ actions:
     type: safety_nets
     label: action
     applies_to: "pop"
-    effort: 15
+    effort: 2
     requires_attr: 
       wealth: .1
     augments_self_properties: 
@@ -34,7 +34,7 @@ actions:
     type: individual_education
     label: action
     applies_to: "pop"
-    effort: 10
+    effort: 1
     requires_attr: 
       wealth: .1
     augments_self_properties: 
@@ -45,7 +45,7 @@ actions:
     type: patriot_propoganda
     label: action
     applies_to: "pop"
-    effort: 10
+    effort: 1
     augments_self_properties: 
       factionLoyalty: .1
       conformity: .1
@@ -55,7 +55,7 @@ actions:
     type: build_infrastructure
     label: action
     applies_to: "pop"
-    effort: 20
+    effort: 3
     requires_attr: 
       wealth: .5
     leadingdesire: wealth
@@ -67,7 +67,7 @@ actions:
     type: healthcare_initialtives
     label: action
     applies_to: "pop"
-    effort: 15
+    effort: 2
     requires_attr: 
       wealth: .1
     augments_self_properties:
@@ -80,7 +80,7 @@ actions:
     requires_attr: 
       wealth: .1
     applies_to: pop
-    effort: 15
+    effort: 2
     augments_self_properties: 
       wealth: -.1
       literacy: 0.01
