@@ -64,7 +64,7 @@ actions:
       industrial_infrastructure: 1
     comment: "increase industry by investing in local infrastructure, increases industry"
   -
-    type: healthcare_initialtives
+    type: healthcare_initiatives
     label: action
     applies_to: "pop"
     effort: 2

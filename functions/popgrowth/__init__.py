@@ -79,12 +79,15 @@ def main(mytimer: func.TimerRequest) -> None:
     locations_df = pd.DataFrame([d['location'] for d in data])
 
     logging.info(f"Total pops loaded: {len(pops_df)}")
+    if len(pops_df)==0:
+        logging.info(f'**** No population growth today ****')
+        reproducing_pops = []
+    else:
+        pops_df['roll'] = pops_df['objid'].apply(lambda x: np.random.random())
+        pops_df['grow'] = pops_df[['wealth','health']].T.mean() >= pops_df['roll']
 
-    pops_df['roll'] = pops_df['objid'].apply(lambda x: np.random.random())
-    pops_df['grow'] = pops_df[['wealth','health']].T.mean() >= pops_df['roll']
-
-    reproducing_pops = pops_df[pops_df['grow']].drop(['roll','grow'],axis=1)
-    logging.info(f"Total reproducing pops: {len(reproducing_pops)}")
+        reproducing_pops = pops_df[pops_df['grow']].drop(['roll','grow'],axis=1)
+        logging.info(f"Total reproducing pops: {len(reproducing_pops)}")
 
     if len(reproducing_pops)>0:
         nodes = []
