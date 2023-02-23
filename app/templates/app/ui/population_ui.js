@@ -52,7 +52,7 @@ function getPopBox(f){
         };
         pop_button = addButtonToBox(p,faction_pops_control)
         // console.log(p.data.isIdle)
-        if(p.data.isIdle=="True"){
+        if(p.data.isIdle.toLowerCase()=="true"){
             p.gui.buttonColor = "green"
             p.gui.buttontext = "get actions"
             p.gui.buttonName = "get_actions_"
