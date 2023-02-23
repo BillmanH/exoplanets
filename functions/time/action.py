@@ -43,7 +43,7 @@ def mark_action_as_resolved(c,agent, job):
 def mark_agent_idle(c, agent):
     if 'isIdle' in agent.keys():
         idleQuery = f"""
-        "g.V().has('objid','{agent['objid']}').property('isIdle','true')"
+        g.V().has('objid','{agent['objid']}').property('isIdle','true')
         """
         c.add_query(idleQuery)
 
