@@ -22,9 +22,19 @@ except:
 
 
 
-
 def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
+
+def population_growth_event(p,location,child):
+    node = {
+        'objdid':uuid,
+        'name':'population growth',
+        'label':'event',
+        'text': f"The population ({p['name']}) enhabiting {location['name']} has grown to produce the ofspring {child['name']}.",
+        'visibleTo':p['username'],
+        'time':params['time']['currentTime'] 
+    }
+    return node
 
 def make_word(n):
     syl = np.random.choice(syllables, n)
@@ -102,6 +112,7 @@ def main(mytimer: func.TimerRequest) -> None:
             location = locations_df.loc[i].to_dict()
             child = grow_pop(p,species)
             nodes.append(child)
+            nodes.append(population_growth_event(p, location,child))
             edges.append({"node1": child["objid"], "node2": p["objid"], "label": "childOf"})
             edges.append({"node1": child["objid"], "node2": child["isInFaction"], "label": "isInFaction"})
             edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOfSpecies"})
