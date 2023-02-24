@@ -26,6 +26,7 @@ function dropAllControls(){
     dropControlIfExists("faction_window")
     dropControlIfExists("window")
     dropControlIfExists("planets_window")
+    dropControlIfExists("resources_window")
 }
 
 var objectDetails = function(d){
@@ -218,4 +219,24 @@ function hoverTooltip(obj){
             text1.paddingRight = "20px";
     }
 
+}
+
+function create_icon(params){
+    var icon = BABYLON.GUI.Button.CreateImageOnlyButton(params.name, params.image);
+    icon.width = "40px";
+    icon.height = "40px";
+    icon.top = params.top
+    icon.left = 20
+    icon.color = "white";
+    icon.stretch = BABYLON.GUI.Image.STRETCH_EXTEND;
+    icon.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    icon.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    //TODO Tooltip not working. 
+    // icon.actionManager = new BABYLON.ActionManager(scene);
+    // icon.metadata = {"icon":params.tooltiptext}
+    // icon.actionManager = new BABYLON.ActionManager(scene);
+    // icon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+    //     hoverTooltip(icon)
+    // }));
+    return icon
 }

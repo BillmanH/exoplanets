@@ -221,17 +221,39 @@ def get_galaxy_nodes():
 
 
 
-def get_system(username):
-    # TODO: This process just assumes there is only one system per account. Eventually will need to expand to take 
-    # a system parameter to specify which system the user would like to fetch. 
+def get_home_system(username):
     nodes_query = (
         f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
     )
+    system_query = (
+        f"g.V().hasLabel('system').has('username','{username}').has('isHomeSystem','true').valueMap()"
+    )
     c = CosmosdbClient()
-    c.run_query(nodes_query)   
-    nodes = c.res
+    c.add_query(nodes_query)
+    c.add_query(system_query)
+    c.run_queries()   
+    nodes = c.res[nodes_query]
+    system = c.clean_nodes(c.res[system_query])[0]
     edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
-    system = {"nodes": c.clean_nodes(nodes), "edges": edges}
+    system = {"nodes": c.clean_nodes(nodes), "edges": edges, "system":system}
+    return system
+
+def get_system(objid,orientation):
+    if orientation == 'planet':
+        nodes_query = (
+            f"g.V().has('objid','{objid}').out('isInSystem').in().valueMap()"
+        )
+        system_query = (
+            f"g.V().has('objid','{objid}').out('isInSystem').valueMap()"
+        )
+    c = CosmosdbClient()
+    c.add_query(nodes_query)
+    c.add_query(system_query)
+    c.run_queries()   
+    nodes = c.res[nodes_query]
+    system = c.clean_nodes(c.res[system_query])[0]
+    edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
+    system = {"nodes": c.clean_nodes(nodes), "edges": edges, "system":system}
     return system
 
 

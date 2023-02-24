@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("new", views.new_game),
     path("genesis_view", views.genesis, name="genesis"),
+    path("homesystemui", views.home_system_ui, name="home_system_ui"),
     path("galaxymap", views.galaxy_map, name="galaxy_map"),
     path("systemmap", views.system_map, name="system_map"),
     path("systemui", views.system_ui, name="system_ui"),

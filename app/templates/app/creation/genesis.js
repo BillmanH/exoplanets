@@ -256,7 +256,7 @@ function build_population(c,n) {
 }
 
 function goto_system(c,n){
-            window.location.href = '/systemui';
+            window.location.href = '/homesystemui';
 }
 
 

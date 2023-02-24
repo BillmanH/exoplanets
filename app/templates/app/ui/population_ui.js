@@ -1,7 +1,9 @@
 {% load static %}
 
 icons = {
-    "pop":"{% static 'app/objects/icons/pop_icon_2.png' %}"
+    pop:"{% static 'app/objects/icons/pop_icon_2.png' %}",
+    resources:"{% static 'app/objects/icons/resource_icon_1.png' %}",
+    system:"{% static 'app/objects/icons/system_icon_1.png' %}"
 }
 
 pop_control_panel = {
@@ -29,6 +31,25 @@ actions_control_panel = {
     width:"600px",
     height:"600px"
 }
+
+resources_control_panel = {
+    name:"resources_window",
+    title: "These are the resources known to be avalable in this system",
+    top:20,
+    left:70,
+    width:"400px",
+    height:"100px"
+}
+
+var system_icon = create_icon({name:'system_icon',image:icons.system,top:20,tooltiptext:"return to the system"})
+dashboard.addControl(system_icon);
+
+var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:90})
+dashboard.addControl(pop_icon);
+
+var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:160})
+dashboard.addControl(resource_icon);
+
 
 // pointer 
 const pointer = BABYLON.MeshBuilder.CreateSphere("pointer", {diameter: 12});
@@ -69,51 +90,41 @@ function getPopBox(f){
 }
 
 
-var pop_icon = BABYLON.GUI.Button.CreateImageOnlyButton("pop_icon", icons["pop"]);
-    pop_icon.width = "40px";
-    pop_icon.height = "40px";
-    pop_icon.top = 20
-    pop_icon.left = 20
-    pop_icon.color = "white";
-    pop_icon.stretch = BABYLON.GUI.Image.STRETCH_EXTEND;
-    pop_icon.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-    pop_icon.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-    dashboard.addControl(pop_icon);
 
+pop_icon.onPointerClickObservable.add(function () {
+    dropAllControls()
 
-
-    pop_icon.onPointerClickObservable.add(function () {
-        dropControlIfExists("action_window")
-        dropControlIfExists("faction_window")
-        dropControlIfExists("window")
-
-        factions = distinct_list(data.nodes,'faction','objid')
-        pop_control_panel.height = (100 * factions.length).toString() + "px"
-        pop_control = createControlBox(pop_control_panel)
-        var guiIter = 0
-        for (let i = 0; i < factions.length; i++){
-            guiIter ++
-            f = {}
-            f.data = get_specific_node(data.nodes,factions[i])[0]
-            f.iter = guiIter
-            f.gui = {buttonColor:"white",
-            depth:0}
-            f.coord = {
-                x:f.data.lat*ground_dimensions,
-                y:0,
-                z:f.data.lat*ground_dimensions
-            }
-            f.gui.clickButton = function(f) {
-                console.log(f.data.name, f.data.objid, " button was pushed")
-                pointer.position = new BABYLON.Vector3(f.coord.x, 100, f.coord.z) 
-                pointer.isVisible = true
-                getPopBox(f)
-                objectDetails(f.data)
-            };
-            addButtonToBox(f,pop_control)
+    factions = distinct_list(data.nodes,'faction','objid')
+    pop_control_panel.height = (100 * factions.length).toString() + "px"
+    pop_control = createControlBox(pop_control_panel)
+    var guiIter = 0
+    for (let i = 0; i < factions.length; i++){
+        guiIter ++
+        f = {}
+        f.data = get_specific_node(data.nodes,factions[i])[0]
+        f.iter = guiIter
+        f.gui = {buttonColor:"white",
+        depth:0}
+        f.coord = {
+            x:f.data.lat*ground_dimensions,
+            y:0,
+            z:f.data.lat*ground_dimensions
         }
-    });
+        f.gui.clickButton = function(f) {
+            console.log(f.data.name, f.data.objid, " button was pushed")
+            pointer.position = new BABYLON.Vector3(f.coord.x, 100, f.coord.z) 
+            pointer.isVisible = true
+            getPopBox(f)
+            objectDetails(f.data)
+        };
+        addButtonToBox(f,pop_control)
+    }
+});
 
+resource_icon.onPointerClickObservable.add(function () {
+    dropAllControls()
+    resource_control = createControlBox(resources_control_panel)
+});
 
 function make_actions_box(actions){
     dropControlIfExists("action_window")
@@ -146,3 +157,12 @@ function make_actions_box(actions){
     }
 }
         
+
+
+system_icon.onPointerClickObservable.add(function () {
+    dropAllControls()
+    plz = pleaseWaiter(dashboard)
+    dest = '/systemui?objid=' + global_location + '&orientation=planet'
+    console.log(dest)
+    window.location.href = dest;
+});

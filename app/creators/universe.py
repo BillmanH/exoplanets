@@ -173,6 +173,7 @@ def build_homeSystem(data, username):
     system = {
         "name": language.make_word(maths.rnd(2, 1)),
         "label": "system",
+        "isHomeSystem":"true",
         "objid": systemid,
     }
     star = make_star()
