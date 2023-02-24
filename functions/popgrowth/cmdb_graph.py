@@ -85,6 +85,7 @@ class CosmosdbClient():
             self.run_query_from_list(q)
             res[q] = self.res
         self.res = res
+        self.stack = []
         self.close_client()
 
     ## cleaning results

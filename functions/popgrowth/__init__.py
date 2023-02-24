@@ -58,6 +58,9 @@ def main(mytimer: func.TimerRequest) -> None:
     if mytimer.past_due:
         logging.info('The timer is past due!')
     
+    c.run_query("g.V().hasLabel('time').valueMap()")
+    params['time'] = c.clean_nodes(c.res)[0]
+
     healthy_pops_query = f"""
     g.V().has('label','pop')
         .has('health',gt({params['pop_health_requirement']})).as('pop')
