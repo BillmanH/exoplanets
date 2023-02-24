@@ -83,6 +83,7 @@ class CosmosdbClient():
             self.run_query_from_list(q)
             res[q] = self.res
         self.res = res
+        self.stack = []
         self.close_client()
 
     ## cleaning results
@@ -95,7 +96,7 @@ class CosmosdbClient():
 
     def clean_node(self, x):
         for k in list(x.keys()):
-            if len(x[k]) == 1:
+            if type(x[k])==list:
                 x[k] = x[k][0]
         if 'objid' in x.keys():
             x["id"] = x["objid"]
