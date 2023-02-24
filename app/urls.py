@@ -18,7 +18,7 @@ urlpatterns = [
 
     path("ajax/planet", planet.get_planet, name="get_planet"),
     path("ajax/planet-details", planet.get_planet_details, name="get_planet_details"),
-    path("ajax/planet-enhabitants", planet.get_planet_enhabitants, name="get_planet_enhabitants"),
+    path("ajax/planet-inhabitants", planet.get_planet_inhabitants, name="get_planet_inhabitants"),
     path("ajax/faction-details", pop.get_faction_details, name="get_faction_details"),
     path("ajax/pops-all", pop.get_all_pops, name="get_all_pops"),
 

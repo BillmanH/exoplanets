@@ -13,7 +13,7 @@ def all_pops_consumption(c):
     g.V().has('label','pop').as('pop')
         .local(
             union(
-                out('enhabits').as('location'),
+                out('inhabits').as('location'),
                 out('isOfSpecies').as('species')
                 )
                 .fold()).as('location','species')
@@ -88,7 +88,7 @@ def death_by_starvation_event(loc,pop,params):
         'objid':uuid(),
         'name':'starvation',
         'label':'event',
-        'text': f"The population ({pop['name'][0]}) enhabiting {loc['name'][0]} has died of starvation.",
+        'text': f"The population ({pop['name'][0]}) inhabiting  {loc['name'][0]} has died of starvation.",
         'visibleTo':pop['username'][0],
         'time':params['time']['currentTime'],
         'username':'azfunction'
@@ -108,7 +108,7 @@ def lower_health(c,params,x):
     dead_pop_nodes = []
     dead_pop_ids = []
     query =f"""
-    g.V().has('objid','{x.location_id}').as('location').in('enhabits')
+    g.V().has('objid','{x.location_id}').as('location').in('inhabits')
         .haslabel('pop').as('pop')
         .out('isOfSpecies').as('species')
         .path()

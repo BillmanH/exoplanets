@@ -33,7 +33,7 @@ def population_growth_event(p,location,child):
         'id': id,
         'name':'population growth',
         'label':'event',
-        'text': f"The population ({p['name']}) enhabiting {location['name']} has grown to produce the population: {child['name']}.",
+        'text': f"The population ({p['name']}) inhabiting {location['name']} has grown to produce the population: {child['name']}.",
         'visibleTo':p['username'],
         'time':params['time']['currentTime']
     }
@@ -84,7 +84,7 @@ def main(mytimer: func.TimerRequest) -> None:
         .has('health',gt({params['pop_health_requirement']})).as('pop')
         .local(
             union(
-                out('enhabits').as('location'),
+                out('inhabits').as('location'),
                 out('isOfSpecies').as('species')
                 )
                 .fold()).as('location','species')
@@ -125,7 +125,7 @@ def main(mytimer: func.TimerRequest) -> None:
             edges.append({"node1": child["objid"], "node2": p["objid"], "label": "childOf"})
             edges.append({"node1": child["objid"], "node2": child["isInFaction"], "label": "isInFaction"})
             edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOfSpecies"})
-            edges.append({"node1": child["objid"], "node2": location["objid"], "label": "enhabits"})
+            edges.append({"node1": child["objid"], "node2": location["objid"], "label": "inhabits"})
             
         upload_data = {'nodes':nodes,'edges':edges}
         c.upload_data(upload_data)

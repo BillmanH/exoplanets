@@ -115,7 +115,7 @@ def get_all_actions(request):
     g.E().haslabel('takingAction')
         .has('status',within('pending','resolved')).as('job')
             .outV().has('username','{request.get('username','')[0]}').as('agent')
-        .out('enhabits').as('location')
+        .out('inhabits').as('location')
         .path().by(values('name','status','weight','comment').fold())
             .by(values('name').fold())
             .by(values('name','class','objtype').fold())

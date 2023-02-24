@@ -247,10 +247,10 @@ def get_factions(username):
 
 
 def get_local_population(objid):
-    # objid is the id of the object which contains ('enhabits') the population/s
+    # objid is the id of the object which contains ('inhabits') the population/s
     nodes_query = (
         f"""g.V().has('objid','{objid}').as('location')
-            .in('enhabits').as('population')
+            .in('inhabits').as('population')
             .local(
                 union(
                     out('isInFaction').as('faction'),

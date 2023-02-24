@@ -49,12 +49,12 @@ def get_planet_details(request):
 
     return JsonResponse(response)
 
-def get_planet_enhabitants(request):
+def get_planet_inhabitants(request):
     response = {}
     request = dict(request.GET)
     queryplanet = f"""g.V().hasLabel('planet')
                     .has('objid','{request.get('objid','')[0]}')
-                    .in('enhabits').hasLabel('pop').valueMap()
+                    .in('inhabits').hasLabel('pop').valueMap()
     """
     c = CosmosdbClient()
     c.run_query(queryplanet)

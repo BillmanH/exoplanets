@@ -31,7 +31,7 @@ g.V().has('faction','name','factionName').in('isInFaction').values('aggression')
 get the peopl of a given local, including thier faction and species:
 ```
 g.V().has('objid','7615388501660').as('location')
-	.in('enhabits').as('population')
+	.in('inhabits').as('population')
 	.local(
 		union(
 			out('isInFaction').as('faction'),
@@ -48,7 +48,7 @@ g.V().has('label','pop')
     .has('health',gt(0.2)).as('pop')
     .local(
         union(
-            out('enhabits').as('location'),
+            out('inhabits').as('location'),
             out('isOfSpecies').as('species')
             )
 		    .fold()).as('location','species')
@@ -81,7 +81,7 @@ Getting the pop, planet and action being taken.
 g.E().haslabel('takingAction')
 	.has('status',within('pending','resolved')).as('job')
         .outV().as('agent')
-	.out('enhabits').as('location')
+	.out('inhabits').as('location')
 	.path().by(values('name','status','weight','comment').fold())
 		.by(values('name').fold())
 		.by(values('name','class','objtype').fold())
