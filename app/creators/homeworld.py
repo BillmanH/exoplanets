@@ -208,7 +208,7 @@ def attach_people_to_world(homeworld_nodes, homeworld):
     # in the beginning there should only be one homeworld
     pops = [p for p in homeworld_nodes if p.get("label") == "pop"]
     edges = [
-        {"node1": p["objid"], "node2": homeworld["objid"], "label": "enhabits"}
+        {"node1": p["objid"], "node2": homeworld["objid"], "label": "inhabits"}
         for p in pops
     ]
     return edges

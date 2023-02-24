@@ -6,6 +6,7 @@ import numpy as np
 
 import azure.functions as func
 from .cmdb_graph import CosmosdbClient
+from .tools import consumption
 import os
 
 logger = logging.getLogger('azure.mgmt.resource')
@@ -22,9 +23,22 @@ except:
 
 
 
-
 def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
+
+def population_growth_event(p,location,child):
+    id = uuid()
+    node = {
+        'objid':id,
+        'id': id,
+        'name':'population growth',
+        'label':'event',
+        'text': f"The population ({p['name']}) inhabiting {location['name']} has grown to produce the population: {child['name']}.",
+        'visibleTo':p['username'],
+        'time':params['time']['currentTime']
+    }
+    # logging.info(node)
+    return node
 
 def make_word(n):
     syl = np.random.choice(syllables, n)
@@ -34,12 +48,13 @@ def make_word(n):
 
 def grow_pop(p,species):
     child = p.copy()
+    child['foundedTime']:params['time']['currentTime'] 
     child['label'] = 'pop'
     child['name'] = child['name']+make_word(1).lower()
     id = uuid()
     child['objid'] = id
     child['id'] = id
-    child['isIdle'] = 'False'
+    child['isIdle'] = 'true'
     child['health'] = np.round(child['health']*.6,3)
     child['wealth'] = np.round(child['wealth']*.6,3)
     child['industry'] = np.round(child['industry']*.6,3)
@@ -58,12 +73,18 @@ def main(mytimer: func.TimerRequest) -> None:
     if mytimer.past_due:
         logging.info('The timer is past due!')
     
+    c.run_query("g.V().hasLabel('time').valueMap()")
+    params['time'] = c.clean_nodes(c.res)[0]
+
+    consumption.consume(c,params)
+
+
     healthy_pops_query = f"""
     g.V().has('label','pop')
         .has('health',gt({params['pop_health_requirement']})).as('pop')
         .local(
             union(
-                out('enhabits').as('location'),
+                out('inhabits').as('location'),
                 out('isOfSpecies').as('species')
                 )
                 .fold()).as('location','species')
@@ -78,9 +99,10 @@ def main(mytimer: func.TimerRequest) -> None:
     species_df = pd.DataFrame([d['species'] for d in data])
     locations_df = pd.DataFrame([d['location'] for d in data])
 
-    logging.info(f"Total pops loaded: {len(pops_df)}")
+    
+    logging.info(f"Total pops who could grow: {len(pops_df)}")
     if len(pops_df)==0:
-        logging.info(f'**** No population growth today ****')
+        logging.info(f'**** No pops capable of reproducing ****')
         reproducing_pops = []
     else:
         pops_df['roll'] = pops_df['objid'].apply(lambda x: np.random.random())
@@ -99,10 +121,11 @@ def main(mytimer: func.TimerRequest) -> None:
             location = locations_df.loc[i].to_dict()
             child = grow_pop(p,species)
             nodes.append(child)
+            nodes.append(population_growth_event(p, location,child))
             edges.append({"node1": child["objid"], "node2": p["objid"], "label": "childOf"})
             edges.append({"node1": child["objid"], "node2": child["isInFaction"], "label": "isInFaction"})
             edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOfSpecies"})
-            edges.append({"node1": child["objid"], "node2": location["objid"], "label": "enhabits"})
+            edges.append({"node1": child["objid"], "node2": location["objid"], "label": "inhabits"})
             
         upload_data = {'nodes':nodes,'edges':edges}
         c.upload_data(upload_data)

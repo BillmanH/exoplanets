@@ -29,15 +29,18 @@ def signup(request):
 def index(request):
     all_count_query = "g.V().count()"
     count_accounts_query = "g.V().hasLabel('account').count()"
+    count_pops_query = "g.V().haslabel('pop').count()"
     time_units_query = "g.V().hasLabel('time').values('currentTime')"
     c = CosmosdbClient()
     c.add_query(all_count_query)
     c.add_query(count_accounts_query)
+    c.add_query(count_pops_query)
     c.add_query(time_units_query)
     c.run_queries()
     context = {"all_count": c.res[all_count_query], 
                 "count_accounts": c.res[count_accounts_query], 
-                "time": c.res[time_units_query]}
+                "time": c.res[time_units_query],
+                "all_pops": c.res[count_pops_query]}
     return render(request, "app/index.html", context)
 
 

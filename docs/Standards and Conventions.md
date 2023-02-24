@@ -27,7 +27,7 @@ Other items are created when uploading to the graph. Note the `models.create_ver
 
 Edges, when created in python have this shape:
 ```
- {"node1": p["objid"], "node2": homeworld["objid"], "label": "enhabits", "weight":.45}
+ {"node1": p["objid"], "node2": homeworld["objid"], "label": "inhabits", "weight":.45}
 ```
  The edge automatically links two objects by `objid`. 
 

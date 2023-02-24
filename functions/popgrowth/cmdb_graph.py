@@ -3,6 +3,7 @@ import os
 import pickle
 from functools import reduce
 import operator
+import logging
 
 import yaml
 import numpy as np
@@ -85,6 +86,7 @@ class CosmosdbClient():
             self.run_query_from_list(q)
             res[q] = self.res
         self.res = res
+        self.stack = []
         self.close_client()
 
     ## cleaning results
@@ -160,6 +162,7 @@ class CosmosdbClient():
         if 'username' not in properties:
             gaddv += f".property('username','azfunction')"
         gaddv += f".property('objtype','{node['label']}')"
+        # logging.info(f'gaddv: {gaddv}')
         return gaddv
 
     def create_edge(self, edge):

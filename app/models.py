@@ -83,6 +83,7 @@ class CosmosdbClient():
             self.run_query_from_list(q)
             res[q] = self.res
         self.res = res
+        self.stack = []
         self.close_client()
 
     ## cleaning results
@@ -95,7 +96,7 @@ class CosmosdbClient():
 
     def clean_node(self, x):
         for k in list(x.keys()):
-            if len(x[k]) == 1:
+            if type(x[k])==list:
                 x[k] = x[k][0]
         if 'objid' in x.keys():
             x["id"] = x["objid"]
@@ -128,7 +129,10 @@ class CosmosdbClient():
             objects = reduce(operator.concat, r['objects'])
 
             for i,l in enumerate(labels):
-                t[l]=self.clean_node(objects[i])
+                try:
+                    t[l]=self.clean_node(objects[i])
+                except:
+                    print("had an issue with ,",i,l, objects)
             fab.append(t)
         return fab
 
@@ -243,10 +247,10 @@ def get_factions(username):
 
 
 def get_local_population(objid):
-    # objid is the id of the object which contains ('enhabits') the population/s
+    # objid is the id of the object which contains ('inhabits') the population/s
     nodes_query = (
         f"""g.V().has('objid','{objid}').as('location')
-            .in('enhabits').as('population')
+            .in('inhabits').as('population')
             .local(
                 union(
                     out('isInFaction').as('faction'),
