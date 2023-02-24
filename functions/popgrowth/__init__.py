@@ -44,6 +44,7 @@ def make_word(n):
 
 def grow_pop(p,species):
     child = p.copy()
+    child['foundedTime']:params['time']['currentTime'] 
     child['label'] = 'pop'
     child['name'] = child['name']+make_word(1).lower()
     id = uuid()
