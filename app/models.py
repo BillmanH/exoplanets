@@ -129,7 +129,10 @@ class CosmosdbClient():
             objects = reduce(operator.concat, r['objects'])
 
             for i,l in enumerate(labels):
-                t[l]=self.clean_node(objects[i])
+                try:
+                    t[l]=self.clean_node(objects[i])
+                except:
+                    print("had an issue with ,",i,l, objects)
             fab.append(t)
         return fab
 

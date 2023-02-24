@@ -1,11 +1,32 @@
 import pandas as pd
 import numpy as np
 import logging
+import yaml
 
 def get_unique_consumption_values(x):
     y = [f"'{i.strip('][')}'" for i in x]
     y = ",".join(y)
     return y
+
+def all_pops_consumption(c):
+    healthy_pops_query = f"""
+    g.V().has('label','pop').as('pop')
+        .local(
+            union(
+                out('enhabits').as('location'),
+                out('isOfSpecies').as('species')
+                )
+                .fold()).as('location','species')
+            .path()
+            .by(unfold().valueMap().fold())
+    """
+    c.run_query(healthy_pops_query)
+    data = c.reduce_res(c.res)
+    pops_df = pd.DataFrame([d['pop'] for d in data])
+    species_df = pd.DataFrame([d['species'] for d in data])
+    locations_df = pd.DataFrame([d['location'] for d in data])
+    logging.info(f"A total of {len(pops_df)} are about to be processed for consumption")
+    return(pops_df,species_df,locations_df)
 
 def get_consumption_df(locations_df,species_df,params):
     consumption_df = pd.DataFrame(pd.concat([
@@ -64,12 +85,13 @@ def uuid(n=13):
 
 def death_by_starvation_event(loc,pop,params):
     node = {
-        'objdid':uuid,
+        'objid':uuid(),
         'name':'starvation',
         'label':'event',
         'text': f"The population ({pop['name'][0]}) enhabiting {loc['name'][0]} has died of starvation.",
         'visibleTo':pop['username'][0],
-        'time':params['time']['currentTime'] 
+        'time':params['time']['currentTime'],
+        'username':'azfunction'
     }
     return node
 
@@ -82,7 +104,7 @@ def delete_dead_pops(c,dead_pop_ids):
     c.run_query(query)
 
 
-def lower_health(c,x,params):
+def lower_health(c,params,x):
     dead_pop_nodes = []
     dead_pop_ids = []
     query =f"""
@@ -108,7 +130,8 @@ def lower_health(c,x,params):
                 if len(dead_pop_ids) > 30:
                     print(f"cache threshold of n pops reached. Purging {len(dead_pop_ids)}")
                     delete_dead_pops(c, dead_pop_ids)
-                    c.upload_data({"nodes":dead_pop_nodes,"edges":[]})
+                    upload_data = {'nodes':dead_pop_nodes,'edges':[]}
+                    c.upload_data(data=upload_data)
                     dead_pop_ids = []
                     dead_pop_nodes = []
                     print('.',end="")
@@ -121,13 +144,16 @@ def lower_health(c,x,params):
     print(f"Remaining pops purged due to starvation: {len(dead_pop_ids)}")
     if len(dead_pop_ids)>0:
         delete_dead_pops(c, dead_pop_ids)
-        c.upload_data({"nodes":dead_pop_nodes,"edges":[]})
+        upload_data = {'nodes':dead_pop_nodes,'edges':[]}
+        c.upload_data(data=upload_data)
     print(f"{len(c.stack)} items in query stack")
     c.run_queries()
 
 
 # this is the 'main' function:       
-def consume(c,locations_df,species_df,params):
+def consume(c,params):
+    # query to get all pops
+    pops_df,species_df,locations_df = all_pops_consumption(c)
     # get the origional list of populations who would consume resources
     consumption_df = get_consumption_df(locations_df,species_df,params)
     # Some species consume more than one resource, so we extend
@@ -136,7 +162,7 @@ def consume(c,locations_df,species_df,params):
     c.run_query(make_resource_query(consumption_df))
     resources = c.res
     # Tally the consumption to get the remaining resources
-    consumption_df = tally_consumption(consumption_df,resources)
+    consumption_df = tally_consumption(c,consumption_df,resources)
     # for resources > 0 (have enough to eat), update those resources
     consumption_df[consumption_df['remaining']>0].apply(lambda x: make_resource_update_query(c,x),axis=1)
     # for locations with resources < 0 we lower the health of all populations

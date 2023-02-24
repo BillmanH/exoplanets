@@ -6,6 +6,7 @@ import numpy as np
 
 import azure.functions as func
 from .cmdb_graph import CosmosdbClient
+from .tools import consumption
 import os
 
 logger = logging.getLogger('azure.mgmt.resource')
@@ -26,14 +27,17 @@ def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
 
 def population_growth_event(p,location,child):
+    id = uuid()
     node = {
-        'objdid':uuid,
+        'objid':id,
+        'id': id,
         'name':'population growth',
         'label':'event',
-        'text': f"The population ({p['name']}) enhabiting {location['name']} has grown to produce the ofspring {child['name']}.",
+        'text': f"The population ({p['name']}) enhabiting {location['name']} has grown to produce the population: {child['name']}.",
         'visibleTo':p['username'],
-        'time':params['time']['currentTime'] 
+        'time':params['time']['currentTime']
     }
+    # logging.info(node)
     return node
 
 def make_word(n):
@@ -50,7 +54,7 @@ def grow_pop(p,species):
     id = uuid()
     child['objid'] = id
     child['id'] = id
-    child['isIdle'] = 'False'
+    child['isIdle'] = 'true'
     child['health'] = np.round(child['health']*.6,3)
     child['wealth'] = np.round(child['wealth']*.6,3)
     child['industry'] = np.round(child['industry']*.6,3)
@@ -72,6 +76,9 @@ def main(mytimer: func.TimerRequest) -> None:
     c.run_query("g.V().hasLabel('time').valueMap()")
     params['time'] = c.clean_nodes(c.res)[0]
 
+    consumption.consume(c,params)
+
+
     healthy_pops_query = f"""
     g.V().has('label','pop')
         .has('health',gt({params['pop_health_requirement']})).as('pop')
@@ -92,9 +99,10 @@ def main(mytimer: func.TimerRequest) -> None:
     species_df = pd.DataFrame([d['species'] for d in data])
     locations_df = pd.DataFrame([d['location'] for d in data])
 
-    logging.info(f"Total pops loaded: {len(pops_df)}")
+    
+    logging.info(f"Total pops who could grow: {len(pops_df)}")
     if len(pops_df)==0:
-        logging.info(f'**** No population growth today ****')
+        logging.info(f'**** No pops capable of reproducing ****')
         reproducing_pops = []
     else:
         pops_df['roll'] = pops_df['objid'].apply(lambda x: np.random.random())
