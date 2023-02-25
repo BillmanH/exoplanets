@@ -48,6 +48,7 @@ class CosmosdbClient():
         self.c = None
         self.res = "no query"
         self.stack = []
+        self.stacklimit = 15
         self.res_stack = {}
 
     ## Managing the client
@@ -61,7 +62,7 @@ class CosmosdbClient():
             )
             
     def close_client(self):
-            self.c.close()
+        self.c.close()
 
     ## Managing the queries
     def run_query(self, query="g.V().count()"):
@@ -191,13 +192,13 @@ class CosmosdbClient():
         for node in data["nodes"]:
             n = self.create_vertex(node, username)
             self.add_query(n)
-            if len(self.stack)>15:
+            if len(self.stack)>self.stacklimit:
                 self.run_queries()
         self.run_queries()
         for edge in data["edges"]:
             e = self.create_edge(edge, username)
             self.add_query(e)
-            if len(self.stack)>15:
+            if len(self.stack)>self.stacklimit:
                 self.run_queries()
         self.run_queries()
 
