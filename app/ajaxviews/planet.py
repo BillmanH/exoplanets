@@ -1,18 +1,17 @@
-from app.models import CosmosdbClient, clean_nodes
+from app.models import CosmosdbClient
 from django.http import JsonResponse
-
-# TODO: Need to clean up the `clean_nodes`
 
 def get_planet(request):
     """
     given that user has clicked on a planet,
     get the planet info and the info of the surrounding objects.
     """
+    c = CosmosdbClient()
     request = request.GET
     selected_planet = [dict(request)]
     # if the user clicks on a star we'll just return the object.
     if selected_planet[0]['objtype'][0] == 'star':
-        return JsonResponse({"nodes": [clean_nodes(selected_planet)], "links": [], "error":"objtype is star"})
+        return JsonResponse({"nodes": [c.clean_nodes(selected_planet)], "links": [], "error":"objtype is star"})
     # some properties cause problems when they are the root node in d3.js
     if 'orbitsId' in selected_planet[0]:
         del selected_planet[0]['orbitsId']
@@ -22,7 +21,6 @@ def get_planet(request):
     del selected_planet[0]["vy"]
 
     query = f"g.V().has('objid','{request.get('objid','')}').in('orbits').valueMap()"
-    c = CosmosdbClient()
     c.run_query(query)
 
     edges = [
@@ -31,7 +29,7 @@ def get_planet(request):
         if "orbitsId" in i.keys()
     ]
     nodes =  c.res + selected_planet
-    system = {"nodes": clean_nodes(nodes), "links": edges}
+    system = {"nodes": c.clean_nodes(nodes), "links": edges}
     return JsonResponse(system)
 
 
@@ -44,7 +42,7 @@ def get_planet_details(request):
     """
     c = CosmosdbClient()
     c.run_query(queryplanet)
-    planet = clean_nodes(c.res)
+    planet = c.clean_nodes(c.res)
     response['planet'] = planet
 
     return JsonResponse(response)
@@ -58,7 +56,7 @@ def get_planet_inhabitants(request):
     """
     c = CosmosdbClient()
     c.run_query(queryplanet)
-    respops = clean_nodes(c.res)
+    respops = c.clean_nodes(c.res)
     pops = [i for i in respops if i.get("objtype")=='pop']
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:

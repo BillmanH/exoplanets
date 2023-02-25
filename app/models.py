@@ -203,18 +203,18 @@ class CosmosdbClient():
         self.run_queries()
 
 
-# Even though `clean_nodes` is a part of the CosmosdbClient, there are use cases where you need it independanty
-# for example, cleaning nodes that were returned from the ajax-requests. 
-def clean_node(x):
-    for k in list(x.keys()):
-        if len(x[k]) == 1:
-            x[k] = x[k][0]
-    if 'objid' in x.keys():
-        x["id"] = x["objid"]
-    return x
+# # Even though `clean_nodes` is a part of the CosmosdbClient, there are use cases where you need it independanty
+# # for example, cleaning nodes that were returned from the ajax-requests. 
+# def clean_node(x):
+#     for k in list(x.keys()):
+#         if len(x[k]) == 1:
+#             x[k] = x[k][0]
+#     if 'objid' in x.keys():
+#         x["id"] = x["objid"]
+#     return x
 
-def clean_nodes(nodes):
-    return [clean_node(n) for n in nodes]
+# def clean_nodes(nodes):
+#     return [clean_node(n) for n in nodes]
     
 def get_galaxy_nodes():
     # TODO: Add Glat and glon to systems when created

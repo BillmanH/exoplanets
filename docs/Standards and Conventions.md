@@ -68,9 +68,10 @@ The backend functions are all in `app/ajaxviews`.
 def get_some_data(request):
     response = {}
     request = dict(request.GET)
+    c = CosmosdbClient()
     # Do a query with the info in an f-string
     query = f"g.V().hasLabel('planet').has('objid','{request.get('objid','')[0]}').in().valueMap()"
-    res = clean_nodes(run_query(c, query))
+    res = c.clean_nodes(c.run_query())
     # Other logic that you do with the results of your query
     response['data thing'] = res
     return JsonResponse(response)
