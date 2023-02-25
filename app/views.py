@@ -44,6 +44,7 @@ def index(request):
     return render(request, "app/index.html", context)
 
 
+# Creates a new acount. Only done when creating a new login for the first time. 
 @login_required
 def new_game(request):
     context = {}
@@ -54,7 +55,7 @@ def new_game(request):
         context['account'] = acc.get_json()
     return render(request, "app/creation/genesis_view.html", context)
 
-
+# Creates a new system, using an old acount
 @login_required
 def genesis(request):
     res = get_system(request.user.username)

@@ -1,4 +1,4 @@
-import os
+import os,sys
 
 from functools import reduce
 import operator
@@ -10,6 +10,9 @@ from django.db import models
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
+import asyncio
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 # ASSERTIONS: 
@@ -58,7 +61,7 @@ class CosmosdbClient():
             )
             
     def close_client(self):
-        self.c.close()
+            self.c.close()
 
     ## Managing the queries
     def run_query(self, query="g.V().count()"):
@@ -136,6 +139,10 @@ class CosmosdbClient():
             fab.append(t)
         return fab
 
+    def test_fields(self,data):
+        for n in data['nodes']:
+            n['id']=n['objid']
+        return data
 
     # creating strings for uploading data
     def create_vertex(self,node, username):
@@ -161,7 +168,7 @@ class CosmosdbClient():
             gaddv += substr
         if 'username' not in properties:
             gaddv += f".property('username','{username}')"
-        # TODO: Add defaults for objid 
+
         gaddv += f".property('objtype','{node['label']}')"
         return gaddv
 
@@ -180,22 +187,19 @@ class CosmosdbClient():
         Extra items are piped in as properties of the edge.
         Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
         """
-        self.open_client()
-        self.nodes = []
-        self.edges = []
-        self.res = []
+        data = self.test_fields(data)
         for node in data["nodes"]:
             n = self.create_vertex(node, username)
-            self.nodes.append(n)
-            callback = self.c.submitAsync(n)
-            self.res.append(callback.result().all().result())
+            self.add_query(n)
+            if len(self.stack)>15:
+                self.run_queries()
+        self.run_queries()
         for edge in data["edges"]:
             e = self.create_edge(edge, username)
-            self.edges.append(e)
-            callback = self.c.submitAsync(e)
-            self.res.append(callback.result().all().result())
-        self.close_client()  
-
+            self.add_query(e)
+            if len(self.stack)>15:
+                self.run_queries()
+        self.run_queries()
 
 
 # Even though `clean_nodes` is a part of the CosmosdbClient, there are use cases where you need it independanty

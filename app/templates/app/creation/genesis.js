@@ -25,7 +25,7 @@ var form = {
 
 function add_menu(t,c) {
     var menu = document.createElement("p")
-    menu.className += "menu"
+    menu.className += "guimenu"
     menu.id = c
     var text = document.createTextNode(t);
     menu.appendChild(text);

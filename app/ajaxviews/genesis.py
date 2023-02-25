@@ -1,8 +1,8 @@
-from app.models import CosmosdbClient, get_system
+from app.models import CosmosdbClient, get_home_system
 from django.http import JsonResponse
 
 from app.creators import homeworld, universe
-import ast
+
 
 
 def refreshaccount(request):
@@ -31,7 +31,7 @@ def build_solar_system(request):
     response['note'] = 'solar system created'
     response['status'] = 'success'
 
-    res = get_system(username)
+    res = get_home_system(username)
     response["solar_system"] = res
     return JsonResponse(response)
 

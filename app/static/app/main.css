@@ -46,6 +46,13 @@ td {
   display: inline-block;
 }
 
+.guimenu {
+  color: whitesmoke;
+  padding: 5px 5px;
+  border: 1px solid white;
+  display: block;
+}
+
 .button {
   color: whitesmoke;
   text-decoration: none;
