@@ -191,10 +191,10 @@ class CosmosdbClient():
             self.res.append(callback.result().all().result())
         for edge in data["edges"]:
             e = self.create_edge(edge, username)
-            self.nodes.append(e)
+            self.edges.append(e)
             callback = self.c.submitAsync(e)
             self.res.append(callback.result().all().result())
-        self.close_client()
+        self.close_client()  
 
 
 
