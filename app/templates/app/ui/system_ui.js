@@ -26,8 +26,8 @@ resources_control_panel = {
 var planets_icon = create_icon({name:'planets_icon',image:icons.planets,top:20})
 dashboard.addControl(planets_icon);
 
-var resource_icon = create_icon({name:'resource_icon',image:icons.resources,top:90})
-dashboard.addControl(resource_icon);
+// var resource_icon = create_icon({name:'resource_icon',image:icons.resources,top:90})
+// dashboard.addControl(resource_icon);
 
 
 planets_icon.onPointerClickObservable.add(function () {
@@ -67,7 +67,7 @@ planets_icon.onPointerClickObservable.add(function () {
     }
 });
 
-resource_icon.onPointerClickObservable.add(function () {
-    dropAllControls()
-    resource_control = createControlBox(resources_control_panel)
-});
+// resource_icon.onPointerClickObservable.add(function () {
+//     dropAllControls()
+//     resource_control = createControlBox(resources_control_panel)
+// });
