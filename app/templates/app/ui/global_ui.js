@@ -43,11 +43,13 @@ function createControlBox(control_panel){
     // console.log(control_panel.name, control_panel.hasOwnProperty('name'))
     const label = new BABYLON.GUI.Rectangle(control_panel.name)
         label.background = 'black'
+
         label.top = control_panel.top 
         label.left = control_panel.left 
         
         label.width = control_panel.width
         label.height = control_panel.height
+
         label.alpha = 0.5
 
         label.cornerRadius = 5
@@ -186,11 +188,16 @@ function hoverTooltip(obj){
     dropControlIfExists("uiTooltip")
     if(obj.hasOwnProperty('metadata')){
         // console.log(obj.metadata.name)
-        
+        var ttheight = 15
+        if(obj.metadata.hasOwnProperty("data")){
+            var heightmod = Object.keys(obj.metadata.data).length
+        } else {
+            var heightmod = Object.keys(obj.metadata).length
+        }        
         var rect1 = new BABYLON.GUI.Rectangle("uiTooltip");
             dashboard.addControl(rect1);
             rect1.width = "300px";
-            rect1.height ="200px";
+            rect1.height = (ttheight * heightmod).toString() + "px";
             rect1.thickness = 2;        
             rect1.linkOffsetX = "200px";
             rect1.linkOffsetY = "-100px";
