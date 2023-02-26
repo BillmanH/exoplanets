@@ -21,7 +21,8 @@ var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
     troubleshooter.color = "white";    
     troubleshooter.paddingRight = 20
     troubleshooter.paddingTop = 20
-    troubleshooter.text = dictToSimpleText({name:"dev",objtype:"window",width:window.screen.width})
+    var troubleshooting = {"name":"dev","objtype":"window","width":window.screen.width}
+    troubleshooter.text = dictToSimpleText(troubleshooting)
     dashboard.addControl(troubleshooter);
 
 function dropControlIfExists(name){
@@ -98,12 +99,42 @@ function createControlBox(control_panel){
         textblock.background = "black";
         textblock.color = "white";    
         textblock.text = control_panel.title
+        
 
     closeButton.onPointerUpObservable.add(function() {
         dashboard.getControlByName(control_panel.name).dispose()
     });
 
+    // label.control_metadata = control_panel
     return label
+}
+
+var addTextBlockToBox = function(n,box){
+    const label = new BABYLON.GUI.Rectangle("loadingpleasewait")
+        label.background = 'black'
+        label.top = (75 * n.iter) + 10
+        label.left = 10
+        label.width = "500px"
+        label.height = "75px"
+        // label.thickness = 1
+        // label.linkOffsetY = 30
+
+        label.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    box.addControl(label);
+
+    var resourceText = new BABYLON.GUI.TextBlock("resource_text"+n.iter.toString())
+        resourceText.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_LEFT;
+        resourceText.textVerticalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        resourceText.paddingTop = 5
+        resourceText.paddingLeft = 10 
+        resourceText.fontSize = 12;    
+        resourceText.background = "black";
+        resourceText.color = "white";   
+        resourceText.text = dictToSingleLIne(n.data, n.displayed_values)
+        resourceText.textWrapping = true
+        
+        label.addControl(resourceText);
 }
 
 // for buttons creatd dynamically, for example the children of an item

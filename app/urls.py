@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from .ajaxviews import planet, pop, overview, genesis, actions
+from .ajaxviews import planet, pop, overview, genesis, actions, resources
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -25,6 +25,8 @@ urlpatterns = [
 
     path("ajax/get-actions", actions.get_actions, name="get_actions"),
     
+    path("ajax/get-local-resources", resources.get_local_resourcses, name="get_local_resourcses"),
+
     path("ajax/take-action", pop.take_action, name="pop_take_action"),
     path("ajax/overview", overview.get_overview, name="overview"),
     path("ajax/newsfeed", overview.get_newsfeed, name="newsfeed")

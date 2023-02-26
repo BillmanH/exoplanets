@@ -1,5 +1,4 @@
 {% load static %}
-{% include "app/ajax/population_info.js" %}
 
 factionbuildingHeight = 10
 ground_dimensions = 500

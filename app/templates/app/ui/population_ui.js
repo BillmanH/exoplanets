@@ -1,4 +1,6 @@
 {% load static %}
+{% include "app/ajax/population_info.js" %}
+{% include "app/ajax/resources.js" %}
 
 icons = {
     pop:"{% static 'app/objects/icons/pop_icon_2.png' %}",
@@ -37,7 +39,7 @@ resources_control_panel = {
     title: "These are the resources known to be avalable in this system",
     top:20,
     left:70,
-    width:"400px",
+    width:"600px",
     height:"100px"
 }
 
@@ -123,7 +125,18 @@ pop_icon.onPointerClickObservable.add(function () {
 
 resource_icon.onPointerClickObservable.add(function () {
     dropAllControls()
-    resource_control = createControlBox(resources_control_panel)
+    ajax_get_local_resources({location:global_location}).then(function(response){
+        const resources = response.resources
+        resources_control_panel.height = (100 * resources.length).toString() + "px"
+        resource_control = createControlBox(resources_control_panel)
+        for (let i = 0; i < resources.length; i++){
+            n = {}
+            n.iter = i+1
+            n.displayed_values = ["name","description","volume"]
+            n.data = resources[i]
+            addTextBlockToBox(n,resource_control)
+        }
+    })
 });
 
 function make_actions_box(actions){
@@ -156,7 +169,6 @@ function make_actions_box(actions){
         ActionBox = createControlBox(actions_control_panel)
     }
 }
-        
 
 
 system_icon.onPointerClickObservable.add(function () {
