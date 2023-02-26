@@ -11,9 +11,18 @@ textblock.color = "white";
 textblock.paddingRight = 20
 textblock.paddingTop = 20
 
-
 dashboard.addControl(textblock);
 
+var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
+    troubleshooter.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    troubleshooter.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
+    troubleshooter.fontSize = 10;    
+    troubleshooter.background = "black";
+    troubleshooter.color = "white";    
+    troubleshooter.paddingRight = 20
+    troubleshooter.paddingTop = 20
+    troubleshooter.text = dictToSimpleText({name:"dev",objtype:"window",width:window.screen.width})
+    dashboard.addControl(troubleshooter);
 
 function dropControlIfExists(name){
     if(dashboard.getControlByName(name)){
