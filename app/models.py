@@ -1,4 +1,4 @@
-import os
+import os,sys
 
 from functools import reduce
 import operator
@@ -10,6 +10,9 @@ from django.db import models
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
+import asyncio
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 # ASSERTIONS: 
@@ -45,6 +48,7 @@ class CosmosdbClient():
         self.c = None
         self.res = "no query"
         self.stack = []
+        self.stacklimit = 15
         self.res_stack = {}
 
     ## Managing the client
@@ -95,9 +99,10 @@ class CosmosdbClient():
         return s
 
     def clean_node(self, x):
+        # For each value, return the last value in the array for that object. 
         for k in list(x.keys()):
             if type(x[k])==list:
-                x[k] = x[k][0]
+                x[k] = x[k][-1]
         if 'objid' in x.keys():
             x["id"] = x["objid"]
         return x
@@ -136,6 +141,10 @@ class CosmosdbClient():
             fab.append(t)
         return fab
 
+    def test_fields(self,data):
+        for n in data['nodes']:
+            n['id']=n['objid']
+        return data
 
     # creating strings for uploading data
     def create_vertex(self,node, username):
@@ -161,7 +170,7 @@ class CosmosdbClient():
             gaddv += substr
         if 'username' not in properties:
             gaddv += f".property('username','{username}')"
-        # TODO: Add defaults for objid 
+
         gaddv += f".property('objtype','{node['label']}')"
         return gaddv
 
@@ -180,37 +189,22 @@ class CosmosdbClient():
         Extra items are piped in as properties of the edge.
         Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
         """
-        self.open_client()
-        self.nodes = []
-        self.edges = []
-        self.res = []
+        data = self.test_fields(data)
         for node in data["nodes"]:
             n = self.create_vertex(node, username)
-            self.nodes.append(n)
-            callback = self.c.submitAsync(n)
-            self.res.append(callback.result().all().result())
+            self.add_query(n)
+            if len(self.stack)>self.stacklimit:
+                self.run_queries()
+        self.run_queries()
         for edge in data["edges"]:
             e = self.create_edge(edge, username)
-            self.nodes.append(e)
-            callback = self.c.submitAsync(e)
-            self.res.append(callback.result().all().result())
-        self.close_client()
+            self.add_query(e)
+            if len(self.stack)>self.stacklimit:
+                self.run_queries()
+        self.run_queries()
 
 
 
-# Even though `clean_nodes` is a part of the CosmosdbClient, there are use cases where you need it independanty
-# for example, cleaning nodes that were returned from the ajax-requests. 
-def clean_node(x):
-    for k in list(x.keys()):
-        if len(x[k]) == 1:
-            x[k] = x[k][0]
-    if 'objid' in x.keys():
-        x["id"] = x["objid"]
-    return x
-
-def clean_nodes(nodes):
-    return [clean_node(n) for n in nodes]
-    
 def get_galaxy_nodes():
     # TODO: Add Glat and glon to systems when created
     # TODO: Create edge from user that connects to systems that have been discovered
@@ -221,17 +215,39 @@ def get_galaxy_nodes():
 
 
 
-def get_system(username):
-    # TODO: This process just assumes there is only one system per account. Eventually will need to expand to take 
-    # a system parameter to specify which system the user would like to fetch. 
+def get_home_system(username):
     nodes_query = (
         f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
     )
+    system_query = (
+        f"g.V().hasLabel('system').has('username','{username}').has('isHomeSystem','true').valueMap()"
+    )
     c = CosmosdbClient()
-    c.run_query(nodes_query)   
-    nodes = c.res
+    c.add_query(nodes_query)
+    c.add_query(system_query)
+    c.run_queries()   
+    nodes = c.res[nodes_query]
+    system = c.clean_nodes(c.res[system_query])[0]
     edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
-    system = {"nodes": c.clean_nodes(nodes), "edges": edges}
+    system = {"nodes": c.clean_nodes(nodes), "edges": edges, "system":system}
+    return system
+
+def get_system(objid,orientation):
+    if orientation == 'planet':
+        nodes_query = (
+            f"g.V().has('objid','{objid}').out('isInSystem').in().valueMap()"
+        )
+        system_query = (
+            f"g.V().has('objid','{objid}').out('isInSystem').valueMap()"
+        )
+    c = CosmosdbClient()
+    c.add_query(nodes_query)
+    c.add_query(system_query)
+    c.run_queries()   
+    nodes = c.res[nodes_query]
+    system = c.clean_nodes(c.res[system_query])[0]
+    edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
+    system = {"nodes": c.clean_nodes(nodes), "edges": edges, "system":system}
     return system
 
 

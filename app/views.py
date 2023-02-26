@@ -44,6 +44,7 @@ def index(request):
     return render(request, "app/index.html", context)
 
 
+# Creates a new acount. Only done when creating a new login for the first time. 
 @login_required
 def new_game(request):
     context = {}
@@ -54,7 +55,7 @@ def new_game(request):
         context['account'] = acc.get_json()
     return render(request, "app/creation/genesis_view.html", context)
 
-
+# Creates a new system, using an old acount
 @login_required
 def genesis(request):
     res = get_system(request.user.username)
@@ -65,13 +66,19 @@ def genesis(request):
 
 @login_required
 def system_map(request):
-    res = get_system(request.user.username)
+    res = get_home_system(request.user.username)
     context = {"solar_system": res}
     return render(request, "app/system_map.html", context)
 
 @login_required
+def home_system_ui(request):
+    res = get_home_system(request.user.username)
+    context = {"solar_system": res}
+    return render(request, "app/system_ui.html", context)
+
+@login_required
 def system_ui(request):
-    res = get_system(request.user.username)
+    res = get_system(request.GET['objid'],request.GET['orientation'])
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
@@ -79,7 +86,7 @@ def system_ui(request):
 @login_required
 def pop_ui_local(request):
     res = get_local_population(request.GET['objid'])
-    context = {"data": res}
+    context = {"data": res,"global_location":request.GET['objid']}
     return render(request, "app/population_local.html", context)
 
 

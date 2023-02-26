@@ -25,7 +25,7 @@ var form = {
 
 function add_menu(t,c) {
     var menu = document.createElement("p")
-    menu.className += "menu"
+    menu.className += "guimenu"
     menu.id = c
     var text = document.createTextNode(t);
     menu.appendChild(text);
@@ -193,7 +193,7 @@ if(account.type=="pre_beta_account"){
 
 function form_solar_system(){
     // TODO: Create text field to allow user to name planet (`planet_name`)
-    add_menu("Choose the numbe of planets in your system, 6 is average.", "num_planets")
+    add_menu("Choose the number of planets in your system, 6 is average.", "num_planets")
     add_menu("... and choose the number of moons, 24 is average. They will be spread across the whole system", "num_moons")
 
     for (i=planets_min;i<=planets_max;i++){
@@ -256,7 +256,7 @@ function build_population(c,n) {
 }
 
 function goto_system(c,n){
-            window.location.href = '/systemui';
+            window.location.href = '/homesystemui';
 }
 
 

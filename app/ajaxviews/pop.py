@@ -57,10 +57,8 @@ def get_all_pops(request):
     queryplanet = f"g.V().hasLabel('pop').has('username','{request.get('username','')[0]}').valueMap()"
     c.run_query(queryplanet)
     respops = c.clean_nodes(c.res)
-    pops = [i for i in respops if i.get("objtype")=='pop']
-    # if faction has people, get the factions (only the ones found on that planet)
-    if len(pops)>0:
-        response["pops"] = pops
+    if len(respops)>0:
+        response["pops"] = respops
     return JsonResponse(response)
 
 

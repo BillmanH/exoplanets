@@ -11,9 +11,19 @@ textblock.color = "white";
 textblock.paddingRight = 20
 textblock.paddingTop = 20
 
-
 dashboard.addControl(textblock);
 
+var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
+    troubleshooter.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    troubleshooter.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
+    troubleshooter.fontSize = 10;    
+    troubleshooter.background = "black";
+    troubleshooter.color = "white";    
+    troubleshooter.paddingRight = 20
+    troubleshooter.paddingTop = 20
+    var troubleshooting = {"name":"dev","objtype":"window","width":window.screen.width}
+    troubleshooter.text = dictToSimpleText(troubleshooting)
+    dashboard.addControl(troubleshooter);
 
 function dropControlIfExists(name){
     if(dashboard.getControlByName(name)){
@@ -26,6 +36,7 @@ function dropAllControls(){
     dropControlIfExists("faction_window")
     dropControlIfExists("window")
     dropControlIfExists("planets_window")
+    dropControlIfExists("resources_window")
 }
 
 var objectDetails = function(d){
@@ -42,11 +53,13 @@ function createControlBox(control_panel){
     // console.log(control_panel.name, control_panel.hasOwnProperty('name'))
     const label = new BABYLON.GUI.Rectangle(control_panel.name)
         label.background = 'black'
+
         label.top = control_panel.top 
         label.left = control_panel.left 
         
         label.width = control_panel.width
         label.height = control_panel.height
+
         label.alpha = 0.5
 
         label.cornerRadius = 5
@@ -86,12 +99,42 @@ function createControlBox(control_panel){
         textblock.background = "black";
         textblock.color = "white";    
         textblock.text = control_panel.title
+        
 
     closeButton.onPointerUpObservable.add(function() {
         dashboard.getControlByName(control_panel.name).dispose()
     });
 
+    // label.control_metadata = control_panel
     return label
+}
+
+var addTextBlockToBox = function(n,box){
+    const label = new BABYLON.GUI.Rectangle("loadingpleasewait")
+        label.background = 'black'
+        label.top = (75 * n.iter) + 10
+        label.left = 10
+        label.width = "500px"
+        label.height = "75px"
+        // label.thickness = 1
+        // label.linkOffsetY = 30
+
+        label.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    box.addControl(label);
+
+    var resourceText = new BABYLON.GUI.TextBlock("resource_text"+n.iter.toString())
+        resourceText.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_LEFT;
+        resourceText.textVerticalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        resourceText.paddingTop = 5
+        resourceText.paddingLeft = 10 
+        resourceText.fontSize = 12;    
+        resourceText.background = "black";
+        resourceText.color = "white";   
+        resourceText.text = dictToSingleLIne(n.data, n.displayed_values)
+        resourceText.textWrapping = true
+        
+        label.addControl(resourceText);
 }
 
 // for buttons creatd dynamically, for example the children of an item
@@ -185,11 +228,16 @@ function hoverTooltip(obj){
     dropControlIfExists("uiTooltip")
     if(obj.hasOwnProperty('metadata')){
         // console.log(obj.metadata.name)
-        
+        var ttheight = 15
+        if(obj.metadata.hasOwnProperty("data")){
+            var heightmod = Object.keys(obj.metadata.data).length
+        } else {
+            var heightmod = Object.keys(obj.metadata).length
+        }        
         var rect1 = new BABYLON.GUI.Rectangle("uiTooltip");
             dashboard.addControl(rect1);
             rect1.width = "300px";
-            rect1.height ="200px";
+            rect1.height = (ttheight * heightmod).toString() + "px";
             rect1.thickness = 2;        
             rect1.linkOffsetX = "200px";
             rect1.linkOffsetY = "-100px";
@@ -218,4 +266,24 @@ function hoverTooltip(obj){
             text1.paddingRight = "20px";
     }
 
+}
+
+function create_icon(params){
+    var icon = BABYLON.GUI.Button.CreateImageOnlyButton(params.name, params.image);
+    icon.width = "40px";
+    icon.height = "40px";
+    icon.top = params.top
+    icon.left = 20
+    icon.color = "white";
+    icon.stretch = BABYLON.GUI.Image.STRETCH_EXTEND;
+    icon.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    icon.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    //TODO Tooltip not working. 
+    // icon.actionManager = new BABYLON.ActionManager(scene);
+    // icon.metadata = {"icon":params.tooltiptext}
+    // icon.actionManager = new BABYLON.ActionManager(scene);
+    // icon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+    //     hoverTooltip(icon)
+    // }));
+    return icon
 }

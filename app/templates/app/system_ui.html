@@ -8,6 +8,7 @@
 </body>
 <script>
     var solar_system = {{ solar_system | safe }}
+    var global_location = solar_system.system.objid
     console.log(solar_system)
     
     {% include "app/ui/globals.js" %}

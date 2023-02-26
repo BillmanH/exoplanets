@@ -131,6 +131,17 @@ class Moon(Body):
         return fund
 
 
+def make_system():
+    systemid = maths.uuid(n=13)
+    system = {
+        "name": language.make_word(maths.rnd(2, 1)),
+        "label": "system",
+        "isHomeSystem":"true",
+        "objid": systemid,
+    }
+    return system
+
+
 def make_star():
     s = Star()
     s.build_attr(sdata)
@@ -169,12 +180,7 @@ def make_moon(t, planets):
 
 def build_homeSystem(data, username):
 
-    systemid = maths.uuid(n=13)
-    system = {
-        "name": language.make_word(maths.rnd(2, 1)),
-        "label": "system",
-        "objid": systemid,
-    }
+    system = make_system()
     star = make_star()
     planets = [
         make_planet(
@@ -196,7 +202,7 @@ def build_homeSystem(data, username):
     system_edges = [
         {"node1": p["objid"], "node2": system["objid"], "label": "isInSystem"}
         for p in nodes
-        if p["label"] != "system"
+        if p["label"] not in ["system","resource","form"]
     ]
     orbits = [
         {
@@ -210,7 +216,7 @@ def build_homeSystem(data, username):
     ]
 
     formEdge = {
-        "node1": systemid,
+        "node1": system['objid'],
         "node2": data["objid"],
         "label": "created_from_form",
     }

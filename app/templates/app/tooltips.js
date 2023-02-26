@@ -26,6 +26,15 @@ function limitDict(d) {
     return d
 }
 
+function onlyDisplayedValues(d,displayed_values) {
+    y = {}
+    for (let i = 0; i < displayed_values.length; i++) {
+        v = displayed_values[i]
+        y[v] = d[v]
+    }
+    return y
+}
+
 function toProperCase(s)
 {
   return s.toLowerCase().replace(/^(.)|\s(.)/g, 
@@ -73,6 +82,30 @@ function dictToSimpleText(d) {
     return html
 }
 
+function dictToSingleLIne(d, displayed_values) {
+    var dt = onlyDisplayedValues(d,displayed_values)
+    var html = ""
+    for (var k in dt) {
+        x = k.replace(/_/g, " ")
+        y = dt[k]
+        if (y.toString().indexOf(".") != -1) {y = parseFloat(y.toString())};
+        if (typeof (y) == "string") {
+            y = dt[k].replace(/_/g, " ")
+        } else if (typeof (y) == "number") {
+            y = r(y)
+        } else if (typeof (y) == "object") {
+            y = dt[k].toString().replace(/_/g, " ")
+        }
+        if(x=='name'){
+            html += y +"\n"
+        } else if (x=='volume'){
+            html += "\n  " + x + ": " + y
+        } else {
+            html += x + ": " + y + "  "   
+        }
+    }
+    return html + "\n\n"
+}
 
 var tooltip = d3.select("body")
     .append("div")
