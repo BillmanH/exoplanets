@@ -48,6 +48,7 @@ class CosmosdbClient():
         self.c = None
         self.res = "no query"
         self.stack = []
+        self.stacklimit = 15
         self.res_stack = {}
 
     ## Managing the client
@@ -99,8 +100,8 @@ class CosmosdbClient():
 
     def clean_node(self, x):
         for k in list(x.keys()):
-            if len(x[k]) == 1:
-                x[k] = x[k][0]
+            if type(x[k])==list:
+                x[k] = x[k][-1]
         if 'objid' in x.keys():
             x["id"] = x["objid"]
         return x
@@ -136,6 +137,10 @@ class CosmosdbClient():
             fab.append(t)
         return fab
 
+    def test_fields(self,data):
+        for n in data['nodes']:
+            n['id']=n['objid']
+        return data
 
     # creating strings for uploading data
     def create_vertex(self,node):
@@ -180,19 +185,17 @@ class CosmosdbClient():
         Extra items are piped in as properties of the edge.
         Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
         """
-        self.open_client()
-        self.nodes = []
-        self.edges = []
-        self.res = []
+        data = self.test_fields(data)
         for node in data["nodes"]:
             n = self.create_vertex(node)
-            self.nodes.append(n)
-            callback = self.c.submitAsync(n)
-            self.res.append(callback.result().all().result())
+            self.add_query(n)
+            if len(self.stack)>self.stacklimit:
+                self.run_queries()
+        self.run_queries()
         for edge in data["edges"]:
             e = self.create_edge(edge)
-            self.nodes.append(e)
-            callback = self.c.submitAsync(e)
-            self.res.append(callback.result().all().result())
-        self.close_client()
+            self.add_query(e)
+            if len(self.stack)>self.stacklimit:
+                self.run_queries()
+        self.run_queries()
 
