@@ -3,13 +3,13 @@ var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
 //global textbox in upper left corner.
 var textblock = new BABYLON.GUI.TextBlock("textblock")
-textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-textblock.fontSize = 24;    
-textblock.background = "black";
-textblock.color = "white";    
-textblock.paddingRight = 20
-textblock.paddingTop = 20
+    textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+    textblock.fontSize = 24;    
+    textblock.background = "black";
+    textblock.color = "white";    
+    textblock.paddingRight = 20
+    textblock.paddingTop = 20
 
 dashboard.addControl(textblock);
 
@@ -50,13 +50,19 @@ function createControlBox(control_panel){
     if (control_panel.hasOwnProperty('title')==false){
         control_panel.title = "this text box has no title"
     }
-    // console.log(control_panel.name, control_panel.hasOwnProperty('name'))
+    console.log(control_panel.left, control_panel.top)
     const label = new BABYLON.GUI.Rectangle(control_panel.name)
         label.background = 'black'
-
-        label.top = control_panel.top 
-        label.left = control_panel.left 
         
+        if(control_panel.left>window.screen.width){
+            label.top = control_panel.top = 700
+            label.left = control_panel.left - 800
+            
+        } else {
+            label.top = control_panel.top 
+            label.left = control_panel.left 
+            
+        }
         label.width = control_panel.width
         label.height = control_panel.height
 
@@ -114,10 +120,10 @@ var addTextBlockToBox = function(n,box){
         label.background = 'black'
         label.top = (75 * n.iter) + 10
         label.left = 10
-        label.width = "500px"
-        label.height = "75px"
-        // label.thickness = 1
-        // label.linkOffsetY = 30
+        label.width = box.width
+        label.height = box.height
+        label.paddingLeft = 5
+        label.paddingRight = 5
 
         label.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -127,7 +133,7 @@ var addTextBlockToBox = function(n,box){
         resourceText.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_LEFT;
         resourceText.textVerticalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         resourceText.paddingTop = 5
-        resourceText.paddingLeft = 10 
+        resourceText.paddingLeft = 5 
         resourceText.fontSize = 12;    
         resourceText.background = "black";
         resourceText.color = "white";   
