@@ -46,6 +46,9 @@ function createFaction(n){
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        objectDetails(n.data)
+    }));
 }
 
 function createPop(n){
@@ -70,6 +73,9 @@ function createPop(n){
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
+    }));
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        objectDetails(n.data.population)
     }));
 }
 
