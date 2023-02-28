@@ -44,13 +44,10 @@ resources_control_panel = {
 }
 
 var system_icon = create_icon({name:'system_icon',image:icons.system,top:20,tooltiptext:"return to the system"})
-dashboard.addControl(system_icon);
-
 var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:90})
-dashboard.addControl(pop_icon);
-
 var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:160})
-dashboard.addControl(resource_icon);
+
+
 
 
 // pointer 

@@ -119,11 +119,11 @@ var addTextBlockToBox = function(n,box){
     const label = new BABYLON.GUI.Rectangle("loadingpleasewait")
         label.background = 'black'
         label.top = (75 * n.iter) + 10
-        label.left = 10
+        label.left = 5
         label.width = box.width
         label.height = box.height
-        label.paddingLeft = 5
-        label.paddingRight = 5
+        label.paddingLeft = 2
+        label.paddingRight = 2
 
         label.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -284,12 +284,6 @@ function create_icon(params){
     icon.stretch = BABYLON.GUI.Image.STRETCH_EXTEND;
     icon.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     icon.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-    //TODO Tooltip not working. 
-    // icon.actionManager = new BABYLON.ActionManager(scene);
-    // icon.metadata = {"icon":params.tooltiptext}
-    // icon.actionManager = new BABYLON.ActionManager(scene);
-    // icon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
-    //     hoverTooltip(icon)
-    // }));
+    dashboard.addControl(icon)
     return icon
 }
