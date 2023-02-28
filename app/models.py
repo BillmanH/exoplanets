@@ -146,6 +146,14 @@ class CosmosdbClient():
             n['id']=n['objid']
         return data
 
+    def create_custom_edge(self,n1,n2,label):
+        edge = f"""
+        g.V().has('objid','{n1['objid']}')
+            .addE('{label}')
+            .to(g.V().has('objid','{n2['objid']}'))
+        """
+        return edge
+    
     # creating strings for uploading data
     def create_vertex(self,node, username):
         if (len(
