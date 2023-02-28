@@ -26,11 +26,10 @@ except:
 def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
 
+# TODO: Move pop growth to it's own file
 def population_growth_event(p,location,child):
-    id = uuid()
     node = {
-        'objid':id,
-        'id': id,
+        'objid':uuid(),
         'name':'population growth',
         'label':'event',
         'text': f"The population ({p['name']}) inhabiting {location['name']} has grown to produce the population: {child['name']}.",
@@ -39,6 +38,22 @@ def population_growth_event(p,location,child):
     }
     # logging.info(node)
     return node
+
+def population_event_relation(pop,event):
+    edge = f"""
+    g.V().has('objid','{pop['objid']}')
+        .addE('caused')
+        .to(g.V().has('objid','{event['objid']}'))
+    """
+    return edge
+
+def location_event_relation(location,event):
+    edge = f"""
+    g.V().has('objid','{event['objid']}')
+        .addE('happenedAt')
+        .to(g.V().has('objid','{location['objid']}'))
+    """
+    return edge
 
 def make_word(n):
     syl = np.random.choice(syllables, n)
@@ -67,6 +82,8 @@ def grow_pop(p,species):
 def main(mytimer: func.TimerRequest) -> None:
     c = CosmosdbClient()
     logging.info(f'CDB endpoint: {c.endpoint}')
+    logging.info(f"famount people will suffer by starving: {params['starve_damage']}")
+    logging.info(f"amount of health needed to grow: {params['pop_health_requirement']}")
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
 
@@ -77,7 +94,6 @@ def main(mytimer: func.TimerRequest) -> None:
     params['time'] = c.clean_nodes(c.res)[0]
 
     consumption.consume(c,params)
-
 
     healthy_pops_query = f"""
     g.V().has('label','pop')
@@ -115,20 +131,28 @@ def main(mytimer: func.TimerRequest) -> None:
         nodes = []
         edges = []
 
+        # Event edges must be uploaded separately, because the event nodes haven't been created yet. 
+        event_edges = []
         for i in reproducing_pops.index.to_list():
             p = reproducing_pops.loc[i].to_dict()
             species = species_df.loc[i].to_dict()
             location = locations_df.loc[i].to_dict()
             child = grow_pop(p,species)
             nodes.append(child)
-            nodes.append(population_growth_event(p, location,child))
+            event = population_growth_event(p, location,child)
+            nodes.append(event)
             edges.append({"node1": child["objid"], "node2": p["objid"], "label": "childOf"})
             edges.append({"node1": child["objid"], "node2": child["isInFaction"], "label": "isInFaction"})
             edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOfSpecies"})
             edges.append({"node1": child["objid"], "node2": location["objid"], "label": "inhabits"})
-            
+
+            event_edges.append(c.create_custom_edge(event,location,'happenedAt'))
+            event_edges.append(c.create_custom_edge(p,event,'caused'))
         upload_data = {'nodes':nodes,'edges':edges}
         c.upload_data(upload_data)
+        for e in event_edges:
+            c.add_query(e)
+        c.run_queries()
     else:
         logging.info(f"zero population growth")
 
