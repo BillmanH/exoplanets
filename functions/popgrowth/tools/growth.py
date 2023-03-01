@@ -13,7 +13,6 @@ def make_word(n, syllables):
     return word.capitalize()
 
 
-# TODO: Move pop growth to it's own file
 def population_growth_event(p,location,child, params):
     node = {
         'objid':uuid(),
