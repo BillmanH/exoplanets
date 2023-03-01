@@ -88,7 +88,7 @@ def death_by_starvation_event(loc,pop,params):
         'objid':uuid(),
         'name':'starvation',
         'label':'event',
-        'text': f"The population ({pop['name'][0]}) inhabiting  {loc['name'][0]} has died of starvation.",
+        'text': f"The population ({pop['name'][0]}) inhabiting {loc['name']} has died of starvation.",
         'visibleTo':pop['username'][0],
         'time':params['time']['currentTime'],
         'username':'azfunction'
