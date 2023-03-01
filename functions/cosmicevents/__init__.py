@@ -1,4 +1,3 @@
-import datetime
 import logging
 import yaml, pickle
 import pandas as pd
@@ -6,7 +5,7 @@ import numpy as np
 
 import azure.functions as func
 from .cmdb_graph import CosmosdbClient
-from .tools import consumption
+from .tools import replenish_resources
 import os
 
 logger = logging.getLogger('azure.mgmt.resource')
@@ -32,26 +31,7 @@ def main(mytimer: func.TimerRequest) -> None:
     if mytimer.past_due:
         logging.info('The timer is past due!')
 
-    renewables_query = f"""
-    g.V().has('label','resource')
-            .has('replenish_rate',gt(0)).valuemap()
-    """
-    c.run_query(renewables_query)
-    data = c.clean_nodes(c.res)
-
-
-    
-    logging.info(f"Total resources with the ability to renew: {len(data)}")
-    if len(data)>0:
-        for r in data:
-            c.add_query(f"""
-            g.V().has('objid','{r['objid']}').property('volume','{r['volume']+r['replenish_rate']}')
-            """)
-        c.run_queries()
-
-        logging.info(f'**** resources have been renewed ****')
-    else:
-        logging.info(f'**** No resources to renew ****')
+    replenish_resources.renew_resources(c)
 
 
     ### END 
