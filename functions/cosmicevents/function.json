@@ -2,7 +2,7 @@
   "scriptFile": "__init__.py",
   "bindings": [
     {
-      "name": "cosmiceventstimertrigger",
+      "name": "mytimer",
       "type": "timerTrigger",
       "direction": "in",
       // "RunOnStartup":true,

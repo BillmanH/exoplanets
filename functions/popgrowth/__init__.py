@@ -37,7 +37,7 @@ def main(mytimer: func.TimerRequest) -> None:
     params['time'] = c.clean_nodes(c.res)[0]
 
     consumption.consume(c,params)
-    growth.grow(c,params)
+    growth.grow(c,params,syllables)
 
     ### END 
     logging.info(f'Population Growth trigger ran at: {utc_timestamp}')

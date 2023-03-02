@@ -12,7 +12,7 @@ def get_replenishing_resources(c):
 
 def update_replenishing_resources(r):
         replenish_query = f"""
-                g.V().has('objid','{r['objid']}').property('volume','{r['volume']+r['replenish_rate']}')
+                g.V().has('objid','{r['objid']}').property('volume',{r['volume']+r['replenish_rate']})
         """
         return replenish_query
 
