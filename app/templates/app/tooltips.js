@@ -9,7 +9,7 @@ function popvalues(a, m) {
     return a
 }
 
-function r(x, n=100) {
+function r(x, n=1000) {
     x = Math.round(x * n) / n
     return x
 }
@@ -88,7 +88,6 @@ function dictToSingleLIne(d, displayed_values) {
     for (var k in dt) {
         x = k.replace(/_/g, " ")
         y = dt[k]
-        if (y.toString().indexOf(".") != -1) {y = parseFloat(y.toString())};
         if (typeof (y) == "string") {
             y = dt[k].replace(/_/g, " ")
         } else if (typeof (y) == "number") {
@@ -101,7 +100,7 @@ function dictToSingleLIne(d, displayed_values) {
         } else if (x=='volume'){
             html += "\n  " + x + ": " + y
         } else {
-            html += x + ": " + y + "  "   
+            html += x + ": " +  y + "  "   
         }
     }
     return html + "\n\n"

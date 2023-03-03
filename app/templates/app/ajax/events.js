@@ -1,6 +1,6 @@
-function ajax_get_local_resources(d){
+function ajax_get_local_events(d){
     return $.ajax({
-            url: '/ajax/get-local-resources',
+            url: '/ajax/get-local-events',
             type: 'get',
             data: d,
             dataType: 'json',
@@ -9,7 +9,7 @@ function ajax_get_local_resources(d){
             },
             success: function(data){
                 data.location = d
-                console.log('ajax/get-local-resources', data)
+                console.log('ajax/get-local-events', data)
             }
         })
 }

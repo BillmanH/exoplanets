@@ -32,11 +32,13 @@ function dropControlIfExists(name){
 }
 
 function dropAllControls(){
+    dropControlIfExists("events_window")
     dropControlIfExists("action_window")
     dropControlIfExists("faction_window")
     dropControlIfExists("window")
     dropControlIfExists("planets_window")
     dropControlIfExists("resources_window")
+    dropControlIfExists("loadingpleasewait")
 }
 
 var objectDetails = function(d){
@@ -50,7 +52,6 @@ function createControlBox(control_panel){
     if (control_panel.hasOwnProperty('title')==false){
         control_panel.title = "this text box has no title"
     }
-    console.log(control_panel.left, control_panel.top)
     const label = new BABYLON.GUI.Rectangle(control_panel.name)
         label.background = 'black'
         
