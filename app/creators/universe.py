@@ -70,10 +70,17 @@ class Star(Body):
         self.label = "star"
         self.type = sdata["class"]
         self.radius = sdata["radius"]
+        self.glat = r.normal(0,20) # roughly based on NASA Exoplanet archive
+        self.glon = r.normal(0,20)
+        self.gelat = r.normal(0,5)
 
     def get_data(self):
         fund = self.get_fundimentals()
-        fund["radius"] = self.radius
+        fund['radius'] = self.radius
+        fund['class'] = self.type
+        fund['glat'] = self.glat
+        fund['glon'] = self.glon
+        fund['gelat'] = self.gelat
         return fund
 
 
