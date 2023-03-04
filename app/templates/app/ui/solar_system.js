@@ -173,11 +173,7 @@ for (let i = 0; i < solar_system.nodes.length; i++) {
                     console.log(o)
                     console.log(o.data.name, o.data.objid, " button was pushed")
                     objectDetails(o.data)
-                    // TODO orbit child object
-                    // var moon = scene.getMeshByName(o.data.objid);
-                    // console.log(moon.diameter)
-                    // camera.setTarget(new BABYLON.Vector3(moon.position.x, moon.position.y, moon.position.z));
-                    // camera.radius = 25
+
                 };
                 if(o.isSupportsLife.toLowerCase()=="true"){
                     o.gui.buttonColor = "green"
