@@ -15,7 +15,7 @@ function make_tree(coord){
     branches.material = treemat2;
 }
 
-function build_mesh_resource(r){
+function build_organic_resource(r){
     for (let i = 0; i < r.volume; i++){
         var range = ground_dimensions/2
         make_tree(pivotLocal((-1*range),range))

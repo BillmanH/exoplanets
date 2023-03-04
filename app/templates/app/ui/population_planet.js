@@ -114,7 +114,7 @@ function render_resources(resources){
             for (let i = 0; i < resources.length; i++){
                 resource = resources[i]
                 if(resource.name.toLowerCase()=="organic"){
-                    build_mesh_resource(resource)
+                    build_organic_resource(resource)
                 }
             }
         }
