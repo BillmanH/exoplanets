@@ -1,5 +1,6 @@
 
 var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+var icon_config = {padding:70,initial:20} // distance between icons.
 
 //global textbox in upper left corner.
 var textblock = new BABYLON.GUI.TextBlock("textblock")
@@ -29,6 +30,10 @@ function dropControlIfExists(name){
     if(dashboard.getControlByName(name)){
         dashboard.getControlByName(name).dispose()
     }
+}
+
+function getIconTop(iter){
+    return (iter*icon_config.padding) + icon_config.initial
 }
 
 function dropAllControls(){
@@ -117,18 +122,21 @@ function createControlBox(control_panel){
 }
 
 var addTextBlockToBox = function(n,box){
-    const label = new BABYLON.GUI.Rectangle("loadingpleasewait")
+    var box_height = n.displayed_values.length * 25
+    
+    const label = new BABYLON.GUI.Rectangle("text_block")
         label.background = 'black'
-        label.top = (75 * n.iter) + 10
+        label.top = (box_height * n.iter)
         label.left = 5
         label.width = box.width
-        label.height = box.height
+        label.height = box_height.toString() + "px"
         label.paddingLeft = 2
         label.paddingRight = 2
-
+        
         label.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     box.addControl(label);
+
 
     var resourceText = new BABYLON.GUI.TextBlock("resource_text"+n.iter.toString())
         resourceText.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_LEFT;

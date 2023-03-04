@@ -54,10 +54,10 @@ events_control_panel = {
     height:"100px"
 }
 
-var system_icon = create_icon({name:'system_icon',image:icons.system,top:20,tooltiptext:"return to the system"})
-var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:90})
-var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:160})
-var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:230})
+var system_icon = create_icon({name:'system_icon',image:icons.system,top:getIconTop(0),tooltiptext:"return to the system"})
+var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:getIconTop(1)})
+var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:getIconTop(2)})
+var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:getIconTop(3)})
 
 
 
@@ -153,7 +153,6 @@ events_icon.onPointerClickObservable.add(function () {
     ajax_get_local_events({location:global_location}).then(function(response){
         const events = response.events
         events_control_panel.height = ((100 * events.length)+100).toString() + "px"
-        events_control_panel.title += " (" + events.length + ")"
         events_control = createControlBox(events_control_panel)
         for (let i = 0; i < events.length; i++){
             n = {}

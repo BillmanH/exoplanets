@@ -11,7 +11,7 @@ def get_local_events(request):
     """
     response = {}
     request = dict(request.GET)
-    query_local_events = f"g.V().has('objid','{request.get('location','')[0]}').in('happenedAt').valuemap()"
+    query_local_events = f"g.V().has('objid','{request.get('location','')[0]}').in('happenedAt').order().by('time', decr).limit(15).valuemap()"
     c = CosmosdbClient()
     c.run_query(query_local_events)
     response["events"] = c.clean_nodes(c.res)
