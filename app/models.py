@@ -272,7 +272,7 @@ def get_factions(username):
 
 def get_local_population(objid):
     # objid is the id of the object which contains ('inhabits') the population/s
-    nodes_query = (
+    population_query = (
         f"""g.V().has('objid','{objid}').as('location')
             .in('inhabits').as('population')
             .local(
@@ -284,8 +284,16 @@ def get_local_population(objid):
                     .path()
                     .by(unfold().valueMap().fold())"""
     )
+    resource_query = (
+        f"""g.V().has('objid','{objid}').as('location')
+            .out('hasResource').as('resource')
+        """
+    )
     c = CosmosdbClient()
-    c.run_query(nodes_query)   
-    nodes = c.reduce_res(c.res)
-    data = {"nodes": nodes, "edges": []}
+    c.add_query(population_query)
+    c.add_query(resource_query)
+    c.run_queries()   
+    nodes = c.reduce_res(c.res[population_query])
+    resources = c.clean_nodes(c.res[resource_query])
+    data = {"nodes": nodes, "edges": [], "resources":resources}
     return data

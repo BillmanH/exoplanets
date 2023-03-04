@@ -157,7 +157,7 @@ events_icon.onPointerClickObservable.add(function () {
         for (let i = 0; i < events.length; i++){
             n = {}
             n.iter = i+1
-            n.displayed_values = ["name","text"]
+            n.displayed_values = ["name","text","time"]
             n.data = events[i]
             addTextBlockToBox(n,events_control)
         }
