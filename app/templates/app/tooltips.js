@@ -9,7 +9,7 @@ function popvalues(a, m) {
     return a
 }
 
-function r(x, n=1000) {
+function r(x, n=100) {
     x = Math.round(x * n) / n
     return x
 }
@@ -100,7 +100,7 @@ function dictToSingleLIne(d, displayed_values) {
         } else if (x=='volume'){
             html += "\n  " + x + ": " + y
         } else {
-            html += x + ": " +  y + "  "   
+            html += x + ": " + y + "  "   
         }
     }
     return html + "\n\n"
