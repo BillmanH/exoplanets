@@ -3,7 +3,7 @@
 factionbuildingHeight = 10
 ground_dimensions = 500
 
-{% include "app/ui/objects/resources.js" %}
+
 
 // light
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
