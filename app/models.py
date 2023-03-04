@@ -286,7 +286,7 @@ def get_local_population(objid):
     )
     resource_query = (
         f"""g.V().has('objid','{objid}').as('location')
-            .out('hasResource').as('resource')
+            .out('hasResource').as('resource').valueMap()
         """
     )
     c = CosmosdbClient()
