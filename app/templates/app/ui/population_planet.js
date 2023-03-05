@@ -121,6 +121,15 @@ function render_resources(resources){
     }
 }
 
+
+
 render_resources(data['resources'])
+
+farm_building = {name:'farm',
+            objtype:'building'}
+pop = scene.getMeshByName("3406609797297"+"_box")
+
+building = render_block(pop,farm_building)
+console.log(building)
 // Goals: 
 // https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/height_map
