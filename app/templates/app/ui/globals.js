@@ -38,6 +38,18 @@ function filter_nodes_res(nodes,element,field, value){
     return mylist
 }
 
+function filter_nodes_list(nodes,element, value){
+    // filtering data formats like [{…},{…},{…},{…},{…},{…}]
+    var mylist = []
+    for (let i = 0; i < nodes.length; i++){
+        if(nodes[i][element]==value){
+            mylist.push(nodes[i])
+        }
+    } 
+    return mylist
+}
+
+
 function distinct_list(nodes,element,field){
     var mylist = []
     for (let i = 0; i < nodes.length; i++){
