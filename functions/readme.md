@@ -2,15 +2,25 @@
 
 Azure functions run the backend of the game. All things happening that aren't controlled by the UI in `app`. All functions do some variation of running a query and then updating the graph. 
 
-| Name | Description | Status |
-|---|---|---|
-| time | timer function. Some things take time to complete. This checks all of the things that are in process, and resolves them. | not yet live |
-| chaos | timer function, this facilitates all of the brownian motion in the universe. It makes random things happen. | not yet live |
-| HttpExample | http function. Just keeping it as a template. Not involved in the game. | template |
+![Alt text](/docs/img/Exodestiny.png?raw=true "docker cicd")
+
+## Mapping the functions
+The functions all serve various different functions. Usually grouped by computational efficiency rather than ontological sense.
+- time
+    - resolves actions
+    - updates the global clock (UCT)
+- popgrowth
+    - Facilitates population growth
+    - Facilitates population resource consumption
+        - inluding starving and death by starvation
+- cosmicevents
+    - Planetary resource renewal
+
+
+
 
 # Dev Cycle Steps:
 
-![Alt text](/docs/img/Exodestiny.png?raw=true "docker cicd")
 
 ## Creating the local development environment
 The Azure Func Tools don't support conda environments, so I'm using a regular python env. This will need to be done anytime `requirements.txt` is updated OR when the environment variables are reset. This is just for the local environment. This is also ideal because the local environment supports features like notebooks and charts that aren't needed in the web. 

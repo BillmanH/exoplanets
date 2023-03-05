@@ -26,7 +26,7 @@
 
         const alpha = Math.PI / 4;
         const beta = Math.PI / 3;
-        const radius = 600;
+        const radius = 300;
         const target = new BABYLON.Vector3(0, 0, 0);
 
         const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
@@ -40,6 +40,8 @@
         // generatiors
         {% include "app/tooltips.js" %}
         {% include "app/ajax/population_action.js" %}
+        {% include "app/ui/objects/resources.js" %}
+        {% include "app/ui/skybox_green_planet.js" %}
         {% include "app/ui/population_planet.js" %}
 
 

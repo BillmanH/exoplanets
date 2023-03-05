@@ -177,6 +177,13 @@ class CosmosdbClient():
         gadde_fin = f".to(g.V().has('objid','{self.cs(edge['node2'])}'))"
         return gadde + gadde_fin
 
+    def create_custom_edge(self,n1,n2,label):
+        edge = f"""
+        g.V().has('objid','{n1['objid']}')
+            .addE('{label}')
+            .to(g.V().has('objid','{n2['objid']}'))
+        """
+        return edge
 
     def upload_data(self, data):
         """

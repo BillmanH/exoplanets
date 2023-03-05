@@ -1,11 +1,13 @@
 {% load static %}
 {% include "app/ajax/population_info.js" %}
 {% include "app/ajax/resources.js" %}
+{% include "app/ajax/events.js" %}
 
 icons = {
     pop:"{% static 'app/objects/icons/pop_icon_2.png' %}",
     resources:"{% static 'app/objects/icons/resource_icon_1.png' %}",
-    system:"{% static 'app/objects/icons/system_icon_1.png' %}"
+    system:"{% static 'app/objects/icons/system_icon_1.png' %}",
+    events:"{% static 'app/objects/icons/events_icon_1.png' %}"
 }
 
 pop_control_panel = {
@@ -43,14 +45,20 @@ resources_control_panel = {
     height:"100px"
 }
 
-var system_icon = create_icon({name:'system_icon',image:icons.system,top:20,tooltiptext:"return to the system"})
-dashboard.addControl(system_icon);
+events_control_panel = {
+    name:"events_window",
+    title: "Events:",
+    top:20,
+    left:70,
+    width:"600px",
+    height:"100px"
+}
 
-var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:90})
-dashboard.addControl(pop_icon);
+var system_icon = create_icon({name:'system_icon',image:icons.system,top:getIconTop(0),tooltiptext:"return to the system"})
+var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:getIconTop(1)})
+var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:getIconTop(2)})
+var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:getIconTop(3)})
 
-var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:160})
-dashboard.addControl(resource_icon);
 
 
 // pointer 
@@ -137,7 +145,26 @@ resource_icon.onPointerClickObservable.add(function () {
             addTextBlockToBox(n,resource_control)
         }
     })
+    dropControlIfExists("loadingpleasewait")
 });
+
+events_icon.onPointerClickObservable.add(function () {
+    dropAllControls()
+    ajax_get_local_events({location:global_location}).then(function(response){
+        const events = response.events
+        events_control_panel.height = ((100 * events.length)+100).toString() + "px"
+        events_control = createControlBox(events_control_panel)
+        for (let i = 0; i < events.length; i++){
+            n = {}
+            n.iter = i+1
+            n.displayed_values = ["name","text","time"]
+            n.data = events[i]
+            addTextBlockToBox(n,events_control)
+        }
+    })
+    dropControlIfExists("loadingpleasewait")
+});
+
 
 function make_actions_box(actions){
     dropControlIfExists("action_window")

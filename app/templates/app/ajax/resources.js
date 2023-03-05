@@ -8,8 +8,6 @@ function ajax_get_local_resources(d){
                 plz = pleaseWaiter(dashboard)
             },
             success: function(data){
-                plz = dashboard.getControlByName("loadingpleasewait")
-                plz.dispose()
                 data.location = d
                 console.log('ajax/get-local-resources', data)
             }

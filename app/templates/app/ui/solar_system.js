@@ -54,6 +54,7 @@ function createPlanet(n){
     var orbiting = scene.getMeshByName(n.data.orbitsId);
     n.diameter = scale_radius(n.data.radius)/2  // should be r*2 but I want smaller plantets. 
     n.x = scale_distance(n.iter)
+    
     n.y = 0
     n.z = scale_distance(n.data.orbitsDistance)
     const planet = BABYLON.MeshBuilder.CreateSphere(n.data.objid,  {diameter: n.diameter});
@@ -129,77 +130,78 @@ function createMoon(n){
 
 // Main -- rendering loops
 // Primary objects that don't rely on the relative position
-var guiIter = 0
-for (let i = 0; i < solar_system.nodes.length; i++) {
-    n = {}
-    n.data = solar_system["nodes"][i]
-    n.gui = {buttonColor:"white",
-            depth:0}
-    if (n.data.objtype=="star"){
-        n.gui.clickButton = function(n) {
-            console.log(n.data.name, n.data.objid, " button was pushed")
-            camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
-            camera.radius = n.diameter + 25  
-            label = dashboard.getControlByName(n.data.objid+"_nameplate")
-            if(label){label.isVisible = false}
-            objectDetails(n.data)
-        }
-        guiIter++
-        n.iter = guiIter
-        createStar(n)
-    }
-    if (n.data.objtype=="planet"){
-        guiIter++
-        n.iter = guiIter
-        n.gui.clickButton = function(n) {
-            console.log(n.data.name, n.data.objid, " button was pushed")
-            camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
-            camera.radius = n.diameter + 25  
-            label = dashboard.getControlByName(n.data.objid+"_nameplate")
-            if(label){label.isVisible = false}
-            objectDetails(n.data)
-
-            satellites = scene.getMeshByName(n.data.objid).getChildren()
-            // console.log(satellites)
-            var guiIter = 0
-            for (let si = 0; si < satellites.length; si++) {
-                o = {}
-                o.data = get_node(solar_system["nodes"],satellites[si].id)
-                console.log(o)
-                o.iter = si+1
-                o.gui = {buttonColor:"white",
-                    depth:1}
-                o.gui.clickButton = function(o) {
-                    console.log(o)
-                    console.log(o.data.name, o.data.objid, " button was pushed")
-                    objectDetails(o.data)
-                    // TODO orbit child object
-                    // var moon = scene.getMeshByName(o.data.objid);
-                    // console.log(moon.diameter)
-                    // camera.setTarget(new BABYLON.Vector3(moon.position.x, moon.position.y, moon.position.z));
-                    // camera.radius = 25
-                };
-                if(o.isSupportsLife.toLowerCase()=="true"){
-                    o.gui.buttonColor = "green"
-                }
-                if(o.data.isSupportsLife.toLowerCase()=="true"){createVisitButton(o)}
+function createprimry_bodies(pdata){
+    var guiIter = 0
+    for (let i = 0; i < solar_system.nodes.length; i++) {
+        n = {}
+        n.data = solar_system["nodes"][i]
+        n.gui = {buttonColor:"white",
+                depth:0}
+        if (n.data.objtype=="star"){
+            n.gui.clickButton = function(n) {
+                console.log(n.data.name, n.data.objid, " button was pushed")
+                camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
+                camera.radius = n.diameter + 25  
+                label = dashboard.getControlByName(n.data.objid+"_nameplate")
+                if(label){label.isVisible = false}
+                objectDetails(n.data)
             }
+            guiIter++
+            n.iter = guiIter
+            createStar(n)
         }
-        createPlanet(n)
+        if (n.data.objtype=="planet"){
+            guiIter++
+            n.iter = guiIter
+            n.gui.clickButton = function(n) {
+                console.log(n.data.name, n.data.objid, " button was pushed")
+                camera.setTarget(new BABYLON.Vector3(n.x, n.y, n.z));
+                camera.radius = n.diameter + 25  
+                label = dashboard.getControlByName(n.data.objid+"_nameplate")
+                if(label){label.isVisible = false}
+                objectDetails(n.data)
 
-    }
-  }
+                satellites = scene.getMeshByName(n.data.objid).getChildren()
+                // console.log(satellites)
+                var guiIter = 0
+                for (let si = 0; si < satellites.length; si++) {
+                    o = {}
+                    o.data = get_node(solar_system["nodes"],satellites[si].id)
+                    console.log(o)
+                    o.iter = si+1
+                    o.gui = {buttonColor:"white",
+                        depth:1}
+                    o.gui.clickButton = function(o) {
+                        console.log(o)
+                        console.log(o.data.name, o.data.objid, " button was pushed")
+                        objectDetails(o.data)
 
+                    };
+                    if(o.isSupportsLife.toLowerCase()=="true"){
+                        o.gui.buttonColor = "green"
+                    }
+                    if(o.data.isSupportsLife.toLowerCase()=="true"){createVisitButton(o)}
+                }
+            }
+            createPlanet(n)
 
-// Secondary objects that do rely on a position of something else.
-var guiIter = 0
-for (let i = 0; i < solar_system.nodes.length; i++) {
-    n = {}
-    n.data = solar_system["nodes"][i]
-    guiIter++
-    n.iter = guiIter
-    if (n.data.objtype=="moon"){
-        createMoon(n)
+        }
     }
 }
 
+function createMoons(pdata){
+    // Secondary objects that do rely on a position of something else.
+    var guiIter = 0
+    for (let i = 0; i < pdata.length; i++) {
+        n = {}
+        n.data = pdata[i]
+        guiIter++
+        n.iter = guiIter
+        if (n.data.objtype=="moon"){
+            createMoon(n)
+        }
+    }
+}
+
+createprimry_bodies(filter_nodes_list(solar_system["nodes"],'objtype','planet'))
+createMoons(filter_nodes_list(solar_system["nodes"],'objtype','moon'))

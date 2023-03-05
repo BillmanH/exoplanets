@@ -20,14 +20,20 @@ class Resource:
         self.volume = maths.rnd(conf["mean"],conf["std"], min_val=0)
         if conf.get('replenish_rate'):
             self.replenish_rate = conf['replenish_rate']
+        else: 
+            self.replenish_rate = None
     def get_data(self):
-        return {
+        fund = {
             "name": self.name,
             "objid": self.objid,
             "label": self.label,
             "volume": self.volume,
             "description": self.description
         }
+        if (self.replenish_rate):
+            fund['replenish_rate'] = self.replenish_rate
+        return fund
+
     def __repr__(self) -> str:
         return f"<{self.label}: {self.objid}; {self.name}>"  
 
@@ -67,7 +73,8 @@ class Star(Body):
 
     def get_data(self):
         fund = self.get_fundimentals()
-        fund["radius"] = self.radius
+        fund['radius'] = self.radius
+        fund['class'] = self.type
         return fund
 
 
@@ -78,9 +85,7 @@ class Planet(Body):
         self.type = t
         self.radius = maths.rnd(pdata[t]["radius_mean"], pdata[t]["radius_std"], min_val=0,type='float')
         self.mass = maths.rnd(pdata[t]["mass_mean"], pdata[t]["mass_std"],min_val=0,type='float')
-        self.orbitsDistance = maths.rnd(
-            pdata[t]["distance_min"], pdata[t]["distance_max"]
-        )
+        self.orbitsDistance = maths.np.round(maths.np.random.uniform(pdata[t]["distance_min"], pdata[t]["distance_max"]),3)
         self.orbitsId = orbiting["objid"]
         self.orbitsName = orbiting["name"]
         self.isSupportsLife = False
@@ -108,7 +113,7 @@ class Moon(Body):
         self.type = t
         self.orbiting = r.choice(planets)
         self.orbitsId = self.orbiting["objid"]
-        self.distance = 0.005  # TODO: Make dynamic moon distance
+        self.orbitsDistance = maths.rnd(0.005,0.1,type='float')  
         self.mass = abs(r.normal(mdata[t]["mass_mean"], mdata[t]["mass_std"]))
         self.radius = (
             abs(r.normal(mdata[t]["radius_mean"], mdata[t]["radius_std"]))
@@ -122,7 +127,7 @@ class Moon(Body):
         fund = self.get_fundimentals()
         fund["orbitsId"] = self.orbitsId
         fund["orbitsName"] = self.orbitsName
-        fund["orbitsDistance"] = self.distance
+        fund["orbitsDistance"] = self.orbitsDistance + self.orbiting['radius']
         fund["mass"] = self.mass
         fund["radius"] = self.radius
         fund["isSupportsLife"] = self.isSupportsLife
@@ -138,6 +143,9 @@ def make_system():
         "label": "system",
         "isHomeSystem":"true",
         "objid": systemid,
+        "glat": maths.np.round(r.normal(0,20),3), # roughly based on NASA Exoplanet archive
+        "glon": maths.np.round(r.normal(0,20),3),
+        "gelat": maths.np.round(r.normal(0,5),3)
     }
     return system
 

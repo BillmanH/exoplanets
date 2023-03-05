@@ -11,7 +11,7 @@ const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0)
 // ground
 const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:ground_dimensions, height:ground_dimensions});
 const groundMat = new BABYLON.StandardMaterial("groundMat");
-    groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green.png' %}");
+    groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green_2.png' %}");
     ground.material = groundMat; //Place the material property of the ground
 
 // center
@@ -46,6 +46,9 @@ function createFaction(n){
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        objectDetails(n.data)
+    }));
 }
 
 function createPop(n){
@@ -71,8 +74,10 @@ function createPop(n){
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        objectDetails(n.data.population)
+    }));
 }
-
 
 
 // main - actually loads the content
@@ -102,6 +107,20 @@ for (let i = 0; i < factions.length; i++) {
   }
 
 
+// redering natural resources
+function render_resources(resources){
+    if (data.hasOwnProperty('resources')){
+        if  (resources.length > 0){
+            for (let i = 0; i < resources.length; i++){
+                resource = resources[i]
+                if(resource.name.toLowerCase()=="organic"){
+                    build_organic_resource(resource)
+                }
+            }
+        }
+    }
+}
 
+render_resources(data['resources'])
 // Goals: 
 // https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/height_map

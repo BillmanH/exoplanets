@@ -88,7 +88,6 @@ function dictToSingleLIne(d, displayed_values) {
     for (var k in dt) {
         x = k.replace(/_/g, " ")
         y = dt[k]
-        if (y.toString().indexOf(".") != -1) {y = parseFloat(y.toString())};
         if (typeof (y) == "string") {
             y = dt[k].replace(/_/g, " ")
         } else if (typeof (y) == "number") {

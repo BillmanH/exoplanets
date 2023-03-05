@@ -1,5 +1,4 @@
 import numpy as np
-from numpy import random as r
 
 
 def rnd(n, s,min_val=1,type='int'):
@@ -11,9 +10,9 @@ def rnd(n, s,min_val=1,type='int'):
     type = type of return value. `int` will round to nearest whole number, `float` will round to three decimal places. 
     """
     if type=='int':
-        y = int(abs(np.ceil(r.normal(n, s))))
+        y = int(abs(np.ceil(np.random.normal(n, s))))
     if type=='float':
-        y = np.round(r.normal(n, s),3)
+        y = np.round(np.random.normal(n, s),3)
     if y < min_val:
         y=min_val
     return y

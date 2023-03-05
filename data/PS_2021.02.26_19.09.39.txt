@@ -1,0 +1,117 @@
+# This file was produced by the NASA Exoplanet Archive  http://exoplanetarchive.ipac.caltech.edu
+# Sun Mar 28 19:28:48 2021
+#
+# User preference: *
+#
+# COLUMN pl_name:        Planet Name
+# COLUMN hostname:       Host Name
+# COLUMN pl_letter:      Planet Letter
+# COLUMN hd_name:        HD ID
+# COLUMN gaia_id:        GAIA ID
+# COLUMN default_flag:   Default Parameter Set
+# COLUMN sy_snum:        Number of Stars
+# COLUMN sy_pnum:        Number of Planets
+# COLUMN sy_mnum:        Number of Moons
+# COLUMN cb_flag:        Circumbinary Flag
+# COLUMN discoverymethod: Discovery Method
+# COLUMN disc_year:      Discovery Year
+# COLUMN disc_locale:    Discovery Locale
+# COLUMN disc_facility:  Discovery Facility
+# COLUMN soltype:        Solution Type
+# COLUMN pl_controv_flag: Controversial Flag
+# COLUMN pl_refname:     Planetary Parameter Reference
+# COLUMN pl_orbper:      Orbital Period [days]
+# COLUMN pl_orbpererr1:  Orbital Period Upper Unc. [days]
+# COLUMN pl_orbpererr2:  Orbital Period Lower Unc. [days]
+# COLUMN pl_orbperlim:   Orbital Period Limit Flag
+# COLUMN pl_orbsmax:     Orbit Semi-Major Axis [au])
+# COLUMN pl_orbsmaxerr1: Orbit Semi-Major Axis Upper Unc. [au]
+# COLUMN pl_orbsmaxerr2: Orbit Semi-Major Axis Lower Unc. [au]
+# COLUMN pl_orbsmaxlim:  Orbit Semi-Major Axis Limit Flag
+# COLUMN pl_rade:        Planet Radius [Earth Radius]
+# COLUMN pl_radeerr1:    Planet Radius Upper Unc. [Earth Radius]
+# COLUMN pl_radeerr2:    Planet Radius Lower Unc. [Earth Radius]
+# COLUMN pl_radelim:     Planet Radius Limit Flag
+# COLUMN pl_radj:        Planet Radius [Jupiter Radius]
+# COLUMN pl_radjerr1:    Planet Radius Upper Unc. [Jupiter Radius]
+# COLUMN pl_radjerr2:    Planet Radius Lower Unc. [Jupiter Radius]
+# COLUMN pl_radjlim:     Planet Radius Limit Flag
+# COLUMN pl_masse:       Planet Mass [Earth Mass]
+# COLUMN pl_masseerr1:   Planet Mass [Earth Mass] Upper Unc.
+# COLUMN pl_masseerr2:   Planet Mass [Earth Mass] Lower Unc.
+# COLUMN pl_masselim:    Planet Mass [Earth Mass] Limit Flag
+# COLUMN pl_dens:        Planet Density [g/cm**3]
+# COLUMN pl_denserr1:    Planet Density Upper Unc. [g/cm**3]
+# COLUMN pl_denserr2:    Planet Density Lower Unc. [g/cm**3]
+# COLUMN pl_denslim:     Planet Density Limit Flag
+# COLUMN pl_orbeccen:    Eccentricity
+# COLUMN pl_orbeccenerr1: Eccentricity Upper Unc.
+# COLUMN pl_orbeccenerr2: Eccentricity Lower Unc.
+# COLUMN pl_orbeccenlim: Eccentricity Limit Flag
+# COLUMN pl_insol:       Insolation Flux [Earth Flux]
+# COLUMN pl_insolerr1:   Insolation Flux Upper Unc. [Earth Flux]
+# COLUMN pl_insolerr2:   Insolation Flux Lower Unc. [Earth Flux]
+# COLUMN pl_insollim:    Insolation Flux Limit Flag
+# COLUMN pl_eqt:         Equilibrium Temperature [K]
+# COLUMN pl_eqterr1:     Equilibrium Temperature Upper Unc. [K]
+# COLUMN pl_eqterr2:     Equilibrium Temperature Lower Unc. [K]
+# COLUMN pl_eqtlim:      Equilibrium Temperature Limit Flag
+# COLUMN ttv_flag:       Data show Transit Timing Variations
+# COLUMN pl_imppar:      Impact Parameter
+# COLUMN pl_impparerr1:  Impact Parameter Upper Unc.
+# COLUMN pl_impparerr2:  Impact Parameter Lower Unc.
+# COLUMN pl_impparlim:   Impact Parameter Limit Flag
+# COLUMN pl_ratror:      Ratio of Planet to Stellar Radius
+# COLUMN pl_ratrorerr1:  Ratio of Planet to Stellar Radius Upper Unc.
+# COLUMN pl_ratrorerr2:  Ratio of Planet to Stellar Radius Lower Unc.
+# COLUMN pl_ratrorlim:   Ratio of Planet to Stellar Radius Limit Flag
+# COLUMN pl_orbtper:     Epoch of Periastron [days]
+# COLUMN pl_orbtpererr1: Epoch of Periastron Upper Unc. [days]
+# COLUMN pl_orbtpererr2: Epoch of Periastron Lower Unc. [days]
+# COLUMN pl_orbtperlim:  Epoch of Periastron Limit Flag
+# COLUMN st_refname:     Stellar Parameter Reference
+# COLUMN st_spectype:    Spectral Type
+# COLUMN st_teff:        Stellar Effective Temperature [K]
+# COLUMN st_tefferr1:    Stellar Effective Temperature Upper Unc. [K]
+# COLUMN st_tefferr2:    Stellar Effective Temperature Lower Unc. [K]
+# COLUMN st_tefflim:     Stellar Effective Temperature Limit Flag
+# COLUMN st_rad:         Stellar Radius [Solar Radius]
+# COLUMN st_raderr1:     Stellar Radius Upper Unc. [Solar Radius]
+# COLUMN st_raderr2:     Stellar Radius Lower Unc. [Solar Radius]
+# COLUMN st_radlim:      Stellar Radius Limit Flag
+# COLUMN st_mass:        Stellar Mass [Solar mass]
+# COLUMN st_masserr1:    Stellar Mass Upper Unc. [Solar mass]
+# COLUMN st_masserr2:    Stellar Mass Lower Unc. [Solar mass]
+# COLUMN st_masslim:     Stellar Mass Limit Flag
+# COLUMN st_met:         Stellar Metallicity [dex]
+# COLUMN st_meterr1:     Stellar Metallicity Upper Unc. [dex]
+# COLUMN st_meterr2:     Stellar Metallicity Lower Unc. [dex]
+# COLUMN st_metlim:      Stellar Metallicity Limit Flag
+# COLUMN st_metratio:    Stellar Metallicity Ratio
+# COLUMN st_logg:        Stellar Surface Gravity [log10(cm/s**2)]
+# COLUMN st_loggerr1:    Stellar Surface Gravity Upper Unc. [log10(cm/s**2)]
+# COLUMN st_loggerr2:    Stellar Surface Gravity Lower Unc. [log10(cm/s**2)]
+# COLUMN st_logglim:     Stellar Surface Gravity Limit Flag
+# COLUMN st_age:         Stellar Age [Gyr]
+# COLUMN st_ageerr1:     Stellar Age Upper Unc. [Gyr]
+# COLUMN st_ageerr2:     Stellar Age Lower Unc. [Gyr]
+# COLUMN st_agelim:      Stellar Age Limit Flag
+# COLUMN sy_refname:     System Parameter Reference
+# COLUMN rastr:          RA [sexagesimal]
+# COLUMN ra:             RA [deg]
+# COLUMN decstr:         Dec [sexagesimal]
+# COLUMN dec:            Dec [deg]
+# COLUMN glat:           Galactic Latitude [deg]
+# COLUMN glon:           Galactic Longitude [deg]
+# COLUMN elat:           Ecliptic Latitude [deg]
+# COLUMN elon:           nas [deg]
+# COLUMN sy_dist:        Distance [pc]
+# COLUMN sy_disterr1:    Distance [pc] Upper Unc
+# COLUMN sy_disterr2:    Distance [pc] Lower Unc
+# COLUMN sy_gaiamag:     Gaia Magnitude
+# COLUMN sy_gaiamagerr1: Gaia Magnitude Upper Unc
+# COLUMN sy_gaiamagerr2: Gaia Magnitude Lower Unc
+# COLUMN rowupdate:      Date of Last Update
+# COLUMN pl_pubdate:     Planetary Parameter Reference Publication Date
+# COLUMN releasedate:    Release Date
+#

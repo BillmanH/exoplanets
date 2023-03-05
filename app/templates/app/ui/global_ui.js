@@ -1,5 +1,6 @@
 
 var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+var icon_config = {padding:70,initial:20} // distance between icons.
 
 //global textbox in upper left corner.
 var textblock = new BABYLON.GUI.TextBlock("textblock")
@@ -31,12 +32,18 @@ function dropControlIfExists(name){
     }
 }
 
+function getIconTop(iter){
+    return (iter*icon_config.padding) + icon_config.initial
+}
+
 function dropAllControls(){
+    dropControlIfExists("events_window")
     dropControlIfExists("action_window")
     dropControlIfExists("faction_window")
     dropControlIfExists("window")
     dropControlIfExists("planets_window")
     dropControlIfExists("resources_window")
+    dropControlIfExists("loadingpleasewait")
 }
 
 var objectDetails = function(d){
@@ -50,7 +57,6 @@ function createControlBox(control_panel){
     if (control_panel.hasOwnProperty('title')==false){
         control_panel.title = "this text box has no title"
     }
-    console.log(control_panel.left, control_panel.top)
     const label = new BABYLON.GUI.Rectangle(control_panel.name)
         label.background = 'black'
         
@@ -116,18 +122,21 @@ function createControlBox(control_panel){
 }
 
 var addTextBlockToBox = function(n,box){
-    const label = new BABYLON.GUI.Rectangle("loadingpleasewait")
+    var box_height = n.displayed_values.length * 25
+    
+    const label = new BABYLON.GUI.Rectangle("text_block")
         label.background = 'black'
-        label.top = (75 * n.iter) + 10
-        label.left = 10
+        label.top = (box_height * n.iter)
+        label.left = 5
         label.width = box.width
-        label.height = box.height
-        label.paddingLeft = 5
-        label.paddingRight = 5
-
+        label.height = box_height.toString() + "px"
+        label.paddingLeft = 2
+        label.paddingRight = 2
+        
         label.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         label.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     box.addControl(label);
+
 
     var resourceText = new BABYLON.GUI.TextBlock("resource_text"+n.iter.toString())
         resourceText.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_LEFT;
@@ -284,12 +293,6 @@ function create_icon(params){
     icon.stretch = BABYLON.GUI.Image.STRETCH_EXTEND;
     icon.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     icon.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-    //TODO Tooltip not working. 
-    // icon.actionManager = new BABYLON.ActionManager(scene);
-    // icon.metadata = {"icon":params.tooltiptext}
-    // icon.actionManager = new BABYLON.ActionManager(scene);
-    // icon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
-    //     hoverTooltip(icon)
-    // }));
+    dashboard.addControl(icon)
     return icon
 }
