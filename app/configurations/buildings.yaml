@@ -1,0 +1,41 @@
+explanation:
+  - type: all buildings have a 'type'/'label' of building
+  - name: name_with_underscore. UI can remove the '_' at display time.
+  - augments_resource: [OPTIONAL] augments a specific resource, creates it if it does not exist
+  - built_by: type of object that can build the building
+  - owned_by: type of object that can own/maintain this building, assuming a relationhsip to that object
+  - changes: stats changed by the owner
+  - faction_augments: if owned by a pop in the faction,  raises the stat for all pops in factions
+  - effort: "time in `universal time units` that the action will take to complete"
+  - requires_attr: required attributes of the agent. Determines if the agent can do the action.
+
+buildings:
+  - name: farmland
+    - planet_requirements: {'isHabitable':'true'}
+    - augments_resource: {'vegitable_foodstuff':10}
+    - changes: 
+      - wealth: -0.01
+    - owned_by: pop
+    - built_by: pop
+    - effort: 1
+
+  - name: hospital
+    - owned_by: pop
+    - built_by: pop
+    - changes: 
+      - wealth: -0.01
+    - faction_augments:
+      - health: 0.01
+    - effort: 3
+    requires_attr: 
+      industry: .6
+
+  - name: solar_panel
+    - owned_by: pop
+    - built_by: pop
+    - changes: 
+      - wealth: -0.01
+    - faction_augments:
+      - wealth: 0.01
+    requires_attr: 
+      industry: .51
