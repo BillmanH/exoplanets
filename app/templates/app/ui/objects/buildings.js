@@ -8,6 +8,7 @@ bulding_config = {
 }
 
 
+
 // redering natural resources
 function render_block(pop,building){
     var box = BABYLON.MeshBuilder.CreateBox(pop.metadata.objid+"_box", 

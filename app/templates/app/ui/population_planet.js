@@ -2,6 +2,7 @@
 
 factionbuildingHeight = 10
 ground_dimensions = 500
+shinyness = 0.05
 
 
 
@@ -13,6 +14,7 @@ const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:ground_dimensio
 const groundMat = new BABYLON.StandardMaterial("groundMat");
     groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green_2.png' %}");
     ground.material = groundMat; //Place the material property of the ground
+    ground.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 
 // center
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
@@ -127,9 +129,11 @@ render_resources(data['resources'])
 
 farm_building = {name:'farm',
             objtype:'building'}
-pop = scene.getMeshByName("3406609797297"+"_box")
+pop = scene.getMeshByName("2065545354087"+"_box")
 
 building = render_block(pop,farm_building)
 console.log(building)
+
+
 // Goals: 
 // https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/height_map
