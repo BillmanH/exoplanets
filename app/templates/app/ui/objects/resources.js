@@ -6,7 +6,7 @@ function make_tree(coord){
     var treemat = new BABYLON.StandardMaterial("groundMat");
     var treemat2 = new BABYLON.StandardMaterial("groundMat");
     treemat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/texture_tree.png' %}");
-    treemat2.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/texture_leaf_2.png' %}");
+    treemat2.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/texture_leaf.png' %}");
     var trunk = BABYLON.MeshBuilder.CreateCylinder("tree_trunk", {height:trunkHeight,diameter:2});
     var branches = BABYLON.MeshBuilder.CreateCylinder("tree_brances", {height:treetop,diameterTop:0, diameterBottom:4});
     trunk.position = new BABYLON.Vector3(coord.x, trunkHeight/2, coord.z)

@@ -22,6 +22,8 @@ function buildings_window(){
 }
 
 
+
+
 function render_block(pop,building){
     var box = BABYLON.MeshBuilder.CreateBox(pop.metadata.objid+"_box", 
     {"height":bulding_config[building.name].height,
