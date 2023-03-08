@@ -40,6 +40,7 @@ function dropAllControls(){
     dropControlIfExists("events_window")
     dropControlIfExists("action_window")
     dropControlIfExists("faction_window")
+    dropControlIfExists("buildings_window")
     dropControlIfExists("window")
     dropControlIfExists("planets_window")
     dropControlIfExists("resources_window")
