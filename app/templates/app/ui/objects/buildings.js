@@ -7,8 +7,21 @@ bulding_config = {
             }
 }
 
+buildings_control_panel = {
+    name:"events_window",
+    title: "Events:",
+    top:20,
+    left:70,
+    width:"600px",
+    height:"100px"
+}
 
-// redering natural resources
+function buildings_window(){
+    dropAllControls()
+    createControlBox(buildings_control_panel)
+}
+
+
 function render_block(pop,building){
     var box = BABYLON.MeshBuilder.CreateBox(pop.metadata.objid+"_box", 
     {"height":bulding_config[building.name].height,

@@ -99,6 +99,13 @@ function getPopBox(f){
     }
 }
 
+system_icon.onPointerClickObservable.add(function () {
+    dropAllControls()
+    plz = pleaseWaiter(dashboard)
+    dest = '/systemui?objid=' + global_location + '&orientation=planet'
+    console.log(dest)
+    window.location.href = dest;
+});
 
 
 pop_icon.onPointerClickObservable.add(function () {
@@ -185,7 +192,11 @@ function make_actions_box(actions){
                 a.gui.clickButton = function(a) {
                     console.log(actions.pop.name,": ", a.type, " button was pushed")
                     console.log("action", a)
-                    takeAction(actions.pop,a.data)
+                    if (a.data.type=='build_building'){
+                        buildings_window(pop)
+                    } else {
+                        takeAction(actions.pop,a.data)
+                }
                 };
                 // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
                 addButtonToBox(a,actions_control)
@@ -198,10 +209,3 @@ function make_actions_box(actions){
 }
 
 
-system_icon.onPointerClickObservable.add(function () {
-    dropAllControls()
-    plz = pleaseWaiter(dashboard)
-    dest = '/systemui?objid=' + global_location + '&orientation=planet'
-    console.log(dest)
-    window.location.href = dest;
-});
