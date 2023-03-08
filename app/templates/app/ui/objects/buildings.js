@@ -3,17 +3,18 @@
 bulding_config = {
     "farm": {texture:"{% static 'app/objects/planet/surface/texture_farm_1.png' %}",
                 height: 2,
-                size: 30
+                size: 30,
+                from_ground:-1
             }
 }
 
 buildings_control_panel = {
-    name:"events_window",
-    title: "Events:",
+    name:"buildings_window",
+    title: "Available Buildings:",
     top:20,
     left:70,
     width:"600px",
-    height:"100px"
+    height:"400px"
 }
 
 function buildings_window(){
@@ -31,7 +32,7 @@ function render_block(pop,building){
     );    
     box.parent = pop
     console.log(pop.position)
-        box.position = new BABYLON.Vector3(pop.position.x + 10 , pop.position.y, pop.position.z + 10) 
+    box.position = new BABYLON.Vector3(pop.position.x + 10 , bulding_config[building.name].from_ground, pop.position.z + 10) 
     var boxMat = new BABYLON.StandardMaterial(pop.metadata.objid + "_groundMat");
     boxMat.diffuseTexture =  new BABYLON.Texture(bulding_config[building.name].texture);
     box.material = boxMat; 

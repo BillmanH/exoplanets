@@ -129,8 +129,9 @@ render_resources(data['resources'])
 
 farm_building = {name:'farm',
             objtype:'building'}
-pop = scene.getMeshByName("2065545354087"+"_box")
-
+// pop = scene.getMeshByName("2065545354087"+"_box")
+pop = scene.getMeshByName("6225371037165"+"_box")
+  
 building = render_block(pop,farm_building)
 console.log(building)
 

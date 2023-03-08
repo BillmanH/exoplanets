@@ -195,7 +195,7 @@ function make_actions_box(actions){
                     if (a.data.type=='build_building'){
                         buildings_window(pop)
                     } else {
-                        takeAction(actions.pop,a.data)
+                        takeAction(actions.pop.objid,a.data)
                 }
                 };
                 // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"

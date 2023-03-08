@@ -16,12 +16,10 @@ buildings:
     - changes: 
       - wealth: -0.01
     - owned_by: pop
-    - built_by: pop
     - effort: 1
 
   - name: hospital
     - owned_by: pop
-    - built_by: pop
     - changes: 
       - wealth: -0.01
     - faction_augments:
@@ -32,7 +30,6 @@ buildings:
 
   - name: solar_panel
     - owned_by: pop
-    - built_by: pop
     - changes: 
       - wealth: -0.01
     - faction_augments:
