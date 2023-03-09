@@ -60,16 +60,8 @@ function createControlBox(control_panel){
     }
     const label = new BABYLON.GUI.Rectangle(control_panel.name)
         label.background = 'black'
-        
-        if(control_panel.left>window.screen.width){
-            label.top = control_panel.top = 700
-            label.left = control_panel.left - 800
-            
-        } else {
-            label.top = control_panel.top 
-            label.left = control_panel.left 
-            
-        }
+        label.top = control_panel.top 
+        label.left = control_panel.left 
         label.width = control_panel.width
         label.height = control_panel.height
 

@@ -197,7 +197,7 @@ function make_actions_box(actions){
                             buildings_window(response)
                         })
                     } else {
-                        takeAction(actions.pop.objid,a.data)
+                        takeAction(actions.pop,a.data)
                 }
                 };
                 // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
