@@ -31,7 +31,7 @@ function ajax_getActions(d){
 
 function ajax_getBuildings(d){
     if(d["isIdle"].toLowerCase()=="true"){
-        $.ajax({
+        return $.ajax({
             url: '/ajax/get-possible-buildings',
             type: 'get',
             data: d,
@@ -44,8 +44,6 @@ function ajax_getBuildings(d){
                 plz.dispose()
                 data.pop = d
                 console.log(data)
-                make_actions_box(data)
-                return data
             }
         })
     }

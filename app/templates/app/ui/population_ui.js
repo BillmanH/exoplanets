@@ -121,7 +121,7 @@ pop_icon.onPointerClickObservable.add(function () {
         f.data = get_specific_node(data.nodes,factions[i])[0]
         f.iter = guiIter
         f.gui = {buttonColor:"white",
-        depth:0}
+            depth:0}
         f.coord = {
             x:f.data.lat*ground_dimensions,
             y:0,
@@ -193,7 +193,9 @@ function make_actions_box(actions){
                     console.log(actions.pop.name,": ", a.type, " button was pushed")
                     console.log("action", a)
                     if (a.data.type=='build_building'){
-                        buildings_window(pop)
+                        ajax_getBuildings(actions.pop).then(function(response){
+                            buildings_window(response)
+                        })
                     } else {
                         takeAction(actions.pop.objid,a.data)
                 }

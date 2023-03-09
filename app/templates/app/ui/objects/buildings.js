@@ -17,9 +17,21 @@ buildings_control_panel = {
     height:"400px"
 }
 
-function buildings_window(){
+function buildings_window(response){
     dropAllControls()
-    createControlBox(buildings_control_panel)
+    var buildings_control = createControlBox(buildings_control_panel)
+    for (let i = 0; i < response.buildings.length; i++) {
+        f = {}
+        f.data = response.buildings[i]
+        f.gui = {buttonColor:"white",
+            depth:1}
+        f.iter = i+1
+        f.gui.clickButton = function(f) {
+            console.log(f.data.type, " button was pushed")
+            objectDetails(f.data)
+        };
+        addButtonToBox(f,buildings_control)
+    }
 }
 
 

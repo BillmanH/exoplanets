@@ -37,7 +37,7 @@ class ActionValidator:
 class BuildingValidator:
     def __init__(self,agent, buildings):
         self.agent = agent
-        self.buildings = [a for a in buildings if a["built_by"]==agent["objtype"]]
+        self.buildings = [a for a in buildings if a["owned_by"]==agent["objtype"]]
         
 
     def check_has_attr(self, building):
@@ -54,7 +54,7 @@ class BuildingValidator:
         return True
 
     def validate(self):
-        valid_buildings = [build for build in self.building if self.check_has_attr(build)]
+        valid_buildings = [build for build in self.buildings if self.check_has_attr(build)]
         return valid_buildings
     
 def get_actions(request):
@@ -114,7 +114,7 @@ def get_possible_buildings(request):
         validator = BuildingValidator(agent,buildings)
         valid_buildings = validator.validate()
         if len(valid_buildings)>0:
-            response['actions'] = valid_buildings
+            response['buildings'] = valid_buildings
         else:
             response['error'] = "no valid_buildings returned"
         return JsonResponse(response)
