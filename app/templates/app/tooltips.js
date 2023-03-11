@@ -19,7 +19,7 @@ renames = {}
 function limitDict(d) {
     var things_we_dont_print = ["name","username", "objid", "id", "orbitsId",
                                  "vx", "vy", "x", "y","z", "isInFaction", "iter",
-                                "gui","objtype","coord"]
+                                "gui","objtype","coord","ownedByID"]
     for (i in things_we_dont_print) {
         d = popvalues(d, things_we_dont_print[i])
     }

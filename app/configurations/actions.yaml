@@ -6,7 +6,55 @@ explanation:
     effort: "time in `universal time units` that the action will take to complete"
     comment: "Human readable comment. Used in UX buttons and tooltips."
     augments_self_properties: "OPTIONAL, if action augments attribute values, list attributes required in format `item,item,item;value,value,value`"
+    requires_attr: required attributes of the agent. Determines if the agent can do the action.
+
 actions:
+  -
+    type: safety_nets
+    label: action
+    applies_to: "pop"
+    effort: 2
+    requires_attr: 
+      wealth: .1
+    augments_self_properties: 
+      constitution: 0.05
+      wealth: -.05
+    comment: "increase the health of your population greatly, at the cost of a large amount of wealth"
+  -
+    type: healthcare_initiatives
+    label: action
+    applies_to: "pop"
+    effort: 2
+    requires_attr: 
+      wealth: .1
+    augments_self_properties:
+      health: 0.01
+      wealth: -.01
+    comment: "increase the health of your population slightly, at the cost of a small amount of wealth"
+  -
+    type: individual_education
+    label: action
+    applies_to: "pop"
+    effort: 1
+    requires_attr: 
+      wealth: .1
+    augments_self_properties: 
+      conformity: -0.05
+      literacy: 0.1
+    comment: "increase the general health of the population"
+
+  -
+    type: individual_education
+    label: action
+    requires_attr: 
+      wealth: .1
+    applies_to: pop
+    effort: 2
+    augments_self_properties: 
+      wealth: -.1
+      literacy: 0.01
+      factionLoyalty: -.01
+    comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
   -
     type: patriot_education
     label: action
@@ -20,28 +68,6 @@ actions:
       aggression: 0.05
     comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
   -
-    type: safety_nets
-    label: action
-    applies_to: "pop"
-    effort: 2
-    requires_attr: 
-      wealth: .1
-    augments_self_properties: 
-      constitution: 0.05
-      wealth: -.05
-    comment: "increase the general health of the population"
-  -
-    type: individual_education
-    label: action
-    applies_to: "pop"
-    effort: 1
-    requires_attr: 
-      wealth: .1
-    augments_self_properties: 
-      conformity: -0.05
-      literacy: 0.1
-    comment: "increase the general health of the population"
-  -
     type: patriot_propoganda
     label: action
     applies_to: "pop"
@@ -51,6 +77,7 @@ actions:
       conformity: .1
       aggression: .1
     comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
+
   -
     type: build_infrastructure
     label: action
@@ -58,33 +85,14 @@ actions:
     effort: 3
     requires_attr: 
       wealth: .5
-    leadingdesire: wealth
     augments_self_properties: 
       wealth: -0.05
-      industrial_infrastructure: 1
+      industry: .05
     comment: "increase industry by investing in local infrastructure, increases industry"
+
   -
-    type: healthcare_initiatives
+    type: build_building
     label: action
     applies_to: "pop"
-    effort: 2
-    requires_attr: 
-      wealth: .1
-    augments_self_properties:
-      health: 0.01
-      wealth: -.01
-    comment: "increase the health and literacy of other populations within your faction"
-  -
-    type: individual_education
-    label: action
-    requires_attr: 
-      wealth: .1
-    applies_to: pop
-    effort: 2
-    augments_self_properties: 
-      wealth: -.1
-      literacy: 0.01
-      factionLoyalty: -.01
-    comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
-
-
+    effort: 1
+    comment: "opens the building window for that population to create a new building"

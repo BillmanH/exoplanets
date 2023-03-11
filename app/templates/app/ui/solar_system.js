@@ -71,9 +71,9 @@ function createPlanet(n){
     var rect1 = new BABYLON.GUI.Rectangle(n.data.objid+"_nameplate");
         rect1.width = .06;
         rect1.height = .03;
-        rect1.cornerRadius = 10;
+        rect1.cornerRadius = 5;
         rect1.color = "white";
-        rect1.thickness = 4;
+        rect1.thickness = 2;
         rect1.background = "black";
         dashboard.addControl(rect1);
         rect1.linkWithMesh(planet);   

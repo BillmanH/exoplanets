@@ -14,7 +14,7 @@ pop_control_panel = {
     name:"faction_window",
     title: "These are the factions at this location",
     top:20,
-    left:70,
+    left:80,
     width:"400px",
     height:"100px"
 }
@@ -40,7 +40,7 @@ resources_control_panel = {
     name:"resources_window",
     title: "These are the resources known to be avalable in this system",
     top:20,
-    left:70,
+    left:80,
     width:"600px",
     height:"100px"
 }
@@ -49,7 +49,7 @@ events_control_panel = {
     name:"events_window",
     title: "Events:",
     top:20,
-    left:70,
+    left:80,
     width:"600px",
     height:"100px"
 }
@@ -99,6 +99,13 @@ function getPopBox(f){
     }
 }
 
+system_icon.onPointerClickObservable.add(function () {
+    dropAllControls()
+    plz = pleaseWaiter(dashboard)
+    dest = '/systemui?objid=' + global_location + '&orientation=planet'
+    console.log(dest)
+    window.location.href = dest;
+});
 
 
 pop_icon.onPointerClickObservable.add(function () {
@@ -114,7 +121,7 @@ pop_icon.onPointerClickObservable.add(function () {
         f.data = get_specific_node(data.nodes,factions[i])[0]
         f.iter = guiIter
         f.gui = {buttonColor:"white",
-        depth:0}
+            depth:0}
         f.coord = {
             x:f.data.lat*ground_dimensions,
             y:0,
@@ -182,10 +189,18 @@ function make_actions_box(actions){
                 width:"200px"}
                 a.iter = i+1
                 a.data = actions.actions[i]
+                a.gui.text_button = true
+                a.gui.displayed_values = ["comment","effort"]
                 a.gui.clickButton = function(a) {
                     console.log(actions.pop.name,": ", a.type, " button was pushed")
                     console.log("action", a)
-                    takeAction(actions.pop,a.data)
+                    if (a.data.type=='build_building'){
+                        ajax_getBuildings(actions.pop).then(function(response){
+                            buildings_window(response)
+                        })
+                    } else {
+                        takeAction(actions.pop,a.data)
+                }
                 };
                 // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
                 addButtonToBox(a,actions_control)
@@ -198,10 +213,3 @@ function make_actions_box(actions){
 }
 
 
-system_icon.onPointerClickObservable.add(function () {
-    dropAllControls()
-    plz = pleaseWaiter(dashboard)
-    dest = '/systemui?objid=' + global_location + '&orientation=planet'
-    console.log(dest)
-    window.location.href = dest;
-});

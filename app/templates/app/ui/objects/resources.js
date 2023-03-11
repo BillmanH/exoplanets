@@ -1,7 +1,7 @@
 {% load static %}
 
 function make_tree(coord){
-    var trunkHeight = 5
+    var trunkHeight = 3
     var treetop = 8
     var treemat = new BABYLON.StandardMaterial("groundMat");
     var treemat2 = new BABYLON.StandardMaterial("groundMat");
