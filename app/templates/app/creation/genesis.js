@@ -1,11 +1,5 @@
 
 // NOTE: These just affect the UI in the creator. This does not affect the actual genesis limits.
-planets_min = 3
-planets_max = 10
-
-moons_min = 15
-moons_max = 30
-
 pop_min = 2
 pop_max = 15
 
@@ -17,9 +11,14 @@ var form = {
     "username": "{{ user.username }}",
     "accountid":account.objid,
     "conformity":.5,
+    "constitution":.5,
     "literacy":.5,
     "aggression":.5,
-    "constitution":.5
+    "num_planets": 4,
+    "num_moons": 10,
+    "starting_pop":7,
+    "organics":.5,
+    "minerals":.5
     }
 
 
@@ -53,78 +52,44 @@ function add_button(c,n,t,f) {
 }
 
 
-function add_slider(c,n){
-    var p = document.createElement("p")
-    var text = document.createTextNode(n);
+
+function add_duality_slider(c,n1,n2){
+    // n1 = duality 1; n2 = duality 2
+    // c = document id to place it
+    var div = document.createElement("div")
+    var p1 = document.createElement("p")
+    var p2 = document.createElement("p")
+    var p3 = document.createElement("p")
+    var textn1 = document.createTextNode(n1);
+    var textn2 = document.createTextNode(n2);
+    p1.id = n1+"_text"
+    p2.id = n2+"_text"
     var slider = document.createElement("input")
-    p.appendChild(text);
-    document.getElementById(c).appendChild(p);  
+    p1.appendChild(textn1);
+    p2.appendChild(textn2);
+    p3.appendChild(slider);
+    div.appendChild(p1);
+    div.appendChild(p2);
+    div.appendChild(p3);
+    document.getElementById(c).appendChild(div); 
     slider.type="range"
     slider.min="1"
     slider.max="100"
     slider.value="50"
     slider.className = "slider"
-    slider.id = n
+    slider.id = n1+"-"+n2
     slider.oninput = function() {
-        form[n] = this.value/100;
-        population_form_check()
+        form[n1] = this.value/100;
+        form[n2] = 1-(this.value/100);
+        document.getElementById(n1+"_text").innerText = n1 + ": "+ form[n1] 
+        document.getElementById(n2+"_text").innerText = n2 + ": "+ form[n2]
       }
-    document.getElementById(c).appendChild(slider);  
+    document.getElementById(c).appendChild(div);  
 }
 
 
-var mark_system_checked = function(c,n){
-    var parent = document.querySelector("#"+c);
-    var allChildElements = parent.querySelectorAll('.button');
 
-    for(i=0; i < allChildElements.length ; i++){
-        allChildElements[i].style.color = "whitesmoke"
-        allChildElements[i].style.backgroundColor = "#2d2d2d"
-    }
 
-    form[c] = n
-    selected = document.getElementById(c + "_" + n)
-    console.log(selected)
-    selected.style.color = "black";
-    selected.style.backgroundColor = "whitesmoke"
-
-    if ((form.hasOwnProperty("num_planets"))&(form.hasOwnProperty("num_moons"))){
-        d3.selectAll('#createsystem').remove()
-        add_menu("Create this solar system", "createsystem")
-        add_button("createsystem",1,"create", build_solar_system)
-    }
-}
-
-var mark_population_checked = function(c,n){
-    var parent = document.querySelector("#"+c);
-    var allChildElements = parent.querySelectorAll('.button');
-
-    for(i=0; i < allChildElements.length ; i++){
-        allChildElements[i].style.color = "whitesmoke"
-        allChildElements[i].style.backgroundColor = "#2d2d2d"
-    }
-
-    form[c] = n
-    selected = document.getElementById(c + "_" + n)
-    console.log(selected)
-    selected.style.color = "black";
-    selected.style.backgroundColor = "whitesmoke"
-
-    population_form_check()
-}
-
-function population_form_check(){
-    if ((form.hasOwnProperty("starting_pop"))
-        &(form.hasOwnProperty("conformity"))
-        &(form.hasOwnProperty("literacy"))
-        &(form.hasOwnProperty("aggression"))
-        &(form.hasOwnProperty("constitution"))
-        ){
-            d3.selectAll('#createpeople').remove()
-            add_menu("let these people flourish", "createpeople")
-            add_button("createpeople",1,"create", build_population)
-        }
-}
 
 
 
@@ -170,9 +135,7 @@ function build_solar_system(c,n) {
         data: form,
         dataType: 'json',
         beforeSend: function () {
-            d3.selectAll('#num_planets').remove()
-            d3.selectAll('#num_moons').remove()
-            d3.selectAll('#createsystem').remove()
+            d3.selectAll('#starting_homeworld').remove()
             add_please_wait()
         },
         success: function(data){
@@ -193,33 +156,22 @@ if(account.type=="pre_beta_account"){
 
 function form_solar_system(){
     // TODO: Create text field to allow user to name planet (`planet_name`)
-    add_menu("Choose the number of planets in your system, 6 is average.", "num_planets")
-    add_menu("... and choose the number of moons, 24 is average. They will be spread across the whole system", "num_moons")
-
-    for (i=planets_min;i<=planets_max;i++){
-        add_button("num_planets",i,i, mark_system_checked)
-    }
-
-    for (i=moons_min;i<=moons_max;i++){
-        add_button("num_moons",i,i, mark_system_checked)
-    }
+    add_menu("Choose the nature of your homeworld." , "starting_homeworld")
+    add_p("starting_homeworld","Organic materials will sustain your population in the beginning, minerals will help your population later.")
+    add_duality_slider("starting_homeworld","organics","minerals")
+    add_button("starting_homeworld",1,"Build solar system, and homeworld", build_solar_system)
 }
 
 function form_population(){
     add_menu("Against all odds, a species on this planet has risen out of the muck and begun to form a culture.", "starting_pop")
-    add_p("starting_pop","Choose your starting population")
-    for (i=pop_min;i<=pop_max;i++){
-        add_button("starting_pop",i,i, mark_population_checked)
-    }    
 }
 
 function form_people_culture(){
-    add_menu("That species has established a culture that enables them to thrive.", "home_world")
-    add_p("home_world","Choose the starting attributes of your people. Each attribute has both advantages and disadvantages.")
-    add_slider("home_world","conformity")
-    add_slider("home_world","literacy")
-    add_slider("home_world","aggression")
-    add_slider("home_world","constitution")
+    add_menu("That species has established a culture that enables them to thrive.", "home_population")
+    add_p("home_population","Choose the starting attributes of your people. Each attribute has both advantages and disadvantages.")
+    add_duality_slider("home_population","conformity","constitution")
+    add_duality_slider("home_population","literacy","aggression")
+    add_button("home_population",1,"Let the people evolve.", build_population)
 }
 
 function build_population(c,n) {
@@ -231,7 +183,6 @@ function build_population(c,n) {
         beforeSend: function () {
             d3.selectAll('#home_world').remove()
             d3.selectAll('#starting_pop').remove()
-            d3.selectAll('#createpeople').remove()
             add_please_wait()
         },
         success: function (data) {
