@@ -26,6 +26,8 @@ function buildings_window(response){
         f.gui = {buttonColor:"white",
             depth:1}
         f.iter = i+1
+        f.gui.text_button = true
+        f.gui.displayed_values = ["description","effort"]
         f.gui.clickButton = function(f) {
             console.log(f.data.type, " button was pushed")
             objectDetails(f.data)

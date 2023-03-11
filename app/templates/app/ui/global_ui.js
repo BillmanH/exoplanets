@@ -160,7 +160,7 @@ var addButtonToBox = function(n,control) {
     } else {
         buttonText = n.data.name
     }
-    // console.log(n.gui.buttonColor)
+
     var button = BABYLON.GUI.Button.CreateSimpleButton(buttonName + n.data.objid, buttonText);
         if(n.gui.hasOwnProperty('width')){
             button.width = n.gui.width
@@ -178,6 +178,34 @@ var addButtonToBox = function(n,control) {
         button.background = "black";
         button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+
+        if(n.gui.hasOwnProperty('text_button')){
+            const buttonDescription = new BABYLON.GUI.Rectangle("text_block")
+            buttonDescription.background = 'black'
+            buttonDescription.top = button.top 
+            buttonDescription.left =  pxToNum(button.left) + pxToNum(button.width) + 10
+            buttonDescription.width = (pxToNum(control.width)-pxToNum(button.width) - 40 ).toString() + "px"
+            buttonDescription.height = button.height
+            buttonDescription.paddingLeft = 2
+            buttonDescription.paddingRight = 2
+            
+            buttonDescription.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+            buttonDescription.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+            var textblock = new BABYLON.GUI.TextBlock("buttonDescription_text")
+                textblock.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+                textblock.textVerticalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT
+                textblock.background = "black";
+                textblock.color = "white";  
+                textblock.fontSize = 14; 
+                textblock.textWrapping = true; 
+                textblock.text = dictToSingleLIne(n.data, n.gui.displayed_values) 
+            buttonDescription.addControl(textblock);
+
+            control.addControl(buttonDescription);
+            console.log(buttonDescription.width)
+        }
 
         control.addControl(button)
         switch(n.gui.buttonName){
@@ -288,4 +316,11 @@ function create_icon(params){
     icon.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     dashboard.addControl(icon)
     return icon
+}
+
+
+// One off small functions
+function pxToNum(px){
+    var i = parseInt(px.replace(/px/g, ""))
+    return i
 }

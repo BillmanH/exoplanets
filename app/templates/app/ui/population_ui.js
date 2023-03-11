@@ -189,6 +189,8 @@ function make_actions_box(actions){
                 width:"200px"}
                 a.iter = i+1
                 a.data = actions.actions[i]
+                a.gui.text_button = true
+                a.gui.displayed_values = ["comment","effort"]
                 a.gui.clickButton = function(a) {
                     console.log(actions.pop.name,": ", a.type, " button was pushed")
                     console.log("action", a)
