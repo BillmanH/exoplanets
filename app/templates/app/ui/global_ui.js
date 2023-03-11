@@ -278,8 +278,8 @@ function hoverTooltip(obj){
 
 function create_icon(params){
     var icon = BABYLON.GUI.Button.CreateImageOnlyButton(params.name, params.image);
-    icon.width = "40px";
-    icon.height = "40px";
+    icon.width = "60px";
+    icon.height = "60px";
     icon.top = params.top
     icon.left = 20
     icon.color = "white";

@@ -14,7 +14,7 @@ pop_control_panel = {
     name:"faction_window",
     title: "These are the factions at this location",
     top:20,
-    left:70,
+    left:80,
     width:"400px",
     height:"100px"
 }
@@ -40,7 +40,7 @@ resources_control_panel = {
     name:"resources_window",
     title: "These are the resources known to be avalable in this system",
     top:20,
-    left:70,
+    left:80,
     width:"600px",
     height:"100px"
 }
@@ -49,7 +49,7 @@ events_control_panel = {
     name:"events_window",
     title: "Events:",
     top:20,
-    left:70,
+    left:80,
     width:"600px",
     height:"100px"
 }
