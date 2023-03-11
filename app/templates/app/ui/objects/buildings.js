@@ -12,7 +12,7 @@ buildings_control_panel = {
     name:"buildings_window",
     title: "Available Buildings:",
     top:20,
-    left:70,
+    left:80,
     width:"600px",
     height:"400px"
 }
