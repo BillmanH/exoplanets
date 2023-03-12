@@ -105,7 +105,7 @@ def take_action(request):
     return JsonResponse(response) 
 
 
-def take_bulding_action(request):
+def take_building_action(request):
     request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     building = request["building"]
