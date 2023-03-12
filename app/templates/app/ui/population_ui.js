@@ -199,6 +199,7 @@ function make_actions_box(actions){
                             buildings_window(response)
                         })
                     } else {
+                        objectDetails(a.data)
                         takeAction(actions.pop,a.data)
                 }
                 };

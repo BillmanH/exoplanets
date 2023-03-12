@@ -36,6 +36,7 @@ urlpatterns = [
     path("ajax/get-local-events", events.get_local_events, name="get_local_events"),
 
     path("ajax/take-action", pop.take_action, name="pop_take_action"),
+    path("ajax/take-building-action", pop.take_building_action, name="pop_take_building_action"),
     path("ajax/overview", overview.get_overview, name="overview"),
     path("ajax/newsfeed", overview.get_newsfeed, name="newsfeed")
 ]
