@@ -1,33 +1,56 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "name": {
-            "type": "string"
+        "accounts_ExoDestAI_name": {
+            "type": "String"
         },
-        "location": {
-            "type": "string"
+        "deployed_model_name": {
+            "type": "String"
         },
-        "sku": {
-            "type": "string"
+        "tags": {
+            "type": "object",
+            "defaultValue": {}
         },
-        "tagValues": {
-            "type": "object"
+        "region": {
+            "type":"string",
+            "defaultValue": "West US 2"
         }
+        
     },
+    "variables": {},
     "resources": [
-        {
-            "apiVersion": "2022-03-01",
-            "name": "[parameters('name')]",
-            "location": "[parameters('location')]",
+        { 
             "type": "Microsoft.CognitiveServices/accounts",
-            "kind": "OpenAI",
-            "tags": "[if(contains(parameters('tagValues'), 'Microsoft.CognitiveServices/accounts'), parameters('tagValues')['Microsoft.CognitiveServices/accounts'], json('{}'))]",
+            "apiVersion": "2022-12-01",
+            "name": "[parameters('accounts_ExoDestAI_name')]",
+            "location": "[parameters('region')]",
+            "tags": "[parameters('tags')]",
             "sku": {
-                "name": "[parameters('sku')]"
+                "name": "S0"
             },
+            "kind": "OpenAI",
             "properties": {
-                "customSubDomainName": "[toLower(parameters('name'))]"
+                "customSubDomainName": "[parameters('accounts_ExoDestAI_name')]",
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2022-12-01",
+            "name": "[concat(parameters('accounts_ExoDestAI_name'), '/', parameters('deployed_model_name'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_ExoDestAI_name'))]"
+            ],
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "gpt-35-turbo",
+                    "version": "0301"
+                },
+                "scaleSettings": {
+                    "scaleType": "Standard"
+                }
             }
         }
     ]
