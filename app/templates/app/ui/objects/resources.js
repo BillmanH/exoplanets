@@ -13,6 +13,7 @@ function make_tree(coord){
     branches.position = new BABYLON.Vector3(coord.x, treetop/2+trunkHeight, coord.z) 
     trunk.material = treemat; //Place the material property of the ground
     branches.material = treemat2;
+    branches.material.specularColor = new BABYLON.Color3(0.05, 0.05, 0.05);
 }
 
 function build_organic_resource(r){

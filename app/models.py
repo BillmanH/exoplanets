@@ -224,6 +224,7 @@ def get_galaxy_nodes():
 
 
 def get_home_system(username):
+    # If they just created a new game, they will only have one system. 
     nodes_query = (
         f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
     )
