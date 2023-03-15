@@ -6,10 +6,11 @@ import azure.functions as func
 from .cmdb_graph import CosmosdbClient
 
 from .time_functions import global_ticker
-from .action import (get_global_actions, 
+from .tools.action import (get_global_actions, 
                         validate_action_time, 
                         parse_properties, 
                         resolve_action,
+                        make_action_event,
                         mark_action_as_resolved,
                         mark_agent_idle)
 
@@ -47,9 +48,9 @@ def main(mytimer: func.TimerRequest) -> None:
             resolve_action(c,agent,action)
             mark_action_as_resolved(c,agent, job)
             mark_agent_idle(c, agent)
-
-            c.run_queries()
-
+            action_event = make_action_event(c,agent,job)
+            c.add_query(c.create_custom_edge(action_event,agent,'completed'))
+            c.add_query(c.create_vertex(action_event))
             logging.info(f'validActionCounter: {validActionCounter}')
             
 
@@ -61,6 +62,3 @@ def main(mytimer: func.TimerRequest) -> None:
 
 
     logging.info(f'Python timer trigger function ran at: {utc_timestamp}')
-
-# Example action query:
-# 6816154304433

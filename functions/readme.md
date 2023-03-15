@@ -17,6 +17,12 @@ The functions all serve various different functions. Usually grouped by computat
     - Planetary resource renewal
 
 
+## Layout of an exodestiny funciton
+- function
+    - `__init__.py`  _Just the main funciton_
+    - tools
+        - _Methods that run the actual code_
+    - `cmdb_graph.py` module that executes queries and interacts with the graph. 
 
 
 # Dev Cycle Steps:
