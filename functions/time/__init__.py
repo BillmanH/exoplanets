@@ -28,7 +28,7 @@ def main(mytimer: func.TimerRequest) -> None:
     # Time is constant, pulled in once at the begining of the function
     c.run_query("g.V().hasLabel('time').valueMap()")
     time = c.clean_nodes(c.res)[0]
-
+    params = {'time':{'currentTime':time}}
     ### START of time_funtions here
 
     # Get all pending actions
@@ -48,10 +48,13 @@ def main(mytimer: func.TimerRequest) -> None:
             resolve_action(c,agent,action)
             mark_action_as_resolved(c,agent, job)
             mark_agent_idle(c, agent)
-            action_event = make_action_event(c,agent,job)
+            action_event = make_action_event(c,agent,job,params)
             c.add_query(c.create_custom_edge(action_event,agent,'completed'))
             c.add_query(c.create_vertex(action_event))
-            logging.info(f'validActionCounter: {validActionCounter}')
+            # print(c.stack)
+            logging.info(f'validActionCounter: {validActionCounter}, total queries:{len(c.stack)}')
+            c.run_queries()
+
             
 
     logging.info(f'Total ations resolved in this run: {validActionCounter}')

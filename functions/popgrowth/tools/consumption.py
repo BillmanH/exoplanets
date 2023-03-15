@@ -75,7 +75,7 @@ def tally_consumption(c,consumption_df,resources):
         location = c.clean_node(r['objects'][0])
         consumption_df.loc[consumption_df['location_id']==location['objid'],'available'] = int(resource['volume'])
     consumption_df['remaining'] = consumption_df['available']-consumption_df['consumption']
-    consumption_df[consumption_df['remaining']<0]['remaining'] = -1
+    consumption_df.loc[consumption_df['remaining']<0,'remaining'] = -1
     consumption_df['remaining'] = consumption_df['remaining'].fillna(-1)
     return consumption_df
 

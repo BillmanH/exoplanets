@@ -1,5 +1,6 @@
 import logging
 import yaml
+import numpy as np
 
 def uuid(n=13):
     return "".join([str(i) for i in np.random.choice(range(10), n)])
@@ -9,7 +10,7 @@ def make_action_event(c,pop,act,params):
         'objid':uuid(),
         'name':'job',
         'label':'event',
-        'text': f"The population ({pop['name']}) has completed {act['name']}",
+        'text': f"The population ({pop['name']}) has completed {act['actionType']}",
         'visibleTo':pop['username'][0],
         'time':params['time']['currentTime'],
         'username':'azfunction'
