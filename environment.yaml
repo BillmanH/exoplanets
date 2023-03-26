@@ -1,14 +1,14 @@
-name: exoplanets
+name: exodestiny
 channels:
   - conda-forge
   - defaults
 dependencies:
-  - python==3.7
+  - python==3.9
   - black
   - cryptography
   - django==3.2.7
   - ipykernel
-  - openpyx==3.1.0
+  - openpyxl==3.1.0
   - openai==0.10.5
   - pandas
   - pip

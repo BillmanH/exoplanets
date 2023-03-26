@@ -20,6 +20,6 @@ cd $Env:abspath
 az deployment group create --resource-group $resourceGroupName --template-file "infra/ARM/template.json" --parameters "infra/ARM/parameters.json"
 
 
-# Creating the azure functions separately until I get it figured out. 
-az deployment group create --resource-group $resourceGroupName --template-file "infra/ARM/template_func.json" --parameters "infra/ARM/parameters_func.json"
+# Open AI is it's own thing as well
+az deployment group create --resource-group $resourceGroupName --template-file "infra/ARM/openai_template.json" --parameters "infra/ARM/openai_parameters.json"
 
