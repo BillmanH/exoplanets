@@ -33,7 +33,7 @@ That requires that you have a `env-vars.json` file, which is in the gitignore. A
     "AZURE_STATIC_CONTAINER": "static"
 }
 ```
-
+A good way to know what variables you need is to search for `os.getenv` in the code. In VSCode this is done with `ctrl`+`shft`+`f`
 
 To get the list of local variables (to ensure that local _dev_ and cloud _prod_ match):
 ```
