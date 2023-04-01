@@ -4,7 +4,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python==3.8
+  - python==3.
   - altair
   - nltk
   - pip
@@ -16,6 +16,7 @@ dependencies:
   - scikit-learn
   - pip:
     - nb_black
+    - openai
     - gremlinpython==3.5.1
     # - gremlinpython==3.6.0 # looking at upgrate, but don't need it right now.
     - psycopg2-binary==2.9.2

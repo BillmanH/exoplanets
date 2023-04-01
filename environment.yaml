@@ -1,4 +1,4 @@
-name: exoplanets
+name: exodestiny
 channels:
   - conda-forge
   - defaults
@@ -8,13 +8,15 @@ dependencies:
   - cryptography
   - django==3.2.7
   - ipykernel
-  - openpyx==3.1.0
+  - openpyxl==3.1.0
+  - openai==0.10.5
   - pandas
   - pip
   - pyyaml
   - scikit-learn
   - pip:
     - nb_black
+    - openai
     - gremlinpython==3.5.1
     - psycopg2-binary==2.9.2
 prefix: C:\Users\william.harding\Anaconda3\envs\exoplanets

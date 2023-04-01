@@ -148,6 +148,7 @@ data/examplesystem.json
 infra/ARM/*parameters.json
 app/static/app/app/admin/img/icon-clock.svg
 infra/ARM/parameters*.json
+infra/ARM/*param*.json
 
 # Settings files that exist, but changes aren't tracked
 #   This is done to create a placeholder when cloning a new repo. 
