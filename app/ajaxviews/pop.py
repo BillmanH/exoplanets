@@ -89,12 +89,37 @@ def take_action(request):
     request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     action = request["action"]
-    # define queries
-    # g.V().has('objid','0000000000').property('isIdle','true')
-    # get output
     response = {}
-    #### Phase : validate action
     c = CosmosdbClient()
+    setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
+    getTime = "g.V().hasLabel('time').valueMap()"
+    response['result'] = 'valid: Pop is able to take action'
+    c.run_query(getTime)
+    universalTime = c.clean_nodes(c.res)
+    data = {"nodes": [], "edges": create_job(c,agent,action,universalTime)}
+    c.upload_data(agent['username'], data)
+    response["uploadresp"] = str(c.res)
+    setIdleResp = c.run_query(setIdle)
+    response["setIdleResp"] = str(setIdleResp)
+
+    return JsonResponse(response) 
+
+
+def take_building_action(request):
+    request = ast.literal_eval(request.GET['values'])
+    agent = request["agent"]
+    building = request["building"]
+    response = {}
+    c = CosmosdbClient()
+
+    action = {
+        "type": f"{building['name']} construction",
+        "label": "construction",
+        "comment": f"constructing a {building['name']}",
+        "effort":building['effort'],
+        "applies_to":building['owned_by']
+    }
+
     setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
     getTime = "g.V().hasLabel('time').valueMap()"
     response['result'] = 'valid: Pop is able to take action'

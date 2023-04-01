@@ -75,7 +75,7 @@ def tally_consumption(c,consumption_df,resources):
         location = c.clean_node(r['objects'][0])
         consumption_df.loc[consumption_df['location_id']==location['objid'],'available'] = int(resource['volume'])
     consumption_df['remaining'] = consumption_df['available']-consumption_df['consumption']
-    consumption_df[consumption_df['remaining']<0]['remaining'] = -1
+    consumption_df.loc[consumption_df['remaining']<0,'remaining'] = -1
     consumption_df['remaining'] = consumption_df['remaining'].fillna(-1)
     return consumption_df
 
@@ -171,7 +171,6 @@ def consume(c,params):
     pops_df,species_df,locations_df = all_pops_consumption(c)
     # get the origional list of populations who would consume resources
     consumption_df = get_consumption_df(locations_df,species_df,params)
-    print(consumption_df)
     # Some species consume more than one resource, so we extend
     consumption_df = expand_consumption_df(consumption_df)
     # Get the available resources for those locations
@@ -183,3 +182,4 @@ def consume(c,params):
     consumption_df.apply(lambda x: make_resource_update_query(c,x),axis=1)
     # for locations with resources < 0 we lower the health of all populations
     consumption_df[consumption_df['remaining']<=0].apply(lambda x: lower_health(c,params,x),axis=1)
+    print(consumption_df)

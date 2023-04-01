@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "accounts_ExoDestAI_name": {
+            "type": "String"
+        },
+        "deployed_model_name": {
+            "type": "String"
+        },
+        "tags": {
+            "type": "object",
+            "defaultValue": {}
+        },
+        "region": {
+            "type":"string",
+            "defaultValue": "West US 2"
+        }
+        
+    },
+    "variables": {},
+    "resources": [
+        { 
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2022-12-01",
+            "name": "[parameters('accounts_ExoDestAI_name')]",
+            "location": "[parameters('region')]",
+            "tags": "[parameters('tags')]",
+            "sku": {
+                "name": "S0"
+            },
+            "kind": "OpenAI",
+            "properties": {
+                "customSubDomainName": "[parameters('accounts_ExoDestAI_name')]",
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2022-12-01",
+            "name": "[concat(parameters('accounts_ExoDestAI_name'), '/', parameters('deployed_model_name'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_ExoDestAI_name'))]"
+            ],
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "gpt-35-turbo",
+                    "version": "0301"
+                },
+                "scaleSettings": {
+                    "scaleType": "Standard"
+                }
+            }
+        }
+    ]
+}

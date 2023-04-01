@@ -21,6 +21,21 @@ const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
     center.isVisible = false
 
 
+// redering natural resources
+function render_resources(resources){
+    if (data.hasOwnProperty('resources')){
+        if  (resources.length > 0){
+            for (let i = 0; i < resources.length; i++){
+                resource = resources[i]
+                if(resource.name.toLowerCase()=="organic"){
+                    build_organic_resource(resource)
+                }
+            }
+        }
+    }
+}
+
+render_resources(data['resources'])
 
 function createFaction(n){
     const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_box", 
@@ -33,13 +48,14 @@ function createFaction(n){
       boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
       box.material = boxMat; 
       
-    var disc = BABYLON.MeshBuilder.CreateCylinder(n.data.objid + "disc", {diameter:50, height:1});
+    var disc = BABYLON.MeshBuilder.CreateCylinder(n.data.objid + "_disc", {diameter:50, height:1});
         disc.position.y = factionbuildingHeight/2*-1
         disc.parent = box
     const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
         discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
         disc.material = discMat; 
 
+        
     box.metadata = n.data
     box.actionManager = new BABYLON.ActionManager(scene);
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
@@ -51,6 +67,9 @@ function createFaction(n){
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(n.data)
     }));
+
+    // removeCollidingMesh(n.data.objid + "_disc","tree_trunk")
+    // removeCollidingMesh(n.data.objid + "_disc","tree_brances")
 }
 
 function createPop(n){
@@ -79,6 +98,7 @@ function createPop(n){
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(n.data.population)
     }));
+    // removeCollidingMesh(box.name,"tree_trunk")
 }
 
 
@@ -108,25 +128,9 @@ for (let i = 0; i < factions.length; i++) {
     }
   }
 
-
-// redering natural resources
-function render_resources(resources){
-    if (data.hasOwnProperty('resources')){
-        if  (resources.length > 0){
-            for (let i = 0; i < resources.length; i++){
-                resource = resources[i]
-                if(resource.name.toLowerCase()=="organic"){
-                    build_organic_resource(resource)
-                }
-            }
-        }
-    }
-}
-
-
-
-render_resources(data['resources'])
-
+  
+removeCollidingMesh("_disc","tree")
+// removeCollidingMesh("_box","tree")
 // farm_building = {name:'farm',
 //             objtype:'building'}
 // // pop = scene.getMeshByName("2065545354087"+"_box")

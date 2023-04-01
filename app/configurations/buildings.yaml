@@ -36,6 +36,7 @@ buildings:
     name: solar_panel
     description: "Generates wealth for all populations in this faction except the owner"
     owned_by: pop
+    effort: 3
     changes: 
       wealth: -0.01
     faction_augments:

@@ -1,18 +1,16 @@
-import os,sys
-
+import os
+# Pickle isn't used, but I might use it. 
+import pickle
 from functools import reduce
 import operator
 
 import yaml
 import numpy as np
 import pandas as pd
-from django.db import models
+
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
-
-import asyncio
-if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import logging
 
 
 # ASSERTIONS: 
@@ -34,6 +32,7 @@ class GraphFormatError(Exception):
 # NOTE: in order not to delay load times, try making small queries to populate the page first, 
 # then handle additional queries in `axajviews`. This will be better for the clint in the long run. 
 
+
 class CosmosdbClient():
     # TODO: build capability to 'upsert' nodes instead of drop and replace. 
     """
@@ -42,9 +41,10 @@ class CosmosdbClient():
     cb.run_queries()
     """
     def __init__(self) -> None:
+        # Note username is removed when performing in Azure Functions
         self.endpoint = os.getenv("endpoint","env vars not set")
-        self.username = os.getenv("dbusername","env vars not set")
         self.password = os.getenv("dbkey","env vars not set")+"=="
+        self.username = os.getenv("dbusername","env vars not set")
         self.c = None
         self.res = "no query"
         self.stack = []
@@ -99,7 +99,6 @@ class CosmosdbClient():
         return s
 
     def clean_node(self, x):
-        # For each value, return the last value in the array for that object. 
         for k in list(x.keys()):
             if type(x[k])==list:
                 x[k] = x[k][-1]
@@ -134,10 +133,7 @@ class CosmosdbClient():
             objects = reduce(operator.concat, r['objects'])
 
             for i,l in enumerate(labels):
-                try:
-                    t[l]=self.clean_node(objects[i])
-                except:
-                    print("had an issue with ,",i,l, objects)
+                t[l]=self.clean_node(objects[i])
             fab.append(t)
         return fab
 
@@ -155,7 +151,7 @@ class CosmosdbClient():
         return edge
     
     # creating strings for uploading data
-    def create_vertex(self,node, username):
+    def create_vertex(self,node):
         if (len(
             [i for i in expectedProperties 
                 if i in list(node.keys())]
@@ -177,20 +173,20 @@ class CosmosdbClient():
                 substr = f".property('{k}','{self.cs(node[k])}')"
             gaddv += substr
         if 'username' not in properties:
-            gaddv += f".property('username','{username}')"
-
+            gaddv += f".property('username','azfunction')"
         gaddv += f".property('objtype','{node['label']}')"
+        # logging.info(f'gaddv: {gaddv}')
         return gaddv
 
-    def create_edge(self, edge, username):
-        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('username','{username}')"
+    def create_edge(self, edge):
+        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('username','azfunction')"
         for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
             gadde += f".property('{i}','{edge[i]}')"
         gadde_fin = f".to(g.V().has('objid','{self.cs(edge['node2'])}'))"
         return gadde + gadde_fin
 
 
-    def upload_data(self, username, data):
+    def upload_data(self, data):
         """
         uploads nodes and edges in a format {"nodes":nodes,"edges":edges}.
         Each value is a list of dicts with all properties. 
@@ -199,102 +195,15 @@ class CosmosdbClient():
         """
         data = self.test_fields(data)
         for node in data["nodes"]:
-            n = self.create_vertex(node, username)
+            n = self.create_vertex(node)
             self.add_query(n)
             if len(self.stack)>self.stacklimit:
                 self.run_queries()
         self.run_queries()
         for edge in data["edges"]:
-            e = self.create_edge(edge, username)
+            e = self.create_edge(edge)
             self.add_query(e)
             if len(self.stack)>self.stacklimit:
                 self.run_queries()
         self.run_queries()
 
-
-
-def get_galaxy_nodes():
-    # TODO: Add Glat and glon to systems when created
-    # TODO: Create edge from user that connects to systems that have been discovered
-    query="g.V().haslabel('system').valueMap('hostname','objid','disc_facility','glat','glon')"
-    c = CosmosdbClient()
-    c.run_query(query)
-    return c.clean_nodes(c.res)
-
-
-
-def get_home_system(username):
-    # If they just created a new game, they will only have one system. 
-    nodes_query = (
-        f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
-    )
-    system_query = (
-        f"g.V().hasLabel('system').has('username','{username}').has('isHomeSystem','true').valueMap()"
-    )
-    c = CosmosdbClient()
-    c.add_query(nodes_query)
-    c.add_query(system_query)
-    c.run_queries()   
-    nodes = c.res[nodes_query]
-    system = c.clean_nodes(c.res[system_query])[0]
-    edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
-    system = {"nodes": c.clean_nodes(nodes), "edges": edges, "system":system}
-    return system
-
-def get_system(objid,orientation):
-    if orientation == 'planet':
-        nodes_query = (
-            f"g.V().has('objid','{objid}').out('isInSystem').in().valueMap()"
-        )
-        system_query = (
-            f"g.V().has('objid','{objid}').out('isInSystem').valueMap()"
-        )
-    c = CosmosdbClient()
-    c.add_query(nodes_query)
-    c.add_query(system_query)
-    c.run_queries()   
-    nodes = c.res[nodes_query]
-    system = c.clean_nodes(c.res[system_query])[0]
-    edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
-    system = {"nodes": c.clean_nodes(nodes), "edges": edges, "system":system}
-    return system
-
-
-def get_factions(username):
-    nodes_query = (
-        f"g.V().has('username','{username}').has('label','faction').valuemap()"
-    )
-    c = CosmosdbClient()
-    c.run_query(nodes_query)   
-    nodes = c.res
-    system = {"nodes": c.clean_nodes(nodes), "edges": []}
-    return system
-
-
-def get_local_population(objid):
-    # objid is the id of the object which contains ('inhabits') the population/s
-    population_query = (
-        f"""g.V().has('objid','{objid}').as('location')
-            .in('inhabits').as('population')
-            .local(
-                union(
-                    out('isInFaction').as('faction'),
-                    out('isOfSpecies').as('species')
-                    )
-                    .fold()).as('faction','species')
-                    .path()
-                    .by(unfold().valueMap().fold())"""
-    )
-    resource_query = (
-        f"""g.V().has('objid','{objid}').as('location')
-            .out('hasResource').as('resource').valueMap()
-        """
-    )
-    c = CosmosdbClient()
-    c.add_query(population_query)
-    c.add_query(resource_query)
-    c.run_queries()   
-    nodes = c.reduce_res(c.res[population_query])
-    resources = c.clean_nodes(c.res[resource_query])
-    data = {"nodes": nodes, "edges": [], "resources":resources}
-    return data

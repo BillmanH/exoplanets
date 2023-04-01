@@ -1,0 +1,12 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "name": "mytimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      // "RunOnStartup":true,
+      "schedule": "0 */10 * * * *"
+    }
+  ]
+}

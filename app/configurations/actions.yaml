@@ -17,7 +17,7 @@ actions:
     requires_attr: 
       wealth: .1
     augments_self_properties: 
-      constitution: 0.05
+      wealth: 0.05
       wealth: -.05
     comment: "increase the health of your population greatly, at the cost of a large amount of wealth"
   -

@@ -31,6 +31,7 @@ function buildings_window(response){
         f.gui.clickButton = function(f) {
             console.log(f.data.type, " button was pushed")
             objectDetails(f.data)
+            takeBuildingAction(response.pop,f.data)
         };
         addButtonToBox(f,buildings_control)
     }
