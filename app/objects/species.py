@@ -1,4 +1,4 @@
-from objects import baseobjects
+from ..objects import baseobjects
 
 class Creature(baseobjects.Baseobject):
     def __init__(self):

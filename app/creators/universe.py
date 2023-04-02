@@ -6,7 +6,7 @@ from ..functions import maths
 from ..functions import language
 from ..functions import configurations
 
-from objects import celestials
+from ..objects import celestials
 
 conf = configurations.get_configurations()
 

@@ -1,7 +1,8 @@
 # All Celestial objects. Planets, moons, stars, including the base Body class.
-from functions import maths
-from functions import language
-from objects import resource
+
+from ..functions import maths
+from ..functions import language
+from ..objects import resource
 
 class Body:
     def __init__(self,conf=None):

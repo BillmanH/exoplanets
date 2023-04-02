@@ -1,4 +1,4 @@
-from functions import maths
+from ..functions import maths
 
 class Resource:
     def __init__(self, conf):

@@ -1,7 +1,7 @@
 from ..functions import maths
 
-from objects import species
-from objects import baseobjects
+from ..objects import species
+from ..objects import baseobjects
 
 class Pop(species.Creature):
     def __init__(self, species):

@@ -1,7 +1,8 @@
 from app.models import CosmosdbClient
 from django.http import JsonResponse
 
-from app.creators import homeworld, maths
+from app.creators import homeworld
+from ..functions import maths
 import ast
 
 
