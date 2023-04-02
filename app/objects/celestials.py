@@ -4,12 +4,14 @@ from ..functions import language
 from ..objects import resource
 
 class Body:
-    def __init__(self):
+    def __init__(self,conf=None):
         self.objid = maths.uuid(n=13)
         self.type = "celestial body"
         self.label = "body"
         self.name = "unnamed"
         self.resources = []
+        if conf:
+            self.config = conf
 
     def make_name(self, n1, n2):
         self.name = language.make_word(maths.rnd(n1, n2))
@@ -23,8 +25,9 @@ class Body:
         }
     
     def scan_body(self):
-        for n in pdata[self.type]['resources'].keys():
-            self.resources.append(resource.Resource(pdata[self.type]['resources'][n]))
+        # TODO : Handle if object doesn't have self.type
+        for n in self.config[self.type]['resources'].keys():
+            self.resources.append(resource.Resource(self.config[self.type]['resources'][n]))
 
     def __repr__(self) -> str:
         return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"
@@ -50,9 +53,9 @@ class Planet(Body):
         self.make_name(2, 1)
         self.label = "planet"
         self.type = t
-        self.radius = maths.rnd(pdata[t]["radius_mean"], pdata[t]["radius_std"], min_val=0,type='float')
-        self.mass = maths.rnd(pdata[t]["mass_mean"], pdata[t]["mass_std"],min_val=0,type='float')
-        self.orbitsDistance = maths.np.round(maths.np.random.uniform(pdata[t]["distance_min"], pdata[t]["distance_max"]),3)
+        self.radius = maths.rnd(self.config[t]["radius_mean"], self.config[t]["radius_std"], min_val=0,type='float')
+        self.mass = maths.rnd(self.config[t]["mass_mean"], self.config[t]["mass_std"],min_val=0,type='float')
+        self.orbitsDistance = maths.np.round(maths.np.random.uniform(self.config[t]["distance_min"], self.config[t]["distance_max"]),3)
         self.orbitsId = orbiting["objid"]
         self.orbitsName = orbiting["name"]
         self.isSupportsLife = False
@@ -78,12 +81,12 @@ class Moon(Body):
         self.make_name(2, 1)
         self.label = "moon"
         self.type = t
-        self.orbiting = r.choice(planets)
+        self.orbiting = maths.np.choice(planets)
         self.orbitsId = self.orbiting["objid"]
         self.orbitsDistance = maths.rnd(0.005,0.1,type='float')  
-        self.mass = abs(r.normal(mdata[t]["mass_mean"], mdata[t]["mass_std"]))
+        self.mass = abs(maths.np.normal(self.config[t]["mass_mean"], self.config[t]["mass_std"]))
         self.radius = (
-            abs(r.normal(mdata[t]["radius_mean"], mdata[t]["radius_std"]))
+            abs(maths.np.normal(self.config[t]["radius_mean"], self.config[t]["radius_std"]))
             * self.orbiting["radius"]
         )
         self.orbitsName = self.orbiting["name"]
