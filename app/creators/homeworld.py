@@ -6,6 +6,10 @@ from numpy import interp, linspace
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
+from ..functions import configurations
+
+from ..objects import species
+
 
 # Setup Params:
 n_steps = 6  # max factions

@@ -1,3 +1,13 @@
+from objects import baseobjects
+
+class Creature(baseobjects.Baseobject):
+    def __init__(self):
+        super().__init__()
+        self.label = "creature"
+
+    def get_fundimentals(self):
+        return {"name": self.name, "objid": self.objid, "label": self.label}
+
 
 class Species(baseobjects.Baseobject):
     def build_attr(self, data):

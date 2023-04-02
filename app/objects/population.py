@@ -1,18 +1,22 @@
+from ..functions import maths
 
-class Pop(Creature):
+from objects import species
+from objects import baseobjects
+
+class Pop(species.Creature):
     def __init__(self, species):
         super().__init__()
         self.conformity = abs(
-            round(random.normal(float(species.conformity), species.pop_std), 3)
+            round(maths.np.random.normal(float(species.conformity), species.pop_std), 3)
         )
         self.literacy = abs(
-            round(random.normal(float(species.literacy), species.pop_std), 3)
+            round(maths.np.random.normal(float(species.literacy), species.pop_std), 3)
         )
         self.aggression = abs(
-            round(random.normal(float(species.aggression), species.pop_std), 3)
+            round(maths.np.random.normal(float(species.aggression), species.pop_std), 3)
         )
         self.constitution = abs(
-            round(random.normal(float(species.constitution), species.pop_std), 3)
+            round(maths.np.random.normal(float(species.constitution), species.pop_std), 3)
         )
         self.label = "pop"
         self.type = "pop"
@@ -28,7 +32,7 @@ class Pop(Creature):
         self.industry = (self.aggression + self.constitution) / 2
         self.wealth = (self.literacy + self.industry) / 2
         self.factionLoyalty = abs(
-            round(random.normal(float(self.conformity), 0.2 * (1 - float(self.conformity))), 3)
+            round(maths.np.random.normal(float(self.conformity), 0.2 * (1 - float(self.conformity))), 3)
         )
 
     def set_faction(self, n):
