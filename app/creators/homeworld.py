@@ -6,9 +6,10 @@ from numpy import interp, linspace
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
-from ..functions import configurations
+
 
 from ..objects import species
+from ..objects import population
 
 
 # Setup Params:
@@ -43,11 +44,11 @@ def get_faction_objid(df, faction_no):
 
 def build_people(data):
     # Get the Species
-    species = Species()
-    species.build_attr(data)
+    spec = species.Species()
+    spec.build_attr(data)
 
     # Build the populations (note that pops is a DataFrame)
-    pops = [Pop(species) for i in range(int(data["starting_pop"]))]
+    pops = [population.Pop(species) for i in range(int(data["starting_pop"]))]
 
     # Build the factions based on Kmeans Clustering
     pops_df = pd.DataFrame([p.get_data() for p in pops])
@@ -56,7 +57,7 @@ def build_people(data):
         pops_df[[c for c in pops_df.columns if c in starting_attributes]]
     )
 
-    factions = [Faction(i) for i in range(kmeans.n_clusters)]
+    factions = [population.Faction(i) for i in range(kmeans.n_clusters)]
 
     # Assign the pop to that faction number, not yet matched to an ID.
     for i, n in enumerate(kmeans.labels_):
