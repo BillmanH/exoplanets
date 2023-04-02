@@ -48,7 +48,7 @@ def build_people(data):
     spec.build_attr(data)
 
     # Build the populations (note that pops is a DataFrame)
-    pops = [population.Pop(species) for i in range(int(data["starting_pop"]))]
+    pops = [population.Pop(spec) for i in range(int(data["starting_pop"]))]
 
     # Build the factions based on Kmeans Clustering
     pops_df = pd.DataFrame([p.get_data() for p in pops])
@@ -89,7 +89,7 @@ def build_people(data):
         isInFaction+= f.get_faction_pop_edge()
         
 
-    nodes = [species.get_data()] + [pop.get_data() for pop in pops] + [f.get_data() for f in factions]
+    nodes = [spec.get_data()] + [pop.get_data() for pop in pops] + [f.get_data() for f in factions]
     edges = isInFaction + isOfSpecies
     
     return nodes, edges

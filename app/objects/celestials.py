@@ -1,7 +1,7 @@
 # All Celestial objects. Planets, moons, stars, including the base Body class.
-from ..functions import maths
-from ..functions import language
-from ..objects import resource
+from functions import maths
+from functions import language
+from objects import resource
 
 class Body:
     def __init__(self,conf=None):
@@ -31,7 +31,7 @@ class Body:
 
     def __repr__(self) -> str:
         return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"
-    
+
 
 
 class Star(Body):
@@ -81,12 +81,12 @@ class Moon(Body):
         self.make_name(2, 1)
         self.label = "moon"
         self.type = t
-        self.orbiting = maths.np.choice(planets)
+        self.orbiting = maths.np.random.choice(planets)
         self.orbitsId = self.orbiting["objid"]
         self.orbitsDistance = maths.rnd(0.005,0.1,type='float')  
-        self.mass = abs(maths.np.normal(self.config[t]["mass_mean"], self.config[t]["mass_std"]))
+        self.mass = abs(maths.np.random.normal(self.config[t]["mass_mean"], self.config[t]["mass_std"]))
         self.radius = (
-            abs(maths.np.normal(self.config[t]["radius_mean"], self.config[t]["radius_std"]))
+            abs(maths.np.random.normal(self.config[t]["radius_mean"], self.config[t]["radius_std"]))
             * self.orbiting["radius"]
         )
         self.orbitsName = self.orbiting["name"]

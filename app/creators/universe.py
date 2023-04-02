@@ -56,7 +56,7 @@ def make_homeworld(orbiting, data):
 
 
 def make_moon(t, planets):
-    m = celestials.Moon()
+    m = celestials.Moon(conf=conf["moon_config"])
     m.build_attr(t, planets)
     return m.get_data()
 

@@ -1,3 +1,5 @@
+from functions import maths
+
 class Resource:
     def __init__(self, conf):
         self.objid = maths.uuid(n=13)
