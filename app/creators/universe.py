@@ -26,19 +26,19 @@ def make_system():
 
 
 def make_star():
-    s = celestials.Star()
+    s = celestials.Star(conf=conf["star_config"])
     s.build_attr(conf['star_config'])
     return s.get_data()
 
 
 def make_planet(t, orbiting):
-    p = celestials.Planet()
+    p = celestials.Planet(conf=conf["planet_config"])
     p.build_attr(t, orbiting)
     return p.get_data()
 
 
 def make_homeworld(orbiting, data):
-    p = celestials.Planet()
+    p = celestials.Planet(conf=conf["planet_config"])
     p.build_attr("terrestrial", orbiting)
     # p.scan_body()
     planet = p.get_data()
