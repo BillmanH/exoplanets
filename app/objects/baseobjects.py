@@ -1,5 +1,5 @@
-from . import language
-from . import maths
+from ..creators import language
+from ..creators import maths
 
 class Baseobject:
     def __init__(self):
