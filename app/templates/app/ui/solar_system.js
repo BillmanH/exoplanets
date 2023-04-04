@@ -68,23 +68,6 @@ function createPlanet(n){
     planet.material = surface
     planet.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
     planet.metadata = n
-    var rect1 = new BABYLON.GUI.Rectangle(n.data.objid+"_nameplate");
-        rect1.width = .06;
-        rect1.height = .03;
-        rect1.cornerRadius = 5;
-        rect1.color = "white";
-        rect1.thickness = 2;
-        rect1.background = "black";
-        dashboard.addControl(rect1);
-        rect1.linkWithMesh(planet);   
-        rect1.linkOffsetY = -15;
-
-
-    var label = new BABYLON.GUI.TextBlock(n.data.objid+"_nameplatetext");
-        // https://playground.babylonjs.com/#XCPP9Y#121
-        label.text = n.data.name;
-        label.height = "40px"
-        rect1.addControl(label);    
 
     planet.actionManager = new BABYLON.ActionManager(scene);
     planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
