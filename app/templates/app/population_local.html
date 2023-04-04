@@ -3,8 +3,8 @@
 {% include "app/head.html" %}
 
 <body>
-    {% include "app/menu_top.html" %}
-    <p></p>
+    <!-- {% include "app/menu_top.html" %}
+    <p></p> -->
     <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 <script>
@@ -13,9 +13,6 @@
     console.log(data)
     
     {% include "app/ui/globals.js" %}
-    var width = 640,
-        height = 480,
-        defaultNodeSize = 10
 
     const canvas = document.getElementById("renderCanvas");
     const engine = new BABYLON.Engine(canvas, true);
@@ -49,10 +46,11 @@
         return scene;
     }
 
-    const system = createScene();
 
+    const scene = createScene();
     engine.runRenderLoop(function () {
-        system.render();
+        scene.render();
+        {% include "app/ui/render_cleanup.js" %}
     });
 </script>
 

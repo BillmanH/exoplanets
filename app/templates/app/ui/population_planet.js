@@ -38,12 +38,11 @@ function render_resources(resources){
 render_resources(data['resources'])
 
 function createFaction(n){
-    const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_box", 
+    const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_faction", 
         {"height":factionbuildingHeight,
         "size":10}
       );
-      box.parent = center
-      box.position = new BABYLON.Vector3(n.coord.x, factionbuildingHeight/2, n.coord.z) 
+
       const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
       boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
       box.material = boxMat; 
@@ -51,29 +50,34 @@ function createFaction(n){
     var disc = BABYLON.MeshBuilder.CreateCylinder(n.data.objid + "_disc", {diameter:50, height:1});
         disc.position.y = factionbuildingHeight/2*-1
         disc.parent = box
+
     const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
         discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
         disc.material = discMat; 
 
-        
-    box.metadata = n.data
-    box.actionManager = new BABYLON.ActionManager(scene);
-    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
-        hoverTooltip(box)
+    
+
+    var faction = BABYLON.Mesh.MergeMeshes([box, disc], true, false, undefined, false, true);
+    faction.position = new BABYLON.Vector3(n.data.lat*ground_dimensions, factionbuildingHeight/2, n.data.long*ground_dimensions)
+
+    faction.metadata = n.data
+    faction.actionManager = new BABYLON.ActionManager(scene);
+    faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(faction)
     }));
-    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+    faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
-    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+    faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(n.data)
     }));
+    console.log(faction.name)
 
-    // removeCollidingMesh(n.data.objid + "_disc","tree_trunk")
-    // removeCollidingMesh(n.data.objid + "_disc","tree_brances")
+
 }
 
 function createPop(n){
-    var faction = scene.getMeshByName(n.data.faction.objid+"_box");
+    var faction = scene.getMeshByName(n.data.faction.objid+"_faction_merged");
     const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_box", 
         {"height":factionbuildingHeight/2,
         "size":5}
@@ -98,7 +102,7 @@ function createPop(n){
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(n.data.population)
     }));
-    // removeCollidingMesh(box.name,"tree_trunk")
+
 }
 
 
@@ -129,7 +133,7 @@ for (let i = 0; i < factions.length; i++) {
   }
 
   
-removeCollidingMesh("_disc","tree")
+// removeCollidingMesh("_faction","tree")
 // removeCollidingMesh("_box","tree")
 // farm_building = {name:'farm',
 //             objtype:'building'}
