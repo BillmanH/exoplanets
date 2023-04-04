@@ -132,9 +132,7 @@ for (let i = 0; i < factions.length; i++) {
     }
   }
 
-  
-// removeCollidingMesh("_faction","tree")
-// removeCollidingMesh("_box","tree")
+
 // farm_building = {name:'farm',
 //             objtype:'building'}
 // // pop = scene.getMeshByName("2065545354087"+"_box")

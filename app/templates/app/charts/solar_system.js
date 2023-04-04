@@ -43,8 +43,8 @@ function click_planet(d){
 
 ssystem = draw_node(
     "sSystem",
-    solar_system['nodes'],
-    solar_system['edges'],
+    data['nodes'],
+    data['edges'],
     s_objectColors,
     .15,
     height,
