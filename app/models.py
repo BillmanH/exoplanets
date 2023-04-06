@@ -192,7 +192,9 @@ class CosmosdbClient():
 
     def upload_data(self, username, data):
         """
-        uploads nodes and edges in a format {"nodes":nodes,"edges":edges}.
+        uploads nodes and edges in a format `{"nodes":nodes,"edges":edges}`.
+        edge format:
+            `{'node1':0000,'node2':0001,'label':'hasRelationship',...other properties}`
         Each value is a list of dicts with all properties. 
         Extra items are piped in as properties of the edge.
         Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
