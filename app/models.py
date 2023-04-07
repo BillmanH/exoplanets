@@ -292,11 +292,27 @@ def get_local_population(objid):
             .out('hasResource').as('resource').valueMap()
         """
     )
+    building_query = (f"""g.V().has('objid','{3389212112395}').as('location')
+        .in('inhabits').as('population')
+        .in('owned_by').as('building')
+        .path()
+            .by(valueMap('objid','name'))
+            .by(valueMap('objid','name'))
+            .by(valueMap('objid','name','changes','augments_resource','planet_requirements','description','render_type'))
+    """)
     c = CosmosdbClient()
     c.add_query(population_query)
     c.add_query(resource_query)
+    c.add_query(building_query)
     c.run_queries()   
     nodes = c.reduce_res(c.res[population_query])
     resources = c.clean_nodes(c.res[resource_query])
-    data = {"nodes": nodes, "edges": [], "resources":resources}
+    buildings = []
+    for iter, item in enumerate(c.res[building_query]):
+        build = c.clean_node(item["objects"][2])
+        owner = c.clean_node(item["objects"][1])
+        build.update({"owner": owner["objid"]})
+        buildings.append(build)
+    buildings
+    data = {"nodes": nodes, "edges": [], "resources":resources,"buildings":buildings}
     return data

@@ -132,9 +132,18 @@ for (let i = 0; i < factions.length; i++) {
     }
   }
 
+function renderBuildings(){
+    for (let i = 0; i < data.buildings.length; i++) {
+        d = data.buildings[i]
+        if(d.render_type=='block'){
+            var owner = scene.getMeshByName(d.owner+'_box')
+            render_block(owner, d)
+        }
+    }
+}
 
-// farm_building = {name:'farm',
-//             objtype:'building'}
+renderBuildings()
+
 // // pop = scene.getMeshByName("2065545354087"+"_box")
 // pop = scene.getMeshByName("6225371037165"+"_box")
   

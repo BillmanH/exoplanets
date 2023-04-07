@@ -1,7 +1,7 @@
 {% load static %} 
 
 bulding_config = {
-    "farm": {texture:"{% static 'app/objects/planet/surface/texture_farm_1.png' %}",
+    "farmland": {texture:"{% static 'app/objects/planet/surface/texture_farm_1.png' %}",
                 height: 2,
                 size: 30,
                 from_ground:-1

@@ -8,6 +8,7 @@ explanation:
   - faction_augments: if owned by a pop in the faction,  raises the stat for all pops in factions
   - effort: "time in `universal time units` that the action will take to complete"
   - requires_attr: required attributes of the agent. Determines if the agent can do the action.
+  - render_type: "guides the rendering in buildings.js. Available types: 'block'"
 
 buildings:
   -
@@ -19,6 +20,7 @@ buildings:
       wealth: -0.01
     owned_by: pop
     effort: 1
+    render_type: 'block'
 
   - 
     name: hospital
@@ -31,6 +33,7 @@ buildings:
     effort: 3
     requires_attr: 
       industry: .6
+    render_type: 'block'
 
   -
     name: solar_panel
@@ -43,3 +46,4 @@ buildings:
       wealth: 0.01
     requires_attr: 
       industry: .51
+    render_type: 'block'
