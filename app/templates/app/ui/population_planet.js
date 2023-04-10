@@ -3,7 +3,7 @@
 factionbuildingHeight = 10
 ground_dimensions = 500
 shinyness = 0.05
-
+faction_address_margin = 10
 
 
 // light
@@ -39,8 +39,9 @@ render_resources(data['resources'])
 
 function createFaction(n){
     const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_faction", 
-        {"height":factionbuildingHeight,
-        "size":10}
+        {height:factionbuildingHeight,
+        width:10,
+        depth:10}
       );
 
       const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
@@ -76,16 +77,24 @@ function createFaction(n){
 
 }
 
+function get_address(pop_loactions,iter){
+    address = JSON.parse(pop_loactions)[iter]
+    return address
+}
+
 function createPop(n){
     var faction = scene.getMeshByName(n.data.faction.objid+"_faction_merged");
     const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_box", 
-        {"height":factionbuildingHeight/2,
-        "size":5}
+        {height:factionbuildingHeight*n.data.population.health,
+        width:5,
+        depth:5}
     );
+
+    address = get_address(faction.metadata.pop_loactions, n.data.iter)
+    n.data.population.address = address.toString()
+
     box.parent = faction
-    box.position = new BABYLON.Vector3(n.coord.x + 5, factionbuildingHeight/4*-1, n.coord.z + 5) 
-    var phi = Math.random() * 2 * Math.PI; 
-    box.rotation.y = phi;
+    box.position = new BABYLON.Vector3(address[0]*10 + faction_address_margin, (factionbuildingHeight/4)*-1, address[1]*10 + faction_address_margin)
 
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
@@ -127,6 +136,7 @@ for (let i = 0; i < factions.length; i++) {
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
+        p.data.iter = j
         p.coord = pivotLocal((j+5)*-1,(j+5))
         createPop(p)
     }
@@ -144,11 +154,7 @@ function renderBuildings(){
 
 renderBuildings()
 
-// // pop = scene.getMeshByName("2065545354087"+"_box")
-// pop = scene.getMeshByName("6225371037165"+"_box")
-  
-// building = render_block(pop,farm_building)
-// console.log(building)
+
 
 
 // Goals: 

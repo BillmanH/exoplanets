@@ -71,7 +71,7 @@ class Faction(baseobjects.Baseobject):
         fund = self.get_fundimentals()
         fund['lat'] = self.lat
         fund['long'] = self.long
-        fund['pop_loactions'] = self.faction_place
+        fund['pop_loactions'] = str(self.faction_place)
         return fund
 
     def assign_pop_to_faction(self, pop):
