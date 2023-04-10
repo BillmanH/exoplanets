@@ -2,7 +2,7 @@
 # notebooks/People/Generating Population
 
 import pandas as pd
-from numpy import interp, linspace
+import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
@@ -33,7 +33,7 @@ def get_faction_loyalty(x, pops, factions):
 
 
 def get_n_factions(n_steps, conf):
-    x = interp((1 - conf), linspace(0, 1, num=n_steps), [i for i in range(n_steps)])
+    x = np.interp((1 - conf), np.linspace(0, 1, num=n_steps), [i for i in range(n_steps)])
     return int(round(x))
 
 
@@ -43,6 +43,12 @@ def get_faction_objid(df, faction_no):
 
 
 def build_people(data):
+    """
+    returns `nodes`, `edges`
+    ---
+    builds the homeworld population based on input `data` form from `genesis.js`. 
+
+    """
     # Get the Species
     spec = species.Species()
     spec.build_attr(data)
@@ -78,8 +84,8 @@ def build_people(data):
     X_r = pca.fit(kmeans.cluster_centers_).transform(kmeans.cluster_centers_)
     for i,f in enumerate(factions):
         f.pca_explained_variance_ratio = pca.explained_variance_ratio_
-        f.lat = X_r[i][0]
-        f.long = X_r[i][1]
+        f.lat =  np.round(X_r[i][0],3)
+        f.long = np.round(X_r[i][1],3)
 
 
     # sum up the nodes and edges for return

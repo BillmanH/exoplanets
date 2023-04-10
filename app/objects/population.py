@@ -65,17 +65,28 @@ class Faction(baseobjects.Baseobject):
         self.pops = []
         self.lat = 0
         self.long = 0
+        self.faction_place = [[0,0]]
 
     def get_data(self):
         fund = self.get_fundimentals()
         fund['lat'] = self.lat
         fund['long'] = self.long
+        fund['pop_loactions'] = self.faction_place
         return fund
 
     def assign_pop_to_faction(self, pop):
+        options = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
         pop.isInFaction = self.objid
         self.pops.append(pop.objid)
+        pick = options[maths.np.random.choice([0, 1, 2, 3])]
+        while True:
+            new_pick = options[maths.np.random.choice([0, 1, 2, 3])]
+            pick = maths.np.add(pick, new_pick).tolist()
+            if pick not in self.faction_place:
+                self.faction_place.append(pick)
+                break
 
+    
     def get_faction_pop_edge(self):
         return [
             {"node1": pop, "node2": self.objid, "label": "isInFaction"}
