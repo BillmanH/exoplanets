@@ -3,7 +3,7 @@
 factionbuildingHeight = 10
 ground_dimensions = 500
 shinyness = 0.05
-faction_address_margin = 10
+
 
 
 // light
@@ -78,7 +78,7 @@ function createFaction(n){
 }
 
 function get_address(pop_loactions,iter){
-    address = JSON.parse(pop_loactions)[iter]
+    address = JSON.parse(pop_loactions)[iter+1]
     return address
 }
 
@@ -93,8 +93,9 @@ function createPop(n){
     address = get_address(faction.metadata.pop_loactions, n.data.iter)
     n.data.population.address = address.toString()
 
+
     box.parent = faction
-    box.position = new BABYLON.Vector3(address[0]*10 + faction_address_margin, (factionbuildingHeight/4)*-1, address[1]*10 + faction_address_margin)
+    box.position = new BABYLON.Vector3(address[0]*10, (factionbuildingHeight/4)*-1, address[1]*10)
 
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
