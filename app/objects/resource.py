@@ -7,7 +7,7 @@ class Resource:
         self.conf = conf
         self.name = conf["name"]
         self.description = conf["description"]
-        self.volume = maths.rnd(conf["mean"],conf["std"], min_val=0)
+        self.volume = maths.rnd(conf["mean"],conf["std"], min_val=0,max_val=100000)
         if conf.get('replenish_rate'):
             self.replenish_rate = conf['replenish_rate']
         else: 
