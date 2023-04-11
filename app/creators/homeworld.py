@@ -77,16 +77,21 @@ def build_people(data):
         p.set_pop_name(faction)
         faction.assign_pop_to_faction(p)
 
-    # using PCA to set populations on map:
-                            
-    # PCA Part
-    pca = PCA(n_components=2)
-    X_r = pca.fit(kmeans.cluster_centers_).transform(kmeans.cluster_centers_)
-    for i,f in enumerate(factions):
-        f.pca_explained_variance_ratio = pca.explained_variance_ratio_
-        f.lat =  np.round(X_r[i][0],3)
-        f.long = np.round(X_r[i][1],3)
-
+    if n_factions>2:
+        # using PCA to set populations on map:
+                                
+        # PCA Part
+        pca = PCA(n_components=2)
+        X_r = pca.fit(kmeans.cluster_centers_).transform(kmeans.cluster_centers_)
+        for i,f in enumerate(factions):
+            f.pca_explained_variance_ratio = pca.explained_variance_ratio_
+            f.lat =  np.round(X_r[i][0],3)
+            f.long = np.round(X_r[i][1],3)
+    else:
+        # Only one faction, the lat and long is 0,0
+        for i,f in enumerate(factions):
+            f.lat =  0
+            f.long = 0
 
     # sum up the nodes and edges for return
     isOfSpecies = [p.isOfSpecies for p in pops]
