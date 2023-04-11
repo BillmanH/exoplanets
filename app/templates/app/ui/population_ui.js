@@ -61,11 +61,6 @@ var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:ico
 
 
 
-// pointer 
-const pointer = BABYLON.MeshBuilder.CreateSphere("pointer", {diameter: 12});
-    pointer.position = new BABYLON.Vector3(0,0,0)
-    pointer.isVisible = false
-
 function getPopBox(f){
     dropControlIfExists("window")
     dropControlIfExists("action_window")
@@ -129,8 +124,6 @@ pop_icon.onPointerClickObservable.add(function () {
         }
         f.gui.clickButton = function(f) {
             console.log(f.data.name, f.data.objid, " button was pushed")
-            pointer.position = new BABYLON.Vector3(f.coord.x, 100, f.coord.z) 
-            pointer.isVisible = true
             getPopBox(f)
             objectDetails(f.data)
         };
