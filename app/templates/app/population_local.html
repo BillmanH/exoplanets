@@ -9,7 +9,7 @@
 </body>
 <script>
     var data = {{ data | safe }}
-    var global_location = {{ global_location | safe }}
+    var global_location = "{{ global_location | safe }}"
     console.log(data)
     
     {% include "app/ui/globals.js" %}

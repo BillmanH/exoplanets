@@ -292,7 +292,7 @@ def get_local_population(objid):
             .out('hasResource').as('resource').valueMap()
         """
     )
-    building_query = (f"""g.V().has('objid','{3389212112395}').as('location')
+    building_query = (f"""g.V().has('objid','{objid}').as('location')
         .in('inhabits').as('population')
         .in('owned_by').as('building')
         .path()
