@@ -38,7 +38,7 @@ function render_resources(resources){
 render_resources(data['resources'])
 
 function createFaction(n){
-    const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_faction", 
+    const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_nocol_faction", 
         {height:factionbuildingHeight,
         width:10,
         depth:10}
@@ -83,8 +83,8 @@ function get_address(pop_loactions,iter){
 }
 
 function createPop(n){
-    var faction = scene.getMeshByName(n.data.faction.objid+"_faction_merged");
-    const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_box", 
+    var faction = scene.getMeshByName(n.data.faction.objid+"_nocol_faction_merged");
+    const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_nocol_box", 
         {height:factionbuildingHeight*n.data.population.health,
         width:5,
         depth:5}

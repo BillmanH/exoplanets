@@ -21,4 +21,4 @@ function removeCollidingMesh(owner,tresspasser){
     }
 }
 
-removeCollidingMesh("_faction","tree")
+removeCollidingMesh("_nocol_","tree")
