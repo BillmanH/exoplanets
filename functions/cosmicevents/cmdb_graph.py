@@ -152,6 +152,7 @@ class CosmosdbClient():
 
     # creating strings for uploading data
     def create_vertex(self,node):
+        node['objid'] = str(node['objid'])
         if (len(
             [i for i in expectedProperties 
                 if i in list(node.keys())]

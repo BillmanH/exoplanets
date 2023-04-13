@@ -7,12 +7,12 @@ def uuid(n=13):
 
 def make_action_event(c,pop,act,params):
     node = {
-        'objid':uuid(),
+        'objid': f"{uuid()}",
         'name':'job',
         'label':'event',
         'text': f"The population ({pop['name']}) has completed {act['actionType']}",
-        'visibleTo':pop['username'][0],
-        'time':params['time']['currentTime'],
+        'visibleTo':pop['username'],
+        'time':params['currentTime'],
         'username':'azfunction'
     }
     return node

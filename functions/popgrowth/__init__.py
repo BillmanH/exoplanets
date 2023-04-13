@@ -25,8 +25,8 @@ except:
 def main(mytimer: func.TimerRequest) -> None:
     c = CosmosdbClient()
     logging.info(f'CDB endpoint: {c.endpoint}')
-    logging.info(f"famount people will suffer by starving: {params['starve_damage']}")
-    logging.info(f"Fmount of health needed to grow: {params['pop_health_requirement']}")
+    logging.info(f"[param] amount people will suffer by starving: {params['starve_damage']}")
+    logging.info(f"[param] amount of health needed to grow: {params['pop_health_requirement']}")
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
 
