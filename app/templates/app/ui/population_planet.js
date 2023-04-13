@@ -95,7 +95,7 @@ function createPop(n){
 
 
     box.parent = faction
-    box.position = new BABYLON.Vector3(address[0]*10, (factionbuildingHeight/4)*-1, address[1]*10)
+    box.position = new BABYLON.Vector3(address[0]*5, (factionbuildingHeight/4)*-1, address[1]*5)
 
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
@@ -147,7 +147,7 @@ function renderBuildings(){
     for (let i = 0; i < data.buildings.length; i++) {
         d = data.buildings[i]
         if(d.render_type=='block'){
-            var owner = scene.getMeshByName(d.owner+'_box')
+            var owner = scene.getMeshByName(d.owner+'_nocol_box')
             render_block(owner, d)
         }
     }

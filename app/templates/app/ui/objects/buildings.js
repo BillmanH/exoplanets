@@ -41,12 +41,11 @@ function buildings_window(response){
 
 
 function render_block(pop,building){
-    var box = BABYLON.MeshBuilder.CreateBox(pop.metadata.objid+"_box", 
+    var box = BABYLON.MeshBuilder.CreateBox(pop.metadata.objid+"_nocol_box", 
     {"height":bulding_config[building.name].height,
         "size":bulding_config[building.name].size}
     );    
     box.parent = pop
-    console.log(pop.position)
     box.position = new BABYLON.Vector3(pop.position.x + 10 , bulding_config[building.name].from_ground, pop.position.z + 10) 
     var boxMat = new BABYLON.StandardMaterial(pop.metadata.objid + "_groundMat");
     boxMat.diffuseTexture =  new BABYLON.Texture(bulding_config[building.name].texture);
