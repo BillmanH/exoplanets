@@ -6,7 +6,7 @@ import operator
 import yaml
 import numpy as np
 import pandas as pd
-from django.db import models
+
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
