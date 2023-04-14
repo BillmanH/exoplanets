@@ -1,17 +1,18 @@
-import os
-# Pickle isn't used, but I might use it. 
-import pickle
+import os,sys
+
 from functools import reduce
 import operator
-import logging
 
 import yaml
 import numpy as np
 import pandas as pd
-
+from django.db import models
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
+import asyncio
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 # ASSERTIONS: 
@@ -41,10 +42,9 @@ class CosmosdbClient():
     cb.run_queries()
     """
     def __init__(self) -> None:
-        # Note username is removed when performing in Azure Functions
         self.endpoint = os.getenv("endpoint","env vars not set")
-        self.password = os.getenv("dbkey","env vars not set")+"=="
         self.username = os.getenv("dbusername","env vars not set")
+        self.password = os.getenv("dbkey","env vars not set")+"=="
         self.c = None
         self.res = "no query"
         self.stack = []
@@ -99,6 +99,7 @@ class CosmosdbClient():
         return s
 
     def clean_node(self, x):
+        # For each value, return the last value in the array for that object. 
         for k in list(x.keys()):
             if type(x[k])==list:
                 x[k] = x[k][-1]
@@ -133,7 +134,10 @@ class CosmosdbClient():
             objects = reduce(operator.concat, r['objects'])
 
             for i,l in enumerate(labels):
-                t[l]=self.clean_node(objects[i])
+                try:
+                    t[l]=self.clean_node(objects[i])
+                except:
+                    print("had an issue with ,",i,l, objects)
             fab.append(t)
         return fab
 
@@ -142,8 +146,16 @@ class CosmosdbClient():
             n['id']=n['objid']
         return data
 
+    def create_custom_edge(self,n1,n2,label):
+        edge = f"""
+        g.V().has('objid','{n1['objid']}')
+            .addE('{label}')
+            .to(g.V().has('objid','{n2['objid']}'))
+        """
+        return edge
+    
     # creating strings for uploading data
-    def create_vertex(self,node):
+    def create_vertex(self,node, username):
         node['objid'] = str(node['objid'])
         if (len(
             [i for i in expectedProperties 
@@ -166,42 +178,37 @@ class CosmosdbClient():
                 substr = f".property('{k}','{self.cs(node[k])}')"
             gaddv += substr
         if 'username' not in properties:
-            gaddv += f".property('username','azfunction')"
+            gaddv += f".property('username','{username}')"
+
         gaddv += f".property('objtype','{node['label']}')"
-        # logging.info(f'gaddv: {gaddv}')
         return gaddv
 
-    def create_edge(self, edge):
-        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('username','azfunction')"
+    def create_edge(self, edge, username):
+        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('username','{username}')"
         for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
             gadde += f".property('{i}','{edge[i]}')"
         gadde_fin = f".to(g.V().has('objid','{self.cs(edge['node2'])}'))"
         return gadde + gadde_fin
 
-    def create_custom_edge(self,n1,n2,label):
-        edge = f"""
-        g.V().has('objid','{n1['objid']}')
-            .addE('{label}')
-            .to(g.V().has('objid','{n2['objid']}'))
-        """
-        return edge
 
-    def upload_data(self, data):
+    def upload_data(self, username, data):
         """
-        uploads nodes and edges in a format {"nodes":nodes,"edges":edges}.
+        uploads nodes and edges in a format `{"nodes":nodes,"edges":edges}`.
+        edge format:
+            `{'node1':0000,'node2':0001,'label':'hasRelationship',...other properties}`
         Each value is a list of dicts with all properties. 
         Extra items are piped in as properties of the edge.
         Note that edge lables don't show in a valuemap. So you need to add a 'name' to the properties if you want that info. 
         """
         data = self.test_fields(data)
         for node in data["nodes"]:
-            n = self.create_vertex(node)
+            n = self.create_vertex(node, username)
             self.add_query(n)
             if len(self.stack)>self.stacklimit:
                 self.run_queries()
         self.run_queries()
         for edge in data["edges"]:
-            e = self.create_edge(edge)
+            e = self.create_edge(edge, username)
             self.add_query(e)
             if len(self.stack)>self.stacklimit:
                 self.run_queries()
