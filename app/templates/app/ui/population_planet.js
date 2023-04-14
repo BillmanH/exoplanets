@@ -1,9 +1,8 @@
 {% load static %}
 
 factionbuildingHeight = 10
-ground_dimensions = 500
+ground_dimensions = 5000
 shinyness = 0.05
-
 
 
 // light
@@ -160,3 +159,4 @@ renderBuildings()
 
 // Goals: 
 // https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/height_map
+// https://www.babylonjs-playground.com/#225AVV
