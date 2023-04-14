@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms.widgets import NumberInput
 
-from .creators.maths import uuid
+from .functions.maths import uuid
 
 # https://docs.djangoproject.com/en/3.1/ref/forms/widgets/#built-in-widgets
 

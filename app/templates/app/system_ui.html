@@ -1,21 +1,19 @@
 {% load static %}
 <html>
 {% include "app/head.html" %}
-
 <body>
-    {% include "app/menu_top.html" %}
+    <!-- {% include "app/menu_top.html" %}
+    <p></p> -->
     <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 <script>
-    var solar_system = {{ solar_system | safe }}
-    var global_location = solar_system.system.objid
-    console.log(solar_system)
+    var data = {{ solar_system | safe }}
+    var global_location = data.system.objid
+    console.log(data)
     
     {% include "app/ui/globals.js" %}
     {% include "app/ui/system_globals.js" %}
-    var width = 640,
-        height = 480,
-        defaultNodeSize = 10
+
 
     const canvas = document.getElementById("renderCanvas");     
     const engine = new BABYLON.Engine(canvas, true);
@@ -43,10 +41,10 @@
         return scene;
     }
 
-    const system = createScene();
+    const scene = createScene();
 
     engine.runRenderLoop(function () {
-        system.render();
+        scene.render();
     });
 </script>
 

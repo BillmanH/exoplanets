@@ -68,23 +68,6 @@ function createPlanet(n){
     planet.material = surface
     planet.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
     planet.metadata = n
-    var rect1 = new BABYLON.GUI.Rectangle(n.data.objid+"_nameplate");
-        rect1.width = .06;
-        rect1.height = .03;
-        rect1.cornerRadius = 5;
-        rect1.color = "white";
-        rect1.thickness = 2;
-        rect1.background = "black";
-        dashboard.addControl(rect1);
-        rect1.linkWithMesh(planet);   
-        rect1.linkOffsetY = -15;
-
-
-    var label = new BABYLON.GUI.TextBlock(n.data.objid+"_nameplatetext");
-        // https://playground.babylonjs.com/#XCPP9Y#121
-        label.text = n.data.name;
-        label.height = "40px"
-        rect1.addControl(label);    
 
     planet.actionManager = new BABYLON.ActionManager(scene);
     planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
@@ -132,9 +115,9 @@ function createMoon(n){
 // Primary objects that don't rely on the relative position
 function createprimry_bodies(pdata){
     var guiIter = 0
-    for (let i = 0; i < solar_system.nodes.length; i++) {
+    for (let i = 0; i < data.nodes.length; i++) {
         n = {}
-        n.data = solar_system["nodes"][i]
+        n.data = data["nodes"][i]
         n.gui = {buttonColor:"white",
                 depth:0}
         if (n.data.objtype=="star"){
@@ -166,7 +149,7 @@ function createprimry_bodies(pdata){
                 var guiIter = 0
                 for (let si = 0; si < satellites.length; si++) {
                     o = {}
-                    o.data = get_node(solar_system["nodes"],satellites[si].id)
+                    o.data = get_node(data["nodes"],satellites[si].id)
                     console.log(o)
                     o.iter = si+1
                     o.gui = {buttonColor:"white",
@@ -203,5 +186,5 @@ function createMoons(pdata){
     }
 }
 
-createprimry_bodies(filter_nodes_list(solar_system["nodes"],'objtype','planet'))
-createMoons(filter_nodes_list(solar_system["nodes"],'objtype','moon'))
+createprimry_bodies(filter_nodes_list(data["nodes"],'objtype','planet'))
+createMoons(filter_nodes_list(data["nodes"],'objtype','moon'))

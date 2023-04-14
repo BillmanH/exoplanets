@@ -59,12 +59,11 @@ var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and population
 var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:getIconTop(2)})
 var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:getIconTop(3)})
 
-
-
-// pointer 
-const pointer = BABYLON.MeshBuilder.CreateSphere("pointer", {diameter: 12});
-    pointer.position = new BABYLON.Vector3(0,0,0)
-    pointer.isVisible = false
+var piovtCamera = function(name){
+    var o = scene.getMeshByName(name);
+    camera.setTarget(o.position);
+    camera.radius = 100 
+}
 
 function getPopBox(f){
     dropControlIfExists("window")
@@ -129,8 +128,8 @@ pop_icon.onPointerClickObservable.add(function () {
         }
         f.gui.clickButton = function(f) {
             console.log(f.data.name, f.data.objid, " button was pushed")
-            pointer.position = new BABYLON.Vector3(f.coord.x, 100, f.coord.z) 
-            pointer.isVisible = true
+            console.log(f.data.objid+"_nocol_faction_merged")
+            piovtCamera(f.data.objid+"_nocol_faction_merged")
             getPopBox(f)
             objectDetails(f.data)
         };

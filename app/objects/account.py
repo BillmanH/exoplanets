@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from . import maths
+from ..functions import maths
 
 strFormat = r'%Y-%m-%dT%H:%M:%S'
 class Account:

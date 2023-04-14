@@ -2,129 +2,20 @@
 # notebooks/People/Generating Population
 
 import pandas as pd
-from numpy import interp, linspace, random
+import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
-from . import baseobjects
+
+
+from ..objects import species
+from ..objects import population
+
 
 # Setup Params:
 n_steps = 6  # max factions
 meta = ["uuid", "name", "label", "isIdle"]
 starting_attributes = ["conformity", "literacy", "aggression", "constitution"]
-
-
-class Creature(baseobjects.Baseobject):
-    def __init__(self):
-        super().__init__()
-        self.label = "creature"
-
-    def get_fundimentals(self):
-        return {"name": self.name, "objid": self.objid, "label": self.label}
-
-
-class Species(baseobjects.Baseobject):
-    def build_attr(self, data):
-        self.conformity = data["conformity"]
-        self.aggression = data["aggression"]
-        self.literacy = data["literacy"]
-        self.constitution = data["constitution"]
-        self.label = "species"
-        self.name = self.make_name(1, 2)
-        self.consumes = ["Organic"]
-        self.effuses = ["Organic waste","Plastics"]
-        self.viral_resilience = 0.7
-        self.habitat_resilience = 0.2
-        self.pop_std = 0.2 * (1 - float(self.conformity))
-
-    def get_data(self):
-        fund = self.get_fundimentals()
-        fund["consumes"] = self.consumes
-        fund["effuses"] = self.effuses
-        fund["viral_resilience"] = self.viral_resilience
-        fund["habitat_resilience"] = self.habitat_resilience
-        return fund
-
-
-class Pop(Creature):
-    def __init__(self, species):
-        super().__init__()
-        self.conformity = abs(
-            round(random.normal(float(species.conformity), species.pop_std), 3)
-        )
-        self.literacy = abs(
-            round(random.normal(float(species.literacy), species.pop_std), 3)
-        )
-        self.aggression = abs(
-            round(random.normal(float(species.aggression), species.pop_std), 3)
-        )
-        self.constitution = abs(
-            round(random.normal(float(species.constitution), species.pop_std), 3)
-        )
-        self.label = "pop"
-        self.type = "pop"
-        self.isIdle = "true"
-        self.health = 0.5
-        self.isOfSpecies = {
-            "node1": self.objid,
-            "node2": species.objid,
-            "label": "isOfSpecies",
-        }
-        self.factionNo = None
-        self.isInFaction = None
-        self.industry = (self.aggression + self.constitution) / 2
-        self.wealth = (self.literacy + self.industry) / 2
-        self.factionLoyalty = abs(
-            round(random.normal(float(self.conformity), 0.2 * (1 - float(self.conformity))), 3)
-        )
-
-    def set_faction(self, n):
-        self.factionNo = n
-
-    def set_pop_name(self, faction):
-        # the pop name is the faction name plus an extra syllable.
-        self.name = f"{faction.name} {self.make_name(1, 2)}"
-
-    def get_data(self):
-        fund = self.get_fundimentals()
-        fund["conformity"] = self.conformity
-        fund["literacy"] = self.literacy
-        fund["aggression"] = self.aggression
-        fund["constitution"] = self.constitution
-        fund["health"] = self.health
-        fund["isInFaction"] = self.isInFaction
-        fund["industry"] = self.industry
-        fund["wealth"] = self.wealth
-        fund["factionLoyalty"] = self.factionLoyalty
-        fund["isIdle"] = self.isIdle
-        return fund
-
-
-class Faction(baseobjects.Baseobject):
-    def __init__(self, i):
-        super().__init__()
-        self.name = self.make_name(2, 2)
-        self.label = "faction"
-        self.faction_no = i
-        self.pops = []
-        self.lat = 0
-        self.long = 0
-
-    def get_data(self):
-        fund = self.get_fundimentals()
-        fund['lat'] = self.lat
-        fund['long'] = self.long
-        return fund
-
-    def assign_pop_to_faction(self, pop):
-        pop.isInFaction = self.objid
-        self.pops.append(pop.objid)
-
-    def get_faction_pop_edge(self):
-        return [
-            {"node1": pop, "node2": self.objid, "label": "isInFaction"}
-            for pop in self.pops
-        ]
 
 
 
@@ -142,7 +33,7 @@ def get_faction_loyalty(x, pops, factions):
 
 
 def get_n_factions(n_steps, conf):
-    x = interp((1 - conf), linspace(0, 1, num=n_steps), [i for i in range(n_steps)])
+    x = np.interp((1 - conf), np.linspace(0, 1, num=n_steps), [i for i in range(n_steps)])
     return int(round(x))
 
 
@@ -152,12 +43,18 @@ def get_faction_objid(df, faction_no):
 
 
 def build_people(data):
+    """
+    returns `nodes`, `edges`
+    ---
+    builds the homeworld population based on input `data` form from `genesis.js`. 
+
+    """
     # Get the Species
-    species = Species()
-    species.build_attr(data)
+    spec = species.Species()
+    spec.build_attr(data)
 
     # Build the populations (note that pops is a DataFrame)
-    pops = [Pop(species) for i in range(int(data["starting_pop"]))]
+    pops = [population.Pop(spec) for i in range(int(data["starting_pop"]))]
 
     # Build the factions based on Kmeans Clustering
     pops_df = pd.DataFrame([p.get_data() for p in pops])
@@ -166,7 +63,7 @@ def build_people(data):
         pops_df[[c for c in pops_df.columns if c in starting_attributes]]
     )
 
-    factions = [Faction(i) for i in range(kmeans.n_clusters)]
+    factions = [population.Faction(i) for i in range(kmeans.n_clusters)]
 
     # Assign the pop to that faction number, not yet matched to an ID.
     for i, n in enumerate(kmeans.labels_):
@@ -180,16 +77,21 @@ def build_people(data):
         p.set_pop_name(faction)
         faction.assign_pop_to_faction(p)
 
-    # using PCA to set populations on map:
-                            
-    # PCA Part
-    pca = PCA(n_components=2)
-    X_r = pca.fit(kmeans.cluster_centers_).transform(kmeans.cluster_centers_)
-    for i,f in enumerate(factions):
-        f.pca_explained_variance_ratio = pca.explained_variance_ratio_
-        f.lat = X_r[i][0]
-        f.long = X_r[i][1]
-
+    if n_factions>2:
+        # using PCA to set populations on map:
+                                
+        # PCA Part
+        pca = PCA(n_components=2)
+        X_r = pca.fit(kmeans.cluster_centers_).transform(kmeans.cluster_centers_)
+        for i,f in enumerate(factions):
+            f.pca_explained_variance_ratio = pca.explained_variance_ratio_
+            f.lat =  np.round(X_r[i][0],3)
+            f.long = np.round(X_r[i][1],3)
+    else:
+        # Only one faction, the lat and long is 0,0
+        for i,f in enumerate(factions):
+            f.lat =  0
+            f.long = 0
 
     # sum up the nodes and edges for return
     isOfSpecies = [p.isOfSpecies for p in pops]
@@ -198,7 +100,7 @@ def build_people(data):
         isInFaction+= f.get_faction_pop_edge()
         
 
-    nodes = [species.get_data()] + [pop.get_data() for pop in pops] + [f.get_data() for f in factions]
+    nodes = [spec.get_data()] + [pop.get_data() for pop in pops] + [f.get_data() for f in factions]
     edges = isInFaction + isOfSpecies
     
     return nodes, edges

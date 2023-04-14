@@ -10,14 +10,15 @@ function make_tree(coord){
     treemat2.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/texture_leaf.png' %}");
     var trunk = BABYLON.MeshBuilder.CreateCylinder("tree"+uid, {height:trunkHeight,diameter:2});
     var branches = BABYLON.MeshBuilder.CreateCylinder("brances"+uid, {height:treetop,diameterTop:0, diameterBottom:4+ Math.floor(Math.random() * 3) + 1});
-    trunk.position = new BABYLON.Vector3(coord.x, trunkHeight/2, coord.z)
-    branches.position = new BABYLON.Vector3(coord.x, treetop/2+trunkHeight, coord.z) 
+    trunk.position = new BABYLON.Vector3(0, trunkHeight/2, 0)
+    branches.position = new BABYLON.Vector3(0, treetop/2+trunkHeight, 0) 
     trunk.material = treemat; //Place the material property of the ground
     branches.material = treemat2;
     branches.material.specularColor = new BABYLON.Color3(0.05, 0.05, 0.05);
     // parameters - arrayOfMeshes, disposeSource, allow32BitsIndices, meshSubclass, subdivideWithSubMeshes, multiMultiMaterial
     var tree = BABYLON.Mesh.MergeMeshes([trunk, branches], true, false, undefined, false, true);
-    // removeSingleCollsion(tree,"_disc")
+    tree.position = new BABYLON.Vector3(coord.x, 0, coord.z)
+    
 }
 
 function build_organic_resource(r){

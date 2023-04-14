@@ -1,7 +1,8 @@
 from app.models import CosmosdbClient
 from django.http import JsonResponse
 
-from app.creators import homeworld, maths
+from app.creators import homeworld
+from ..functions import maths
 import ast
 
 
@@ -66,9 +67,9 @@ def create_job(c,pop,action,universalTime):
     if type(universalTime)==list:
         universalTime = universalTime[0]
     time_to_complete = int(universalTime['currentTime']) + int(action['effort'])
-    uid = create_action_node(c,action,pop)
+    action = create_action_node(c,action,pop)
     popToAction = {"node1":pop['objid'],
-                    "node2":uid,
+                    "node2":action['objid'],
                     "label":"takingAction",
                     "name":"takingAction",
                     'weight':time_to_complete ,
@@ -78,11 +79,11 @@ def create_job(c,pop,action,universalTime):
     return edges
 
 def create_action_node(c,action,agent):
+    uid = str(maths.uuid())
+    action['objid'] = uid
     vertex = c.create_vertex(action,agent['username'])
-    uid = maths.uuid()
-    vertex += f".property('objid','{uid}')"
     c.run_query(vertex)
-    return uid
+    return action
 
 
 def take_action(request):

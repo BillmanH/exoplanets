@@ -8,13 +8,13 @@ function flipper(){
     }
 }
 
-radiuses = get_values(solar_system["nodes"],"radius", "planet")
+radiuses = get_values(data["nodes"],"radius", "planet")
 var scale_radius = d3.scaleLinear()
             .domain([d3.min(radiuses),d3.max(radiuses)])
             .range([10,100]);
 // console.log("radiuses: ", radiuses)   
 
-distances = get_values(solar_system["nodes"],"orbitsDistance", "planet")
+distances = get_values(data["nodes"],"orbitsDistance", "planet")
 // console.log("distances: ", distances)            
 var scale_distance = d3.scaleSqrt()
             .domain([d3.min(distances),d3.max(distances)])

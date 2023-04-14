@@ -1,9 +1,8 @@
 {% load static %}
 
 factionbuildingHeight = 10
-ground_dimensions = 500
+ground_dimensions = 5000
 shinyness = 0.05
-
 
 
 // light
@@ -38,12 +37,12 @@ function render_resources(resources){
 render_resources(data['resources'])
 
 function createFaction(n){
-    const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_box", 
-        {"height":factionbuildingHeight,
-        "size":10}
+    const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_nocol_faction", 
+        {height:factionbuildingHeight,
+        width:10,
+        depth:10}
       );
-      box.parent = center
-      box.position = new BABYLON.Vector3(n.coord.x, factionbuildingHeight/2, n.coord.z) 
+
       const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
       boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
       box.material = boxMat; 
@@ -51,37 +50,51 @@ function createFaction(n){
     var disc = BABYLON.MeshBuilder.CreateCylinder(n.data.objid + "_disc", {diameter:50, height:1});
         disc.position.y = factionbuildingHeight/2*-1
         disc.parent = box
+
     const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
         discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
         disc.material = discMat; 
 
-        
-    box.metadata = n.data
-    box.actionManager = new BABYLON.ActionManager(scene);
-    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
-        hoverTooltip(box)
+    
+
+    var faction = BABYLON.Mesh.MergeMeshes([box, disc], true, false, undefined, false, true);
+    faction.position = new BABYLON.Vector3(n.data.lat*ground_dimensions, factionbuildingHeight/2, n.data.long*ground_dimensions)
+
+    faction.metadata = n.data
+    faction.actionManager = new BABYLON.ActionManager(scene);
+    faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+        hoverTooltip(faction)
     }));
-    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+    faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
-    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+    faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(n.data)
     }));
+    console.log(faction.name)
 
-    // removeCollidingMesh(n.data.objid + "_disc","tree_trunk")
-    // removeCollidingMesh(n.data.objid + "_disc","tree_brances")
+
+}
+
+function get_address(pop_loactions,iter){
+    address = JSON.parse(pop_loactions)[iter+1]
+    return address
 }
 
 function createPop(n){
-    var faction = scene.getMeshByName(n.data.faction.objid+"_box");
-    const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_box", 
-        {"height":factionbuildingHeight/2,
-        "size":5}
+    var faction = scene.getMeshByName(n.data.faction.objid+"_nocol_faction_merged");
+    const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_nocol_box", 
+        {height:factionbuildingHeight*n.data.population.health,
+        width:5,
+        depth:5}
     );
+
+    address = get_address(faction.metadata.pop_loactions, n.data.iter)
+    n.data.population.address = address.toString()
+
+
     box.parent = faction
-    box.position = new BABYLON.Vector3(n.coord.x + 5, factionbuildingHeight/4*-1, n.coord.z + 5) 
-    var phi = Math.random() * 2 * Math.PI; 
-    box.rotation.y = phi;
+    box.position = new BABYLON.Vector3(address[0]*5, (factionbuildingHeight/4)*-1, address[1]*5)
 
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
@@ -98,7 +111,7 @@ function createPop(n){
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(n.data.population)
     }));
-    // removeCollidingMesh(box.name,"tree_trunk")
+
 }
 
 
@@ -123,22 +136,27 @@ for (let i = 0; i < factions.length; i++) {
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
+        p.data.iter = j
         p.coord = pivotLocal((j+5)*-1,(j+5))
         createPop(p)
     }
   }
 
-  
-removeCollidingMesh("_disc","tree")
-// removeCollidingMesh("_box","tree")
-// farm_building = {name:'farm',
-//             objtype:'building'}
-// // pop = scene.getMeshByName("2065545354087"+"_box")
-// pop = scene.getMeshByName("6225371037165"+"_box")
-  
-// building = render_block(pop,farm_building)
-// console.log(building)
+function renderBuildings(){
+    for (let i = 0; i < data.buildings.length; i++) {
+        d = data.buildings[i]
+        if(d.render_type=='block'){
+            var owner = scene.getMeshByName(d.owner+'_nocol_box')
+            render_block(owner, d)
+        }
+    }
+}
+
+renderBuildings()
+
+
 
 
 // Goals: 
 // https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/height_map
+// https://www.babylonjs-playground.com/#225AVV

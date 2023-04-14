@@ -79,8 +79,8 @@ function add_duality_slider(c,n1,n2){
     slider.className = "slider"
     slider.id = n1+"-"+n2
     slider.oninput = function() {
-        form[n1] = this.value/100;
-        form[n2] = 1-(this.value/100);
+        form[n1] = (this.value/100).toFixed(3);
+        form[n2] = (1-(this.value/100)).toFixed(3);
         document.getElementById(n1+"_text").innerText = n1 + ": "+ form[n1] 
         document.getElementById(n2+"_text").innerText = n2 + ": "+ form[n2]
       }
@@ -139,7 +139,8 @@ function build_solar_system(c,n) {
             add_please_wait()
         },
         success: function(data){
-            var solar_system = data.solar_system
+            var data = data.solar_system
+            cnsl(data.status,data.note)
             {% include "app/charts/solar_system.js" %}
             form_population()
             form_people_culture()

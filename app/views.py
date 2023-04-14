@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from app.models import *
-from app.creators.account import Account
+from app.objects.account import Account
 from .creators import universe
 
 

@@ -3,19 +3,16 @@
 {% include "app/head.html" %}
 
 <body>
-    {% include "app/menu_top.html" %}
-    <p></p>
+    <!-- {% include "app/menu_top.html" %}
+    <p></p> -->
     <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 <script>
     var data = {{ data | safe }}
-    var global_location = {{ global_location | safe }}
+    var global_location = "{{ global_location | safe }}"
     console.log(data)
     
     {% include "app/ui/globals.js" %}
-    var width = 640,
-        height = 480,
-        defaultNodeSize = 10
 
     const canvas = document.getElementById("renderCanvas");
     const engine = new BABYLON.Engine(canvas, true);
@@ -35,25 +32,51 @@
         
         // User interface
         {% include "app/ui/global_ui.js" %}
-        {% include "app/ui/population_ui.js" %}
-
+        
         // generatiors
         {% include "app/tooltips.js" %}
         {% include "app/ajax/population_action.js" %}
         {% include "app/ui/objects/resources.js" %}
         {% include "app/ui/objects/buildings.js" %}
-        {% include "app/ui/skybox_green_planet.js" %}
+        {% include "app/ui/skybox_grey_cloud.js" %}
         {% include "app/ui/population_planet.js" %}
+        {% include "app/ui/population_ui.js" %}
 
-
+        scene.registerBeforeRender(function () {
+            followCamBorderFunc(camera, ground);
+        });
         return scene;
     }
 
-    const system = createScene();
 
+    const scene = createScene();
     engine.runRenderLoop(function () {
-        system.render();
+        scene.render();
+        {% include "app/ui/render_cleanup.js" %}
     });
+
+    function followCamBorderFunc(camera, ground){
+        if (camera.beta < 0.1)
+            camera.beta = 0.1;
+        else if (camera.beta > (Math.PI / 2) * 0.95)
+            camera.beta = (Math.PI / 2) * 0.95;
+            
+        if (typeof lastCameraOffsetX == "undefined") {
+            lastCameraOffsetX = camera.position.x;
+        }
+        if (typeof lastCameraOffsetZ == "undefined") {
+            lastCameraOffsetZ = camera.position.z;
+        }
+        if ((Math.abs(camera.position.x - lastCameraOffsetX) >= camera.cameraOffsetStep) || (Math.abs(camera.position.z - lastCameraOffsetZ) >= camera.cameraOffsetStep)) {
+
+            lastCameraOffsetX = camera.position.x;
+            lastCameraOffsetZ = camera.position.z;
+            var y = ground.getHeightAtCoordinates(camera.position.x, camera.position.z);
+            if ((camera.position.y <= y + 1) ) {
+                camera.setPosition(new BABYLON.Vector3(camera.position.x, y + 1, camera.position.z));
+            }
+        }
+    }
 </script>
 
 </html>

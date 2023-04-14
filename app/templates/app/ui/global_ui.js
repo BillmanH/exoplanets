@@ -332,14 +332,16 @@ function removeCollidingMesh(owner,tresspasser){
     // both inputs are strings
     for (const mesh of scene.meshes) {
         if (mesh.name.indexOf(owner) >= 0) {
-            console.log('meshname',mesh.name)
+
+            console.log('ownermesh: ',mesh.name)
             for (const mesh2 of scene.meshes) {
                 if (mesh2.name.indexOf(tresspasser) >= 0) {
-                    if (mesh2.intersectsMesh(mesh,false)){
-                        // mesh2.dispose()
+
+                    if (mesh2.intersectsMesh(mesh)){
+
                         mesh2.material = new BABYLON.StandardMaterial("matBallon");
                         mesh2.material.emissiveColor = new BABYLON.Color3(1, 0, 0);
-                        console.log(mesh.name,' collides with ',mesh2.name )
+                        console.log(mesh2.name,' collides with ',mesh.name, " at ", mesh2.position.x, mesh.position.x)
                     }
                 }
             }

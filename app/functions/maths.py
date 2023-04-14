@@ -1,12 +1,13 @@
 import numpy as np
 
 
-def rnd(n, s,min_val=1,type='int'):
+def rnd(n, s,min_val=1,max_val=4,type='int'):
     """
     returns positive int, within normal distribution
     n = mean
     s = std
     min_val = the lowest possible value
+    max_val = highest possible value
     type = type of return value. `int` will round to nearest whole number, `float` will round to three decimal places. 
     """
     if type=='int':
@@ -15,6 +16,8 @@ def rnd(n, s,min_val=1,type='int'):
         y = np.round(np.random.normal(n, s),3)
     if y < min_val:
         y=min_val
+    if y > max_val:
+        y=max_val
     return y
 
 

@@ -32,14 +32,12 @@ dashboard.addControl(planets_icon);
 
 planets_icon.onPointerClickObservable.add(function () {
     dropAllControls()
-    data = get_values(solar_system.nodes, 'objid', 'planet')
-    // console.log(data)
-    planet_control_panel.height = (100 * data.length).toString() + "px"
+    var planet_ids = get_values(data.nodes, 'objid', 'planet')
+    planet_control_panel.height = (100 * planet_ids.length).toString() + "px"
     planet_control = createControlBox(planet_control_panel)
-    for (let i = 0; i < data.length; i++){
-        // console.log(get_node(solar_system.nodes,data[i]).name)
+    for (let i = 0; i < planet_ids.length; i++){
         p = {}
-        p.data = get_node(solar_system.nodes,data[i])
+        p.data = get_node(data.nodes,planet_ids[i])
         p.iter = i+1
         p.gui = {buttonColor:"white"}
         p.gui.clickButton = function(p) {
