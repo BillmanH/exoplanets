@@ -32,8 +32,7 @@
         
         // User interface
         {% include "app/ui/global_ui.js" %}
-        {% include "app/ui/population_ui.js" %}
-
+        
         // generatiors
         {% include "app/tooltips.js" %}
         {% include "app/ajax/population_action.js" %}
@@ -41,6 +40,7 @@
         {% include "app/ui/objects/buildings.js" %}
         {% include "app/ui/skybox_grey_cloud.js" %}
         {% include "app/ui/population_planet.js" %}
+        {% include "app/ui/population_ui.js" %}
 
         scene.registerBeforeRender(function () {
             followCamBorderFunc(camera, ground);
