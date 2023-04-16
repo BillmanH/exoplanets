@@ -22,11 +22,11 @@ def build_solar_system(request):
     request = c.clean_node(dict(request.GET))
     username = request.get('owner','')
     # Create the new system
-    universe_nodes, universe_edges = universe.build_homeSystem(
+    graph_data = universe.build_homeSystem(
         request, username
     )
-    data = {"nodes": universe_nodes, "edges": universe_edges}
-    c.upload_data(username, data)
+
+    c.upload_data(username, graph_data)
 
     response['note'] = 'solar system created'
     response['status'] = 'success'

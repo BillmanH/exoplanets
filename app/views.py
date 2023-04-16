@@ -58,9 +58,7 @@ def new_game(request):
 # Creates a new system, using an old acount
 @login_required
 def genesis(request):
-    res = get_system(request.user.username)
-    context = {"solar_system": res,
-                "username": request.user.username}
+    context = {"username": request.user.username}
     return render(request, "app/creation/genesis_view.html", context)
 
 

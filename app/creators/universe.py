@@ -11,95 +11,45 @@ from ..objects import celestials
 conf = configurations.get_configurations()
 
 
-def make_system():
-    systemid = maths.uuid(n=13)
-    system = {
-        "name": language.make_word(maths.rnd(2, 1)),
-        "label": "system",
-        "isHomeSystem":"true",
-        "objid": systemid,
-        "glat": maths.np.round(r.normal(0,20),3),
-        "glon": maths.np.round(r.normal(0,20),3),
-        "gelat": maths.np.round(r.normal(0,5),3)
-    }
-    return system
-
-
-def make_star():
-    s = celestials.Star(conf=conf["star_config"])
-    s.build_attr(conf['star_config'])
-    return s.get_data()
-
-
-def make_planet(t, orbiting):
-    p = celestials.Planet(conf=conf["planet_config"])
-    p.build_attr(t, orbiting)
-    return p.get_data()
-
-
 def make_homeworld(orbiting, data):
-    p = celestials.Planet(conf=conf["planet_config"])
-    p.build_attr("terrestrial", orbiting)
-    # p.scan_body()
-    planet = p.get_data()
+    terrestrial_config = {"terrestrial": conf["planet_config"]["terrestrial"]}
+    p = celestials.Planet(conf=terrestrial_config, orbiting=orbiting)
     if "planet_name" in data.keys():
-        planet["name"] = data["planet_name"]
-    planet["isSupportsLife"] = True
-    planet["isPopulated"] = True
-    planet["isHomeworld"] = True
+        p.name = data["planet_name"]
+    p.isSupportsLife = True
+    p.isPopulated = True
+    p.isHomeworld = True
     p.scan_body()
-    homeworld_nodes = [r.get_data() for r in p.resources] 
-    homeworld_edges = [
-        {"node1": p.objid, "node2": r.objid, "label": "hasResource"} for r in p.resources
-    ]
-    return planet, homeworld_nodes, homeworld_edges
-
-
-def make_moon(t, planets):
-    m = celestials.Moon(conf=conf["moon_config"])
-    m.build_attr(t, planets)
-    return m.get_data()
+    return p
 
 
 def build_homeSystem(data, username):
-
-    system = make_system()
-    star = make_star()
+    starSystem = celestials.System(data)
+    star = celestials.Star(conf["star_config"], starSystem)
     planets = [
-        make_planet(
-            r.choice(list(conf['planet_config'].keys()), p=[conf['planet_config'][t]["prob"] for t in conf['planet_config'].keys()]),
-            star,
-        )
+        celestials.Planet(conf=conf["planet_config"], orbiting = star)
         for p in range(int(data["num_planets"]) - 1)
     ]
-    homeworld, homeworld_nodes,homeworld_edges = make_homeworld(star, data)
-    planets.append(homeworld)
+    home_planet = make_homeworld(star, data)
+    planets.append(home_planet)
     moons = [
-        make_moon(
-            r.choice(list(conf['moon_config'].keys()), p=[conf['moon_config'][t]["prob"] for t in conf['moon_config'].keys()]),
-            planets,
-        )
-        for p in range(int(data["num_moons"]))
-    ]
-    nodes = [data] + [system] + [star] + moons + planets + homeworld_nodes
+            celestials.Moon(conf['moon_config'], planets) for p in range(int(data["num_moons"]))
+        ]
+    all_entities = [starSystem] + [star] + moons + planets + [home_planet] + home_planet.resources
+    all_nodes = [b.get_data() for b in all_entities] + [data]  # Adding the userform as a freebe
+
+    orbiting_bodies = [home_planet] + planets + moons
+    orbiting_edges = [i.get_orbits_edge() for i in orbiting_bodies]
+
+    system_bodies = orbiting_bodies + [star]
     system_edges = [
-        {"node1": p["objid"], "node2": system["objid"], "label": "isInSystem"}
-        for p in nodes
-        if p["label"] not in ["system","resource","form"]
-    ]
-    orbits = [
-        {
-            "node1": p["objid"],
-            "node2": p["orbitsId"],
-            "label": "orbits",
-            "orbit_distance": p["orbitsDistance"],
-        }
-        for p in nodes
-        if p.get("orbitsId")
+        {"node1": i.objid, "node2": starSystem.objid, "label": "isInSystem",}
+        for i in system_bodies
     ]
 
+    resource_edges = [i.get_location_edge() for i in home_planet.resources]
     formEdge = {
-        "node1": system['objid'],
+        "node1": starSystem.objid,
         "node2": data["objid"],
         "label": "created_from_form",
     }
@@ -108,6 +58,8 @@ def build_homeSystem(data, username):
         "node2": data["objid"],
         "label": "submitted",
     }
-    edges = system_edges + orbits + [formEdge] + homeworld_edges + [accountEdge]
-    return nodes, edges
+    edges = orbiting_edges + system_edges + resource_edges + [formEdge] + [accountEdge]
+
+    graph_data = {'nodes':all_nodes, 'edges':edges}
+    return graph_data
 

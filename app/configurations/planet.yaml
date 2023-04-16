@@ -1,5 +1,6 @@
 planet_types: 
   dwarf:
+    name: dwarf
     count: 6.0
     prob: 0.42857142857142855
     mass_mean: 0.0011061666666666668
@@ -10,6 +11,7 @@ planet_types:
     distance_max: 50
 
   gas:
+    name: gas
     count: 2.0
     prob: 0.14285714285714285
     mass_mean: 206.49599999999998
@@ -20,6 +22,7 @@ planet_types:
     distance_max: 10
 
   ice: 
+    name: ice
     count: 2.0
     prob: 0.14285714285714285
     mass_mean: 15.8415
@@ -30,6 +33,7 @@ planet_types:
     distance_max: 29
 
   terrestrial: 
+    name: terrestrial
     count: 4.0
     prob: 0.2857142857142857
     mass_mean: 0.49432499999999996

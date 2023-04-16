@@ -4,15 +4,43 @@ from ..functions import maths
 from ..functions import language
 from ..objects import resource
 
+class System:
+    def __init__(self,conf=None):
+        self.objid = maths.uuid(n=13)
+        self.name = language.make_word(maths.rnd(2, 1))
+        self.type = "ordered"
+        self.label = "sytem"
+        self.isHomeSystem = True
+        self.glat = maths.np.round(maths.np.random.normal(0,20),3)
+        self.glon = maths.np.round(maths.np.random.normal(0,20),3)
+        self.gelat = maths.np.round(maths.np.random.normal(0,5),3)
+
+    def get_data(self):
+        system = {
+            "objid": self.objid,
+            "name": self.name,
+            "label": self.label,
+            "class": self.type,
+            "isHomeSystem": self.isHomeSystem,
+            "glat": self.glat,
+            "glon": self.glon,
+            "gelat": self.gelat
+        }
+        return system
+
+    def __repr__(self) -> str:
+        return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"
+
 class Body:
     def __init__(self,conf=None):
+        self.config = conf
+
+    def set_defaults(self):
         self.objid = maths.uuid(n=13)
         self.type = "celestial body"
         self.label = "body"
         self.name = "unnamed"
         self.resources = []
-        if conf:
-            self.config = conf
 
     def make_name(self, n1, n2):
         self.name = language.make_word(maths.rnd(n1, n2))
@@ -25,10 +53,41 @@ class Body:
             "label": self.label,
         }
     
+    def choose_type(self,config):
+        # Choose a object type from based on the probabilities in the planet config
+        choice = maths.np.random.choice(
+                list(config.keys()),
+                p=[
+                    float(config[t]["prob"]) / sum([config[t]["prob"] for t in config.keys()])
+                    for t in config.keys()
+                ]
+            )
+        return config[choice]
+    
+    def get_orbits_edge(self):
+        edge = {
+            "node1": self.objid,
+            "node2": self.orbiting.objid,
+            "label": "orbits",
+            "orbit_distance": self.orbitsDistance,
+        }
+        return edge
+    
+    def get_in_system_edge(self):
+        edge = {
+            "node1": self.objid,
+            "node2": self.system.objid,
+            "label": "isIn",
+        }
+        return edge        
+    
     def scan_body(self):
-        # TODO : Handle if object doesn't have self.type
-        for n in self.config[self.type]['resources'].keys():
-            self.resources.append(resource.Resource(self.config[self.type]['resources'][n]))
+        if 'resources' in self.config.keys():
+            if len(self.resources)>0:
+                pass
+            else:
+                for n in self.config['resources'].keys():
+                    self.resources.append(resource.Resource(self.config['resources'][n],self))
 
     def __repr__(self) -> str:
         return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"
@@ -36,72 +95,87 @@ class Body:
 
 
 class Star(Body):
-    def build_attr(self, sdata):
+    def __init__(self,conf, starSystem):
+        self.system = starSystem
+        self.config = conf
+        self.set_defaults()
         self.make_name(1, 1)
         self.label = "star"
-        self.type = sdata["class"]
-        self.radius = sdata["radius"]
+        self.type = conf["class"]
+        self.radius = conf["radius"]
 
     def get_data(self):
         fund = self.get_fundimentals()
         fund['radius'] = self.radius
-        fund['class'] = self.type
         return fund
 
 
 class Planet(Body):
-    def build_attr(self, t, orbiting):
+    """
+    Randomly generates a planet
+    Manipulate the config to force specific outcomes.
+    Limit the conf dict to specify the type of planet.
+    """
+    def __init__(self,conf,orbiting):
+        self.set_defaults()
         self.make_name(2, 1)
         self.label = "planet"
-        self.type = t
-        self.radius = maths.rnd(self.config[t]["radius_mean"], self.config[t]["radius_std"], min_val=0,type='float')
-        self.mass = maths.rnd(self.config[t]["mass_mean"], self.config[t]["mass_std"],min_val=0,type='float')
-        self.orbitsDistance = maths.np.round(maths.np.random.uniform(self.config[t]["distance_min"], self.config[t]["distance_max"]),3)
-        self.orbitsId = orbiting["objid"]
-        self.orbitsName = orbiting["name"]
+        t = self.choose_type(conf)
+        self.config = t
+        self.type = t['name']
+        self.radius = maths.rnd(t["radius_mean"], t["radius_std"], min_val=0,type='float')
+        self.mass = maths.rnd(t["mass_mean"], t["mass_std"],min_val=0,type='float')
+        self.orbitsDistance = maths.np.round(maths.np.random.uniform(t["distance_min"], t["distance_max"]),3)
+        self.orbiting = orbiting
         self.isSupportsLife = False
         self.isPopulated = False
         self.isSurveyed = False
-
+        self.system = orbiting.system
 
     def get_data(self):
         fund = self.get_fundimentals()
         fund["radius"] = self.radius
         fund["mass"] = self.mass
         fund["orbitsDistance"] = self.orbitsDistance
-        fund["orbitsId"] = self.orbitsId
-        fund["orbitsName"] = self.orbitsName
+        fund["orbitsId"] = self.orbiting.objid
+        fund["orbitsName"] = self.orbiting.name
         fund["isSupportsLife"] = self.isSupportsLife
         fund["isPopulated"] = self.isPopulated
-        fund["type"] = self.type
         return fund
 
 
 class Moon(Body):
-    def build_attr(self, t, planets):
+    """
+    Moon takes a list of planets as an input. 
+    To specify the planet, pass a list of size 1.
+    """
+    def __init__(self,conf,planets):
+        self.set_defaults()
         self.make_name(2, 1)
         self.label = "moon"
-        self.type = t
+        t = self.choose_type(conf)
+        self.config = t
+        self.type = t['name']
         self.orbiting = maths.np.random.choice(planets)
-        self.orbitsId = self.orbiting["objid"]
-        self.orbitsDistance = maths.rnd(0.005,0.1,type='float')  
-        self.mass = abs(maths.np.random.normal(self.config[t]["mass_mean"], self.config[t]["mass_std"]))
+        self.orbitsId = self.orbiting.objid
+        self.orbitsDistance = maths.rnd(0.005,0.1,type='float', min_val=.0001)  
+        self.mass = abs(maths.np.random.normal(t["mass_mean"], t["mass_std"]))
         self.radius = (
-            abs(maths.np.random.normal(self.config[t]["radius_mean"], self.config[t]["radius_std"]))
-            * self.orbiting["radius"]
+            abs(maths.np.random.normal(t["radius_mean"], t["radius_std"]))
+            * self.orbiting.radius
         )
-        self.orbitsName = self.orbiting["name"]
+        self.orbitsName = self.orbiting.name
         self.isSupportsLife = False
         self.isPopulated = False
+        self.system = self.orbiting.orbiting.system
 
     def get_data(self):
         fund = self.get_fundimentals()
         fund["orbitsId"] = self.orbitsId
         fund["orbitsName"] = self.orbitsName
-        fund["orbitsDistance"] = self.orbitsDistance + self.orbiting['radius']
+        fund["orbitsDistance"] = self.orbitsDistance + self.orbiting.radius
         fund["mass"] = self.mass
         fund["radius"] = self.radius
         fund["isSupportsLife"] = self.isSupportsLife
         fund["isPopulated"] = self.isPopulated
-        fund["class"] = self.type
         return fund
