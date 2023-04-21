@@ -20,7 +20,7 @@ dependencies:
   - black
   - scikit-learn
   - pip:
-    - nb_black
+    # - nb_black
     - openai
     - gremlinpython==3.5.1
     # - gremlinpython==3.6.0 # looking at upgrate, but don't need it right now.
