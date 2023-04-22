@@ -37,8 +37,9 @@ class Pop(species.Creature):
 
     def set_faction(self, faction):
         self.faction = faction
-        faction.pops.append(self)
+        faction.assign_pop_to_faction(self)
         self.name = f"{self.faction.name} {self.make_name(1, 2)}"
+
 
     def get_data(self):
         fund = self.get_fundimentals()
@@ -75,7 +76,7 @@ class Faction(baseobjects.Baseobject):
     def assign_pop_to_faction(self, pop):
         options = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
         pop.isInFaction = self.objid
-        self.pops.append(pop.objid)
+        self.pops.append(pop)
         pick = options[maths.np.random.choice([0, 1, 2, 3])]
         while True:
             new_pick = options[maths.np.random.choice([0, 1, 2, 3])]
@@ -86,5 +87,5 @@ class Faction(baseobjects.Baseobject):
    
     def get_pop_edges(self, faction_edges):
         # takes a list and adds to it, so that it can easily run over many factions. 
-        [faction_edges.append({"node1": pop, "node2": self.objid, "label": "isInFaction"}) for pop in self.pops]
+        [faction_edges.append({"node1": pop.objid, "node2": self.objid, "label": "isInFaction"}) for pop in self.pops]
         return faction_edges

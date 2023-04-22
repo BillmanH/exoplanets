@@ -35,16 +35,17 @@ def build_homeSystem(data, username):
     moons = [
             celestials.Moon(conf['moon_config'], planets) for p in range(int(data["num_moons"]))
         ]
-    all_entities = [starSystem] + [star] + moons + planets + [home_planet] + home_planet.resources
+    all_entities = [starSystem] + [star] + moons + planets + home_planet.resources
     all_nodes = [b.get_data() for b in all_entities] + [data]  # Adding the userform as a freebe
 
     orbiting_bodies = planets + moons
     orbiting_edges = [i.get_orbits_edge() for i in orbiting_bodies]
 
-    system_bodies = orbiting_bodies + [star]
+    system_bodies = orbiting_bodies + [star] 
     system_edges = [i.get_in_system_edge() for i in system_bodies]
 
     resource_edges = [i.get_location_edge() for i in home_planet.resources]
+    
     formEdge = {
         "node1": starSystem.objid,
         "node2": data["objid"],

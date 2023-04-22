@@ -37,9 +37,6 @@ def get_n_factions(n_steps, conf):
     return int(round(x))
 
 
-def get_faction_objid(df, faction_no):
-    objid = df[df["faction_no"] == faction_no]["objid"].values[0]
-    return objid
 
 
 def build_people(data):
@@ -66,7 +63,6 @@ def build_people(data):
 
     for i, n in enumerate(kmeans.labels_):
         pops[i].set_faction(factions[n])
-        print(f"pop: {pops[i]} belongs to faction: {factions[n]}")
 
     if n_factions>2:
         # using PCA to set populations on map:
@@ -86,12 +82,13 @@ def build_people(data):
 
     # sum up the nodes and edges for return
     faction_edges = [] 
-    _ = [f.get_pop_edges() for f in factions]
+    _ = [f.get_pop_edges(faction_edges) for f in factions]
 
     nodes = [spec.get_data()] + [pop.get_data() for pop in pops] + [f.get_data() for f in factions]
-    edges = isInFaction + isOfSpecies
+    edges = faction_edges + [p.isOfSpecies for p in pops]
     
-    return nodes, edges
+    graph_data = {'nodes':nodes, 'edges':edges}
+    return graph_data
 
 
 def attach_people_to_world(homeworld_nodes, homeworld):

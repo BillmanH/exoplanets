@@ -9,7 +9,7 @@ class System:
         self.objid = maths.uuid(n=13)
         self.name = language.make_word(maths.rnd(2, 1))
         self.type = "ordered"
-        self.label = "sytem"
+        self.label = "system"
         self.isHomeSystem = True
         self.glat = maths.np.round(maths.np.random.normal(0,20),3)
         self.glon = maths.np.round(maths.np.random.normal(0,20),3)
@@ -141,6 +141,8 @@ class Planet(Body):
         fund["orbitsName"] = self.orbiting.name
         fund["isSupportsLife"] = self.isSupportsLife
         fund["isPopulated"] = self.isPopulated
+        if hasattr(self, 'isHomeworld'):
+            fund["isHomeworld"] = self.isHomeworld
         return fund
 
 
