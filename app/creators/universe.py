@@ -38,7 +38,7 @@ def build_homeSystem(data, username):
     all_entities = [starSystem] + [star] + moons + planets + [home_planet] + home_planet.resources
     all_nodes = [b.get_data() for b in all_entities] + [data]  # Adding the userform as a freebe
 
-    orbiting_bodies = [home_planet] + planets + moons
+    orbiting_bodies = planets + moons
     orbiting_edges = [i.get_orbits_edge() for i in orbiting_bodies]
 
     system_bodies = orbiting_bodies + [star]
