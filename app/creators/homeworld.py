@@ -1,5 +1,5 @@
 # Doc taken from
-# notebooks/People/Generating Population
+# notebooks/People/Genisis.ipynb
 
 import pandas as pd
 import numpy as np
@@ -10,7 +10,7 @@ from sklearn.decomposition import PCA
 
 from ..objects import species
 from ..objects import population
-
+from ..objects import baseobjects
 
 # Setup Params:
 n_steps = 6  # max factions
@@ -50,8 +50,7 @@ def build_people(data):
 
     """
     # Get the Species
-    spec = species.Species()
-    spec.build_attr(data)
+    spec = species.Species(data)
 
     # Build the populations (note that pops is a DataFrame)
     pops = [population.Pop(spec) for i in range(int(data["starting_pop"]))]
@@ -65,17 +64,9 @@ def build_people(data):
 
     factions = [population.Faction(i) for i in range(kmeans.n_clusters)]
 
-    # Assign the pop to that faction number, not yet matched to an ID.
     for i, n in enumerate(kmeans.labels_):
-        pops[i].set_faction(n)
-
-    # Set the name of the population to comply with the faction it is in.
-    for p in pops:
-        faction = [i for i in factions if i.faction_no == p.factionNo][0]
-        if p.name == '':
-            p.name = p.make_name(2,2)
-        p.set_pop_name(faction)
-        faction.assign_pop_to_faction(p)
+        pops[i].set_faction(factions[n])
+        print(f"pop: {pops[i]} belongs to faction: {factions[n]}")
 
     if n_factions>2:
         # using PCA to set populations on map:
@@ -94,11 +85,8 @@ def build_people(data):
             f.long = 0
 
     # sum up the nodes and edges for return
-    isOfSpecies = [p.isOfSpecies for p in pops]
-    isInFaction = []
-    for f in factions:
-        isInFaction+= f.get_faction_pop_edge()
-        
+    faction_edges = [] 
+    _ = [f.get_pop_edges() for f in factions]
 
     nodes = [spec.get_data()] + [pop.get_data() for pop in pops] + [f.get_data() for f in factions]
     edges = isInFaction + isOfSpecies

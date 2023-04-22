@@ -10,7 +10,8 @@ class Creature(baseobjects.Baseobject):
 
 
 class Species(baseobjects.Baseobject):
-    def build_attr(self, data):
+    def __init__(self, data):
+        super().__init__()
         self.conformity = data["conformity"]
         self.aggression = data["aggression"]
         self.literacy = data["literacy"]
