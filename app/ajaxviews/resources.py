@@ -12,7 +12,10 @@ def get_local_resourcses(request):
     """
     response = {}
     request = dict(request.GET)
-    queryplanet = f"g.V().has('objid','{request.get('location','')[0]}').out('hasResource').valuemap()"
+    queryplanet = f"""
+    g.V().has('objid','{request.get('location','')[0]}')
+        .out('has').haslabel('resource').valuemap()
+    """
     c = CosmosdbClient()
     c.run_query(queryplanet)
     response["resources"] = c.clean_nodes(c.res)

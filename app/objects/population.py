@@ -26,7 +26,7 @@ class Pop(species.Creature):
         self.isOfSpecies = {
             "node1": self.objid,
             "node2": species.objid,
-            "label": "isOfSpecies",
+            "label": "isOf",
         }
         self.faction = None
         self.industry = (self.aggression + self.constitution) / 2
@@ -87,5 +87,5 @@ class Faction(baseobjects.Baseobject):
    
     def get_pop_edges(self, faction_edges):
         # takes a list and adds to it, so that it can easily run over many factions. 
-        [faction_edges.append({"node1": pop.objid, "node2": self.objid, "label": "isInFaction"}) for pop in self.pops]
+        [faction_edges.append({"node1": pop.objid, "node2": self.objid, "label": "isIn"}) for pop in self.pops]
         return faction_edges
