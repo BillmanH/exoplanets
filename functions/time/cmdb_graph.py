@@ -166,6 +166,9 @@ class CosmosdbClient():
         gaddv = f"g.addV('{node['label']}')"
         properties = [k for k in node.keys()]
         for k in properties:
+            # converting bolian balues to gremlin bools
+            if type(node[k])==bool:
+                node[k]=str(node[k]).lower()
             # try to convert objects that aren't ids
             if k not in notFloats:
                 #first try to upload it as a float.
