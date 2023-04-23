@@ -16,6 +16,7 @@ dependencies:
   - scikit-learn
   - pip:
     - nb_black
+    - opencv-python
     - openai
     - gremlinpython==3.5.1
     - psycopg2-binary==2.9.2

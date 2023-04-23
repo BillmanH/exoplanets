@@ -9,7 +9,10 @@ shinyness = 0.05
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
 // ground
-const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:ground_dimensions, height:ground_dimensions});
+const ground =BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "{% static 'app/maps/test_heightmap.png' %}", 
+{width:ground_dimensions, height:ground_dimensions, subdivisions: 100, minHeight:-100, maxHeight: 1000}
+);
+
 const groundMat = new BABYLON.StandardMaterial("groundMat");
     groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green_2.png' %}");
     ground.material = groundMat; //Place the material property of the ground
@@ -43,6 +46,13 @@ function createFaction(n){
         depth:10}
       );
 
+
+    ground.onReady = function(){
+        console.log("ground for", n.data.lat*ground_dimensions,n.data.long*ground_dimensions,": ", 
+        ground.getHeightAtCoordinates(n.data.lat*ground_dimensions,n.data.long*ground_dimensions))
+        var fact_postion = new BABYLON.Vector3(n.data.lat*ground_dimensions, ground.getHeightAtCoordinates(n.data.lat*ground_dimensions,n.data.long*ground_dimensions), n.data.long*ground_dimensions)
+    }
+    // console.log("ground obj: ",scene.getMeshByName("ground"))
       const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
       boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
       box.material = boxMat; 
@@ -58,7 +68,8 @@ function createFaction(n){
     
 
     var faction = BABYLON.Mesh.MergeMeshes([box, disc], true, false, undefined, false, true);
-    faction.position = new BABYLON.Vector3(n.data.lat*ground_dimensions, factionbuildingHeight/2, n.data.long*ground_dimensions)
+    // faction.position = new BABYLON.Vector3(n.data.lat*ground_dimensions, factionbuildingHeight/2, n.data.long*ground_dimensions)
+    faction.posion = fact_postion
 
     faction.metadata = n.data
     faction.actionManager = new BABYLON.ActionManager(scene);
