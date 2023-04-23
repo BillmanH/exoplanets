@@ -64,7 +64,7 @@ def build_people(data):
     for i, n in enumerate(kmeans.labels_):
         pops[i].set_faction(factions[n])
 
-    if n_factions>2:
+    if n_factions>1:
         # using PCA to set populations on map:
                                 
         # PCA Part
