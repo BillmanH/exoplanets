@@ -38,8 +38,6 @@ class Surface():
         coord = [x, y]
         return np.array(coord)
     
-    def get_matrix_gradient(self):
-        return np.array(np.gradient(np.array(self.matrix)))[0]
     
     def __repr__(self):
         return f"<surface: {self.matrix_length}X{self.matrix_length}>"
@@ -47,8 +45,9 @@ class Surface():
 
 
 class Mountain():
-    def __init__(self):
-        self.range_length = 20
+    def __init__(self, range_length=20, height=5):
+        self.range_length = range_length
+        self.height = height
         self.possible_diretions = [
             [0, 0],
             [1,0],
@@ -64,7 +63,8 @@ class Mountain():
         self.path = [self.get_random_direction() for i in range(self.range_length)]
         
     def set_path_proba(self):
-        rnds = np.array([np.random.uniform(0, 1) for i in self.possible_diretions])
+        rnds = np.random.normal(loc=np.random.choice(range(len(self.possible_diretions))),size=len(self.possible_diretions))
+        rnds[rnds<0] = 0
         p = rnds / rnds.sum()
         return p
     
@@ -73,4 +73,4 @@ class Mountain():
         return self.possible_diretions[choice]
                             
     def __repr__(self):
-        return f"<mountain: range:{self.range_length}>"
+        return f"<mountain: range:{self.range_length}, height:{self.height}>"

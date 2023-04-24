@@ -9,7 +9,7 @@ shinyness = 0.05
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
 // ground
-const ground =BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "{% static 'app/maps/test_heightmap.png' %}", 
+const ground =BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "{% static 'app/maps/test_heightmap_1.png' %}", 
 {width:ground_dimensions, height:ground_dimensions, subdivisions: 100, minHeight:-100, maxHeight: 1000}
 );
 
@@ -47,11 +47,11 @@ function createFaction(n){
       );
 
 
-    ground.onReady = function(){
-        console.log("ground for", n.data.lat*ground_dimensions,n.data.long*ground_dimensions,": ", 
-        ground.getHeightAtCoordinates(n.data.lat*ground_dimensions,n.data.long*ground_dimensions))
-        var fact_postion = new BABYLON.Vector3(n.data.lat*ground_dimensions, ground.getHeightAtCoordinates(n.data.lat*ground_dimensions,n.data.long*ground_dimensions), n.data.long*ground_dimensions)
-    }
+    // ground.onReady = function(){
+    //     console.log("ground for", n.data.lat*ground_dimensions,n.data.long*ground_dimensions,": ", 
+    //     ground.getHeightAtCoordinates(n.data.lat*ground_dimensions,n.data.long*ground_dimensions))
+    //     var fact_postion = new BABYLON.Vector3(n.data.lat*ground_dimensions, ground.getHeightAtCoordinates(n.data.lat*ground_dimensions,n.data.long*ground_dimensions), n.data.long*ground_dimensions)
+    // }
     // console.log("ground obj: ",scene.getMeshByName("ground"))
       const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
       boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
@@ -68,8 +68,8 @@ function createFaction(n){
     
 
     var faction = BABYLON.Mesh.MergeMeshes([box, disc], true, false, undefined, false, true);
-    // faction.position = new BABYLON.Vector3(n.data.lat*ground_dimensions, factionbuildingHeight/2, n.data.long*ground_dimensions)
-    faction.posion = fact_postion
+    faction.position = new BABYLON.Vector3(n.data.lat*ground_dimensions, factionbuildingHeight/2, n.data.long*ground_dimensions)
+    // faction.posion = fact_postion
 
     faction.metadata = n.data
     faction.actionManager = new BABYLON.ActionManager(scene);
