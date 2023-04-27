@@ -195,26 +195,27 @@ function build_population(c,n) {
                     pop_table_lables
                 )
                 console.log(data['factions'])
+                console.log('homeworld id:', data.homeworldid)
                 draw_table(
                     "FactionTable",
                     data['factions'],
                     faction_table_lables
                 )
             }
-            finalize_world()
+            finalize_world(data)
             d3.selectAll('#loading').remove()
         }
     });
 }
 
-function goto_system(c,n){
-            window.location.href = '/homesystemui';
+function goto_system(data){
+            window.location.href = '/popuilocal?objid='+ data.homeworldid;
 }
 
 
-function finalize_world(){
+function finalize_world(data){
     add_menu("Feel free to click around, but the game hasn't started yet.", "finalize")
-    add_button("finalize",1,"continue to the game", goto_system)
+    add_button("finalize",1,"continue to the game", goto_system(data))
 }
 
 // An example `data` set:

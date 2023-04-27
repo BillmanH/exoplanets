@@ -48,13 +48,14 @@ def build_population(request):
 
     homeplanet = c.clean_nodes(c.res[queryhomeworld])[0]
     graph_data = homeworld.build_people(form)
+    world = homeworld.build_height_map(homeplanet)
     graph_data['edges'] = graph_data['edges'] + homeworld.attach_people_to_world(graph_data['nodes'],homeplanet)
     
     response = {'pops':[p for p in graph_data['nodes'] if p.get('label')=='pop']}
     response['factions'] = [p for p in graph_data['nodes'] if p.get('label')=='faction']
     response['note'] = 'population created'
     response['status'] = 'success'
-
+    response['homeworldid'] = homeplanet['objid']
     c.upload_data(username, graph_data)
 
     return JsonResponse(response)

@@ -1,9 +1,15 @@
 import numpy as np
+from django.conf import settings as django_settings
+import os
+import cv2
 
+from ..functions import configurations
+params = configurations.get_configurations()
 
 class Surface():
-    def __init__(self):
-        self.matrix_length = 20
+    def __init__(self, conf):
+        self.config = conf
+        self.matrix_length = self.config.get('matrix_length')
         self.matrix = self.shift_terrain()
 
     def shift_terrain(self):
@@ -31,6 +37,8 @@ class Surface():
                 mountain_start[1] = 0   
             self.matrix[mountain_start[0]][mountain_start[1]] += height
 
+    def shift_mountains(self,mountains):
+        [self.mountain_shift(mountain) for mountain in mountains]
 
     def get_random_chord(self):
         x = np.random.choice(self.matrix_length, 1)[0]
@@ -42,12 +50,22 @@ class Surface():
     def __repr__(self):
         return f"<surface: {self.matrix_length}X{self.matrix_length}>"
 
+    def save_heightmap_to_static(self,objid):
+        try:
+            cv2.imwrite(os.path.join(django_settings.STATIC_ROOT,'maps', f'heightmap_{objid}.png'), np.array(self.matrix))
+        except:
+            print('[static folder error] Unable to save to django_settings.STATIC_ROOT, saving to app path instead')
+            cv2.imwrite(os.path.join("../..","app", "static","app","maps", f'heightmap_{objid}.png'), np.array(self.matrix))
 
 
 class Mountain():
-    def __init__(self, range_length=20, height=5):
-        self.range_length = range_length
-        self.height = height
+    def __init__(self, conf):
+        self.config = conf.get('mountains')
+        self.range_length = np.random.randint(self.config['range_length_low'],
+                                               high=self.config['range_length_high'])
+        self.height = np.round(np.random.normal(loc=self.config['height_avg'],
+                                                scale=self.config['heihgt_std'])
+                                            ,2)
         self.possible_diretions = [
             [0, 0],
             [1,0],

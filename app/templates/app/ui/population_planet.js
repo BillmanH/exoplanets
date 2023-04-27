@@ -118,7 +118,7 @@ function createPop(n){
 // main - actually loads the content
 
 // ground
-const ground =BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "{% static 'app/maps/test_heightmap_2.png' %}", 
+const ground =BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "{% static 'app/maps/' %}heightmap_"+global_location+".png", 
 {width:ground_dimensions, height:ground_dimensions, subdivisions: 20, minHeight:-100, maxHeight: 1000
 , onReady: (readyMesh)=>{
         var guiIter = 0

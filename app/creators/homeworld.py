@@ -10,7 +10,11 @@ from sklearn.decomposition import PCA
 
 from ..objects import species
 from ..objects import population
-from ..objects import baseobjects
+from ..objects import terrestrial
+from ..functions import configurations
+
+conf = configurations.get_homeworld_configurations()
+
 
 # Setup Params:
 n_steps = 6  # max factions
@@ -100,7 +104,12 @@ def attach_people_to_world(homeworld_nodes, homeworld):
     ]
     return edges
 
-
+def build_height_map(planet):
+    world = terrestrial.Surface(conf['terrestrial'])
+    mountains = [terrestrial.Mountain(conf['terrestrial']) for i in range(conf['terrestrial']['mountains']['n_mountains'])]
+    world.shift_mountains(mountains)
+    world.save_heightmap_to_static(planet["objid"])
+    return world
 
 def validate_pop_action(p, a):
     # will validate that a given pop (p) meets the requirement needed to take an action (a)
