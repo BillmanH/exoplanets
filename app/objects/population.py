@@ -20,27 +20,26 @@ class Pop(species.Creature):
         )
         self.label = "pop"
         self.type = "pop"
-        self.isIdle = "true"
+        self.isIdle = True
         self.health = 0.5
+        self.species = species
         self.isOfSpecies = {
             "node1": self.objid,
             "node2": species.objid,
-            "label": "isOfSpecies",
+            "label": "isOf",
         }
-        self.factionNo = None
-        self.isInFaction = None
+        self.faction = None
         self.industry = (self.aggression + self.constitution) / 2
         self.wealth = (self.literacy + self.industry) / 2
         self.factionLoyalty = abs(
             round(maths.np.random.normal(float(self.conformity), 0.2 * (1 - float(self.conformity))), 3)
         )
 
-    def set_faction(self, n):
-        self.factionNo = n
+    def set_faction(self, faction):
+        self.faction = faction
+        faction.assign_pop_to_faction(self)
+        self.name = f"{self.faction.name} {self.make_name(1, 2)}"
 
-    def set_pop_name(self, faction):
-        # the pop name is the faction name plus an extra syllable.
-        self.name = f"{faction.name} {self.make_name(1, 2)}"
 
     def get_data(self):
         fund = self.get_fundimentals()
@@ -49,7 +48,7 @@ class Pop(species.Creature):
         fund["aggression"] = self.aggression
         fund["constitution"] = self.constitution
         fund["health"] = self.health
-        fund["isInFaction"] = self.isInFaction
+        fund["isInFaction"] = self.faction.objid if hasattr(self.faction, 'objid') else None
         fund["industry"] = self.industry
         fund["wealth"] = self.wealth
         fund["factionLoyalty"] = self.factionLoyalty
@@ -77,7 +76,7 @@ class Faction(baseobjects.Baseobject):
     def assign_pop_to_faction(self, pop):
         options = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
         pop.isInFaction = self.objid
-        self.pops.append(pop.objid)
+        self.pops.append(pop)
         pick = options[maths.np.random.choice([0, 1, 2, 3])]
         while True:
             new_pick = options[maths.np.random.choice([0, 1, 2, 3])]
@@ -85,10 +84,8 @@ class Faction(baseobjects.Baseobject):
             if pick not in self.faction_place:
                 self.faction_place.append(pick)
                 break
-
-    
-    def get_faction_pop_edge(self):
-        return [
-            {"node1": pop, "node2": self.objid, "label": "isInFaction"}
-            for pop in self.pops
-        ]
+   
+    def get_pop_edges(self, faction_edges):
+        # takes a list and adds to it, so that it can easily run over many factions. 
+        [faction_edges.append({"node1": pop.objid, "node2": self.objid, "label": "isIn"}) for pop in self.pops]
+        return faction_edges

@@ -31,10 +31,10 @@ def get_home_system(username):
 def get_system(objid,orientation):
     if orientation == 'planet':
         nodes_query = (
-            f"g.V().has('objid','{objid}').out('isInSystem').in().valueMap()"
+            f"g.V().has('objid','{objid}').out('isIn').in().valueMap()"
         )
         system_query = (
-            f"g.V().has('objid','{objid}').out('isInSystem').valueMap()"
+            f"g.V().has('objid','{objid}').out('isIn').valueMap()"
         )
     c = CosmosdbClient()
     c.add_query(nodes_query)
@@ -65,8 +65,8 @@ def get_local_population(objid):
             .in('inhabits').as('population')
             .local(
                 union(
-                    out('isInFaction').as('faction'),
-                    out('isOfSpecies').as('species')
+                    out('isIn').hasLabel('faction').as('faction'),
+                    out('isOf').hasLabel('species').as('species')
                     )
                     .fold()).as('faction','species')
                     .path()
@@ -74,12 +74,12 @@ def get_local_population(objid):
     )
     resource_query = (
         f"""g.V().has('objid','{objid}').as('location')
-            .out('hasResource').as('resource').valueMap()
+            .out('has').haslabel('resource').as('resource').valueMap()
         """
     )
     building_query = (f"""g.V().has('objid','{objid}').as('location')
         .in('inhabits').as('population')
-        .in('owned_by').as('building')
+        .in('ownedBy').as('building')
         .path()
             .by(valueMap('objid','name'))
             .by(valueMap('objid','name'))

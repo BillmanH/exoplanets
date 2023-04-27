@@ -26,6 +26,7 @@ var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
     troubleshooter.text = dictToSimpleText(troubleshooting)
     dashboard.addControl(troubleshooter);
 
+
 function dropControlIfExists(name){
     if(dashboard.getControlByName(name)){
         dashboard.getControlByName(name).dispose()

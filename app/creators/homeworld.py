@@ -1,5 +1,5 @@
 # Doc taken from
-# notebooks/People/Generating Population
+# notebooks/People/Genisis.ipynb
 
 import pandas as pd
 import numpy as np
@@ -10,6 +10,10 @@ from sklearn.decomposition import PCA
 
 from ..objects import species
 from ..objects import population
+from ..objects import terrestrial
+from ..functions import configurations
+
+conf = configurations.get_homeworld_configurations()
 
 
 # Setup Params:
@@ -37,9 +41,6 @@ def get_n_factions(n_steps, conf):
     return int(round(x))
 
 
-def get_faction_objid(df, faction_no):
-    objid = df[df["faction_no"] == faction_no]["objid"].values[0]
-    return objid
 
 
 def build_people(data):
@@ -50,8 +51,7 @@ def build_people(data):
 
     """
     # Get the Species
-    spec = species.Species()
-    spec.build_attr(data)
+    spec = species.Species(data)
 
     # Build the populations (note that pops is a DataFrame)
     pops = [population.Pop(spec) for i in range(int(data["starting_pop"]))]
@@ -65,19 +65,10 @@ def build_people(data):
 
     factions = [population.Faction(i) for i in range(kmeans.n_clusters)]
 
-    # Assign the pop to that faction number, not yet matched to an ID.
     for i, n in enumerate(kmeans.labels_):
-        pops[i].set_faction(n)
+        pops[i].set_faction(factions[n])
 
-    # Set the name of the population to comply with the faction it is in.
-    for p in pops:
-        faction = [i for i in factions if i.faction_no == p.factionNo][0]
-        if p.name == '':
-            p.name = p.make_name(2,2)
-        p.set_pop_name(faction)
-        faction.assign_pop_to_faction(p)
-
-    if n_factions>2:
+    if n_factions>1:
         # using PCA to set populations on map:
                                 
         # PCA Part
@@ -94,16 +85,14 @@ def build_people(data):
             f.long = 0
 
     # sum up the nodes and edges for return
-    isOfSpecies = [p.isOfSpecies for p in pops]
-    isInFaction = []
-    for f in factions:
-        isInFaction+= f.get_faction_pop_edge()
-        
+    faction_edges = [] 
+    _ = [f.get_pop_edges(faction_edges) for f in factions]
 
     nodes = [spec.get_data()] + [pop.get_data() for pop in pops] + [f.get_data() for f in factions]
-    edges = isInFaction + isOfSpecies
+    edges = faction_edges + [p.isOfSpecies for p in pops]
     
-    return nodes, edges
+    graph_data = {'nodes':nodes, 'edges':edges}
+    return graph_data
 
 
 def attach_people_to_world(homeworld_nodes, homeworld):
@@ -115,7 +104,12 @@ def attach_people_to_world(homeworld_nodes, homeworld):
     ]
     return edges
 
-
+def build_height_map(planet):
+    world = terrestrial.Surface(conf['terrestrial'])
+    mountains = [terrestrial.Mountain(conf['terrestrial']) for i in range(conf['terrestrial']['mountains']['n_mountains'])]
+    world.shift_mountains(mountains)
+    world.save_heightmap_to_static(planet["objid"])
+    return world
 
 def validate_pop_action(p, a):
     # will validate that a given pop (p) meets the requirement needed to take an action (a)

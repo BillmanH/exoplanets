@@ -22,11 +22,11 @@ def build_solar_system(request):
     request = c.clean_node(dict(request.GET))
     username = request.get('owner','')
     # Create the new system
-    universe_nodes, universe_edges = universe.build_homeSystem(
+    graph_data = universe.build_homeSystem(
         request, username
     )
-    data = {"nodes": universe_nodes, "edges": universe_edges}
-    c.upload_data(username, data)
+
+    c.upload_data(username, graph_data)
 
     response['note'] = 'solar system created'
     response['status'] = 'success'
@@ -47,15 +47,15 @@ def build_population(request):
     c.run_queries()
 
     homeplanet = c.clean_nodes(c.res[queryhomeworld])[0]
-    homeworld_nodes, homeworld_edges = homeworld.build_people(form)
-    homeworld_edges = homeworld_edges + homeworld.attach_people_to_world(homeworld_nodes,homeplanet)
+    graph_data = homeworld.build_people(form)
+    world = homeworld.build_height_map(homeplanet)
+    graph_data['edges'] = graph_data['edges'] + homeworld.attach_people_to_world(graph_data['nodes'],homeplanet)
     
-    response = {'pops':[p for p in homeworld_nodes if p.get('label')=='pop']}
-    response['factions'] = [p for p in homeworld_nodes if p.get('label')=='faction']
+    response = {'pops':[p for p in graph_data['nodes'] if p.get('label')=='pop']}
+    response['factions'] = [p for p in graph_data['nodes'] if p.get('label')=='faction']
     response['note'] = 'population created'
     response['status'] = 'success'
-
-    data = {"nodes": homeworld_nodes, "edges": homeworld_edges}
-    c.upload_data(username, data)
+    response['homeworldid'] = homeplanet['objid']
+    c.upload_data(username, graph_data)
 
     return JsonResponse(response)

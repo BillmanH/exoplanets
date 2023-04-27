@@ -1,5 +1,6 @@
 moon_types:
   ice:
+    name: ice
     count: 4.0
     mass_mean: 0.01722475
     mass_std: 0.00951270642789597
@@ -7,6 +8,7 @@ moon_types:
     radius_mean: 0.04282547027839588
     radius_std: 0.009033669196529754
   rocky:
+    name: rocky
     count: 9.0
     mass_mean: 0.000308
     mass_std: 0.00015929453851278142
@@ -14,6 +16,7 @@ moon_types:
     radius_mean: 0.0733373375016315
     radius_std: 0.16342090345859747
   terrestrial:
+    name: terrestrial
     count: 3.0
     mass_mean: 0.011778333333333333
     mass_std: 0.0035116816959020257

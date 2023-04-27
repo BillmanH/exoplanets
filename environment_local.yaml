@@ -1,4 +1,9 @@
 # Local environment has some things that are only used in notebooks. So you don't need them in the server version. 
+# conda remove --name exoplanets --all
+# 
+# conda env create -f environment_local.yaml
+# conda env config vars set $namstring=$valstring
+# conda env config vars list
 name: exoplanets
 channels:
   - conda-forge
@@ -15,7 +20,8 @@ dependencies:
   - black
   - scikit-learn
   - pip:
-    - nb_black
+    # - nb_black
+    - opencv-python
     - openai
     - gremlinpython==3.5.1
     # - gremlinpython==3.6.0 # looking at upgrate, but don't need it right now.
