@@ -17,7 +17,7 @@ function make_tree(coord){
     branches.material.specularColor = new BABYLON.Color3(0.05, 0.05, 0.05);
     // parameters - arrayOfMeshes, disposeSource, allow32BitsIndices, meshSubclass, subdivideWithSubMeshes, multiMultiMaterial
     var tree = BABYLON.Mesh.MergeMeshes([trunk, branches], true, false, undefined, false, true);
-    y = scene.getMeshById("ground").getHeightAtCoordinates(coord.x,coord.z)+(factionbuildingHeight/2)
+    y = scene.getMeshById("ground").getHeightAtCoordinates(coord.x,coord.z)
     tree.position = new BABYLON.Vector3(coord.x, y, coord.z)
     ground.getHeightAtOctreeGroundCoordinates
     
