@@ -33,7 +33,7 @@ if stage == "dev":
 
 # Using pipe delimeted string to allow the environment vars to separate a list of hosts. 
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split('|')
-
+ALLOWED_HOSTS.append('.azurewebsites.net')
 
 # Application definition
 
