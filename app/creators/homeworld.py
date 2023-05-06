@@ -108,7 +108,7 @@ def build_height_map(planet):
     world = terrestrial.Surface(conf['terrestrial'])
     mountains = [terrestrial.Mountain(conf['terrestrial']) for i in range(conf['terrestrial']['mountains']['n_mountains'])]
     world.shift_mountains(mountains)
-    world.save_heightmap_to_static(planet["objid"])
+    # world.save_heightmap_to_static(planet["objid"])
     return world
 
 def validate_pop_action(p, a):

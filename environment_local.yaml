@@ -21,7 +21,7 @@ dependencies:
   - scikit-learn
   - pip:
     # - nb_black
-    - opencv-python
+    # - opencv-python
     - openai
     - gremlinpython==3.5.1
     # - gremlinpython==3.6.0 # looking at upgrate, but don't need it right now.

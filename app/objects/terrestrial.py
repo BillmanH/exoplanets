@@ -1,7 +1,7 @@
 import numpy as np
-from django.conf import settings as django_settings
+# from django.conf import settings as django_settings
 import os
-import cv2
+# import cv2
 
 from ..functions import configurations
 params = configurations.get_configurations()
@@ -50,12 +50,12 @@ class Surface():
     def __repr__(self):
         return f"<surface: {self.matrix_length}X{self.matrix_length}>"
 
-    def save_heightmap_to_static(self,objid):
-        try:
-            cv2.imwrite(os.path.join(django_settings.STATIC_ROOT,'maps', f'heightmap_{objid}.png'), np.array(self.matrix))
-        except:
-            print('[static folder error] Unable to save to django_settings.STATIC_ROOT, saving to app path instead')
-            cv2.imwrite(os.path.join("../..","app", "static","app","maps", f'heightmap_{objid}.png'), np.array(self.matrix))
+    # def save_heightmap_to_static(self,objid):
+    #     try:
+    #         cv2.imwrite(os.path.join(django_settings.STATIC_ROOT,'maps', f'heightmap_{objid}.png'), np.array(self.matrix))
+    #     except:
+    #         print('[static folder error] Unable to save to django_settings.STATIC_ROOT, saving to app path instead')
+    #         cv2.imwrite(os.path.join("../..","app", "static","app","maps", f'heightmap_{objid}.png'), np.array(self.matrix))
 
 
 class Mountain():
