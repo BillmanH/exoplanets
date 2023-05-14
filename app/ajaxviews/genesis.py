@@ -1,4 +1,5 @@
-from app.models import CosmosdbClient, get_home_system
+from app.connectors.cmdb_graph import CosmosdbClient
+from app.models import get_home_system
 from django.http import JsonResponse
 
 from app.creators import homeworld, universe
@@ -49,6 +50,7 @@ def build_population(request):
     homeplanet = c.clean_nodes(c.res[queryhomeworld])[0]
     graph_data = homeworld.build_people(form)
     world = homeworld.build_height_map(homeplanet)
+    
     graph_data['edges'] = graph_data['edges'] + homeworld.attach_people_to_world(graph_data['nodes'],homeplanet)
     
     response = {'pops':[p for p in graph_data['nodes'] if p.get('label')=='pop']}

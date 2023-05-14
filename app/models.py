@@ -1,4 +1,4 @@
-from .cmdb_graph import *
+from .connectors.cmdb_graph import *
 
 def get_galaxy_nodes():
     # TODO: Add Glat and glon to systems when created

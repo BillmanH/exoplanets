@@ -40,6 +40,12 @@ class CosmosdbClient():
     cb = CosmosdbClient()
     cb.add_query()
     cb.run_queries()
+
+    data format = `{"nodes":nodes_list,"edges":edges_list}`
+
+    node format = {
+    
+    }
     """
     def __init__(self) -> None:
         self.endpoint = os.getenv("endpoint","env vars not set")
