@@ -44,8 +44,15 @@ class CosmosdbClient():
     data format = `{"nodes":nodes_list,"edges":edges_list}`
 
     node format = {
-    
+        'label':'foo',
+        'objid':'00001',
+        'name':'myname'
     }
+    
+
+    edge format = `{'node1':0000,'node2':0001,'label':'hasRelationship',...other properties}`
+        it's always the objid of the nodes, connecting to the objid of the ohter node. 
+
     """
     def __init__(self) -> None:
         self.endpoint = os.getenv("endpoint","env vars not set")
