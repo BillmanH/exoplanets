@@ -72,6 +72,9 @@ def get_local_population(objid):
                     .path()
                     .by(unfold().valueMap().fold())"""
     )
+    biome_query = f"""
+        g.V().has('objid','{objid}').as('planet').in('isOn').haslabel('biome').valueMap()
+    """
     resource_query = (
         f"""g.V().has('objid','{objid}').as('location')
             .out('has').haslabel('resource').as('resource').valueMap()
@@ -89,9 +92,11 @@ def get_local_population(objid):
     c.add_query(population_query)
     c.add_query(resource_query)
     c.add_query(building_query)
+    c.add_query(biome_query)
     c.run_queries()   
     nodes = c.reduce_res(c.res[population_query])
     resources = c.clean_nodes(c.res[resource_query])
+    biome = c.clean_nodes(c.res[biome_query])
     buildings = []
     for iter, item in enumerate(c.res[building_query]):
         build = c.clean_node(item["objects"][2])
@@ -99,5 +104,5 @@ def get_local_population(objid):
         build.update({"owner": owner["objid"]})
         buildings.append(build)
     buildings
-    data = {"nodes": nodes, "edges": [], "resources":resources,"buildings":buildings}
+    data = {"nodes": nodes, "edges": [], "resources":resources,"buildings":buildings, "biome":biome}
     return data

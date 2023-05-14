@@ -49,9 +49,11 @@ def build_population(request):
 
     homeplanet = c.clean_nodes(c.res[queryhomeworld])[0]
     graph_data = homeworld.build_people(form)
-    world = homeworld.build_height_map(homeplanet)
+    biome = homeworld.build_biome(homeplanet)
     
     graph_data['edges'] = graph_data['edges'] + homeworld.attach_people_to_world(graph_data['nodes'],homeplanet)
+    graph_data['nodes'] = graph_data['nodes'] + [biome.get_data()]
+    graph_data['edges'] = graph_data['edges'] + [biome.get_biome_edge()]
     
     response = {'pops':[p for p in graph_data['nodes'] if p.get('label')=='pop']}
     response['factions'] = [p for p in graph_data['nodes'] if p.get('label')=='faction']

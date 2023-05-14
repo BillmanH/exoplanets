@@ -8,6 +8,7 @@ params = configurations.get_configurations()
 class Biome(baseobjects.Baseobject):
     def __init__(self, conf, planet):
         super().__init__()
+        self.label = 'biome'
         self.config = conf
         self.matrix_length = self.config.get('matrix_length')
         self.matrix = self.shift_terrain()
@@ -57,7 +58,7 @@ class Biome(baseobjects.Baseobject):
 
     def get_data(self):
         fund = self.get_fundimentals()
-        fund['grid'] = self.flatten_matrix()
+        fund['grid'] = str(self.flatten_matrix())
         return fund
 
     def get_biome_edge(self):
