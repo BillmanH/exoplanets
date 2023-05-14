@@ -1,13 +1,13 @@
 import numpy as np
-# from django.conf import settings as django_settings
-import os
-# import cv2
 
 from ..functions import configurations
+from ..objects import baseobjects
+
 params = configurations.get_configurations()
 
-class Surface():
+class Biome(baseobjects.Baseobject):
     def __init__(self, conf):
+        super().__init__()
         self.config = conf
         self.matrix_length = self.config.get('matrix_length')
         self.matrix = self.shift_terrain()
@@ -46,16 +46,25 @@ class Surface():
         coord = [x, y]
         return np.array(coord)
     
-    
+    def matrix_to_list(self):
+        # Longer form [x,y,z,x,y,z,x,y,z,x,y,z,x,y,z,x,y,z,x,y,z,x,y,z]
+        np.concatenate([[[x-10,self.matrix[x][z],z-10] for z in range(len(self.matrix))] for x in range(len(self.matrix))]).flatten()
+
+    def flatten_matrix(self):
+        # just the `y` axis of the matrix
+        return np.array(self.matrix).flatten()
+
+    def get_data(self):
+        fund = self.get_fundimentals()
+        fund['grid'] = self.flatten_matrix()
+        return fund
+
+    def get_biome_edge(self, world):
+        edge = {}
+
     def __repr__(self):
         return f"<surface: {self.matrix_length}X{self.matrix_length}>"
 
-    # def save_heightmap_to_static(self,objid):
-    #     try:
-    #         cv2.imwrite(os.path.join(django_settings.STATIC_ROOT,'maps', f'heightmap_{objid}.png'), np.array(self.matrix))
-    #     except:
-    #         print('[static folder error] Unable to save to django_settings.STATIC_ROOT, saving to app path instead')
-    #         cv2.imwrite(os.path.join("../..","app", "static","app","maps", f'heightmap_{objid}.png'), np.array(self.matrix))
 
 
 class Mountain():
@@ -92,3 +101,5 @@ class Mountain():
                             
     def __repr__(self):
         return f"<mountain: range:{self.range_length}, height:{self.height}>"
+    
+

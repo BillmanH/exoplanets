@@ -7,7 +7,6 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
 
-
 from ..objects import species
 from ..objects import population
 from ..objects import terrestrial
@@ -105,10 +104,9 @@ def attach_people_to_world(homeworld_nodes, homeworld):
     return edges
 
 def build_height_map(planet):
-    world = terrestrial.Surface(conf['terrestrial'])
+    world = terrestrial.Biome(conf['terrestrial'])
     mountains = [terrestrial.Mountain(conf['terrestrial']) for i in range(conf['terrestrial']['mountains']['n_mountains'])]
     world.shift_mountains(mountains)
-    # world.save_heightmap_to_static(planet["objid"])
     return world
 
 def validate_pop_action(p, a):
