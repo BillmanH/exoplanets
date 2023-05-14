@@ -2,6 +2,7 @@
 
 factionbuildingHeight = 10
 ground_dimensions = 5000
+ground_subdivisions = 19
 shinyness = 0.05
 
 
@@ -118,49 +119,50 @@ function createPop(n){
 // main - actually loads the content
 
 // ground
-const ground =BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "{% static 'app/maps/' %}heightmap_"+global_location+".png", 
-{width:ground_dimensions, height:ground_dimensions, subdivisions: 20, minHeight:-100, maxHeight: 1000
-, onReady: (readyMesh)=>{
-        var guiIter = 0
-        factions = distinct_list(data.nodes,'faction','objid')
-    
-        for (let i = 0; i < factions.length; i++) {
-            guiIter ++
-            f = {}
-            f.data = get_specific_node(data.nodes,factions[i])[0]   
-            f.iter = guiIter
-            pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-            f.coord = {
-                x:f.data.lat*ground_dimensions,
-                y:0,
-                z:f.data.lat*ground_dimensions
-            }
-            // console.log(f.coord)
-            createFaction(f)
-    
-            for (let j = 0; j < pops.length; j++) {
-                p = {}
-                p.data = pops[j]
-                p.data.iter = j
-                p.coord = pivotLocal((j+5)*-1,(j+5))
-                createPop(p)
-            }
-        }
-    
-        function renderBuildings(){
-            for (let i = 0; i < data.buildings.length; i++) {
-                d = data.buildings[i]
-                if(d.render_type=='block'){
-                    var owner = scene.getMeshByName(d.owner+'_nocol_box')
-                    render_block(owner, d)
-                }
-            }
-        }
-        
-        render_resources(data['resources'], readyMesh)
-        renderBuildings()
+const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: ground_dimensions, width: ground_dimensions, subdivisions: ground_subdivisions, updatable: true})
+
+
+
+var guiIter = 0
+factions = distinct_list(data.nodes,'faction','objid')
+
+for (let i = 0; i < factions.length; i++) {
+    guiIter ++
+    f = {}
+    f.data = get_specific_node(data.nodes,factions[i])[0]   
+    f.iter = guiIter
+    pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
+    f.coord = {
+        x:f.data.lat*ground_dimensions,
+        y:0,
+        z:f.data.lat*ground_dimensions
     }
-});
+    // console.log(f.coord)
+    createFaction(f)
+
+    for (let j = 0; j < pops.length; j++) {
+        p = {}
+        p.data = pops[j]
+        p.data.iter = j
+        p.coord = pivotLocal((j+5)*-1,(j+5))
+        createPop(p)
+    }
+}
+
+function renderBuildings(){
+    for (let i = 0; i < data.buildings.length; i++) {
+        d = data.buildings[i]
+        if(d.render_type=='block'){
+            var owner = scene.getMeshByName(d.owner+'_nocol_box')
+            render_block(owner, d)
+        }
+    }
+}
+
+render_resources(data['resources'], ground)
+renderBuildings()
+        
+
 
 // ground.optimize(10)
 
