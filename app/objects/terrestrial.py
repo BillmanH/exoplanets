@@ -6,11 +6,12 @@ from ..objects import baseobjects
 params = configurations.get_configurations()
 
 class Biome(baseobjects.Baseobject):
-    def __init__(self, conf):
+    def __init__(self, conf, planet):
         super().__init__()
         self.config = conf
         self.matrix_length = self.config.get('matrix_length')
         self.matrix = self.shift_terrain()
+        self.onPlanet = planet
 
     def shift_terrain(self):
         shift = [np.abs(np.round(np.random.normal(
@@ -59,8 +60,9 @@ class Biome(baseobjects.Baseobject):
         fund['grid'] = self.flatten_matrix()
         return fund
 
-    def get_biome_edge(self, world):
-        edge = {}
+    def get_biome_edge(self):
+        edge = {'node1':self.objid,'node2':self.onPlanet['objid'],'label':'isOn'}
+        return edge
 
     def __repr__(self):
         return f"<surface: {self.matrix_length}X{self.matrix_length}>"
