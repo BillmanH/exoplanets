@@ -178,7 +178,3 @@ const groundMat = new BABYLON.StandardMaterial("groundMat");
     ground.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
 
 
-
-// Goals: 
-// https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/height_map
-// https://www.babylonjs-playground.com/#225AVV
