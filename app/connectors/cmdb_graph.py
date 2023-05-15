@@ -40,6 +40,19 @@ class CosmosdbClient():
     cb = CosmosdbClient()
     cb.add_query()
     cb.run_queries()
+
+    data format = `{"nodes":nodes_list,"edges":edges_list}`
+
+    node format = {
+        'label':'foo',
+        'objid':'00001',
+        'name':'myname'
+    }
+    
+
+    edge format = `{'node1':0000,'node2':0001,'label':'hasRelationship',...other properties}`
+        it's always the objid of the nodes, connecting to the objid of the ohter node. 
+
     """
     def __init__(self) -> None:
         self.endpoint = os.getenv("endpoint","env vars not set")
@@ -166,7 +179,7 @@ class CosmosdbClient():
         gaddv = f"g.addV('{node['label']}')"
         properties = [k for k in node.keys()]
         for k in properties:
-            # converting bolian balues to gremlin bools
+            # converting boolian values to gremlin bools
             if type(node[k])==bool:
                 node[k]=str(node[k]).lower()
             # try to convert objects that aren't ids

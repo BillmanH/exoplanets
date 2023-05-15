@@ -7,7 +7,6 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
 
-
 from ..objects import species
 from ..objects import population
 from ..objects import terrestrial
@@ -104,12 +103,11 @@ def attach_people_to_world(homeworld_nodes, homeworld):
     ]
     return edges
 
-def build_height_map(planet):
-    world = terrestrial.Surface(conf['terrestrial'])
+def build_biome(planet):
+    biome = terrestrial.Biome(conf['terrestrial'],planet)
     mountains = [terrestrial.Mountain(conf['terrestrial']) for i in range(conf['terrestrial']['mountains']['n_mountains'])]
-    world.shift_mountains(mountains)
-    # world.save_heightmap_to_static(planet["objid"])
-    return world
+    biome.shift_mountains(mountains)
+    return biome
 
 def validate_pop_action(p, a):
     # will validate that a given pop (p) meets the requirement needed to take an action (a)
@@ -120,7 +118,7 @@ def validate_pop_action(p, a):
         for ri in r:
             if ri[0] not in p.keys():
                 return False  # pop doesn't have the reqired propperty
-            if float(ri[1]) > 0:
+            if float(ri[1]) > 0: 
                 if p[ri[0]] < float(ri[1]):
                     return False  # pop doesn't have the sufficient level of propperty
             if float(ri[1]) < 0:
