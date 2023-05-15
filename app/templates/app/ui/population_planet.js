@@ -5,6 +5,7 @@ ground_dimensions = 5000
 ground_subdivisions = 19
 shinyness = 0.05
 
+mapData = []
 
 // light
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
@@ -116,12 +117,17 @@ function createPop(n){
 }
 
 
-// main - actually loads the content
+
 
 // ground
 const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: ground_dimensions, width: ground_dimensions, subdivisions: ground_subdivisions, updatable: true})
+var ground_arr = ground.getVerticesData(BABYLON.VertexBuffer.PositionKind);
+var altiudes = JSON.parse(data['biome'][0]['grid'])
+for (let i=0;i<altiudes.length;i++){ground_arr[(i*3)+1] = altiudes[i]*10}
 
-
+console.log("altiudes: ",altiudes)
+console.log('positions:', ground_arr)
+ground.updateVerticesData(BABYLON.VertexBuffer.PositionKind, ground_arr);
 
 var guiIter = 0
 factions = distinct_list(data.nodes,'faction','objid')
