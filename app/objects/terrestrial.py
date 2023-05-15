@@ -54,7 +54,7 @@ class Biome(baseobjects.Baseobject):
 
     def flatten_matrix(self):
         # just the `y` axis of the matrix
-        return np.array(self.matrix).flatten()
+        return np.array(self.matrix).flatten().tolist()
 
     def get_data(self):
         fund = self.get_fundimentals()
