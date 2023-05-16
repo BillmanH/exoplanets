@@ -12,6 +12,7 @@ class Creature(baseobjects.Baseobject):
 class Species(baseobjects.Baseobject):
     def __init__(self, data):
         super().__init__()
+        self.config = data
         self.conformity = data["conformity"]
         self.aggression = data["aggression"]
         self.literacy = data["literacy"]
