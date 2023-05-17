@@ -49,7 +49,7 @@ def build_people(data):
     builds the homeworld population based on input `data` form from `genesis.js`. 
 
     """
-    data['defaults'] = conf['default_values']
+    data['defaults'] = conf['species']['default_values']
     # Get the Species
     spec = species.Species(data)
 

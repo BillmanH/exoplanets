@@ -21,7 +21,7 @@ class Pop(species.Creature):
         self.label = "pop"
         self.type = "pop"
         self.isIdle = True
-        self.health = species.config['health']
+        self.health = species.config['defaults']['health']
         self.species = species
         self.isOfSpecies = {
             "node1": self.objid,
