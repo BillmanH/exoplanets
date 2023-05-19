@@ -24,7 +24,7 @@ def get_pop_text(request):
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
         response["pops"] = pops
-        factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
+        factions = list(dict.fromkeys([i.get('isIn') for i in pops]))
         c.run_query(faction_query)
         resfaction = c.clean_nodes(c.res)
         response["factions"] = resfaction

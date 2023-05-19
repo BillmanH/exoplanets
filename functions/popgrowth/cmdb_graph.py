@@ -194,7 +194,7 @@ class CosmosdbClient():
         return gadde + gadde_fin
 
 
-    def upload_data(self, username, data):
+    def upload_data(self, data, username="funciton"):
         """
         uploads nodes and edges in a format `{"nodes":nodes,"edges":edges}`.
         edge format:
@@ -205,12 +205,14 @@ class CosmosdbClient():
         """
         data = self.test_fields(data)
         for node in data["nodes"]:
+            username = node['username']
             n = self.create_vertex(node, username)
             self.add_query(n)
             if len(self.stack)>self.stacklimit:
                 self.run_queries()
         self.run_queries()
         for edge in data["edges"]:
+            username = node['username']
             e = self.create_edge(edge, username)
             self.add_query(e)
             if len(self.stack)>self.stacklimit:

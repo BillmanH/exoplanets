@@ -22,7 +22,8 @@ def renew_resources(c):
     logging.info(f"Total resources with the ability to renew: {len(data)}")
     if len(data)>0:
         for r in data:
-            c.add_query(update_replenishing_resources(r))
+            if r['volume'] < r['max_volume']:
+                c.add_query(update_replenishing_resources(r))
         c.run_queries()
         logging.info(f'**** resources have been renewed ****')
     else:

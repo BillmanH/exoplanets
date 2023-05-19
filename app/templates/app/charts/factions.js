@@ -36,7 +36,7 @@ $.ajax({
                 scaleToOne = false,
                 xy = {"x":"conformity",
                     "y":"aggression"},
-                circleFill = function(d){return categoryScheme(d['isInFaction']) },
+                circleFill = function(d){return categoryScheme(d['isIn']) },
                 circleSize = function (d) { return 5 },
                 strokeColor = function (d) { return "black" },
                 circleClass = function (d) { return "popCircle" },

@@ -20,7 +20,8 @@ def population_growth_event(p,location,child, params):
         'label':'event',
         'text': f"The population ({p['name']}) inhabiting {location['name']} has grown to produce the population: {child['name']}.",
         'visibleTo':p['username'],
-        'time':params['time']['currentTime']
+        'time':params['time']['currentTime'],
+        'username':'event'
     }
     # logging.info(node)
     return node
@@ -49,7 +50,7 @@ def get_pop_health(c,params):
         .local(
             union(
                 out('inhabits').as('location'),
-                out('isOfSpecies').as('species')
+                out('isOf').as('species')
                 )
                 .fold()).as('location','species')
             .path()
@@ -98,8 +99,8 @@ def grow(c,params,syllables):
             event = population_growth_event(p, location,child, params)
             nodes.append(event)
             edges.append({"node1": child["objid"], "node2": p["objid"], "label": "childOf"})
-            edges.append({"node1": child["objid"], "node2": child["isInFaction"], "label": "isInFaction"})
-            edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOfSpecies"})
+            edges.append({"node1": child["objid"], "node2": child["isIn"], "label": "isIn"})
+            edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOf"})
             edges.append({"node1": child["objid"], "node2": location["objid"], "label": "inhabits"})
             event_edges.append(c.create_custom_edge(event,location,'happenedAt'))
             event_edges.append(c.create_custom_edge(p,event,'caused'))

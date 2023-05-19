@@ -13,7 +13,7 @@ def make_action_event(c,pop,act,params):
         'text': f"The population ({pop['name']}) has completed {act['actionType']}",
         'visibleTo':pop['username'],
         'time':params['currentTime'],
-        'username':'azfunction'
+        'username':'event'
     }
     return node
 
