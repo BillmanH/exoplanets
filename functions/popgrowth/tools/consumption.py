@@ -9,18 +9,18 @@ def get_unique_consumption_values(x):
     return y
 
 def all_pops_consumption(c):
-    healthy_pops_query = f"""
+    all_pops_query = f"""
     g.V().has('label','pop').as('pop')
         .local(
             union(
                 out('inhabits').as('location'),
-                out('isOfSpecies').as('species')
+                out('isOf').as('species')
                 )
                 .fold()).as('location','species')
             .path()
             .by(unfold().valueMap().fold())
     """
-    c.run_query(healthy_pops_query)
+    c.run_query(all_pops_query)
     data = c.reduce_res(c.res)
     pops_df = pd.DataFrame([d['pop'] for d in data])
     species_df = pd.DataFrame([d['species'] for d in data])
@@ -60,12 +60,12 @@ def make_resource_query(consumption_df):
     withinstring = "','".join(consumption_df['location_id'].drop_duplicates().tolist())
     consumesstring = get_unique_consumption_values(consumption_df['consumes'].drop_duplicates().tolist())
     query = f"g.V().has('objid',within('{withinstring}')).as('location')"
-    query += f".out('hasResource').has('name',within({consumesstring})).as('resource').path().by(valueMap('objid','name')).by(valueMap('volume','objid','name'))"
+    query += f".out('has').has('name',within({consumesstring})).as('resource').path().by(valueMap('objid','name')).by(valueMap('volume','objid','name'))"
     logging.info(f'Resources to consume: {consumesstring}')
     return query
 
 def make_resource_update_query(c,x):
-    query = f"g.V().has('objid','{x.location_id}').out('hasResource').has('name','{x.consumes}').property('volume',{int(x.remaining)})"
+    query = f"g.V().has('objid','{x.location_id}').out('has').has('name','{x.consumes}').property('volume',{int(x.remaining)})"
     logging.info(f'{x.location_id} consumed {x.consumes}: {x.consumption}, remaining: {x.remaining}')
     c.run_query(query)
 
@@ -113,7 +113,7 @@ def lower_health(c,params,x):
     query =f"""
     g.V().has('objid','{x.location_id}').as('location').in('inhabits')
         .haslabel('pop').as('pop')
-        .out('isOfSpecies').as('species')
+        .out('isOf').as('species')
         .path()
             .by(valueMap('objid','name'))
             .by(valueMap('name','objid','health','username'))

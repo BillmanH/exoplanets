@@ -20,7 +20,8 @@ def population_growth_event(p,location,child, params):
         'label':'event',
         'text': f"The population ({p['name']}) inhabiting {location['name']} has grown to produce the population: {child['name']}.",
         'visibleTo':p['username'],
-        'time':params['time']['currentTime']
+        'time':params['time']['currentTime'],
+        'username':'event'
     }
     # logging.info(node)
     return node
