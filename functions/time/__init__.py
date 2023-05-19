@@ -50,7 +50,7 @@ def main(mytimer: func.TimerRequest) -> None:
             mark_agent_idle(c, agent)
             action_event = make_action_event(c,agent,job,params)
             action_edge = c.create_custom_edge(action_event,agent,'completed')
-            c.add_query(c.create_vertex(action_event))
+            c.add_query(c.create_vertex(action_event,'event'))
             c.add_query(action_edge)
             # print(c.stack)
             logging.info(f'validActionCounter: {validActionCounter}, total queries:{len(c.stack)}')
