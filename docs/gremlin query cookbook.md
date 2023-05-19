@@ -25,7 +25,7 @@ g.V().has('objid','8308379553174').in('orbits').valueMap()
 ## Population Queries
 Get the average agression for a faction (average of pop['agression'])
 ```
-g.V().has('faction','name','factionName').in('isInFaction').values('aggression').mean()
+g.V().has('faction','name','factionName').in('isIn').values('aggression').mean()
 ```
 
 get the peopl of a given local, including thier faction and species:

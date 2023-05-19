@@ -61,7 +61,7 @@ def get_planet_inhabitants(request):
     # if faction has people, get the factions (only the ones found on that planet)
     if len(pops)>0:
         response["pops"] = pops
-        factions = list(dict.fromkeys([i.get('isInFaction') for i in pops]))
+        factions = list(dict.fromkeys([i.get('isIn') for i in pops]))
         queryfaction = f"g.V().has('objid', within({factions})).valueMap()"
         c.run_query(queryfaction)
         resfaction = c.clean_nodes(c.res)

@@ -48,7 +48,7 @@ class Pop(species.Creature):
         fund["aggression"] = self.aggression
         fund["constitution"] = self.constitution
         fund["health"] = self.health
-        fund["isInFaction"] = self.faction.objid if hasattr(self.faction, 'objid') else None
+        fund["isIn"] = self.faction.objid if hasattr(self.faction, 'objid') else None
         fund["industry"] = self.industry
         fund["wealth"] = self.wealth
         fund["factionLoyalty"] = self.factionLoyalty
@@ -75,7 +75,7 @@ class Faction(baseobjects.Baseobject):
 
     def assign_pop_to_faction(self, pop):
         options = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
-        pop.isInFaction = self.objid
+        pop.isIn = self.objid
         self.pops.append(pop)
         pick = options[maths.np.random.choice([0, 1, 2, 3])]
         while True:
