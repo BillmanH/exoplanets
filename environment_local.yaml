@@ -27,3 +27,6 @@ dependencies:
     # - gremlinpython==3.6.0 # looking at upgrate, but don't need it right now.
     - psycopg2-binary==2.9.2
 prefix: C:\Users\william.harding\Anaconda3\envs\exoplanets
+
+# after installing the environments, you can install the local variables with:
+# C:\Users\william.harding\Documents\repos\exoplanets\infra\setting_local-env_vars.ps1
