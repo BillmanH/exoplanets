@@ -78,8 +78,8 @@ function createFaction(n){
 
 }
 
-function get_address(pop_loactions,iter){
-    address = JSON.parse(pop_loactions)[iter+1]
+function get_address(pop_locations,iter){
+    address = JSON.parse(pop_locations)[iter+1]
     return address
 }
 
@@ -91,7 +91,7 @@ function createPop(n){
         depth:5}
     );
 
-    address = get_address(faction.metadata.pop_loactions, n.data.iter)
+    address = get_address(faction.metadata.pop_locations, n.data.iter)
     n.data.population.address = address.toString()
 
 
