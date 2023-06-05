@@ -6,6 +6,5 @@ scikit-learn
 pyyaml
 pandas
 openai
-# opencv-python # open CV not working
 psycopg2-binary==2.9.2
 cryptography
