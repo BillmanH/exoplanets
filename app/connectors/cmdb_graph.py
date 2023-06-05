@@ -239,3 +239,12 @@ class CosmosdbClient():
                 self.run_queries()
         self.run_queries()
 
+    def patch_property(self, objid, property, value):
+        """
+        updates a specific property on a specific object
+        """
+        query = f"""
+        g.V().has('objid','{objid}').property('{property}','{value}')
+        """ 
+        res = self.run_query(query)
+        self.res = res 
