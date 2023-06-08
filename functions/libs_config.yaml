@@ -1,0 +1,12 @@
+time:
+  connectors/cmdb_graph: cmdb_graph
+
+cosmicevents:
+  connectors/cmdb_graph: cmdb_graph
+  
+describe:
+  connectors/cmdb_graph: cmdb_graph
+  
+popgrowth:
+  connectors/cmdb_graph: cmdb_graph
+  
