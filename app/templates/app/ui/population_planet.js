@@ -72,14 +72,32 @@ function createFaction(n){
     faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(n.data)
     }));
-    console.log(faction.name, x, y,z)
-    console.log(faction.position)
+    // console.log(faction.name, x, y,z)
+    // console.log(faction.position)
 
 
 }
 
-function get_address(pop_locations,iter){
-    address = JSON.parse(pop_locations)[iter+1]
+function get_new_address(addresses){
+    const options = [[1, 1], [-1, 1], [1, -1], [-1, -1]];
+    var pick = options[Math.floor(Math.random() * options.length)];
+    do {
+        var new_pick = options[Math.floor(Math.random() * options.length)];
+        pick[0] += new_pick[0]
+        pick[1] += new_pick[1]
+      } while (addresses.indexOf(pick)>=0);
+
+    return pick
+}
+
+function get_address(pop_locations,iter){       
+    addresses = JSON.parse(pop_locations)   
+    if (iter+1 < addresses.length) {
+        address =addresses[iter+1] 
+    } else {
+
+        address = get_new_address(addresses)
+    }
     return address
 }
 
@@ -145,11 +163,12 @@ for (let i = 0; i < factions.length; i++) {
     }
     // console.log(f.coord)
     createFaction(f)
-
+    console.log("population:",pops.length)
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
         p.data.iter = j
+
         p.coord = pivotLocal((j+5)*-1,(j+5))
         createPop(p)
     }

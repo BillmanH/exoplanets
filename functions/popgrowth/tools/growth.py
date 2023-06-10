@@ -86,7 +86,7 @@ def assign_pop_to_faction(faction):
 def grow(c,params,syllables):
     # Get data regarding growth
     pops_df,species_df,locations_df,factions_df = get_pop_health(c,params)
-    logging.info(f"Total pops who could grow: {len(pops_df)}")
+    logging.info(f"To%<tal pops who could grow: {len(pops_df)}")
 
     if len(pops_df)==0:
         logging.info(f'**** No pops capable of reproducing ****')
