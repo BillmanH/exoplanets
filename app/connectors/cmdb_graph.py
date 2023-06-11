@@ -1,4 +1,4 @@
-import os,sys
+import os,sys, ssl
 
 from functools import reduce
 import operator
@@ -7,12 +7,16 @@ import yaml
 import numpy as np
 import pandas as pd
 
+
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
+
 import asyncio
+
+
 if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    print("executing local windows deployment")
 
 
 # ASSERTIONS: 
@@ -27,6 +31,11 @@ class GraphFormatError(Exception):
     """exodestiny data structure error graph error message for cosmos/gremlin checks"""
     pass
 
+
+# class ConnectionIssue(Exception):
+#     print("Exodest cmdb connetion issue: ")
+#     pass
+
 #%%
 # my Gremlin Model is like Django models in name only.
 # I'm creating a client object and connecting it to the 
@@ -36,7 +45,7 @@ class GraphFormatError(Exception):
 
 class CosmosdbClient():
     # TODO: build capability to 'upsert' nodes instead of drop and replace. 
-    """
+    """s
     cb = CosmosdbClient()
     cb.add_query()
     cb.run_queries()
@@ -71,7 +80,7 @@ class CosmosdbClient():
                 "g",
                 username=self.username,
                 password=self.password,
-                message_serializer=serializer.GraphSONSerializersV2d0(),
+                message_serializer=serializer.GraphSONSerializersV2d0()
             )
             
     def close_client(self):
@@ -230,3 +239,12 @@ class CosmosdbClient():
                 self.run_queries()
         self.run_queries()
 
+    def patch_property(self, objid, property, value):
+        """
+        updates a specific property on a specific object
+        """
+        query = f"""
+        g.V().has('objid','{objid}').property('{property}','{value}')
+        """ 
+        res = self.run_query(query)
+        self.res = res 

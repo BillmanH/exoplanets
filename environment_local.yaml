@@ -9,7 +9,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python==3.8
+  - python==3.8.16
   - altair
   - nltk
   - pip
@@ -20,10 +20,12 @@ dependencies:
   - black
   - scikit-learn
   - pip:
-    # - nb_black
-    # - opencv-python
+    # - nb_black # love this package, but having consistency issues with VSCode
     - openai
     - gremlinpython==3.5.1
     # - gremlinpython==3.6.0 # looking at upgrate, but don't need it right now.
     - psycopg2-binary==2.9.2
 prefix: C:\Users\william.harding\Anaconda3\envs\exoplanets
+
+# after installing the environments, you can install the local variables with:
+# C:\Users\william.harding\Documents\repos\exoplanets\infra\setting_local-env_vars.ps1

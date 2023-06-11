@@ -46,13 +46,14 @@ def grow_pop(p,species,params,syllables):
 def get_pop_health(c,params):
     healthy_pops_query = f"""
     g.V().has('label','pop')
-        .has('health',gt({params['pop_health_requirement']})).as('pop')
+        .has('health',gt(0.5)).as('pop')
         .local(
             union(
                 out('inhabits').as('location'),
-                out('isOf').as('species')
+                out('isOf').as('species'),
+                out('isIn').as('faction')
                 )
-                .fold()).as('location','species')
+                .fold()).as('location','species','faction')
             .path()
             .by(unfold().valueMap().fold())
     """
@@ -62,15 +63,30 @@ def get_pop_health(c,params):
     pops_df = pd.DataFrame([d['pop'] for d in data])
     species_df = pd.DataFrame([d['species'] for d in data])
     locations_df = pd.DataFrame([d['location'] for d in data])
+    factions_df = pd.DataFrame([d['faction'] for d in data])
 
-    return pops_df,species_df,locations_df
+    return pops_df,species_df,locations_df, factions_df
 
-
+def assign_pop_to_faction(faction):
+    options = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
+    try:
+        loc = yaml.safe_load(faction['pop_locations'])  
+    except:
+        logging.info(f"{faction['name']}:{faction['objid']} - has no population locations")
+        loc = [[0, 0]]
+    pick = options[np.random.choice([0, 1, 2, 3])]
+    while True:
+        new_pick = options[np.random.choice([0, 1, 2, 3])]
+        pick = np.add(pick, new_pick).tolist()
+        if pick not in loc:
+            loc.append(pick)
+            break
+    return loc
 
 def grow(c,params,syllables):
     # Get data regarding growth
-    pops_df,species_df,locations_df = get_pop_health(c,params)
-    logging.info(f"Total pops who could grow: {len(pops_df)}")
+    pops_df,species_df,locations_df,factions_df = get_pop_health(c,params)
+    logging.info(f"To%<tal pops who could grow: {len(pops_df)}")
 
     if len(pops_df)==0:
         logging.info(f'**** No pops capable of reproducing ****')
@@ -92,9 +108,12 @@ def grow(c,params,syllables):
         # now we grow each pop
         for i in reproducing_pops.index.to_list():
             p = reproducing_pops.loc[i].to_dict()
+            f = factions_df.loc[i].to_dict()
             species = species_df.loc[i].to_dict()
             location = locations_df.loc[i].to_dict()
-            child = grow_pop(p,species,params,syllables)
+            child = grow_pop(p,species,params,syllables)    
+            pop_locations = assign_pop_to_faction(f)    
+            c.patch_property(f['objid'], 'pop_locations', str(pop_locations))
             nodes.append(child)
             event = population_growth_event(p, location,child, params)
             nodes.append(event)

@@ -46,7 +46,8 @@ function render_block(pop,building){
         "size":bulding_config[building.name].size}
     );    
     box.parent = pop
-    box.position = new BABYLON.Vector3(pop.position.x + 10 , bulding_config[building.name].from_ground, pop.position.z + 10) 
+    y = scene.getMeshById("ground").getHeightAtCoordinates(pop.position.x + 10,pop.position.z + 10)
+    box.position = new BABYLON.Vector3(pop.position.x + 10 , y + bulding_config[building.name].from_ground, pop.position.z + 10) 
     var boxMat = new BABYLON.StandardMaterial(pop.metadata.objid + "_groundMat");
     boxMat.diffuseTexture =  new BABYLON.Texture(bulding_config[building.name].texture);
     box.material = boxMat; 

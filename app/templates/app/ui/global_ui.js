@@ -205,7 +205,7 @@ var addButtonToBox = function(n,control) {
             buttonDescription.addControl(textblock);
 
             control.addControl(buttonDescription);
-            console.log(buttonDescription.width)
+            
 
             textblock.onPointerUpObservable.add(function() {objectDetails(n.data)})
         }
