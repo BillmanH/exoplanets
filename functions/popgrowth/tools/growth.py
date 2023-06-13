@@ -111,7 +111,8 @@ def grow(c,params,syllables):
             f = factions_df.loc[i].to_dict()
             species = species_df.loc[i].to_dict()
             location = locations_df.loc[i].to_dict()
-            child = grow_pop(p,species,params,syllables)    
+            child = grow_pop(p,species,params,syllables) 
+            logging.info(f"and so, { p['name']} begat {child['name']}")
             pop_locations = assign_pop_to_faction(f)    
             c.patch_property(f['objid'], 'pop_locations', str(pop_locations))
             nodes.append(child)
@@ -121,12 +122,17 @@ def grow(c,params,syllables):
             edges.append({"node1": child["objid"], "node2": child["isIn"], "label": "isIn"})
             edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOf"})
             edges.append({"node1": child["objid"], "node2": location["objid"], "label": "inhabits"})
+            edges.append({"node1": child["objid"], "node2": f["objid"], "label": "isIn"})
             event_edges.append(c.create_custom_edge(event,location,'happenedAt'))
             event_edges.append(c.create_custom_edge(p,event,'caused'))
         upload_data = {'nodes':nodes,'edges':edges}
+        logging.info(f"****  Beginning Upload *****")
         c.upload_data(upload_data)
+        logging.info(f"total data uploaded: {len(upload_data['nodes'])} nodes, {len(upload_data['edges'])} edges")
         for e in event_edges:
             c.add_query(e)
         c.run_queries()
     else:
         logging.info(f"zero population growth")
+
+    logging.info(f"**** Growth Complete *****")
