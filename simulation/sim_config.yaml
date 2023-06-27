@@ -1,0 +1,17 @@
+planets: 
+  defaults:
+    label : form
+    name: worldgenform
+    objid: 0000000000001
+    owner: user.username
+    username: user.username
+    accountid: 0000000000001
+    conformity: 0.5
+    constitution: 0.5
+    literacy: 0.5
+    aggression: 0.5
+    num_planets: 4
+    num_moons: 10
+    starting_pop: 7
+    organics: 0.5
+    minerals: 0.5
