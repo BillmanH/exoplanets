@@ -160,3 +160,6 @@ __blobstorage__/*
 __azurite_db*
 
 
+# data files for simulations
+simulation/*.csv
+simulation/*.pbix
