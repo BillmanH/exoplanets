@@ -1,6 +1,6 @@
 
 simulation:
-  n_players: 5
+  n_players: 30
 
 # the userform is the baseline data from the user via the UI
 userform: 
