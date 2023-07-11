@@ -112,6 +112,33 @@ class CosmosdbClient():
         self.stack = []
         self.close_client()
 
+    def parse_properties(self,node):
+        """
+        used in actions and other places where json is nested in properties. 
+        example:
+                'properties': {'type': [{'id': 'de09040b-2c60-4a8a-b640-d78a248688f9',
+                        'value': 'healthcare_initiatives'}],
+                    'applies_to': [{'id': 'd753c296-7b62-4eb4-8e18-df39a67977ea',
+                        'value': 'pop'}],
+        returns nicely formated dict
+        """
+        n = {}
+        for k in node["properties"].keys():
+            if len(node["properties"][k]) == 1:
+                n[k] = node["properties"][k][0]["value"]
+        return n
+
+    def parse_all_properties(self):
+        r = {}
+        for part in self.res[0].keys():
+            if self.res[0][part]['type']=='edge':
+                r[part] = self.res[0][part]['properties']
+            else:
+                r[part] = self.parse_properties(self.res[0][part])
+        return r
+
+
+
     ## cleaning results
     def cs(self, s):
         # Clean String
