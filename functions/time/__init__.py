@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 
 import azure.functions as func
-from .cmdb_graph import CosmosdbClient
+from .connectors.cmdb_graph import CosmosdbClient
 
 from .time_functions import global_ticker
 from .tools.action import (get_global_actions, 
