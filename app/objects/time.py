@@ -1,7 +1,7 @@
 import datetime
 import pandas as pd
+import numpy as np
 import yaml
-
 
 
 class Time:
@@ -68,9 +68,10 @@ class Action:
         self.action = action.action
         self.job = action.job
         self.c = c
+        self.data = {"nodes":[],"edges":[]}
 
     # TODO: Inherit from a base class
-    def uuid(n=13):
+    def uuid(self, n=13):
         return "".join([str(i) for i in np.random.choice(range(10), n)])
 
     def validate_action_time(time,a):
@@ -109,6 +110,9 @@ class Action:
             self.c.add_query(idleQuery.replace(" ", "").replace("\n", ""))
         
     def make_action_event(self,time):
+        """
+        Creates both the node and the edge for the action
+        """
         node = {
             'objid': f"{self.uuid()}",
             'name':'job',
@@ -118,6 +122,11 @@ class Action:
             'time': time.params['currentTime'],
             'username':'event'
         }
+        self.data['nodes'].append(node)
+        self.data['edges'].append(
+            self.c.create_custom_edge(node,self.agent,'completed')
+                .replace(" ", "").replace("\n", "")
+                )
         
 
     def query_patch_properties(self):
@@ -130,6 +139,14 @@ class Action:
         self.query_patch_properties()
         self.mark_agent_idle()
         self.mark_action_as_resolved()
+        self.make_action_event(time)
+
+
+    def resolve_action(self):
+        if len(self.c.stack)>0:
+            self.c.run_queries()
+        
+        self.c.upload_data(self.agent['username'],self.data)
 
 
     def make_action_event_edge(self):
