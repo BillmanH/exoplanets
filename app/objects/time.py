@@ -1,5 +1,6 @@
 import datetime
 import pandas as pd
+import yaml
 
 
 
@@ -33,8 +34,8 @@ class Time:
         """
 
         self.c.run_query(actions_query)
-        actions = self.c.res
-        self.actions = pd.DataFrame(actions)
+        self.actions = [self.c.parse_all_properties(i) for i in self.c.res]
+        # self.actions = pd.DataFrame(actions)
 
     def global_ticker(self):
         """
@@ -63,14 +64,78 @@ class Action:
 
     """
     def __init__(self,c,action):
-        self.agent = self.parse_properties(action.agent)
-        self.action = self.parse_properties(action.action)
+        self.agent = action.agent
+        self.action = action.action
         self.job = action.job
+        self.c = c
 
-    def parse_properties(node):
-        n = {}
-        for k in node["properties"].keys():
-            if len(node["properties"][k]) == 1:
-                n[k] = node["properties"][k][0]["value"]
-        return n
+    # TODO: Inherit from a base class
+    def uuid(n=13):
+        return "".join([str(i) for i in np.random.choice(range(10), n)])
+
+    def validate_action_time(time,a):
+        '''
+        validate that the time to complete the task has passed. 
+        Not the same as validation that the action can be taken. 
+        If the `takingAction` edge has been applied to the agent `a`, then it is just a check of time completed. 
+        '''
+        if int(a['weight']) < int(time['currentTime']):
+            return True
+        else:
+            return False
+
+    def resolve_augments_self_properties(self):
+        agent = self.agent.copy()
+        self_properties = yaml.safe_load(self.action["augments_self_properties"])
+        for p in self_properties.keys():
+            agent[p] = agent[p] + float(self_properties[p])
+        return agent
+
+    def mark_action_as_resolved(self):
+        patch_job = f"""
+        g.V().has('objid','{self.agent['objid']}')
+                .outE('takingAction')
+                .has('actionType', '{self.job['actionType']}')
+                .has('weight','{self.job['weight']}')
+                .property('status', 'resolved')
+        """    
+        self.c.add_query(patch_job.replace(" ", "").replace("\n", ""))
+
+    def mark_agent_idle(self):
+        if 'isIdle' in self.agent.keys():
+            idleQuery = f"""
+            g.V().has('objid','{self.agent['objid']}').property('isIdle','true')
+            """
+            self.c.add_query(idleQuery.replace(" ", "").replace("\n", ""))
+        
+    def make_action_event(self,time):
+        node = {
+            'objid': f"{self.uuid()}",
+            'name':'job',
+            'label':'event',
+            'text': f"The {self.agent['objtype']} ({self.agent['name']}) has completed {self.job['actionType']}",
+            'visibleTo':self.agent['username'],
+            'time': time.params['currentTime'],
+            'username':'event'
+        }
+        
+
+    def query_patch_properties(self):
+        query = f"g.V().has('objid','{self.agent['objid']}')"
+        for n in yaml.safe_load(self.action["augments_self_properties"]):
+            query += f".property('{n}',{self.agent[n]})"
+        self.c.add_query(query.replace(" ", "").replace("\n", ""))
+
+    def add_updates_to_c(self,time):
+        self.query_patch_properties()
+        self.mark_agent_idle()
+        self.mark_action_as_resolved()
+
+
+    def make_action_event_edge(self):
+        action_edge = c.create_custom_edge(action_event,agent,'completed')
+        
+
     
+    def __repr__(self) -> str:
+        return f"< ({self.agent.get('name')}: {self.agent.get('objid')}) -{self.job.get('name')}:{self.job.get('weight')}-> ({self.action.get('name')}) >"
