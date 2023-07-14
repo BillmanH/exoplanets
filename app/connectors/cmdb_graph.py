@@ -128,13 +128,17 @@ class CosmosdbClient():
                 n[k] = node["properties"][k][0]["value"]
         return n
 
-    def parse_all_properties(self):
+    def parse_all_properties(self,res):
+        """
+        meant to pas in one response item at a time:
+            `self.actions = [self.c.parse_all_properties(i) for i in self.c.res]`
+        """
         r = {}
         for part in self.res[0].keys():
-            if self.res[0][part]['type']=='edge':
-                r[part] = self.res[0][part]['properties']
+            if res[part]['type']=='edge':
+                r[part] = res[part]['properties']
             else:
-                r[part] = self.parse_properties(self.res[0][part])
+                r[part] = self.parse_properties(res[part])
         return r
 
 
@@ -275,3 +279,11 @@ class CosmosdbClient():
         """ 
         res = self.run_query(query)
         self.res = res 
+
+    def query_patch_properties(self, agent, action):
+        query = f"g.V().has('objid','{agent['objid']}')"
+        for n in yaml.safe_load(action["augments_self_properties"]):
+            query += f".property('{n}',{agent[n]})"
+
+        res = self.run_query(query)
+        self.res = res
