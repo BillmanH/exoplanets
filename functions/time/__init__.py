@@ -19,18 +19,16 @@ logger = logging.getLogger('azure.mgmt.resource')
 
 def main(mytimer: func.TimerRequest) -> None:
     c = CosmosdbClient()
-    utc_timestamp = datetime.datetime.utcnow().replace(
-        tzinfo=datetime.timezone.utc).isoformat()
 
     if mytimer.past_due:
         logging.info('The timer is past due!')
-    
-    # Time is constant, pulled in once at the begining of the function
-    c.run_query("g.V().hasLabel('time').valueMap()")
-    time = c.clean_nodes(c.res)[0]
-    params = {'currentTime':time['currentTime']}
-    ### START of time_funtions here
 
+    ### START of time_funtions here
+    
+    # not to be confused with python's time object in the datetime library
+    time = time.Time(c)
+    time.get_current_UTU()
+    logging.info(time)
     # Get all pending actions
     actions = get_global_actions(c)
     actions_df = pd.DataFrame(actions)
@@ -59,8 +57,9 @@ def main(mytimer: func.TimerRequest) -> None:
             
 
     logging.info(f'Total ations resolved in this run: {validActionCounter}')
+    
     # Increment global time
-    global_ticker(c,time)
+    time.global_ticker()
     
     ### END of time_functions
 
