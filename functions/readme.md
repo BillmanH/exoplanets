@@ -50,6 +50,9 @@ timer functions don't run unless the timer goes off. in order to set them to run
 This is automatically commented out in the `function.json`. Don't forget to remove after testing before you deploy. 
 
 
+### 4. run the function
+`func start`
+
 ## Updating the environment in the cloud:
 to get the settings into your local file:
 ```
@@ -75,6 +78,12 @@ In order to test timer functions locally, you need to change the configuration: 
 ## Push it to prod
 There isn't a dev environment on the web, so this will push it directly into prod. Test on your local machine. Then the deploy function within VSC is used to push the function into prod. This means that the code for functions is updated differently than the webapp (wich updates on a GH action). I'll add that to the CICD process when I build a legit "dev" engvironment. As the local machine is the dev environment for now, this is not needed. 
 
+## Moving the library from the main app
+In order to reduce redundancy and ensure consistency, the main methods and objects are defined in `app/objects`. Azure functions are encolsed units and can't pull from the main source. So you have to copy the files. 
+**Rule** the azure functions should only have the execution of the objects and logs. No extra code. That way the process can be tested locally. 
+
+To migrate the objects into the azure function.
+`\functions> python transfer_code.py`
 
 # More useful docs:
 
