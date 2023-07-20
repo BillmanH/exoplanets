@@ -3,9 +3,9 @@ import logging
 import pandas as pd
 
 import azure.functions as func
-from .connectors.cmdb_graph import CosmosdbClient
 
-from app.objects import time as t
+from .app.connectors.cmdb_graph import CosmosdbClient
+from .app.objects import time as t
 
 
 logger = logging.getLogger('azure.mgmt.resource')
@@ -28,7 +28,7 @@ def main(mytimer: func.TimerRequest) -> None:
     actions_df = pd.DataFrame(time.actions)
     
     logging.info(f'total jobs: {actions_df.shape[0]}')
-    validActionCounter = 0
+    validActionCounter = 0 
     for i in actions_df.index:
         action = t.Action(c,actions_df.loc[i])
         if action.validate_action_time(time):
@@ -48,4 +48,4 @@ def main(mytimer: func.TimerRequest) -> None:
     ### END of time_functions
 
 
-    logging.info(f'Python timer trigger function ran at: {time}')
+    logging.info(f'Python timer trigger function ran at: {time }')
