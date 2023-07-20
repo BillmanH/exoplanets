@@ -74,13 +74,13 @@ class Action:
     def uuid(self, n=13):
         return "".join([str(i) for i in np.random.choice(range(10), n)])
 
-    def validate_action_time(time,a):
+    def validate_action_time(self,time):
         '''
         validate that the time to complete the task has passed. 
         Not the same as validation that the action can be taken. 
         If the `takingAction` edge has been applied to the agent `a`, then it is just a check of time completed. 
         '''
-        if int(a['weight']) < int(time['currentTime']):
+        if int(self.job['weight']) < int(time.params['currentTime']):
             return True
         else:
             return False
@@ -123,10 +123,7 @@ class Action:
             'username':'event'
         }
         self.data['nodes'].append(node)
-        self.data['edges'].append(
-            self.c.create_custom_edge(node,self.agent,'completed')
-                .replace(" ", "").replace("\n", "")
-                )
+        self.data['edges'].append({'node1':self.agent['objid'],'node2':node['objid'],'label':'completed'})
         
 
     def query_patch_properties(self):
@@ -137,9 +134,9 @@ class Action:
 
     def add_updates_to_c(self,time):
         self.query_patch_properties()
-        self.mark_agent_idle()
-        self.mark_action_as_resolved()
         self.make_action_event(time)
+        self.mark_action_as_resolved()
+        self.mark_agent_idle()
 
 
     def resolve_action(self):
