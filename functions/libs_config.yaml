@@ -9,5 +9,9 @@ used_from_lib:
       - cmdb_graph.py
     objects:
       - time.py 
+      - species.py
+      - baseobjects.py
     configurations:
       - species.yaml
+    functions: 
+      - maths.py

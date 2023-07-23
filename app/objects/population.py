@@ -89,3 +89,30 @@ class Faction(baseobjects.Baseobject):
         # takes a list and adds to it, so that it can easily run over many factions. 
         [faction_edges.append({"node1": pop.objid, "node2": self.objid, "label": "isIn"}) for pop in self.pops]
         return faction_edges
+
+
+class Global_Pop_Manager():
+    def __init__(self,params,c) -> None:
+        self.params = params
+        self.c = c
+        self.data = None
+        
+
+    def get_pop_health(self):
+        pop_health_requirement = self.params['pop_health_requirement']
+        healthy_pops_query = f"""
+        g.V().has('label','pop')
+            .has('health',gt({pop_health_requirement})).as('pop')
+            .local(
+                union(
+                    out('inhabits').as('location'),
+                    out('isOf').as('species'),
+                    out('isIn').as('faction')
+                    )
+                    .fold()).as('location','species','faction')
+                .path()
+                .by(unfold().valueMap().fold())
+        """
+        self.c.run_query(healthy_pops_query)
+        self.data = self.c.reduce_res(self.c.res)
+

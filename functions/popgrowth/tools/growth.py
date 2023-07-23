@@ -20,7 +20,7 @@ def population_growth_event(p,location,child, params):
         'label':'event',
         'text': f"The population ({p['name']}) inhabiting {location['name']} has grown to produce the population: {child['name']}.",
         'visibleTo':p['username'],
-        'time':params['time']['currentTime'],
+        'time':params['currentTime'],
         'username':'event'
     }
     # logging.info(node)
@@ -29,7 +29,7 @@ def population_growth_event(p,location,child, params):
 
 def grow_pop(p,species,params,syllables):
     child = p.copy()
-    child['foundedTime']:params['time']['currentTime'] 
+    child['foundedTime']:params['currentTime'] 
     child['label'] = 'pop'
     child['name'] = child['name']+make_word(1,syllables).lower()
     id = uuid()
@@ -123,11 +123,11 @@ def grow(c,params,syllables):
             edges.append({"node1": child["objid"], "node2": species["objid"], "label": "isOf"})
             edges.append({"node1": child["objid"], "node2": location["objid"], "label": "inhabits"})
             edges.append({"node1": child["objid"], "node2": f["objid"], "label": "isIn"})
-            event_edges.append(c.create_custom_edge(event,location,'happenedAt'))
-            event_edges.append(c.create_custom_edge(p,event,'caused'))
+            event_edges.append(c.create_custom_edge(event,location,'happenedAt').replace(" ","").replace("\n",""))
+            event_edges.append(c.create_custom_edge(p,event,'caused').replace(" ","").replace("\n",""))
         upload_data = {'nodes':nodes,'edges':edges}
         logging.info(f"****  Beginning Upload *****")
-        c.upload_data(upload_data)
+        c.upload_data("function",upload_data)
         logging.info(f"total data uploaded: {len(upload_data['nodes'])} nodes, {len(upload_data['edges'])} edges")
         for e in event_edges:
             c.add_query(e)
