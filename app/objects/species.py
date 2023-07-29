@@ -36,6 +36,8 @@ class Species(baseobjects.Baseobject):
         self.label = "species"
         self.pop_std = 0.2 * (1 - float(self.conformity))
 
+
+    
     def get_data(self):
         fund = self.get_fundimentals()
         fund["consumes"] = self.consumes

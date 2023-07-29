@@ -1,10 +1,12 @@
 from ..functions import maths
+from ..functions import language
 
 from ..objects import species
 from ..objects import baseobjects
 
 class Pop(species.Creature):
     def __init__(self, species):
+        self.child_youth_mod = .6
         super().__init__()
         self.conformity = abs(
             round(maths.np.random.normal(float(species.conformity), species.pop_std), 3)
@@ -40,7 +42,7 @@ class Pop(species.Creature):
         faction.assign_pop_to_faction(self)
         self.name = f"{self.faction.name} {self.make_name(1, 2)}"
 
-
+    
     def get_data(self):
         fund = self.get_fundimentals()
         fund["conformity"] = self.conformity
@@ -92,10 +94,16 @@ class Faction(baseobjects.Baseobject):
 
 
 class Global_Pop_Manager():
+    """
+    See `Population Growth.ipynb` for info on how the population manager works. 
+        It's a controller for populations and species. 
+    """
     def __init__(self,params,c) -> None:
         self.params = params
         self.c = c
         self.data = None
+        # used in creating new populations, which require a species. 
+        self.species_dict = {}
         
 
     def get_pop_health(self):
@@ -115,4 +123,5 @@ class Global_Pop_Manager():
         """
         self.c.run_query(healthy_pops_query)
         self.data = self.c.reduce_res(self.c.res)
+
 
