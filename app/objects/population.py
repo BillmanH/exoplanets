@@ -4,6 +4,8 @@ from ..functions import language
 from ..objects import species
 from ..objects import baseobjects
 
+import yaml 
+
 class Pop(species.Creature):
     def __init__(self, species):
         self.child_youth_mod = .6
@@ -20,6 +22,9 @@ class Pop(species.Creature):
         self.constitution = abs(
             round(maths.np.random.normal(float(species.constitution), species.pop_std), 3)
         )
+        if 'objid' in species.config['defaults']:
+            self.objid = maths.uuid()
+            self.childOf = {"node1": self.objid, "node2": species.config['defaults']['objid'], "label": "childOf"}
         self.label = "pop"
         self.type = "pop"
         self.isIdle = True
@@ -31,11 +36,27 @@ class Pop(species.Creature):
             "label": "isOf",
         }
         self.faction = None
+        self.isInEdge = self.get_isInFaction()
         self.industry = (self.aggression + self.constitution) / 2
         self.wealth = (self.literacy + self.industry) / 2
         self.factionLoyalty = abs(
             round(maths.np.random.normal(float(self.conformity), 0.2 * (1 - float(self.conformity))), 3)
         )
+
+    def get_isInFaction(self):
+        try:
+            edge = {
+                "node1": self.objid,
+                "node2": self.isIn,
+                "label": "isIn",
+            }
+        except:
+            edge = {
+                "node1": self.objid,
+                "node2": 'None',
+                "label": "isIn",
+            }
+        return edge
 
     def set_faction(self, faction):
         self.faction = faction
@@ -60,13 +81,23 @@ class Pop(species.Creature):
 class Faction(baseobjects.Baseobject):
     def __init__(self, i):
         super().__init__()
-        self.name = self.make_name(2, 2)
-        self.label = "faction"
-        self.faction_no = i
-        self.pops = []
-        self.lat = 0
-        self.long = 0
-        self.faction_place = [[0,0]]
+        if 'objid' in i:
+            self.name = i['name']
+            self.objid = i['objid']
+            self.label = "faction"
+            self.faction_no = None
+            self.pops = []
+            self.lat = i['lat']
+            self.long = i['long']
+            self.faction_place = yaml.safe_load(i['pop_locations'])
+        else:
+            self.name = self.make_name(2, 2)
+            self.label = "faction"
+            self.faction_no = i
+            self.pops = []
+            self.lat = 0
+            self.long = 0
+            self.faction_place = [[0,0]]
 
     def get_data(self):
         fund = self.get_fundimentals()
@@ -78,6 +109,7 @@ class Faction(baseobjects.Baseobject):
     def assign_pop_to_faction(self, pop):
         options = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
         pop.isIn = self.objid
+        pop.faction = self
         self.pops.append(pop)
         pick = options[maths.np.random.choice([0, 1, 2, 3])]
         while True:
@@ -123,5 +155,18 @@ class Global_Pop_Manager():
         """
         self.c.run_query(healthy_pops_query)
         self.data = self.c.reduce_res(self.c.res)
+
+
+    def population_growth_event(self,parent,location,child):
+        node = {
+            'objid':maths.uuid(),
+            'name':'population growth',
+            'label':'event',
+            'text': f"The population ({parent['name']}) inhabiting {location['name']} has grown to produce the population: {child.name}.",
+            'visibleTo':parent['username'],
+            'time':self.params['currentTime'],
+            'username':'event'
+        }
+        return node
 
 
