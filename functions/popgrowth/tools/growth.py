@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 import logging
-
+from ..app.objects import time
+from ..app.objects import population
+from ..app.functions import language
 
 
 
@@ -72,7 +74,9 @@ def grow(c,params):
 
         data = {"nodes":[c.get_data() for c in children] + events ,"edges":isOfEdges + inhabitsEdges + childofEdges + factionedges + event_edges }
         print(f"The final dataset is {len(data.get('nodes'))} nodes and {len(data.get('edges'))} edges")
+        logging.info(f"Population Growth Data Started")
         c.upload_data('notebook',data)
+        logging.info(f"Population Growth Data Complete")
     else:
         logging.info(f"zero population growth")
 

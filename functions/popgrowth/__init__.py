@@ -8,6 +8,9 @@ import azure.functions as func
 from .tools import consumption, growth
 from .app.connectors import cmdb_graph
 from .app.objects import time
+from .app.objects import population
+from .app.functions import language
+
 
 logger = logging.getLogger('azure.mgmt.resource')
 
@@ -40,8 +43,8 @@ def main(mytimer: func.TimerRequest) -> None:
 
 
     consumption.consume(c,params)
-    
-    growth.grow(c,params,syllables)
+
+    growth.grow(c,params)
 
     ### END 
     logging.info(f'Population Growth trigger ran at: {utc_timestamp}')
