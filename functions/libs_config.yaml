@@ -11,7 +11,9 @@ used_from_lib:
       - time.py 
       - species.py
       - baseobjects.py
+      - population.py
     configurations:
       - species.yaml
     functions: 
       - maths.py
+      - language.py

@@ -1,12 +1,8 @@
 import pandas as pd
 import numpy as np
 import logging
-import yaml
 
 
-#importing the libraries from the app
-from app.objects import population
-from app.functions import language
 
 
 
