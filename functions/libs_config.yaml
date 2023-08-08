@@ -1,12 +1,19 @@
-time:
-  connectors/cmdb_graph: cmdb_graph
-
-cosmicevents:
-  connectors/cmdb_graph: cmdb_graph
-  
-describe:
-  connectors/cmdb_graph: cmdb_graph
-  
-popgrowth:
-  connectors/cmdb_graph: cmdb_graph
-  
+used_from_lib:
+  time:
+    connectors:
+      - cmdb_graph.py
+    objects:
+      - time.py
+  popgrowth:
+    connectors:
+      - cmdb_graph.py
+    objects:
+      - time.py 
+      - species.py
+      - baseobjects.py
+      - population.py
+    configurations:
+      - species.yaml
+    functions: 
+      - maths.py
+      - language.py

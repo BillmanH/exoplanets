@@ -1,4 +1,4 @@
-import os,sys
+import os,sys, ssl
 
 from functools import reduce
 import operator
@@ -7,12 +7,16 @@ import yaml
 import numpy as np
 import pandas as pd
 
+
 from gremlin_python.driver import client, protocol, serializer
 from gremlin_python.driver.protocol import GremlinServerError
 
+
 import asyncio
+
+
 if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    print("executing local windows deployment")
 
 
 # ASSERTIONS: 
@@ -27,6 +31,11 @@ class GraphFormatError(Exception):
     """exodestiny data structure error graph error message for cosmos/gremlin checks"""
     pass
 
+
+# class ConnectionIssue(Exception):
+#     print("Exodest cmdb connetion issue: ")
+#     pass
+
 #%%
 # my Gremlin Model is like Django models in name only.
 # I'm creating a client object and connecting it to the 
@@ -36,10 +45,23 @@ class GraphFormatError(Exception):
 
 class CosmosdbClient():
     # TODO: build capability to 'upsert' nodes instead of drop and replace. 
-    """
+    """s
     cb = CosmosdbClient()
     cb.add_query()
     cb.run_queries()
+
+    data format = `{"nodes":nodes_list,"edges":edges_list}`
+
+    node format = {
+        'label':'foo',
+        'objid':'00001',
+        'name':'myname'
+    }
+    
+
+    edge format = `{'node1':0000,'node2':0001,'label':'hasRelationship',...other properties}`
+        it's always the objid of the nodes, connecting to the objid of the ohter node. 
+
     """
     def __init__(self) -> None:
         self.endpoint = os.getenv("endpoint","env vars not set")
@@ -58,7 +80,7 @@ class CosmosdbClient():
                 "g",
                 username=self.username,
                 password=self.password,
-                message_serializer=serializer.GraphSONSerializersV2d0(),
+                message_serializer=serializer.GraphSONSerializersV2d0()
             )
             
     def close_client(self):
@@ -89,6 +111,37 @@ class CosmosdbClient():
         self.res = res
         self.stack = []
         self.close_client()
+
+    def parse_properties(self,node):
+        """
+        used in actions and other places where json is nested in properties. 
+        example:
+                'properties': {'type': [{'id': 'de09040b-2c60-4a8a-b640-d78a248688f9',
+                        'value': 'healthcare_initiatives'}],
+                    'applies_to': [{'id': 'd753c296-7b62-4eb4-8e18-df39a67977ea',
+                        'value': 'pop'}],
+        returns nicely formated dict
+        """
+        n = {}
+        for k in node["properties"].keys():
+            if len(node["properties"][k]) == 1:
+                n[k] = node["properties"][k][0]["value"]
+        return n
+
+    def parse_all_properties(self,res):
+        """
+        meant to pas in one response item at a time:
+            `self.actions = [self.c.parse_all_properties(i) for i in self.c.res]`
+        """
+        r = {}
+        for part in self.res[0].keys():
+            if res[part]['type']=='edge':
+                r[part] = res[part]['properties']
+            else:
+                r[part] = self.parse_properties(res[part])
+        return r
+
+
 
     ## cleaning results
     def cs(self, s):
@@ -166,7 +219,7 @@ class CosmosdbClient():
         gaddv = f"g.addV('{node['label']}')"
         properties = [k for k in node.keys()]
         for k in properties:
-            # converting bolian balues to gremlin bools
+            # converting boolian values to gremlin bools
             if type(node[k])==bool:
                 node[k]=str(node[k]).lower()
             # try to convert objects that aren't ids
@@ -217,3 +270,20 @@ class CosmosdbClient():
                 self.run_queries()
         self.run_queries()
 
+    def patch_property(self, objid, property, value):
+        """
+        updates a specific property on a specific object
+        """
+        query = f"""
+        g.V().has('objid','{objid}').property('{property}','{value}')
+        """ 
+        res = self.run_query(query)
+        self.res = res 
+
+    def query_patch_properties(self, agent, action):
+        query = f"g.V().has('objid','{agent['objid']}')"
+        for n in yaml.safe_load(action["augments_self_properties"]):
+            query += f".property('{n}',{agent[n]})"
+
+        res = self.run_query(query)
+        self.res = res

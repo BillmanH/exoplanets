@@ -62,7 +62,7 @@ def get_all_pops(request):
         response["pops"] = respops
     return JsonResponse(response)
 
-
+# TODO: Migrate to pop object
 def create_job(c,pop,action,universalTime):
     if type(universalTime)==list:
         universalTime = universalTime[0]

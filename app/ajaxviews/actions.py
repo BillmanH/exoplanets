@@ -2,7 +2,7 @@ from app.models import CosmosdbClient
 from django.http import JsonResponse
 import yaml, os
 
-
+# TODO: Must make the action inheret the properties of the action class in time.py
 def get_actions_config():
     actions = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/actions.yaml")))
     return actions["actions"]

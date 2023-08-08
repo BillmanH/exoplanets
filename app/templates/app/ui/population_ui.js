@@ -213,3 +213,15 @@ function make_actions_box(actions){
 }
 
 
+scene.onKeyboardObservable.add((kbInfo) => {
+    switch (kbInfo.type) {
+        case BABYLON.KeyboardEventTypes.KEYDOWN:
+        switch (kbInfo.event.key) {
+        case "x":
+        case "X":
+            dropAllControls()
+        break
+        }
+        break;
+        }
+    }); 

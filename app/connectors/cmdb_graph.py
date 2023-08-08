@@ -112,6 +112,37 @@ class CosmosdbClient():
         self.stack = []
         self.close_client()
 
+    def parse_properties(self,node):
+        """
+        used in actions and other places where json is nested in properties. 
+        example:
+                'properties': {'type': [{'id': 'de09040b-2c60-4a8a-b640-d78a248688f9',
+                        'value': 'healthcare_initiatives'}],
+                    'applies_to': [{'id': 'd753c296-7b62-4eb4-8e18-df39a67977ea',
+                        'value': 'pop'}],
+        returns nicely formated dict
+        """
+        n = {}
+        for k in node["properties"].keys():
+            if len(node["properties"][k]) == 1:
+                n[k] = node["properties"][k][0]["value"]
+        return n
+
+    def parse_all_properties(self,res):
+        """
+        meant to pas in one response item at a time:
+            `self.actions = [self.c.parse_all_properties(i) for i in self.c.res]`
+        """
+        r = {}
+        for part in self.res[0].keys():
+            if res[part]['type']=='edge':
+                r[part] = res[part]['properties']
+            else:
+                r[part] = self.parse_properties(res[part])
+        return r
+
+
+
     ## cleaning results
     def cs(self, s):
         # Clean String
@@ -248,3 +279,11 @@ class CosmosdbClient():
         """ 
         res = self.run_query(query)
         self.res = res 
+
+    def query_patch_properties(self, agent, action):
+        query = f"g.V().has('objid','{agent['objid']}')"
+        for n in yaml.safe_load(action["augments_self_properties"]):
+            query += f".property('{n}',{agent[n]})"
+
+        res = self.run_query(query)
+        self.res = res

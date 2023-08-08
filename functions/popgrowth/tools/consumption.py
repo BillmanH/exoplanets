@@ -91,7 +91,7 @@ def death_by_starvation_event(loc,pop,params):
         'label':'event',
         'text': f"The population ({pop['name'][0]}) inhabiting {loc['name']} has died of starvation.",
         'visibleTo':pop['username'][0],
-        'time':params['time']['currentTime'],
+        'time':params['currentTime'],
         'username':'azfunction'
     }
     return node
@@ -122,11 +122,11 @@ def lower_health(c,params,x):
     c.run_query(query)
     out = c.res
     print(f"{len(out)} pops will starve in {x.location_id}")
+    all_death = 0
     for i in out:
         health = i['objects'][1]['health'][0]
         objid = i['objects'][1]['objid'][0]
         consumes = yaml.safe_load(i['objects'][2]['consumes'][0])
-        all_death = 0
         # logging.info(f'health: {x.consumes,consumes}')
         if x.consumes in consumes:
             if health <= 0:
@@ -139,7 +139,7 @@ def lower_health(c,params,x):
                     print(f"cache threshold of n pops reached. Purging {len(dead_pop_ids)}")
                     delete_dead_pops(c, dead_pop_ids)
                     upload_data = {'nodes':dead_pop_nodes,'edges':[]}
-                    c.upload_data(data=upload_data)
+                    c.upload_data(data=upload_data,username='azfunc')
                     dead_pop_ids = []
                     dead_pop_nodes = []
                     death_event_edges = []
@@ -157,7 +157,7 @@ def lower_health(c,params,x):
     if len(dead_pop_ids)>0:
         delete_dead_pops(c, dead_pop_ids)
         upload_data = {'nodes':dead_pop_nodes,'edges':[]}
-        c.upload_data(data=upload_data)
+        c.upload_data(data=upload_data,username='azfunc')
         for e in death_event_edges:
             c.add_query(e)
     # logging.info(f'stack: {len(c.stack)}')
