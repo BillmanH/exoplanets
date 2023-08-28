@@ -23,3 +23,6 @@ az deployment group create --resource-group $resourceGroupName --template-file "
 # Open AI is it's own thing as well
 az deployment group create --resource-group $resourceGroupName --template-file "infra/ARM/openai_template.json" --parameters "infra/ARM/openai_parameters.json"
 
+
+# The Backend Server that runs the trigger functions
+az deployment group create --resource-group $resourceGroupName --template-file "infra/server/template.json" --parameters "infra/server/parameters.json"
