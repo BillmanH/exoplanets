@@ -42,3 +42,7 @@ def main():
 
 
     logging.info(f'Python timer trigger function ran at: {time }')
+
+
+if __name__ == "__main__":
+    main()
