@@ -12,7 +12,7 @@ from .app.objects import population
 from .app.functions import language
 
 
-logger = logging.getLogger('azure.mgmt.resource')
+logging.basicConfig(filename='time.log', level=logging.INFO)
 
 
 
