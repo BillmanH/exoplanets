@@ -10,14 +10,13 @@ import yaml, pickle
 
 from app.connectors.cmdb_graph import CosmosdbClient
 from app.objects import time as t
-from app.functions import consumption, growth
+from app.functions import consumption, growth, replenish_resources
 
 logging.basicConfig(filename='engine.log', level=logging.INFO)
 
 
-
-params = yaml.safe_load(open('app/configurations/settings.yaml'))
-syllables = pickle.load(open('syllables.p', "rb"))
+params = yaml.safe_load(open('app/configurations/popgrowthconfig.yaml'))
+syllables = pickle.load(open('app/creators/specs/syllables.p', "rb"))
 
 
 
@@ -26,7 +25,7 @@ def time(c):
     # not to be confused with python's time object in the datetime library
     time = t.Time(c)
     time.get_current_UTU()
-    logging.info(time)
+    logging.info(f'*** Time function ran at: {time }')
     # Get all pending actions 
     time.get_global_actions()
     actions_df = pd.DataFrame(time.actions)
@@ -46,13 +45,14 @@ def time(c):
     # Increment global time
     time.global_ticker()
 
-    logging.info(f'Python timer trigger function ran at: {time }')
+    logging.info(f'*** Time function ended')
 
     return time
 
 
 
-def popgrowth(c,t) -> None:
+def popgrowth(c,t):
+    logging.info(f'*** Population growth function started at: {t }')
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
 
@@ -61,6 +61,7 @@ def popgrowth(c,t) -> None:
     consumption.consume(c,params)
 
     growth.grow(c,params)
+    logging.info(f'*** Population growth ended')
 
 
 
@@ -69,6 +70,7 @@ def main():
     c = CosmosdbClient()
     t = time(c)
     popgrowth(c,t)
+    replenish_resources.renew_resources(c)
 
 
 if __name__ == "__main__":
