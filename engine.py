@@ -67,11 +67,14 @@ def popgrowth(c,t):
 
 
 def main():
+    runtime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
+    logging.info(f'*** Engine started at: {runtime}')
     c = CosmosdbClient()
     t = time(c)
     popgrowth(c,t)
     replenish_resources.renew_resources(c)
-
+    endtime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
+    logging.info(f'*** Engine finsihed at: {endtime}')
 
 if __name__ == "__main__":
     main()
