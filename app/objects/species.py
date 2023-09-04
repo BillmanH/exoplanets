@@ -19,17 +19,20 @@ class Species(baseobjects.Baseobject):
             self.aggression = .5
             self.literacy = .5
             self.constitution = .5
+            if data['name'] != 'worldgenform':
+                self.uuid = data["objid"]
+                self.objid = data["objid"]
+                self.name = data["name"] 
             if data['name'] == 'worldgenform':
-                self.make_uuid()
                 self.name = self.make_name(1, 2)
             self.consumes = data["consumes"]
             self.effuses = data["effuses"]
+            
         else: 
             self.conformity = data["conformity"]
             self.aggression = data["aggression"]
             self.literacy = data["literacy"]
             self.constitution = data["constitution"]
-            self.make_uuid()
             self.name = self.make_name(1, 2)
             self.consumes = data['consumes']
             self.effuses = data['effuses']

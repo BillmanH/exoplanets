@@ -59,11 +59,12 @@ def build_population(request):
     graph_data['nodes'] = graph_data['nodes'] + [biome.get_data()]
     graph_data['edges'] = graph_data['edges'] + [biome.get_biome_edge()]
     
+    c.upload_data(username, graph_data)
+    
     response = {'pops':[p for p in graph_data['nodes'] if p.get('label')=='pop']}
     response['factions'] = [p for p in graph_data['nodes'] if p.get('label')=='faction']
     response['note'] = 'population created'
     response['status'] = 'success'
     response['homeworldid'] = homeplanet['objid']
-    c.upload_data(username, graph_data)
 
     return JsonResponse(response)
