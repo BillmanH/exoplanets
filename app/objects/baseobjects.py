@@ -10,6 +10,7 @@ class Baseobject:
 
     def make_uuid(self):
         self.uuid = maths.uuid(n=13)
+        return self.uuid
     
     def make_name(self,n1,n2):
         """
@@ -20,11 +21,11 @@ class Baseobject:
     def get_fundimentals(self):
         return {
             "name":self.name,
-            "objid":self.objid,
+            "objid":self.uuid,
             "label":self.label
         }
     def __repr__(self) -> str:
-        return f"<{self.label}: {self.type if hasattr(self, 'type') else None}; {self.objid}; {self.name}>"
+        return f"<{self.label}: {self.type if hasattr(self, 'type') else None}; {self.uuid}; {self.name}>"
 
 class NewGame():
     def __init__(self,data):

@@ -47,9 +47,9 @@ function createFaction(n){
             disc.position.y = factionbuildingHeight/2*-1
             disc.parent = box
 
-        const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
-            discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
-            disc.material = discMat; 
+        // const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
+        //     discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
+        //     disc.material = discMat; 
 
     
     

@@ -81,7 +81,7 @@ class Pop(species.Creature):
 class Faction(baseobjects.Baseobject):
     def __init__(self, i):
         super().__init__()
-        if 'objid' in i:
+        if type(i)==dict:
             self.name = i['name']
             self.objid = i['objid']
             self.label = "faction"

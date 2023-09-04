@@ -40,6 +40,10 @@ def build_population(request):
     response = {}
     c = CosmosdbClient()
     form = c.clean_node(dict(request.GET))
+    # Javascript concatenates the effuses into a string, so we need to split it
+    if "," in form['effuses']:
+        form['effuses'] = form['effuses'].split(",")
+
     username = form.get('owner','')
     
     # get the homeworld
