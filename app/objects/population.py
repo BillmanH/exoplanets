@@ -76,6 +76,8 @@ class Pop(species.Creature):
         fund["wealth"] = self.wealth
         fund["factionLoyalty"] = self.factionLoyalty
         fund["isIdle"] = self.isIdle
+        if 'username' in self.species.config.keys():
+            fund["username"] = self.species.config['username']
         return fund
 
 class Faction(baseobjects.Baseobject):

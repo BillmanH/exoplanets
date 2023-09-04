@@ -22,7 +22,7 @@ class Species(baseobjects.Baseobject):
             if data['name'] != 'worldgenform':
                 self.uuid = data["objid"]
                 self.objid = data["objid"]
-                self.name = data["name"] 
+                self.name = data["name"]
             if data['name'] == 'worldgenform':
                 self.name = self.make_name(1, 2)
             self.consumes = data["consumes"]
@@ -48,6 +48,8 @@ class Species(baseobjects.Baseobject):
             fund["effuses"] = ','.join(self.effuses)
         else:
             fund["effuses"] = self.effuses
+        if 'username' in self.config.keys():
+            fund['username'] = self.config['username']
         fund["conformity"] = self.conformity
         fund["aggression"] = self.aggression
         fund["literacy"] = self.literacy
