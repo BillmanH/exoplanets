@@ -78,31 +78,10 @@ function createFaction(n){
 
 }
 
-function get_new_address(addresses){
-    const options = [[1, 1], [-1, 1], [1, -1], [-1, -1]];
-    var pick = options[Math.floor(Math.random() * options.length)];
-    do {
-        var new_pick = options[Math.floor(Math.random() * options.length)];
-        pick[0] += new_pick[0]
-        pick[1] += new_pick[1]
-      } while (addresses.indexOf(pick)>=0);
 
-    return pick
-}
-
-function get_address(pop_locations,iter){       
-    addresses = JSON.parse(pop_locations)   
-    if (iter+1 < addresses.length) {
-        address =addresses[iter+1] 
-    } else {
-
-        address = get_new_address(addresses)
-    }  
-    // console.log(iter,address,addresses)
-    return address
-}
 
 function createPop(n){
+    console.log('pop:', n)
     var faction = scene.getMeshByName(n.data.faction.objid+"_nocol_faction_merged");
     var trueBuildHeight = (factionbuildingHeight*n.data.population.health)
     const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_nocol_box", 
@@ -111,12 +90,12 @@ function createPop(n){
         depth:4}
     );
 
-    address = get_address(faction.metadata.pop_locations, n.data.iter)
-    n.data.population.address = address.toString()
+    // address = get_address(faction.metadata.pop_locations, n.data.iter)
+    // n.data.population.address = address.toString()
 
     box.parent = faction
-    n.data.population.x = address[0]*5
-    n.data.population.z = address[1]*5
+    n.data.population.x = n.coord.x 
+    n.data.population.z = n.coord.z
     n.data.population.y = scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z)
     box.position = new BABYLON.Vector3(n.data.population.x,((faction.position._y-n.data.population.y)/faction.position._y) -(factionbuildingHeight/4), n.data.population.z)
 
@@ -171,12 +150,13 @@ for (let i = 0; i < factions.length; i++) {
         p = {}
         p.data = pops[j]
         p.data.iter = j
-        p.coord = pivotLocal((j+5)*-1,(j+5))
+        p.coord = pivotLocal((j+10+pops.length)*-1,(j+10+pops.length))
         createPop(p)
     }
 }
 
 function renderBuildings(){
+    // Buildings attached to pops, not pops themselves. 
     for (let i = 0; i < data.buildings.length; i++) {
         d = data.buildings[i]
         if(d.render_type=='block'){
