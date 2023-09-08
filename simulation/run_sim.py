@@ -42,8 +42,6 @@ class Simulaiton:
 
 
 
-
-
 # %%
 def main():
     sim = Simulaiton()

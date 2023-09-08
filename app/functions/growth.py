@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 import logging
-from ..app.objects import time
-from ..app.objects import population
-from ..app.functions import language
+from app.objects import time
+from app.objects import population
+from app.functions import language
 
 
 
