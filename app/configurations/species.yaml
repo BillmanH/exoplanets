@@ -1,6 +1,6 @@
 default_values:
   health: .7
-  consumes: organic
+  consumes: organics
   effuses: 
     - organic waste
     - plastics

@@ -19,7 +19,7 @@ function render_resources(resources, readyMesh){
         if  (resources.length > 0){
             for (let i = 0; i < resources.length; i++){
                 resource = resources[i]
-                if(resource.name.toLowerCase()=="organic"){
+                if(resource.name.toLowerCase()=="organics"){
                     build_organic_resource(resource, readyMesh)
                 }
             }
@@ -43,17 +43,10 @@ function createFaction(n){
             boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
             box.material = boxMat; 
 
-        var disc = BABYLON.MeshBuilder.CreateCylinder(n.data.objid + "_disc", {diameter:50, height:1});
-            disc.position.y = factionbuildingHeight/2*-1
-            disc.parent = box
-
-        // const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
-        //     discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
-        //     disc.material = discMat; 
 
     
     
-    var faction = BABYLON.Mesh.MergeMeshes([box, disc], true, false, undefined, false, true);
+    var faction = BABYLON.Mesh.MergeMeshes([box], true, false, undefined, false, true);
     var x = n.data.lat*ground_dimensions
     var z = n.data.long*ground_dimensions
     var y = scene.getMeshById("ground").getHeightAtCoordinates(x,z)+(factionbuildingHeight/2)   
