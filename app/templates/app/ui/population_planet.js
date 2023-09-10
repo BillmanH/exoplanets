@@ -68,7 +68,6 @@ function createFaction(n){
     // console.log(faction.name, x, y,z)
     // console.log(faction.position)
 
-
 }
 
 
@@ -86,12 +85,12 @@ function createPop(n){
     // address = get_address(faction.metadata.pop_locations, n.data.iter)
     // n.data.population.address = address.toString()
 
-    box.parent = faction
-    n.data.population.x = n.coord.x 
-    n.data.population.z = n.coord.z
-    n.data.population.y = scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z)
-    box.position = new BABYLON.Vector3(n.data.population.x,((faction.position._y-n.data.population.y)/faction.position._y) -(factionbuildingHeight/4), n.data.population.z)
-
+    // box.parent = faction
+    n.data.population.x = faction.position.x + n.coord.x 
+    n.data.population.z = faction.position.z + n.coord.z
+    n.data.population.y = scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z) + (trueBuildHeight/2)
+    
+    box.position = new BABYLON.Vector3(n.data.population.x,n.data.population.y, n.data.population.z)
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
         box.material = boxMat; 
@@ -107,6 +106,7 @@ function createPop(n){
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         console.log(box.position)
+        console.log(scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z))
         objectDetails(n.data.population)
     }));
 
