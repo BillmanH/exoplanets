@@ -1,6 +1,9 @@
 default_values:
   health: .7
-
+  consumes: organics
+  effuses: 
+    - organic waste
+    - plastics
 # minimum health required to grow population
 population_growth:
   pop_health_requirement: .6

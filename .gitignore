@@ -164,3 +164,4 @@ __azurite_db*
 simulation/*.csv
 simulation/*.pbix
 simulation/*.xlsx
+infra/server/parameters.json

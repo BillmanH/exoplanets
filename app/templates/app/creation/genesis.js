@@ -18,7 +18,9 @@ var form = {
     "num_moons": 10,
     "starting_pop":7,
     "organics":.5,
-    "minerals":.5
+    "minerals":.5,
+    "consumes":"organics",
+    "effuses":"organic waste,plastics"
     }
 
 
@@ -218,20 +220,3 @@ function finalize_world(data){
     add_button("finalize",1,"continue to the game", goto_system(data))
 }
 
-// An example `data` set:
-// data = {
-//     "planet_name": "Earth",
-//     "num_planets": "6",
-//     "num_moons": "24",
-//     "home_has_moons": "on",
-//     "starting_pop": "7",
-//     "conformity": "0.3",
-//     "literacy": "0.7",
-//     "aggression": "0.5",
-//     "constitution": "0.5",
-//     "name": "form",
-//     "objid": "4864559553238",
-//     "username": "Billmanh",
-//     "objtype": "form",
-//     "id": "4864559553238",
-// }

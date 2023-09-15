@@ -10,6 +10,11 @@ on:
       - main
   workflow_dispatch:
 
+
+env:
+  AZURE_FUNCTIONAPP_NAME: 'exo-jobs'
+  PYTHON_VERSION: '3.8'                     # set this to the python version to use (e.g. '3.6', '3.7', '3.8')
+
 jobs:
   build:
     runs-on: ubuntu-latest

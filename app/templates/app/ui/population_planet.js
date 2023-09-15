@@ -19,7 +19,7 @@ function render_resources(resources, readyMesh){
         if  (resources.length > 0){
             for (let i = 0; i < resources.length; i++){
                 resource = resources[i]
-                if(resource.name.toLowerCase()=="organic"){
+                if(resource.name.toLowerCase()=="organics"){
                     build_organic_resource(resource, readyMesh)
                 }
             }
@@ -39,25 +39,15 @@ function createFaction(n){
         // console.log("ground for", n.data.lat*ground_dimensions,n.data.long*ground_dimensions,": ", 
         // readyMesh.getHeightAtCoordinates(n.data.lat*ground_dimensions,n.data.long*ground_dimensions),ground.isReady())
             
-        const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
-            boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
-            box.material = boxMat; 
+    const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
+        boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
+        box.material = boxMat; 
 
-        var disc = BABYLON.MeshBuilder.CreateCylinder(n.data.objid + "_disc", {diameter:50, height:1});
-            disc.position.y = factionbuildingHeight/2*-1
-            disc.parent = box
-
-        const discMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
-            discMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/city_disc.png' %}");
-            disc.material = discMat; 
-
-    
-    
-    var faction = BABYLON.Mesh.MergeMeshes([box, disc], true, false, undefined, false, true);
+    var faction = BABYLON.Mesh.MergeMeshes([box], true, false, undefined, false, true);
     var x = n.data.lat*ground_dimensions
     var z = n.data.long*ground_dimensions
     var y = scene.getMeshById("ground").getHeightAtCoordinates(x,z)+(factionbuildingHeight/2)   
-    
+    n.position = new BABYLON.Vector3(x, y, z)
     faction.position = new BABYLON.Vector3(x, y, z)
 
     faction.metadata = n.data
@@ -72,37 +62,16 @@ function createFaction(n){
         console.log(faction.position)
         objectDetails(n.data)
     }));
+    // n.faction = faction
     // console.log(faction.name, x, y,z)
     // console.log(faction.position)
 
-
 }
 
-function get_new_address(addresses){
-    const options = [[1, 1], [-1, 1], [1, -1], [-1, -1]];
-    var pick = options[Math.floor(Math.random() * options.length)];
-    do {
-        var new_pick = options[Math.floor(Math.random() * options.length)];
-        pick[0] += new_pick[0]
-        pick[1] += new_pick[1]
-      } while (addresses.indexOf(pick)>=0);
 
-    return pick
-}
-
-function get_address(pop_locations,iter){       
-    addresses = JSON.parse(pop_locations)   
-    if (iter+1 < addresses.length) {
-        address =addresses[iter+1] 
-    } else {
-
-        address = get_new_address(addresses)
-    }  
-    // console.log(iter,address,addresses)
-    return address
-}
 
 function createPop(n){
+    // console.log('pop:', n)
     var faction = scene.getMeshByName(n.data.faction.objid+"_nocol_faction_merged");
     var trueBuildHeight = (factionbuildingHeight*n.data.population.health)
     const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_nocol_box", 
@@ -111,15 +80,17 @@ function createPop(n){
         depth:4}
     );
 
-    address = get_address(faction.metadata.pop_locations, n.data.iter)
-    n.data.population.address = address.toString()
+    // address = get_address(faction.metadata.pop_locations, n.data.iter)
+    // n.data.population.address = address.toString()
 
-    box.parent = faction
-    n.data.population.x = address[0]*5
-    n.data.population.z = address[1]*5
-    n.data.population.y = scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z)
-    box.position = new BABYLON.Vector3(n.data.population.x,((faction.position._y-n.data.population.y)/faction.position._y) -(factionbuildingHeight/4), n.data.population.z)
+    // box.parent = faction
+    n.data.population.x = faction.position.x + n.coord.x 
+    n.data.population.z = faction.position.z + n.coord.z
+    n.data.population.y = scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z) + (trueBuildHeight/2)
+    
+    n.position = new BABYLON.Vector3(n.data.population.x,n.data.population.y, n.data.population.z)
 
+    box.position = n.position
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
         box.material = boxMat; 
@@ -135,6 +106,7 @@ function createPop(n){
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         console.log(box.position)
+        console.log(scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z))
         objectDetails(n.data.population)
     }));
 
@@ -165,18 +137,21 @@ for (let i = 0; i < factions.length; i++) {
         y:0,
         z:f.data.lat*ground_dimensions
     }
-    // console.log(f.coord)
+    // console.log(faction,f.coord)
     createFaction(f)
+    createGroundDecal(f,ground,"{% static 'app/objects/planet/surface/planet_city_decal.png' %}",25)
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
         p.data.iter = j
-        p.coord = pivotLocal((j+5)*-1,(j+5))
+        p.coord = pivotLocal((j+10+pops.length)*-1,(j+10+pops.length))
         createPop(p)
+        createGroundDecal(p,ground,"{% static 'app/objects/planet/surface/planet_city_decal.png' %}", 15 * p.data.population.industry)
     }
 }
 
 function renderBuildings(){
+    // Buildings attached to pops, not pops themselves. 
     for (let i = 0; i < data.buildings.length; i++) {
         d = data.buildings[i]
         if(d.render_type=='block'){

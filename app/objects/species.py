@@ -19,20 +19,23 @@ class Species(baseobjects.Baseobject):
             self.aggression = .5
             self.literacy = .5
             self.constitution = .5
-            self.objid = data['objid']
-            self.name = data['name']
+            if data['name'] != 'worldgenform':
+                self.uuid = data["objid"]
+                self.objid = data["objid"]
+                self.name = data["name"]
+            if data['name'] == 'worldgenform':
+                self.name = self.make_name(1, 2)
             self.consumes = data["consumes"]
             self.effuses = data["effuses"]
+            
         else: 
             self.conformity = data["conformity"]
             self.aggression = data["aggression"]
             self.literacy = data["literacy"]
             self.constitution = data["constitution"]
             self.name = self.make_name(1, 2)
-            self.consumes = ["Organic"]
-            self.effuses = ["Organic waste","Plastics"]
-            self.viral_resilience = 0.7
-            self.habitat_resilience = 0.2
+            self.consumes = data['consumes']
+            self.effuses = data['effuses']
         self.label = "species"
         self.pop_std = 0.2 * (1 - float(self.conformity))
 
@@ -41,9 +44,12 @@ class Species(baseobjects.Baseobject):
     def get_data(self):
         fund = self.get_fundimentals()
         fund["consumes"] = self.consumes
-        fund["effuses"] = self.effuses
-        fund["viral_resilience"] = self.viral_resilience
-        fund["habitat_resilience"] = self.habitat_resilience
+        if type(self.effuses)==list:
+            fund["effuses"] = ','.join(self.effuses)
+        else:
+            fund["effuses"] = self.effuses
+        if 'username' in self.config.keys():
+            fund['username'] = self.config['username']
         fund["conformity"] = self.conformity
         fund["aggression"] = self.aggression
         fund["literacy"] = self.literacy

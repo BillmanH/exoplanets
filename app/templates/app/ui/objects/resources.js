@@ -2,14 +2,14 @@
 
 function make_tree(coord){
     var uid = Math.floor((Math.random()) * 0x10000).toString(16)
-    var trunkHeight = 3 
-    var treetop = 8 + Math.floor(Math.random() * 3) + 1
+    var trunkHeight = 2 
+    var treetop = 3 + Math.floor(Math.random() * 2) + 1
     var treemat = new BABYLON.StandardMaterial("groundMat");
     var treemat2 = new BABYLON.StandardMaterial("groundMat");
     treemat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/texture_tree.png' %}");
     treemat2.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/texture_leaf.png' %}");
-    var trunk = BABYLON.MeshBuilder.CreateCylinder("tree"+uid, {height:trunkHeight,diameter:2});
-    var branches = BABYLON.MeshBuilder.CreateCylinder("brances"+uid, {height:treetop,diameterTop:0, diameterBottom:4+ Math.floor(Math.random() * 3) + 1});
+    var trunk = BABYLON.MeshBuilder.CreateCylinder("tree"+uid, {height:trunkHeight,diameter:1});
+    var branches = BABYLON.MeshBuilder.CreateCylinder("brances"+uid, {height:treetop,diameterTop:0, diameterBottom:2+ Math.floor(Math.random() * 3) + 1});
     trunk.position = new BABYLON.Vector3(0, trunkHeight/2, 0)
     branches.position = new BABYLON.Vector3(0, treetop/2+trunkHeight, 0) 
     trunk.material = treemat; //Place the material property of the ground
