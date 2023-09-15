@@ -4,6 +4,28 @@ function cs(s){
     return r
 }
 
+
+function createGroundDecal(o, ground, texture, size){
+    const decalMat = new BABYLON.StandardMaterial();
+        decalMat.diffuseTexture = new BABYLON.Texture(texture);
+        decalMat.zOffset = -1;
+           
+    pos = o.position
+    pos.y = ground.getHeightAtCoordinates(o.position.x,o.position.z)
+    // var y = ground.getHeightAtCoordinates(o.coord.x,o.coord.z)
+
+    groundDecal = BABYLON.MeshBuilder.CreateDecal("decal",
+                                                    ground,
+                                                    {
+                                                        position: pos,
+                                                        size: new BABYLON.Vector3(size, size, size)
+                                                    }
+                                                    , false);
+
+    groundDecal.material = decalMat;
+    console.log("decal", groundDecal.position, o.coord)
+}
+
 // filtering data formats like [{},{},{}]
 function get_values(l,v,t){
     /// l = list; v = value to return; t = type to filter on; 
