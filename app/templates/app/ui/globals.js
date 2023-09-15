@@ -23,7 +23,7 @@ function createGroundDecal(o, ground, texture, size){
                                                     , false);
 
     groundDecal.material = decalMat;
-    console.log("decal", groundDecal.position, o.coord)
+    // console.log("decal", groundDecal.position, o.coord)
 }
 
 // filtering data formats like [{},{},{}]
