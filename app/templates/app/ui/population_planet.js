@@ -39,18 +39,15 @@ function createFaction(n){
         // console.log("ground for", n.data.lat*ground_dimensions,n.data.long*ground_dimensions,": ", 
         // readyMesh.getHeightAtCoordinates(n.data.lat*ground_dimensions,n.data.long*ground_dimensions),ground.isReady())
             
-        const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
-            boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
-            box.material = boxMat; 
+    const boxMat = new BABYLON.StandardMaterial(n.data.objid + "_groundMat");
+        boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper.png' %}");
+        box.material = boxMat; 
 
-
-    
-    
     var faction = BABYLON.Mesh.MergeMeshes([box], true, false, undefined, false, true);
     var x = n.data.lat*ground_dimensions
     var z = n.data.long*ground_dimensions
     var y = scene.getMeshById("ground").getHeightAtCoordinates(x,z)+(factionbuildingHeight/2)   
-    
+    n.position = new BABYLON.Vector3(x, y, z)
     faction.position = new BABYLON.Vector3(x, y, z)
 
     faction.metadata = n.data
@@ -65,6 +62,7 @@ function createFaction(n){
         console.log(faction.position)
         objectDetails(n.data)
     }));
+    // n.faction = faction
     // console.log(faction.name, x, y,z)
     // console.log(faction.position)
 
@@ -73,7 +71,7 @@ function createFaction(n){
 
 
 function createPop(n){
-    console.log('pop:', n)
+    // console.log('pop:', n)
     var faction = scene.getMeshByName(n.data.faction.objid+"_nocol_faction_merged");
     var trueBuildHeight = (factionbuildingHeight*n.data.population.health)
     const box = BABYLON.MeshBuilder.CreateBox(n.data.population.objid+"_nocol_box", 
@@ -90,7 +88,9 @@ function createPop(n){
     n.data.population.z = faction.position.z + n.coord.z
     n.data.population.y = scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z) + (trueBuildHeight/2)
     
-    box.position = new BABYLON.Vector3(n.data.population.x,n.data.population.y, n.data.population.z)
+    n.position = new BABYLON.Vector3(n.data.population.x,n.data.population.y, n.data.population.z)
+
+    box.position = n.position
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
         box.material = boxMat; 
@@ -137,14 +137,16 @@ for (let i = 0; i < factions.length; i++) {
         y:0,
         z:f.data.lat*ground_dimensions
     }
-    // console.log(f.coord)
+    // console.log(faction,f.coord)
     createFaction(f)
+    createGroundDecal(f,ground,"{% static 'app/objects/planet/surface/planet_city_decal.png' %}",25)
     for (let j = 0; j < pops.length; j++) {
         p = {}
         p.data = pops[j]
         p.data.iter = j
         p.coord = pivotLocal((j+10+pops.length)*-1,(j+10+pops.length))
         createPop(p)
+        createGroundDecal(p,ground,"{% static 'app/objects/planet/surface/planet_city_decal.png' %}", 15 * p.data.population.industry)
     }
 }
 
