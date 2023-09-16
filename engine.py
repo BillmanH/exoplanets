@@ -48,6 +48,7 @@ def time(c):
                 b = [b for b in buildings_config['buildings'] if b['name'] == action.action['building']][0]
                 new_buildings.append(structures.Building(action.agent,b))
             logging.info(f'{action} was resolved')
+    logging.info(f'{len(new_buildings)} new buildings were created')
     upload_new_buildings(new_buildings,c)
 
     logging.info(f'Total actions resolved in this run: {validActionCounter}')
