@@ -17,3 +17,9 @@ def get_homeworld_configurations():
         'species':yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/species.yaml"))),
     }
     return configuration
+
+def get_building_configurations():
+    configuration = {
+        'building':yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/buildings.yaml"))),
+    }
+    return configuration

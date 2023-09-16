@@ -2,6 +2,7 @@ from app.models import CosmosdbClient
 from django.http import JsonResponse
 
 from app.creators import homeworld
+from app.objects import time as t
 from ..functions import maths
 import ast
 
@@ -63,46 +64,41 @@ def get_all_pops(request):
     return JsonResponse(response)
 
 # TODO: Migrate to pop object
-def create_job(c,pop,action,universalTime):
-    if type(universalTime)==list:
-        universalTime = universalTime[0]
-    time_to_complete = int(universalTime['currentTime']) + int(action['effort'])
-    action = create_action_node(c,action,pop)
+def create_job(pop,action,utu):
+    time_to_complete = int(utu.params['currentTime']) + int(action['effort'])
+    action['created_at'] = utu.params['currentTime']
+    
+    uid = str(maths.uuid())
+    action['objid'] = uid
     popToAction = {"node1":pop['objid'],
                     "node2":action['objid'],
                     "label":"takingAction",
                     "name":"takingAction",
                     'weight':time_to_complete ,
                     "actionType":action['type'],
+                    "created_at": utu.params['currentTime'],
                     "status":"pending"}
-    edges = [popToAction]
-    return edges
-
-def create_action_node(c,action,agent):
-    uid = str(maths.uuid())
-    action['objid'] = uid
-    vertex = c.create_vertex(action,agent['username'])
-    c.run_query(vertex)
-    return action
+    data = {"nodes": [action], "edges": [popToAction]}
+    return data
 
 
 def take_action(request):
     request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     action = request["action"]
-    response = {}
     c = CosmosdbClient()
+    utu = t.Time(c)
+    utu.get_current_UTU()
+    response = {}
     setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
-    getTime = "g.V().hasLabel('time').valueMap()"
     response['result'] = 'valid: Pop is able to take action'
-    c.run_query(getTime)
-    universalTime = c.clean_nodes(c.res)
-    data = {"nodes": [], "edges": create_job(c,agent,action,universalTime)}
+    
+
+    data = create_job(agent,action,utu)
     c.upload_data(agent['username'], data)
     response["uploadresp"] = str(c.res)
     setIdleResp = c.run_query(setIdle)
     response["setIdleResp"] = str(setIdleResp)
-
     return JsonResponse(response) 
 
 
@@ -112,21 +108,24 @@ def take_building_action(request):
     building = request["building"]
     response = {}
     c = CosmosdbClient()
+    utu = t.Time(c)
+    utu.get_current_UTU()
+    
+    response['result'] = 'valid: Pop is able to take action'
 
     action = {
-        "type": f"{building['name']} construction",
-        "label": "construction",
-        "comment": f"constructing a {building['name']}",
+        "type": "construction",
+        "label": "action",
+        "comment": f"constructing a {building['name'].replace('_',' ')}",
         "effort":building['effort'],
-        "applies_to":building['owned_by']
+        "applies_to":agent['objtype'],
+        "owned_by":building['owned_by'],
+        "building":building['name'],
+        "created_at": utu.params['currentTime']
     }
 
     setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
-    getTime = "g.V().hasLabel('time').valueMap()"
-    response['result'] = 'valid: Pop is able to take action'
-    c.run_query(getTime)
-    universalTime = c.clean_nodes(c.res)
-    data = {"nodes": [], "edges": create_job(c,agent,action,universalTime)}
+    data = {"nodes": [], "edges": create_job(c,agent,action,utu)}
     c.upload_data(agent['username'], data)
     response["uploadresp"] = str(c.res)
     setIdleResp = c.run_query(setIdle)
