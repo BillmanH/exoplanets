@@ -125,8 +125,7 @@ def take_building_action(request):
     }
 
     setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
-    data = {"nodes": [], "edges": create_job(c,agent,action,utu)}
-    c.upload_data(agent['username'], data)
+    c.upload_data(agent['username'], create_job(agent,action,utu))
     response["uploadresp"] = str(c.res)
     setIdleResp = c.run_query(setIdle)
     response["setIdleResp"] = str(setIdleResp)
