@@ -45,11 +45,13 @@ def time(c):
             action.resolve_action()
             if action.action.get('type') == 'construction':
                 # TODO: possibility that there are constructions other than buildings. 
-                b = [b for b in buildings_config['buildings'] if b['name'] == action.action['building']][0]
+                b = [b for b in buildings_config['building']['buildings'] if b['name'] == action.action['building']][0]
                 new_buildings.append(structures.Building(action.agent,b))
             logging.info(f'{action} was resolved')
+
     logging.info(f'{len(new_buildings)} new buildings were created')
-    upload_new_buildings(new_buildings,c)
+    if len(new_buildings) > 0:
+        upload_new_buildings(new_buildings,c)
 
     logging.info(f'Total actions resolved in this run: {validActionCounter}')
     

@@ -60,7 +60,6 @@ class Action:
     All Actions must have an `Agent` who does the action, 
         an `Action` the thing that is done.
         and a `Job` that is the edge between the two in the graph
-
     """
     def __init__(self,c,action):
         self.agent = action.agent
