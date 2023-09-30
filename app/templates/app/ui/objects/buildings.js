@@ -6,7 +6,13 @@ bulding_config = {
                 decalsize: 20,
                 boxsize: 10,
                 from_ground:-1
-            }
+            },
+    "solar_panel": {texture:"{% static 'app/objects/planet/surface/solar_panels.png' %}",
+        height: 1,
+        decalsize: 20,
+        boxsize: 10,
+        from_ground:-1
+    }
 }
 
 buildings_control_panel = {

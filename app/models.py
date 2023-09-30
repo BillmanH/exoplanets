@@ -82,7 +82,7 @@ def get_local_population(objid):
     )
     building_query = (f"""g.V().has('objid','{objid}').as('location')
         .in('inhabits').as('population')
-        .in('ownedBy').as('building')
+        .in('owns').as('building')
         .path()
             .by(valueMap('objid','name'))
             .by(valueMap('objid','name'))
