@@ -2,27 +2,42 @@
 # The Engine is something that is running all of the time. 
 # Manages the passage of time, and the resolution of actions.
 
-
 import datetime
 import logging
 import pandas as pd
-import yaml, pickle
+import yaml
+import pickle
+import os
+import asyncio
+
+from azure.eventhub import EventData
+from azure.eventhub.aio import EventHubProducerClient
+from azure.identity.aio import DefaultAzureCredential
 
 from app.connectors.cmdb_graph import CosmosdbClient
 from app.objects import time as t
 from app.objects import structures
 from app.functions import consumption, growth, replenish_resources, configurations
 
+
+# Load configurations
 buildings_config = configurations.get_building_configurations()
-
-
 logging.basicConfig(filename='engine.log', level=logging.INFO)
-
-
-params = yaml.safe_load(open('app/configurations/popgrowthconfig.yaml'))
+pop_growth_params = yaml.safe_load(open('app/configurations/popgrowthconfig.yaml'))
 syllables = pickle.load(open('app/creators/specs/syllables.p', "rb"))
 
+# Loading the event Hub
+credential = DefaultAzureCredential() 
+EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
+EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 
+eh_producer = EventHubProducerClient(
+        fully_qualified_namespace=EVENT_HUB_FULLY_QUALIFIED_NAMESPACE,
+        eventhub_name=EVENT_HUB_NAME,
+        credential=credential,
+    )
+
+logging.info(f'Event hub: {EVENT_HUB_FULLY_QUALIFIED_NAMESPACE}:{EVENT_HUB_NAME}')
 
 def time(c):
     # Increments time and resolves actions
@@ -74,13 +89,12 @@ def popgrowth(c,t):
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
 
-    params['currentTime'] = t.params['currentTime']
+    pop_growth_params['currentTime'] = t.params['currentTime']
 
-    consumption.consume(c,params)
+    consumption.consume(c,pop_growth_params)
 
-    growth.grow(c,params)
+    growth.grow(c,pop_growth_params)
     logging.info(f'*** Population growth ended')
-
 
 
 
@@ -89,10 +103,11 @@ def main():
     logging.info(f'*** Engine started at: {runtime}')
     c = CosmosdbClient()
     t = time(c)
-    popgrowth(c,t)
-    replenish_resources.renew_resources(c)
+    # popgrowth(c,t)
+    # replenish_resources.renew_resources(c)
     endtime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
-    logging.info(f'*** Engine finsihed at: {endtime}')
+    logging.info(f'*** Engine loop finsihed at: {endtime}')
+    credential.close()
 
 if __name__ == "__main__":
     main()
