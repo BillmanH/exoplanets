@@ -3,9 +3,16 @@
 bulding_config = {
     "farmland": {texture:"{% static 'app/objects/planet/surface/texture_farm_1.png' %}",
                 height: 1,
-                size: 30,
+                decalsize: 20,
+                boxsize: 10,
                 from_ground:-1
-            }
+            },
+    "solar_panel": {texture:"{% static 'app/objects/planet/surface/solar_panels.png' %}",
+        height: 1,
+        decalsize: 20,
+        boxsize: 10,
+        from_ground:-1
+    }
 }
 
 buildings_control_panel = {
@@ -40,17 +47,21 @@ function buildings_window(response){
 
 
 
-function render_block(pop,building){
+function render_block(pop,building,ground){
     var box = BABYLON.MeshBuilder.CreateBox(pop.metadata.objid+"_nocol_box", 
     {"height":bulding_config[building.name].height,
-        "size":bulding_config[building.name].size}
+        "size":bulding_config[building.name].boxsize}
     );    
-    box.parent = pop
-    y = scene.getMeshById("ground").getHeightAtCoordinates(pop.position.x + 10,pop.position.z + 10)
-    box.position = new BABYLON.Vector3(pop.position.x + 10 , y + bulding_config[building.name].from_ground, pop.position.z + 10) 
+    // box.parent = pop
+    y = scene.getMeshById("ground").getHeightAtCoordinates(pop.position.x,pop.position.z)
+    box.position = new BABYLON.Vector3(pop.position.x, y + bulding_config[building.name].from_ground, pop.position.z) 
+
     var boxMat = new BABYLON.StandardMaterial(pop.metadata.objid + "_groundMat");
     boxMat.diffuseTexture =  new BABYLON.Texture(bulding_config[building.name].texture);
     box.material = boxMat; 
+
+
+    createGroundDecal(pop ,ground,bulding_config[building.name].texture, bulding_config[building.name].decalsize)
 
     box.metadata = building
     box.metadata.ownedBy = pop.metadata.name
@@ -64,6 +75,7 @@ function render_block(pop,building){
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(box.metadata)
+        console.log("box: ", box.position, pop.position)
     }));
 
     return box

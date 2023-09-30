@@ -25,7 +25,6 @@ class Time:
         """
         Retrieve a list of the global actions.
         """
-        # Autoincrement time by one:
         actions_query = """
             g.V().haslabel('action').as('action')
                         .inE('takingAction').has('status','pending').as('job')
@@ -35,7 +34,7 @@ class Time:
 
         self.c.run_query(actions_query)
         self.actions = [self.c.parse_all_properties(i) for i in self.c.res]
-        # self.actions = pd.DataFrame(actions)
+
 
     def global_ticker(self):
         """
@@ -61,7 +60,6 @@ class Action:
     All Actions must have an `Agent` who does the action, 
         an `Action` the thing that is done.
         and a `Job` that is the edge between the two in the graph
-
     """
     def __init__(self,c,action):
         self.agent = action.agent
@@ -133,10 +131,14 @@ class Action:
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
 
     def add_updates_to_c(self,time):
-        self.query_patch_properties()
+        if self.action.get('augments_self_properties') != None:
+            self.query_patch_properties()
         self.make_action_event(time)
         self.mark_action_as_resolved()
         self.mark_agent_idle()
+
+    def make_building(self):
+        pass
 
 
     def resolve_action(self):
@@ -145,11 +147,11 @@ class Action:
         
         self.c.upload_data(self.agent['username'],self.data)
 
-
-    def make_action_event_edge(self):
-        action_edge = c.create_custom_edge(action_event,agent,'completed')
-        
-
     
     def __repr__(self) -> str:
-        return f"< ({self.agent.get('name')}: {self.agent.get('objid')}) -{self.job.get('name')}:{self.job.get('weight')}-> ({self.action.get('name')}) >"
+        if self.action.get('name') != None:
+            name = self.action.get('name')
+        else:
+            name = self.action.get('type')
+        return f"< ({self.agent.get('name')}: {self.agent.get('objid')}) -{self.job.get('name')}:{self.job.get('weight')}-> ({name}) >"
+    

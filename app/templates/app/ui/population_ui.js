@@ -7,7 +7,8 @@ icons = {
     pop:"{% static 'app/objects/icons/pop_icon_2.png' %}",
     resources:"{% static 'app/objects/icons/resource_icon_1.png' %}",
     system:"{% static 'app/objects/icons/system_icon_1.png' %}",
-    events:"{% static 'app/objects/icons/events_icon_1.png' %}"
+    events:"{% static 'app/objects/icons/events_icon_1.png' %}",
+    exit:"{% static 'app/objects/icons/exit_icon.png' %}"
 }
 
 pop_control_panel = {
@@ -58,6 +59,7 @@ var system_icon = create_icon({name:'system_icon',image:icons.system,top:getIcon
 var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:getIconTop(1)})
 var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:getIconTop(2)})
 var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:getIconTop(3)})
+var exit_icon = create_icon({name:'quit_icon',tooltiptext:"Quit",image:icons.exit,top:getIconTop(4)})
 
 var piovtCamera = function(name){
     var o = scene.getMeshByName(name);
@@ -169,6 +171,14 @@ events_icon.onPointerClickObservable.add(function () {
         }
     })
     dropControlIfExists("loadingpleasewait")
+});
+
+exit_icon.onPointerClickObservable.add(function () {
+    dropAllControls()
+    plz = pleaseWaiter(dashboard)
+    dest = '/'
+    console.log('quit to menu')
+    window.location.href = dest;
 });
 
 

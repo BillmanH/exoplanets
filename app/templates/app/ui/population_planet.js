@@ -12,7 +12,6 @@ const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0)
 
 
 
-
 // redering natural resources
 function render_resources(resources, readyMesh){
     if (data.hasOwnProperty('resources')){
@@ -144,25 +143,25 @@ for (let i = 0; i < factions.length; i++) {
         p = {}
         p.data = pops[j]
         p.data.iter = j
-        p.coord = pivotLocal((j+10+pops.length)*-1,(j+10+pops.length))
+        p.coord = pivotLocal((((j+pops.length)/2) + 5)*-1,((j+pops.length)/2)+ 5)
         createPop(p)
-        createGroundDecal(p,ground,"{% static 'app/objects/planet/surface/planet_city_decal.png' %}", 15 * p.data.population.industry)
+        createGroundDecal(p,ground,"{% static 'app/objects/planet/surface/planet_city_decal.png' %}", 20 * p.data.population.industry)
     }
 }
 
-function renderBuildings(){
+function renderBuildings(ground){
     // Buildings attached to pops, not pops themselves. 
     for (let i = 0; i < data.buildings.length; i++) {
         d = data.buildings[i]
         if(d.render_type=='block'){
             var owner = scene.getMeshByName(d.owner+'_nocol_box')
-            render_block(owner, d)
+            render_block(owner, d, ground)
         }
     }
 }
 
 render_resources(data['resources'], ground)
-renderBuildings()
+renderBuildings(ground)
         
 
 

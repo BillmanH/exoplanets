@@ -10,7 +10,11 @@ import yaml, pickle
 
 from app.connectors.cmdb_graph import CosmosdbClient
 from app.objects import time as t
-from app.functions import consumption, growth, replenish_resources
+from app.objects import structures
+from app.functions import consumption, growth, replenish_resources, configurations
+
+buildings_config = configurations.get_building_configurations()
+
 
 logging.basicConfig(filename='engine.log', level=logging.INFO)
 
@@ -32,13 +36,22 @@ def time(c):
     
     logging.info(f'Total jobs: {actions_df.shape[0]}')
     validActionCounter = 0 
+    new_buildings = []
     for i in actions_df.index:
         action = t.Action(c,actions_df.loc[i])
         if action.validate_action_time(time):
             validActionCounter += 1
             action.add_updates_to_c(time)
             action.resolve_action()
+            if action.action.get('type') == 'construction':
+                # TODO: possibility that there are constructions other than buildings. 
+                b = [b for b in buildings_config['building']['buildings'] if b['name'] == action.action['building']][0]
+                new_buildings.append(structures.Building(action.agent,b))
             logging.info(f'{action} was resolved')
+
+    logging.info(f'{len(new_buildings)} new buildings were created')
+    if len(new_buildings) > 0:
+        upload_new_buildings(new_buildings,c)
 
     logging.info(f'Total actions resolved in this run: {validActionCounter}')
     
@@ -49,7 +62,12 @@ def time(c):
 
     return time
 
-
+def upload_new_buildings(new_buildings,c):
+    data = {"nodes": [], "edges": []}
+    for b in new_buildings:
+        data['nodes'].append(b.get_data())
+        data['edges'].append(b.get_owned_by())
+    c.upload_data('buildings',data)
 
 def popgrowth(c,t):
     logging.info(f'*** Population growth function started at: {t }')
