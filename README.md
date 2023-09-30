@@ -1,4 +1,7 @@
 # Exoplanets
+
+[![Build and deploy Python app to Azure Web App - exodestiny](https://github.com/BillmanH/exoplanets/actions/workflows/build_and_deploy.yaml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/build_and_deploy.yaml)
+
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
 [The work-in-progress game is here.](http://exodestiny.azurewebsites.net/)
@@ -9,8 +12,6 @@ At the start of the game, your civilization is growing rapidly. It is also consu
 
 ![Alt text](/docs/img/cityview.png?raw=true "solar system")
 
-
-[![Build and deploy Python app to Azure Web App - exodestiny](https://github.com/BillmanH/exoplanets/actions/workflows/build_and_deploy.yaml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/build_and_deploy.yaml)
 
 ![Alt text](/docs/img/solar_system.png?raw=true "solar system")
 
