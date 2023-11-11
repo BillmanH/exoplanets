@@ -12,6 +12,7 @@ At the start of the game, your civilization is growing rapidly. It is also consu
 
 ![Alt text](/docs/img/cityview.png?raw=true "solar system")
 
+The game is a simulation platform first, with some interaction that influences the running simulation. Your civilization is growing, conusming resources, fighting wars without your interaction. Your goal is to nudge them into a sustainable future. 
 
 ![Alt text](/docs/img/solar_system.png?raw=true "solar system")
 
@@ -23,18 +24,6 @@ At the start of the game, your civilization is growing rapidly. It is also consu
 * Babylon.js for 3d scene rendering
 
 
-## Dataset
-Exoplanet data Data is gathered from here. 
-### Important Links
-* [Dataset column definitions](https://exoplanetarchive.ipac.caltech.edu/applications/DocSet/index.html?doctree=/docs/docmenu.xml&startdoc=item_1_01)
-* [Data from this table](https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS)
-
-### Our solar system data
-* [List of Solar System objects](https://en.wikipedia.org/wiki/List_of_Solar_System_objects_by_size#:~:text=Larger%20than%20400%20km%20%20%20%20Body,%20%202004%20%2013%20more%20rows%20)
-
-* uploading that data to cosmos (once parsed) with `python scripts/upload_systems.py`
-
-
 ## Making your own game
 I built this game so that I could clone it and create different versions. You should be able to clone the repo and run it on your own machine or in the cloud of your choice. Some assembly required as this application uses a lot of tools. I'm working to keep the costs of the game down to <$20 a month. 
 
@@ -43,7 +32,8 @@ of course, you can also just clone it on your local machine and run for free. Fe
 ### Docs:
 | Document |
 | ----------- |
-| [Building the Azure infrastructure](docs/Technical%20Architecture.md) | 
+| [Building the Azure infrastructure](docs/readme.md) | 
+| [Managing Azure Functions](az-functions/readme.md) | 
 | [Building the Local (dev) infrastructure](docs/Local_setup.md) | 
 | [Standards and Conventions](docs/Standards%20and%20Conventions.md) | 
 | [Encription and password management](notebooks/Encryption_and_storage_of_passwords.ipynb) |
