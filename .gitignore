@@ -167,3 +167,5 @@ simulation/*.pbix
 simulation/*.xlsx
 infra/server/parameters.json
 az-functions/az-functions/.vscode/extensions.json
+
+.python_packages
