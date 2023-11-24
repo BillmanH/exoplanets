@@ -19,3 +19,4 @@ def eh_update_time(azeventhub: func.EventHubEvent):
 def eh_resolve_action(azeventhub: func.EventHubEvent):
     logging.info('Action Event was triggered: %s',
                 azeventhub.get_body().decode('utf-8'))
+ 

@@ -27,8 +27,12 @@ syllables = pickle.load(open('app/creators/specs/syllables.p', "rb"))
 EVENT_HUB_CONNECTION_STR = os.environ.get("EVENT_HUB_CONNECTION_STR", "ERROR: Event Hub Connection not found")
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME', "ERROR: Event Hub Name not found")
 
-eh_producer = EventHubProducerClient.from_connection_string(
-        conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME
+eh_time_producer = EventHubProducerClient.from_connection_string(
+        conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name="EXO_TIME"
+    )
+
+eh_action_producer = EventHubProducerClient.from_connection_string(
+        conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name="EXO_ACTION"
     )
 
 logging.info(f'Event hub: {EVENT_HUB_NAME}')
@@ -43,12 +47,23 @@ def get_time_from_cmdb(c):
 
 
 
-def test_eventhub():
+def update_time():
     async def run():
-        async with eh_producer:
-            event_data_batch = await eh_producer.create_batch()
+        async with eh_time_producer:
+            event_data_batch = await eh_time_producer.create_batch()
             event_data_batch.add(EventData('Single message'))
-            await eh_producer.send_batch(event_data_batch)
+            await eh_time_producer.send_batch(event_data_batch)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run())
+
+
+def resolve_actions(actions):
+    async def run():
+        async with eh_action_producer:
+            event_data_batch = await eh_action_producer.create_batch()
+            event_data_batch.add(EventData('Single message'))
+            await eh_action_producer.send_batch(event_data_batch)
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run())
@@ -60,7 +75,8 @@ def main():
     # Get the current time from the CMDB
     c = CosmosdbClient()
     current_time = get_time_from_cmdb(c)
-    test_eventhub()
+    update_time()
+    resolve_actions(actions)
     logging.info(f'Current time: {current_time}')
 
 
