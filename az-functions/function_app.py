@@ -1,4 +1,5 @@
 import azure.functions as func
+import os
 import datetime
 import json
 import logging
@@ -27,8 +28,8 @@ def myfunc(req: func.HttpRequest) -> func.HttpResponse:
         )
 
 
-@app.event_hub_message_trigger(arg_name="azeventhub", event_hub_name="exo-game-loop",
-                               connection="Endpoint=sb://exo-jobs.servicebus.windows.net/;SharedAccessKeyName=exo-engine;SharedAccessKey=SV8PLOLmTa7FQ9dGt0wpksShm9dBkFSYM+AEhNb7IC0=") 
+@app.event_hub_message_trigger(arg_name="azeventhub", event_hub_name=os.getenv("EVENT_HUB_NAME"),
+                               connection=os.getenv("EVENT_HUB_CONNECTION_STR")) 
 def myFunction(azeventhub: func.EventHubEvent):
     logging.info('Python EventHub trigger processed an event: %s',
                 azeventhub.get_body().decode('utf-8'))

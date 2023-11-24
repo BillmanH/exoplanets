@@ -39,6 +39,16 @@ eh_producer = EventHubProducerClient(
 
 logging.info(f'Event hub: {EVENT_HUB_FULLY_QUALIFIED_NAMESPACE}:{EVENT_HUB_NAME}')
 
+def test_eventhub():
+    async def run():
+        async with eh_producer:
+            event_data_batch = await eh_producer.create_batch()
+            event_data_batch.add(EventData('Single message'))
+            await eh_producer.send_batch(event_data_batch)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run())
+
 def time(c):
     # Increments time and resolves actions
     # not to be confused with python's time object in the datetime library
