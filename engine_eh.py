@@ -76,7 +76,7 @@ def main():
     c = CosmosdbClient()
     current_time = get_time_from_cmdb(c)
     update_time()
-    resolve_actions(actions)
+    # resolve_actions(actions)
     logging.info(f'Current time: {current_time}')
 
 
