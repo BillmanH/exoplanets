@@ -7,7 +7,6 @@ import logging
 from connector import cmdb_graph as cmdb
 from utu_time import timemanager as tm
 
-c = cmdb.CosmosdbClient()
 app = func.FunctionApp()
 
 
@@ -15,6 +14,7 @@ app = func.FunctionApp()
                                connection="EVENT_HUB_CONNECTION_STR")
 def eh_update_time(azeventhub: func.EventHubEvent):
     # Call the time module that gets and updates the time (increment by one)
+    c = cmdb.CosmosdbClient()
     tm.update_time(c)
     logging.info('Time Event Was triggered: %s',
                 azeventhub.get_body().decode('utf-8'))

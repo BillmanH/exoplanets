@@ -54,6 +54,7 @@ def update_time():
             event_data_batch.add(EventData('Single message'))
             await eh_time_producer.send_batch(event_data_batch)
 
+    print("update_time event triggered")
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run())
 
@@ -82,4 +83,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main() 

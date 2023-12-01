@@ -5,3 +5,4 @@
 azure-functions
 gremlinpython==3.5.1
 pyyaml
+numpy
