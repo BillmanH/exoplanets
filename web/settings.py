@@ -35,7 +35,7 @@ AAD_CONFIG.client.authority = f"https://login.microsoftonline.com/{os.getenv('AA
 
 
 MS_IDENTITY_WEB = IdentityWebPython(AAD_CONFIG)
-ERROR_TEMPLATE = 'auth/{}.html' # for rendering 401 or other errors from msal_middleware
+ERROR_TEMPLATE = 'registration/{}.html' # for rendering 401 or other errors from msal_middleware
 
 
 # Application definition
@@ -57,6 +57,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "ms_identity_web.django.middleware.MsalMiddleware"
 ]
 
 ROOT_URLCONF = "web.urls"

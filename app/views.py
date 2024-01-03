@@ -8,6 +8,8 @@ from .creators import universe
 
 
 from .forms import HomeSystemForm, SignUpForm
+from django.conf import settings
+
 ms_identity_web = settings.MS_IDENTITY_WEB
 
 
@@ -64,7 +66,7 @@ def call_ms_graph(request):
     return render(request, 'auth/call-graph.html', context=dict(results=results))
 
 # Creates a new acount. Only done when creating a new login for the first time. 
-@login_required
+@ms_identity_web.login_required
 def new_game(request):
     context = {}
     c = CosmosdbClient()
@@ -75,32 +77,32 @@ def new_game(request):
     return render(request, "app/creation/genesis_view.html", context)
 
 # Creates a new system, using an old acount
-@login_required
+@ms_identity_web.login_required
 def genesis(request):
     context = {"username": request.user.username}
     return render(request, "app/creation/genesis_view.html", context)
 
 
-@login_required
+@ms_identity_web.login_required
 def system_map(request):
     res = get_home_system(request.user.username)
     context = {"solar_system": res}
     return render(request, "app/system_map.html", context)
 
-@login_required
+@ms_identity_web.login_required
 def home_system_ui(request):
     res = get_home_system(request.user.username)
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
-@login_required
+@ms_identity_web.login_required
 def system_ui(request):
     res = get_system(request.GET['objid'],request.GET['orientation'])
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
 
-@login_required
+@ms_identity_web.login_required
 def pop_ui_local(request):
     res = get_local_population(request.GET['objid'])
     context = {"data": res,"global_location":request.GET['objid']}
@@ -108,14 +110,14 @@ def pop_ui_local(request):
 
 
 
-@login_required
+@ms_identity_web.login_required
 def galaxy_map(request):
     res = get_galaxy_nodes()
     context = {"galaxies": res}
     return render(request, "app/galaxy_map.html", context)
 
 
-@login_required
+@ms_identity_web.login_required
 def populations_view(request):
     res = get_factions(request.user.username)
     context = {"factions": res}
