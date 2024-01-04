@@ -1,7 +1,7 @@
 # Building the Infrastructure. 
 In this case I'm using Azure ARM templates. This makes it easy to store the infrastructure as version control. If I've done everything correctly you should be able to build everything from the command line using `az cli`. I'm building it all form the command line rather than a special build as I don't intend to be building the infrastructure often. 
 
-**You'll need a parameters.json** That has you special keys and resource names. It is in the `.gitignore` here. 
+**You'll need a parameters.json** That has you special keys and resource names. It is in the `.gitignore` here. You should be able to infer if from the `template.json`
 
 ## Steps
 Assuming you've already set the local environment variables per the instructions in the `readme.md` you can follow these CLI steps. Some of the env variables won't be available until you complete the azure build steps, but you should already have the ones required to complete this step. 
@@ -22,8 +22,5 @@ While I'm testing out the chatGPT components, I'm beginning to create a branch a
 az deployment create --resource-group $resourceGroupName --template-file "infra/ARM/openai_template.json" --parameters "infra/ARM/openai_parameters.json"
 ```
 
-
-## Keys and passwords
-For rback roles and env vars there is a `.key` file that is in the gitignore. It is json shaped. 
 
 

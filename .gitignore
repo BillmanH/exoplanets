@@ -136,6 +136,7 @@ dmypy.json
 .pyre/
 
 .vscode/*
+az-functions/.vscode/*
 host.json
 
 
@@ -165,3 +166,6 @@ simulation/*.csv
 simulation/*.pbix
 simulation/*.xlsx
 infra/server/parameters.json
+az-functions/az-functions/.vscode/extensions.json
+
+.python_packages

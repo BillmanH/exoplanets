@@ -1,7 +1,7 @@
 # exoplanets
 A Gremlin Graph database driven strategy game. Get your civilization out into space. 
 
-![Alt text](/docs/img/Infra.png?raw=true "infra")
+![Alt text](/docs/img/Exodestiny_Infrastructure-Proposed2023.png?raw=true "infra")
 
 * Azure App Service
 * Django Web Server
@@ -13,7 +13,6 @@ A Gremlin Graph database driven strategy game. Get your civilization out into sp
     * Azure Storage in this project, but for cost reasons I'm using the same resources from other projects. For that reason I don't have examples of building them here. 
     * The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
 
-![Alt text](../docs/img/Exodestiny.png?raw=true "solar system")
 
 
 ## Dataset

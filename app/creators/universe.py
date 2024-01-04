@@ -1,9 +1,9 @@
 
-from numpy import random as r
+# from numpy import random as r
 
 
-from ..functions import maths
-from ..functions import language
+# from ..functions import maths
+# from ..functions import language
 from ..functions import configurations
 
 from ..objects import celestials
@@ -23,7 +23,7 @@ def make_homeworld(orbiting, data):
     return p
 
 
-def build_homeSystem(data, username):
+def build_homeSystem(data):
     starSystem = celestials.System(data)
     star = celestials.Star(conf["star_config"], starSystem)
     planets = [

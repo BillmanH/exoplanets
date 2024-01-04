@@ -48,8 +48,8 @@ class Species(baseobjects.Baseobject):
             fund["effuses"] = ','.join(self.effuses)
         else:
             fund["effuses"] = self.effuses
-        if 'username' in self.config.keys():
-            fund['username'] = self.config['username']
+        if 'uesrguid' in self.config.keys():
+            fund['uesrguid'] = self.config['uesrguid']
         fund["conformity"] = self.conformity
         fund["aggression"] = self.aggression
         fund["literacy"] = self.literacy

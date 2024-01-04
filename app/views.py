@@ -7,23 +7,11 @@ from app.objects.account import Account
 from .creators import universe
 
 
-from .forms import HomeSystemForm, SignUpForm
+from .forms import HomeSystemForm
+from django.conf import settings
 
+ms_identity_web = settings.MS_IDENTITY_WEB
 
-def signup(request):
-    if request.method == "POST":
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            returnApp = request.GET.get("next", "/")
-            return redirect(returnApp)
-    else:
-        form = SignUpForm()
-    return render(request, "registration/signup.html", {"form": form})
 
 
 def index(request):
@@ -43,45 +31,65 @@ def index(request):
                 "all_pops": c.res[count_pops_query]}
     return render(request, "app/index.html", context)
 
+@ms_identity_web.login_required
+def token_details(request):
+    return render(request, 'auth/token.html')
+
+
+@ms_identity_web.login_required
+def call_ms_graph(request):
+    ms_identity_web.acquire_token_silently()
+    graph = 'https://graph.microsoft.com/v1.0/users'
+    authZ = f'Bearer {ms_identity_web.id_data._access_token}'
+    results = requests.get(graph, headers={'Authorization': authZ}).json()
+
+    # trim the results down to 5 and format them.
+    if 'value' in results:
+        results ['num_results'] = len(results['value'])
+        results['value'] = results['value'][:5]
+
+    return render(request, 'auth/call-graph.html', context=dict(results=results))
 
 # Creates a new acount. Only done when creating a new login for the first time. 
-@login_required
+@ms_identity_web.login_required
 def new_game(request):
     context = {}
     c = CosmosdbClient()
     if request.method == "GET":
-        acc = Account(request.user.username, c)
+        acc = Account(request.identity_context_data._id_token_claims, c)
         acc.sync_to_graph(c)
         context['account'] = acc.get_json()
     return render(request, "app/creation/genesis_view.html", context)
 
 # Creates a new system, using an old acount
-@login_required
+@ms_identity_web.login_required
 def genesis(request):
-    context = {"username": request.user.username}
+    acc = Account(request.identity_context_data._id_token_claims, CosmosdbClient()).get_json()
+    context = {"username": request.identity_context_data.username,
+                "userguid": request.identity_context_data.userguid}
     return render(request, "app/creation/genesis_view.html", context)
 
 
-@login_required
+@ms_identity_web.login_required
 def system_map(request):
-    res = get_home_system(request.user.username)
+    res = get_home_system(request.identity_context_data.username)
     context = {"solar_system": res}
     return render(request, "app/system_map.html", context)
 
-@login_required
+@ms_identity_web.login_required
 def home_system_ui(request):
-    res = get_home_system(request.user.username)
+    res = get_home_system(request.identity_context_data.username)
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
-@login_required
+@ms_identity_web.login_required
 def system_ui(request):
     res = get_system(request.GET['objid'],request.GET['orientation'])
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
 
-@login_required
+@ms_identity_web.login_required
 def pop_ui_local(request):
     res = get_local_population(request.GET['objid'])
     context = {"data": res,"global_location":request.GET['objid']}
@@ -89,16 +97,16 @@ def pop_ui_local(request):
 
 
 
-@login_required
+@ms_identity_web.login_required
 def galaxy_map(request):
     res = get_galaxy_nodes()
     context = {"galaxies": res}
     return render(request, "app/galaxy_map.html", context)
 
 
-@login_required
+@ms_identity_web.login_required
 def populations_view(request):
-    res = get_factions(request.user.username)
+    res = get_factions(request.identity_context_data.username)
     context = {"factions": res}
     return render(request, "app/populations.html", context)
 
