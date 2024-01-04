@@ -7,26 +7,11 @@ from app.objects.account import Account
 from .creators import universe
 
 
-from .forms import HomeSystemForm, SignUpForm
+from .forms import HomeSystemForm
 from django.conf import settings
 
 ms_identity_web = settings.MS_IDENTITY_WEB
 
-
-def signup(request):
-    if request.method == "POST":
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            returnApp = request.GET.get("next", "/")
-            return redirect(returnApp)
-    else:
-        form = SignUpForm()
-    return render(request, "registration/signup.html", {"form": form})
 
 
 def index(request):
@@ -79,7 +64,9 @@ def new_game(request):
 # Creates a new system, using an old acount
 @ms_identity_web.login_required
 def genesis(request):
-    context = {"username": request.identity_context_data.username}
+    acc = Account(request.identity_context_data._id_token_claims, CosmosdbClient()).get_json()
+    context = {"username": request.identity_context_data.username,
+                "userguid": request.identity_context_data.userguid}
     return render(request, "app/creation/genesis_view.html", context)
 
 

@@ -159,7 +159,8 @@ def get_pop_actions(pops, actions):
 #     "constitution": "0.5",
 #     "name": "form",
 #     "objid": "4864559553238",
-#     "username": "Billmanh",
+#     "username": "William Hardingb  ",
+#     "userguid: "0000-00000-0000"
 #     "objtype": "form",
 #     "id": "4864559553238",
 # }

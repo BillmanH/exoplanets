@@ -208,7 +208,7 @@ class CosmosdbClient():
         return edge
     
     # creating strings for uploading data
-    def create_vertex(self,node, username):
+    def create_vertex(self,node, userguid):
         node['objid'] = str(node['objid'])
         if (len(
             [i for i in expectedProperties 
@@ -233,21 +233,21 @@ class CosmosdbClient():
             else:
                 substr = f".property('{k}','{self.cs(node[k])}')"
             gaddv += substr
-        if 'username' not in properties:
-            gaddv += f".property('username','{username}')"
+        if 'userguid' not in properties:
+            gaddv += f".property('userguid','{userguid}')"
 
         gaddv += f".property('objtype','{node['label']}')"
         return gaddv
 
-    def create_edge(self, edge, username):
-        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('username','{username}')"
+    def create_edge(self, edge, userguid):
+        gadde = f"g.V().has('objid','{edge['node1']}').addE('{self.cs(edge['label'])}').property('userguid','{userguid}')"
         for i in [j for j in edge.keys() if j not in ['label','node1','node2']]:
             gadde += f".property('{i}','{edge[i]}')"
         gadde_fin = f".to(g.V().has('objid','{self.cs(edge['node2'])}'))"
         return gadde + gadde_fin
 
 
-    def upload_data(self, username, data):
+    def upload_data(self, userguid, data):
         """
         uploads nodes and edges in a format `{"nodes":nodes,"edges":edges}`.
         edge format:
@@ -258,13 +258,13 @@ class CosmosdbClient():
         """
         data = self.test_fields(data)
         for node in data["nodes"]:
-            n = self.create_vertex(node, username)
+            n = self.create_vertex(node, userguid)
             self.add_query(n)
             if len(self.stack)>self.stacklimit:
                 self.run_queries()
         self.run_queries()
         for edge in data["edges"]:
-            e = self.create_edge(edge, username)
+            e = self.create_edge(edge, userguid)
             self.add_query(e)
             if len(self.stack)>self.stacklimit:
                 self.run_queries()

@@ -10,13 +10,13 @@ def get_galaxy_nodes():
 
 
 
-def get_home_system(username):
+def get_home_system(userguid):
     # If they just created a new game, they will only have one system. 
     nodes_query = (
-        f"g.V().hasLabel('system').has('username','{username}').in().valueMap()"
+        f"g.V().hasLabel('system').has('userguid','{userguid}').in().valueMap()"
     )
     system_query = (
-        f"g.V().hasLabel('system').has('username','{username}').has('isHomeSystem','true').valueMap()"
+        f"g.V().hasLabel('system').has('userguid','{userguid}').has('isHomeSystem','true').valueMap()"
     )
     c = CosmosdbClient()
     c.add_query(nodes_query)
@@ -47,9 +47,9 @@ def get_system(objid,orientation):
     return system
 
 
-def get_factions(username):
+def get_factions(userguid):
     nodes_query = (
-        f"g.V().has('username','{username}').has('label','faction').valuemap()"
+        f"g.V().has('userguid','{userguid}').has('label','faction').valuemap()"
     )
     c = CosmosdbClient()
     c.run_query(nodes_query)   

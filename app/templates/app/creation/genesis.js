@@ -7,8 +7,9 @@ var form = {
     "label":"form",
     "name":"worldgenform",
     "objid":Math.floor(Math.random()*10000000000000),  // 13 char GUID
-    "owner":"{{ user.username }}",
-    "username": "{{ user.username }}",
+    "owner":"{{ account.username }}",
+    "userguid":"{{ account.userguid }}",
+    "username": "{{ account.username }}",
     "accountid":account.objid,
     "conformity":.5,
     "constitution":.5,
@@ -107,6 +108,7 @@ add_menu("Your account:", "accountinfo")
 add_p("accountinfo", "Your account type is: " + account.type)
 add_p("accountinfo","created: " + account.created)
 add_p("accountinfo","last used: "+account.last_used)
+add_p("accountinfo","Owner: "+account.username)
 
 function back_to_home(c,n){
     window.location.href = '/';

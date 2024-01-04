@@ -4,10 +4,17 @@ from ..functions import maths
 
 strFormat = r'%Y-%m-%dT%H:%M:%S'
 class Account:
+    """
+    # Getting the account:
+    `request.identity_context_data._id_token_claims` has the AAD information used in the account node
+    to check-or-create the account node:
+        `acc = Account(request.identity_context_data._id_token_claims, c)`
+    """
     def __init__(self, id_token_claims, c) -> None:
         self.identity_context_data = id_token_claims
         self.username = id_token_claims['name']
         self.userguid = id_token_claims['oid']
+
         if self.check_account_exists(c):
             self.fetch_from_graph(c)
         else:

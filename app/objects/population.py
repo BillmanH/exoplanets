@@ -76,8 +76,8 @@ class Pop(species.Creature):
         fund["wealth"] = self.wealth
         fund["factionLoyalty"] = self.factionLoyalty
         fund["isIdle"] = self.isIdle
-        if 'username' in self.species.config.keys():
-            fund["username"] = self.species.config['username']
+        if 'uesrguid' in self.species.config.keys():
+            fund["uesrguid"] = self.species.config['uesrguid']
         return fund
 
 class Faction(baseobjects.Baseobject):
@@ -156,9 +156,9 @@ class Global_Pop_Manager():
             'name':'population growth',
             'label':'event',
             'text': f"The population ({parent['name']}) inhabiting {location['name']} has grown to produce the population: {child.name}.",
-            'visibleTo':parent['username'],
+            'visibleTo':parent['uesrguid'],
             'time':self.params['currentTime'],
-            'username':'event'
+            'uesrguid':'event'
         }
         return node
 
