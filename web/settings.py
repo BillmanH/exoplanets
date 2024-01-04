@@ -84,29 +84,15 @@ WSGI_APPLICATION = "web.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-if os.environ["stage"] == "prod":
-    # Postgres for local 'prod' deploy
-    DATABASES = {
-        'default': {
-            'ENGINE': "django.db.backends.postgresql",
-            'NAME': os.environ["sqlname"],
-            'USER': os.environ["sqluser"],
-            'PASSWORD': os.environ["sqlpwd"],
-            'HOST': os.environ["sqlserv"],
-            'PORT': '5432',
-            'OPTIONS': {
-                'sslmode': 'require',
-            },
-        },
+
+# The Game uses CosmosDB and AAD for authentication and data. The SQLite doesn't do anythign. 
+# It's only here to keep the default Django functionality from crashing, but it is never used.
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-else:
-    # Local database for local 'dev' deploy
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
 
 # Password validation
