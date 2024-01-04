@@ -71,7 +71,7 @@ def new_game(request):
     context = {}
     c = CosmosdbClient()
     if request.method == "GET":
-        acc = Account(request.user.username, c)
+        acc = Account(request.identity_context_data._id_token_claims, c)
         acc.sync_to_graph(c)
         context['account'] = acc.get_json()
     return render(request, "app/creation/genesis_view.html", context)
@@ -79,19 +79,19 @@ def new_game(request):
 # Creates a new system, using an old acount
 @ms_identity_web.login_required
 def genesis(request):
-    context = {"username": request.user.username}
+    context = {"username": request.identity_context_data.username}
     return render(request, "app/creation/genesis_view.html", context)
 
 
 @ms_identity_web.login_required
 def system_map(request):
-    res = get_home_system(request.user.username)
+    res = get_home_system(request.identity_context_data.username)
     context = {"solar_system": res}
     return render(request, "app/system_map.html", context)
 
 @ms_identity_web.login_required
 def home_system_ui(request):
-    res = get_home_system(request.user.username)
+    res = get_home_system(request.identity_context_data.username)
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
@@ -119,7 +119,7 @@ def galaxy_map(request):
 
 @ms_identity_web.login_required
 def populations_view(request):
-    res = get_factions(request.user.username)
+    res = get_factions(request.identity_context_data.username)
     context = {"factions": res}
     return render(request, "app/populations.html", context)
 
