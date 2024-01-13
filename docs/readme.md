@@ -64,7 +64,7 @@ you'll need to add the variables one at a time. I don't have a script for this b
 
 **NOTE** I created a ps script that syncs between local and cloud. Have a look at `setting_local-env_vars.ps1` in the _infra_ folder. 
 
-#### Variables for the base Django
+### Variables for the base Django
 | Syntax | Description | Notes |
 | ----------- | ----------- | ----------- |
 | stage | (`dev` or `prod` affects how the `settings.py` file will be used.) | |
