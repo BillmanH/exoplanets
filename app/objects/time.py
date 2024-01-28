@@ -116,7 +116,7 @@ class Action:
             'name':'job',
             'label':'event',
             'text': f"The {self.agent['objtype']} ({self.agent['name']}) has completed {self.job['actionType']}",
-            'visibleTo':self.agent['username'],
+            'visibleTo':self.agent['userguid'],
             'time': time.params['currentTime'],
             'username':'event'
         }
@@ -145,7 +145,7 @@ class Action:
         if len(self.c.stack)>0:
             self.c.run_queries()
         
-        self.c.upload_data(self.agent['username'],self.data)
+        self.c.upload_data(self.agent['userguid'],self.data)
 
     
     def __repr__(self) -> str:
