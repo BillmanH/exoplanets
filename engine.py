@@ -40,6 +40,10 @@ eh_producer = EventHubProducerClient(
 logging.info(f'Event hub: {EVENT_HUB_FULLY_QUALIFIED_NAMESPACE}:{EVENT_HUB_NAME}')
 
 def test_eventhub():
+    """
+    This is a test function to see if the event hub is working
+    not executed in the main function
+    """
     async def run():
         async with eh_producer:
             event_data_batch = await eh_producer.create_batch()
@@ -49,7 +53,7 @@ def test_eventhub():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run())
 
-def time(c):
+def time(c,event_data_batch):
     # Increments time and resolves actions
     # not to be confused with python's time object in the datetime library
     time = t.Time(c)
@@ -67,7 +71,7 @@ def time(c):
         if action.validate_action_time(time):
             validActionCounter += 1
             action.add_updates_to_c(time)
-            action.resolve_action()
+            # action.resolve_action()
             if action.action.get('type') == 'construction':
                 # TODO: possibility that there are constructions other than buildings. 
                 b = [b for b in buildings_config['building']['buildings'] if b['name'] == action.action['building']][0]
@@ -112,7 +116,10 @@ def main():
     runtime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
     logging.info(f'*** Engine started at: {runtime}')
     c = CosmosdbClient()
-    t = time(c)
+
+    event_data_batch = eh_producer.create_batch()
+    t = time(c,event_data_batch)
+    eh_producer.send_batch(event_data_batch)
     # popgrowth(c,t)
     # replenish_resources.renew_resources(c)
     endtime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
@@ -121,3 +128,14 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+    # def test_eventhub():
+    # async def run():
+    #     async with eh_producer:
+    #         event_data_batch = await eh_producer.create_batch()
+    #         event_data_batch.add(EventData('Single message'))
+    #         await eh_producer.send_batch(event_data_batch)
+
+    # loop = asyncio.get_event_loop()
+    # loop.run_until_complete(run())
