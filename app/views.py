@@ -72,13 +72,13 @@ def genesis(request):
 
 @ms_identity_web.login_required
 def system_map(request):
-    res = get_home_system(request.identity_context_data.username)
+    res = get_home_system(request.identity_context_data._id_token_claims['oid'])
     context = {"solar_system": res}
     return render(request, "app/system_map.html", context)
 
 @ms_identity_web.login_required
 def home_system_ui(request):
-    res = get_home_system(request.identity_context_data.username)
+    res = get_home_system(request.identity_context_data._id_token_claims['oid'])
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
