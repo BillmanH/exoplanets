@@ -147,7 +147,10 @@ class Action:
         
         self.c.upload_data(self.agent['userguid'],self.data)
 
-    
+    def get_action_message(self):
+        message = {"agent":self.agent,"action":self.action,"job":self.job}
+        return message
+
     def __repr__(self) -> str:
         if self.action.get('name') != None:
             name = self.action.get('name')

@@ -39,21 +39,18 @@ eh_producer = EventHubProducerClient(
 
 logging.info(f'Event hub: {EVENT_HUB_FULLY_QUALIFIED_NAMESPACE}:{EVENT_HUB_NAME}')
 
-def test_eventhub():
-    """
-    This is a test function to see if the event hub is working
-    not executed in the main function
-    """
-    async def run():
+def send_to_eventhub(messages):
+    async def run(messages):
         async with eh_producer:
             event_data_batch = await eh_producer.create_batch()
-            event_data_batch.add(EventData('Single message'))
+            for message in messages:
+                event_data_batch.add(EventData(message))
             await eh_producer.send_batch(event_data_batch)
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(run())
+    loop.run_until_complete(run(messages))
 
-def time(c,event_data_batch):
+def time(c,messages):
     # Increments time and resolves actions
     # not to be confused with python's time object in the datetime library
     time = t.Time(c)
@@ -65,22 +62,12 @@ def time(c,event_data_batch):
     
     logging.info(f'Total jobs: {actions_df.shape[0]}')
     validActionCounter = 0 
-    new_buildings = []
     for i in actions_df.index:
         action = t.Action(c,actions_df.loc[i])
         if action.validate_action_time(time):
             validActionCounter += 1
-            action.add_updates_to_c(time)
-            # action.resolve_action()
-            if action.action.get('type') == 'construction':
-                # TODO: possibility that there are constructions other than buildings. 
-                b = [b for b in buildings_config['building']['buildings'] if b['name'] == action.action['building']][0]
-                new_buildings.append(structures.Building(action.agent,b))
-            logging.info(f'{action} was resolved')
-
-    logging.info(f'{len(new_buildings)} new buildings were created')
-    if len(new_buildings) > 0:
-        upload_new_buildings(new_buildings,c)
+            messages.append(action.get_action_message())
+            logging.info(f'{action} was added to the message queue')
 
     logging.info(f'Total actions resolved in this run: {validActionCounter}')
     
@@ -88,8 +75,7 @@ def time(c,event_data_batch):
     time.global_ticker()
 
     logging.info(f'*** Time function ended')
-
-    return time
+    return messages
 
 def upload_new_buildings(new_buildings,c):
     data = {"nodes": [], "edges": []}
@@ -116,10 +102,11 @@ def main():
     runtime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
     logging.info(f'*** Engine started at: {runtime}')
     c = CosmosdbClient()
+    messages = []
+    messages = time(c,messages)
 
-    event_data_batch = eh_producer.create_batch()
-    t = time(c,event_data_batch)
-    eh_producer.send_batch(event_data_batch)
+    logging.info(f'*** messages sent to event hub: {len(messages)}')
+    send_to_eventhub(messages)
     # popgrowth(c,t)
     # replenish_resources.renew_resources(c)
     endtime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
@@ -130,12 +117,3 @@ if __name__ == "__main__":
     main()
 
 
-    # def test_eventhub():
-    # async def run():
-    #     async with eh_producer:
-    #         event_data_batch = await eh_producer.create_batch()
-    #         event_data_batch.add(EventData('Single message'))
-    #         await eh_producer.send_batch(event_data_batch)
-
-    # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(run())
