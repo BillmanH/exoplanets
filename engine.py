@@ -32,14 +32,7 @@ EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 
-# eh_producer =  (
-#         fully_qualified_namespace=EVENT_HUB_FULLY_QUALIFIED_NAMESPACE,
-#         eventhub_name=EVENT_HUB_NAME,
-#         credential=credential,
-#     )
-
 eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
-
 
 logging.info(f'Event hub: {EVENT_HUB_FULLY_QUALIFIED_NAMESPACE}:{EVENT_HUB_NAME}')
 
