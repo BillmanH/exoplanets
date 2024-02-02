@@ -5,7 +5,7 @@
 import datetime
 import logging
 import pandas as pd
-import yaml
+import yaml, json
 import pickle
 import os
 import asyncio
@@ -29,13 +29,17 @@ syllables = pickle.load(open('app/creators/specs/syllables.p', "rb"))
 # Loading the event Hub
 credential = DefaultAzureCredential() 
 EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
+EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 
-eh_producer = EventHubProducerClient(
-        fully_qualified_namespace=EVENT_HUB_FULLY_QUALIFIED_NAMESPACE,
-        eventhub_name=EVENT_HUB_NAME,
-        credential=credential,
-    )
+# eh_producer =  (
+#         fully_qualified_namespace=EVENT_HUB_FULLY_QUALIFIED_NAMESPACE,
+#         eventhub_name=EVENT_HUB_NAME,
+#         credential=credential,
+#     )
+
+eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
+
 
 logging.info(f'Event hub: {EVENT_HUB_FULLY_QUALIFIED_NAMESPACE}:{EVENT_HUB_NAME}')
 
@@ -44,7 +48,8 @@ def send_to_eventhub(messages):
         async with eh_producer:
             event_data_batch = await eh_producer.create_batch()
             for message in messages:
-                event_data_batch.add(EventData(message))
+                dump = json.dumps(message)
+                event_data_batch.add(EventData(dump))
             await eh_producer.send_batch(event_data_batch)
 
     loop = asyncio.get_event_loop()
