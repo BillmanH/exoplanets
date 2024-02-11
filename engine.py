@@ -101,7 +101,7 @@ def main():
     logging.info(f'*** Engine started at: {runtime}')
     c = CosmosdbClient()
     messages = []
-    messages = time(c,messages)
+    t = time(c)
 
     logging.info(f'*** messages sent to event hub: {len(messages)}')
     send_to_eventhub(messages)

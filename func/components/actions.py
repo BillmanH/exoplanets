@@ -82,6 +82,7 @@ class Action:
 
     def add_updates_to_c(self,time):
         if self.action.get('augments_self_properties') != None:
+            self.agent = self.resolve_augments_self_properties()
             self.query_patch_properties()
         self.make_action_event(time)
         self.mark_action_as_resolved()
