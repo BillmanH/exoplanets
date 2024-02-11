@@ -1,61 +1,9 @@
-import logging
-
-
 import datetime
+import pandas as pd
 import numpy as np
 import yaml
 
 
-class UniversalTime:
-    """
-    c : the `CosmosdbClient` object
-    UTU : Universal Time Units, the unit of measurement of time in the game.
-    """
-    def __init__(self,c):
-        self.params = {}
-        self.c = c
-        self.utc_timestamp = datetime.datetime.utcnow().replace(
-            tzinfo=datetime.timezone.utc).isoformat()
-        self.actions = None
-
-    def get_current_UTU(self):
-        self.c.run_query("g.V().hasLabel('time').valueMap()")
-        time = self.c.clean_nodes(self.c.res)[0]
-        self.params['currentTime'] = time['currentTime']
-
-    def get_global_actions(self):
-        """
-        Retrieve a list of the global actions.
-        """
-        actions_query = """
-            g.V().haslabel('action').as('action')
-                        .inE('takingAction').has('status','pending').as('job')
-                        .outV().as('agent')
-                        .select('action','job','agent')
-        """
-
-        self.c.run_query(actions_query)
-        self.actions = [self.c.parse_all_properties(i) for i in self.c.res]
-
-
-    def global_ticker(self):
-        """
-        Increment the time by one. Takes a graph connection `c` and the universal time node `time`.
-        """
-        # Autoincrement time by one:
-        currentTime = self.params['currentTime'] + 1
-
-        updateRes = self.c.run_query(f"""g.V().hasLabel('time')
-                                    .property('currentTime', {currentTime})
-                                    .property('updatedFrom','azfunction')
-                                    .property('updatedAt','{str(self.utc_timestamp)}')
-                                """
-                                )
-        
-        return f"currentTime was updated from:{self.params['currentTime']} to: {currentTime}"
- 
-    def __repr__(self) -> str:
-        return f"< time at: {self.utc_timestamp} UTU:{self.params.get('currentTime')} >"
 
 class Action:
     """
@@ -64,9 +12,9 @@ class Action:
         and a `Job` that is the edge between the two in the graph
     """
     def __init__(self,c,action):
-        self.agent = action.agent
-        self.action = action.action
-        self.job = action.job
+        self.agent = action['agent']
+        self.action = action['action']
+        self.job = action['job']
         self.c = c
         self.data = {"nodes":[],"edges":[]}
 
@@ -118,7 +66,7 @@ class Action:
             'name':'job',
             'label':'event',
             'text': f"The {self.agent['objtype']} ({self.agent['name']}) has completed {self.job['actionType']}",
-            'visibleTo':self.agent['username'],
+            'visibleTo':self.agent['userguid'],
             'time': time.params['currentTime'],
             'username':'event'
         }
@@ -134,6 +82,7 @@ class Action:
 
     def add_updates_to_c(self,time):
         if self.action.get('augments_self_properties') != None:
+            self.agent = self.resolve_augments_self_properties()
             self.query_patch_properties()
         self.make_action_event(time)
         self.mark_action_as_resolved()
@@ -147,9 +96,12 @@ class Action:
         if len(self.c.stack)>0:
             self.c.run_queries()
         
-        self.c.upload_data(self.agent['username'],self.data)
+        self.c.upload_data(self.agent['userguid'],self.data)
 
-    
+    def get_action_message(self):
+        message = {"agent":self.agent,"action":self.action,"job":self.job}
+        return message
+
     def __repr__(self) -> str:
         if self.action.get('name') != None:
             name = self.action.get('name')
@@ -157,20 +109,3 @@ class Action:
             name = self.action.get('type')
         return f"< ({self.agent.get('name')}: {self.agent.get('objid')}) -{self.job.get('name')}:{self.job.get('weight')}-> ({name}) >"
     
-
-
-
-def update_time(c):
-    # Increments time and resolves actions
-    # not to be confused with python's time object in the datetime library
-    UTUTime = UniversalTime(c)
-    UTUTime.get_current_UTU()
-    logging.info(f'*** Time function ran at: {UTUTime }')
-
-
-    # Increment global time
-    UTUTime.global_ticker()
-
-    logging.info(f'*** Time function ended')
-
-    return UTUTime

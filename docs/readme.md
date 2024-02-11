@@ -1,19 +1,15 @@
 # exoplanets
 A Gremlin Graph database driven strategy game. Get your civilization out into space. 
 
-![Alt text](/docs/img/Exodestiny_Infrastructure-Proposed2023.png?raw=true "infra")
+![Alt text](/docs/img/infra.png?raw=true "infra")
 
-* Azure App Service
 * Django Web Server
 * Azure App Service for Hosting
+* Azure Functions for local hosting
+* Azure Entra ID for login/identity management
 * Azure Cosmos DB (Gremlin)
-* D3.js for visualization
-
-* **Note:** 
-    * Azure Storage in this project, but for cost reasons I'm using the same resources from other projects. For that reason I don't have examples of building them here. 
-    * The current configuration focuses on Azure App Service, however the base code is a Django app. You could host it on any VM or your local computer. However, you will need to adjust for the location of your graphdb and sqldb.
-
-
+* D3.js for charts and 2d viz
+* Babylon.js for 3d viz
 
 ## Dataset
 Exoplanet data Data is gathered from here. 
@@ -42,6 +38,8 @@ You can test your connection with `python scripts/test_connection.py`.
 
 ## Making your own game
 I built this game so that I could clone it and create different versions. You should be able to clone the repo and run it on your own machine or in the cloud of your choice. Some assembly required as this application uses a lot of tools. I'm working to keep the costs of the game down to <$20 a month. 
+
+Note that the Azure Entra ID, Cosmos DB, and some of the components require some customization. Feel free to reach out if you are having trouble getting it running. 
 
 * see the docs in the **infra** folder for production deployment. 
 
@@ -84,20 +82,27 @@ you'll need to add the variables one at a time. I don't have a script for this b
 | ----------- | ----------- | ----------- |
 | subscription | azure subscription id (for building resources) | |
 
-#### Azure SQL DB
-| Syntax | Description | Notes |
-| ----------- | ----------- | ----------- |
-| sqluser | azure SQL user login (SQL used for django user/login tables) | only required if `stage` is set to `prod` |
-| sqlpwd | azure SQL pasword (SQL used for django user/login tables) | only required if `stage` is set to `prod` |
-| sqlserv | azure SQL server | only required if `stage` is set to `prod` |
-| sqlname | azure SQL name | only required if `stage` is set to `prod` |
-
 #### Azure Storage
 | Syntax | Description | Notes |
 | ----------- | ----------- | ----------- |
 | AZURE_STORAGE_KEY | From the portal | |
 | AZURE_ACCOUNT_NAME | From the portal |  |
 | AZURE_STATIC_CONTAINER | From the portal |  |
+
+#### Azure Event Hub
+| Syntax | Description | Notes |
+| ----------- | ----------- | ----------- |
+| EVENT_HUB_FULLY_QUALIFIED_NAMESPACE | From the portal | |
+| EVENT_HUB_NAME | From the portal |  |
+| EVENT_HUB_CONNECTION_STR | From the portal |  |
+
+### Azure Entra ID
+| Syntax | Description | Notes |
+| ----------- | ----------- | ----------- |
+| AAD_CLIENT_CREDENTIAL | From the portal | |
+| AAD_TENANT_ID | From the portal |  |
+| AAD_CLIENT_CREDENTIAL | From the portal |  |
+
 
 I'm always importing modules from different places, so to compensate to multiple relative scopes for static resources (like city names and planet configuration.yaml files) I pass the _full path_ as an os env so that I can retrieve it.  for example on my local machine it's set to:"
 ```
@@ -127,11 +132,7 @@ python manage.py migrate
 **NOTE** You can also access the DB in `notebooks` with the DB helper tools.
 
 ### Migrating Static to Azure
-To host static files in Azure you'll need to create a public blob (recommended). In the portal, create a new container, and change it's `Public access level` to `blob`. Then you can migrate your static files to that bob with:
-```
-python manage.py collectstatic
-```
-if your env variables are configured correctly you should be able to migrate those files. 
+To host static files in Azure you'll need to create a public blob (recommended). In the portal, create a new container, and change it's `Public access level` to `blob`. In my version both the local dev and could use the blob and not locally hosted files. 
 
 # Contributing
 Pretty early in the design right now, however I might invite collaborators later. Feel free to open an issue if you want to chat about contributing, or just make a PR. 

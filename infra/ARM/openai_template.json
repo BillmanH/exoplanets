@@ -14,7 +14,7 @@
         },
         "region": {
             "type":"string",
-            "defaultValue": "West US 2"
+            "defaultValue": "East US"
         }
         
     },
@@ -35,23 +35,5 @@
                 "publicNetworkAccess": "Enabled"
             }
         },
-        {
-            "type": "Microsoft.CognitiveServices/accounts/deployments",
-            "apiVersion": "2022-12-01",
-            "name": "[concat(parameters('accounts_ExoDestAI_name'), '/', parameters('deployed_model_name'))]",
-            "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_ExoDestAI_name'))]"
-            ],
-            "properties": {
-                "model": {
-                    "format": "OpenAI",
-                    "name": "gpt-35-turbo",
-                    "version": "0301"
-                },
-                "scaleSettings": {
-                    "scaleType": "Standard"
-                }
-            }
-        }
     ]
 }

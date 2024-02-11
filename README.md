@@ -1,6 +1,7 @@
 # Exoplanets
 
-[![Build and deploy Python app to Azure Web App - exodestiny](https://github.com/BillmanH/exoplanets/actions/workflows/build_and_deploy.yaml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/build_and_deploy.yaml)
+[![Build and deploy Python app to Azure Web App - exodestiny](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yaml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yaml)
+
 
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
@@ -16,12 +17,9 @@ The game is a simulation platform first, with some interaction that influences t
 
 ![Alt text](/docs/img/solar_system.png?raw=true "solar system")
 
-* Azure App Service
-* Django Web Server
-* Azure App Service for Hosting
-* Azure Cosmos DB (Gremlin)
-* D3.js for visualization
-* Babylon.js for 3d scene rendering
+The game is about simulation, systems-thinking and collective progress. The only adversary is the errosion of your own cosmic destiny. 
+
+![Alt text](/docs/img/PopGrowthSystem.png?raw=true "solar system")
 
 
 ## Making your own game

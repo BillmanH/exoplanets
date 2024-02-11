@@ -16,10 +16,12 @@ function r(x, n=100) {
 
 renames = {}
 
+// things we don't print: "objid"
+
 function limitDict(d) {
-    var things_we_dont_print = ["name","username", "objid", "id", "orbitsId",
+    var things_we_dont_print = ["name","username", "id", "orbitsId",
                                  "vx", "vy", "x", "y","z", "isIn", "iter",
-                                "gui","objtype","coord","ownedByID"]
+                                "gui","objtype","coord","ownedByID","userguid"]
     for (i in things_we_dont_print) {
         d = popvalues(d, things_we_dont_print[i])
     }

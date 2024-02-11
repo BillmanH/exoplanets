@@ -95,7 +95,7 @@ def take_action(request):
     
 
     data = create_job(agent,action,utu)
-    c.upload_data(agent['username'], data)
+    c.upload_data(agent['userguid'], data)
     response["uploadresp"] = str(c.res)
     setIdleResp = c.run_query(setIdle)
     response["setIdleResp"] = str(setIdleResp)
@@ -125,7 +125,7 @@ def take_building_action(request):
     }
 
     setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"
-    c.upload_data(agent['username'], create_job(agent,action,utu))
+    c.upload_data(agent['userguid'], create_job(agent,action,utu))
     response["uploadresp"] = str(c.res)
     setIdleResp = c.run_query(setIdle)
     response["setIdleResp"] = str(setIdleResp)
@@ -136,7 +136,7 @@ def get_all_actions(request):
     query = f"""
     g.E().haslabel('takingAction')
         .has('status',within('pending','resolved')).as('job')
-            .outV().has('username','{request.get('username','')[0]}').as('agent')
+            .outV().has('userguid','{request.get('userguid','')[0]}').as('agent')
         .out('inhabits').as('location')
         .path().by(values('name','status','weight','comment').fold())
             .by(values('name').fold())
