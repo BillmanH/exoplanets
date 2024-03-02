@@ -121,6 +121,8 @@ USE_TZ = True
 
 # STATIC_URL = "/static/"
 
+log_path = "not_really_running.log"
+
 if stage == "prod":
     AZURE_STORAGE_KEY = os.environ.get('AZURE_STORAGE_KEY', False)+"==" # wierd env string issue
     AZURE_ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', False)
