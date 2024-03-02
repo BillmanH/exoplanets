@@ -1,6 +1,9 @@
 # Exoplanets
 
-[![Build and deploy Python app to Azure Web App - exodestiny](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yaml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yaml)
+[![Live web game deployment](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yml)
+
+
+[![Azure Function deployment](https://github.com/BillmanH/exoplanets/actions/workflows/main_exo-jobs2.yml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exo-jobs2.yml)
 
 
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
