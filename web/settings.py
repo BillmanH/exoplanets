@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY","ERROR: `SECRET_KEY` NOT FOUND IN ENVIRONMENT VARIABLES")
 
 # Building a variable to pivot between prod and dev environments
-stage = os.getenv("stage","ERROR: `SECRET_KEY` NOT FOUND IN ENVIRONMENT VARIABLES")
+stage = os.getenv("stage","ERROR: `stage` NOT FOUND IN ENVIRONMENT VARIABLES")
 
 if stage == "prod":
     DEBUG = False
@@ -27,8 +27,7 @@ if stage == "dev":
     DEBUG = True
 
 # Using pipe delimeted string to allow the environment vars to separate a list of hosts. 
-ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split('|')
-
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS","ERROR: `ALLOWED_HOSTS` NOT FOUND IN ENVIRONMENT VARIABLES").split('|')
 
 # Application definition
 AAD_CONFIG = AADConfig.parse_json(file_path='aad.config.json')
