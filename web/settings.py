@@ -13,10 +13,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY","ERROR: `SECRET_KEY` NOT FOUND IN ENVIRONMENT VARIABLES")
+SECRET_KEY = os.getenv("SECRET_KEY","unset_key")
 
 # Building a variable to pivot between prod and dev environments
-stage = os.getenv("stage","ERROR: `stage` NOT FOUND IN ENVIRONMENT VARIABLES")
+stage = os.getenv("stage","predeploymigrations")
 
 if stage == "prod":
     DEBUG = False
@@ -120,8 +120,13 @@ USE_TZ = True
 # Static and Media Files
 
 # STATIC_URL = "/static/"
-
-log_path = "not_really_running.log"
+if stage == "predeploymigrations":
+    log_path = "not_really_running.log"
+    abs_path = os.environ.get('abspath','.')
+    STATIC_ROOT = 'static'
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 if stage == "prod":
     AZURE_STORAGE_KEY = os.environ.get('AZURE_STORAGE_KEY', False)+"==" # wierd env string issue
@@ -136,8 +141,8 @@ if stage == "prod":
 
 if stage == "dev":
     STATIC_URL = "/static/"
-    STATIC_ROOT = os.path.join(os.environ["abspath"], "app", "static", "app")
-    log_path = os.path.join(os.environ["abspath"], "data", "non_prod_blog_log.log")
+    STATIC_ROOT = os.path.join(abs_path, "app", "static", "app")
+    log_path = os.path.join(abs_path, "data", "non_prod_blog_log.log")
 
 
 LOGGING = {
