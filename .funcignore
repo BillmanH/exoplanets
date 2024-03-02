@@ -4,7 +4,7 @@ __quuestorage__/*
 .github/*
 .vscode/*
 data/*
-app/*
+<!-- app/* -->
 docs/*
 infra/*
 notebooks/*
