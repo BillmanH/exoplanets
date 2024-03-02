@@ -62,9 +62,9 @@ class Action:
         and a `Job` that is the edge between the two in the graph
     """
     def __init__(self,c,action):
-        self.agent = action.agent
-        self.action = action.action
-        self.job = action.job
+        self.agent = action['agent']
+        self.action = action['action']
+        self.job = action['job']
         self.c = c
         self.data = {"nodes":[],"edges":[]}
 

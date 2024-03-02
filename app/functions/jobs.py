@@ -3,7 +3,7 @@ import json
 from azure.eventhub import EventData
 import asyncio
 
-def resolve_jobs(c,t,actions):
+def resolve_jobs(c,t,Action):
     # resolves actions
     # not to be confused with python's time object in the datetime library
     messages = []
@@ -13,7 +13,12 @@ def resolve_jobs(c,t,actions):
     logging.info(f'Total jobs: {len(t.actions)}')
     validjob = 0 
     for i in t.actions:
-        action = actions.Action(c,i)
+        try:
+            action = Action(c,i)
+        except AttributeError as e:
+            logging.info(f'Action: {i} was not resolved. error: {e}')
+            logging.info(f'keys: {i.keys()}')
+            continue
         if action.validate_action_time(t):
             validjob += 1
             messages.append(action.get_action_message())
