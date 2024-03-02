@@ -2,9 +2,12 @@ import pickle
 import numpy as np
 import os
 
-
-syllables = pickle.load(open(os.path.join(os.getenv("abspath"),"app/creators/specs/syllables.p"), "rb"))
-syllables_dist = pickle.load(open(os.path.join(os.getenv("abspath"),"app/creators/specs/syllables_dist.p"), "rb"))
+if os.getenv("abspath") is not None:
+    syllables = pickle.load(open(os.path.join(os.getenv("abspath"),"app/creators/specs/syllables.p"), "rb"))
+    syllables_dist = pickle.load(open(os.path.join(os.getenv("abspath"),"app/creators/specs/syllables_dist.p"), "rb"))
+else:
+    syllables = pickle.load(open("app/creators/specs/syllables.p", "rb"))
+    syllables_dist = pickle.load(open("app/creators/specs/syllables_dist.p", "rb"))
 
 # See `notebooks/Naming Things.ipynb` for the logic
 
