@@ -137,7 +137,7 @@ dmypy.json
 
 .vscode/*
 az-functions/.vscode/*
-host.json
+# host.json
 
 
 # Excel files
