@@ -6,7 +6,13 @@
 
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
-[The work-in-progress game is here.](http://exodestiny.azurewebsites.net/)
+
+[The work-in-progress game is here.](http://exodestiny.azurewebsites.net/), however I won't be granting access until I've completed:
+* testing costs of eventhub functions running with throughput limite
+* entra ID groups to manage access and subscription levels
+* cost testing for consumption plans make sure I won't go broke
+
+
 Exoplanets is a real-time, multi-player, online game where you manage a civilization and its people. Starting at the moment where your technology makes it possible to launch an individual into outer space, you must make choices that guide your people on its journey to the stars.
 
 At the start of the game, your civilization is growing rapidly. It is also consuming organic resources at a rate faster than the planet can restore. In time the resources will diminish and your people will starve and die. Your goal is to build infrastructure and technology to stabilize this.
