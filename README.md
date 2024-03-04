@@ -11,6 +11,7 @@
 * testing costs of eventhub functions running with throughput limite
 * entra ID groups to manage access and subscription levels
 * cost testing for consumption plans make sure I won't go broke
+* resources are duplicated in a testing environment (current process is just local->prod)
 
 
 Exoplanets is a real-time, multi-player, online game where you manage a civilization and its people. Starting at the moment where your technology makes it possible to launch an individual into outer space, you must make choices that guide your people on its journey to the stars.
