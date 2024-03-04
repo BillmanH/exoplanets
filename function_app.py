@@ -8,9 +8,10 @@ import ast
 import os
 import logging
 
-import az_func_time as time
-import cmdb_graph
-import jobs
+# I should be able to pull the modules from the same libraries as the game iteself. 
+from app.objects import time
+from app.connectors import cmdb_graph
+from app.functions import jobs
 
 app = func.FunctionApp()
 
