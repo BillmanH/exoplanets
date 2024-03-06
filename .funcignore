@@ -10,7 +10,7 @@ notebooks/*
 scripts/*
 simulation/*
 templates/*
-web/*
+
 
 
 # Root directory files not associated with functions
