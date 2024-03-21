@@ -88,6 +88,8 @@ class Body:
             else:
                 for n in self.config['resources'].keys():
                     self.resources.append(resource.Resource(self.config['resources'][n],self))
+            # TODO: add atmosphere from the config. 
+
 
     def __repr__(self) -> str:
         return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"
