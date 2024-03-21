@@ -7,6 +7,7 @@ moon_types:
     prob: 0.25
     radius_mean: 0.04282547027839588
     radius_std: 0.009033669196529754
+    has_atmosphere: false
   rocky:
     name: rocky
     count: 9.0
@@ -15,6 +16,7 @@ moon_types:
     prob: 0.5625
     radius_mean: 0.0733373375016315
     radius_std: 0.16342090345859747
+    has_atmosphere: false
   terrestrial:
     name: terrestrial
     count: 3.0
@@ -23,3 +25,4 @@ moon_types:
     prob: 0.1875
     radius_mean: 0.10703187481008812
     radius_std: 0.14348491532725952
+    has_atmosphere: true
