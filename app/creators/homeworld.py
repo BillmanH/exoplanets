@@ -51,7 +51,8 @@ def build_people(data):
     """
     data['defaults'] = conf['species']['default_values']
     # Get the Species
-    data.pop("objid")
+    if 'objid' in data.keys():
+        data.pop("objid")
     spec = species.Species(data)
 
     # Build the populations (note that pops is a DataFrame)
