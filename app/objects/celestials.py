@@ -40,18 +40,22 @@ class Body:
         self.type = "celestial body"
         self.label = "body"
         self.name = "unnamed"
+        self.atmosphere = None
         self.resources = []
 
     def make_name(self, n1, n2):
         self.name = language.make_word(maths.rnd(n1, n2))
 
     def get_fundimentals(self):
-        return {
+        fundamental_data = {
             "name": self.name,
             "class": self.type,
             "objid": self.objid,
             "label": self.label,
         }
+        if self.atmosphere:
+            fundamental_data["atmosphere"] = self.atmosphere
+        return fundamental_data
     
     def choose_type(self,config):
         # Choose a object type from based on the probabilities in the planet config
@@ -88,6 +92,10 @@ class Body:
             else:
                 for n in self.config['resources'].keys():
                     self.resources.append(resource.Resource(self.config['resources'][n],self))
+            # TODO: add atmosphere from the config. 
+        if self.config['has_atmosphere']:
+            self.atmosphere = maths.rnd_dist(self.config['atmosphere'])
+
 
     def __repr__(self) -> str:
         return f"<{self.label}: {self.type}; {self.objid}; {self.name}>"

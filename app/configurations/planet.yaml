@@ -9,6 +9,7 @@ planet_types:
     radius_std: 0.04591683787021923
     distance_min: 30
     distance_max: 50
+    has_atmosphere: false
 
   gas:
     name: gas
@@ -20,6 +21,7 @@ planet_types:
     radius_std: 1.2940054095713813
     distance_min: 5.2
     distance_max: 10
+    has_atmosphere: true
 
   ice: 
     name: ice
@@ -31,6 +33,7 @@ planet_types:
     radius_std: 0.08202438661763928
     distance_min: 15
     distance_max: 29
+    has_atmosphere: false
 
   terrestrial: 
     name: terrestrial
@@ -42,6 +45,7 @@ planet_types:
     radius_std: 0.3056014070648236
     distance_min: 0.39
     distance_max: 1.52
+    has_atmosphere: true
     resources:
       vegitation:
         name: "organics"
@@ -67,7 +71,8 @@ planet_types:
         type: "mineral"
         description: "H2O ready to be consumed, either frozen or in ice format"
         mean: 10000
-        std: 1000  
+        std: 1000
+    
 
 
 

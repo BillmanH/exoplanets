@@ -51,7 +51,8 @@ def build_people(data):
     """
     data['defaults'] = conf['species']['default_values']
     # Get the Species
-    data.pop("objid")
+    if 'objid' in data.keys():
+        data.pop("objid")
     spec = species.Species(data)
 
     # Build the populations (note that pops is a DataFrame)
@@ -145,23 +146,4 @@ def get_pop_actions(pops, actions):
                 edges.append(edge)
     return edges
 
-
-# An example `data` set:
-# data = {
-#     "planet_name": "Earth",
-#     "num_planets": "6",
-#     "num_moons": "24",
-#     "home_has_moons": "on",
-#     "starting_pop": "7",
-#     "conformity": "0.3",
-#     "literacy": "0.7",
-#     "aggression": "0.5",
-#     "constitution": "0.5",
-#     "name": "form",
-#     "objid": "4864559553238",
-#     "username": "William Hardingb  ",
-#     "userguid: "0000-00000-0000"
-#     "objtype": "form",
-#     "id": "4864559553238",
-# }
 

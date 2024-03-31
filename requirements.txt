@@ -1,4 +1,6 @@
 pip
+requests
+openssl
 gremlinpython==3.5.1
 scikit-learn
 pyyaml

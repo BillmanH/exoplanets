@@ -10,6 +10,7 @@ def get_configurations():
         'moon_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/moon.yaml")))["moon_types"],
         'star_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/star.yaml")))
     }
+    configuration = add_atmosphere_configurations(configuration)
     return configuration
 
 def get_homeworld_configurations():
@@ -23,4 +24,12 @@ def get_building_configurations():
     configuration = {
         'building':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/buildings.yaml"))),
     }
+    return configuration
+
+
+def add_atmosphere_configurations(configuration):
+    atmosphere_config = yaml.safe_load(open(os.path.join(abs_path,"app/configurations/atmospheres.yaml")))
+    for item in configuration['planet_config'].keys():
+        if configuration['planet_config'][item]['has_atmosphere']:
+            configuration['planet_config'][item]['atmosphere'] = atmosphere_config
     return configuration
