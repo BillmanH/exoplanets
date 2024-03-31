@@ -36,7 +36,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: remove ignored function files
-        run: rm -rf docs/* infra/* notebooks/* scripts/* simulation/* data/* .vscode/*
+        run: rm -rf docs/* infra/* notebooks/* scripts/* simulation/* data/* .vscode/* static/*
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -69,7 +69,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: 'exo-jobs2'
+          app-name: 'exo-functions'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C2822E4944A742718E579A31FCDCB18C }}
