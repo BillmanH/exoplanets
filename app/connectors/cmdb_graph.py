@@ -64,9 +64,9 @@ class CosmosdbClient():
 
     """
     def __init__(self) -> None:
-        self.endpoint = os.getenv("endpoint","env vars not set")
-        self.username = os.getenv("dbusername","env vars not set")
-        self.password = os.getenv("dbkey","env vars not set")+"=="
+        self.endpoint = os.getenv("COSMOS_DB_ENDPOINT","env vars not set")
+        self.username = os.getenv("COSMOS_DB_USERNAME","env vars not set")
+        self.password = os.getenv("COSMOS_DB_KEY","env vars not set")+"=="
         self.c = None
         self.res = "no query"
         self.stack = []

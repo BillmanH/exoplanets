@@ -2,7 +2,7 @@ import numpy as np
 import pickle, os
 # I got the syllables by parsing out a global list of city names. 
 
-syllables = pickle.load(open(os.path.join(os.getenv("abspath"),"app/creators/specs/syllables.p"), "rb"))
+syllables = pickle.load(open(os.path.join(os.getenv("ABS_PATH"),"app/creators/specs/syllables.p"), "rb"))
 
 def make_word(n):
     syl = np.random.choice(syllables, n)

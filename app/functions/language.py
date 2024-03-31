@@ -2,9 +2,9 @@ import pickle
 import numpy as np
 import os
 
-if os.getenv("abspath") is not None:
-    syllables = pickle.load(open(os.path.join(os.getenv("abspath"),"app/creators/specs/syllables.p"), "rb"))
-    syllables_dist = pickle.load(open(os.path.join(os.getenv("abspath"),"app/creators/specs/syllables_dist.p"), "rb"))
+if os.getenv("ABS_PATH") is not None:
+    syllables = pickle.load(open(os.path.join(os.getenv("ABS_PATH"),"app/creators/specs/syllables.p"), "rb"))
+    syllables_dist = pickle.load(open(os.path.join(os.getenv("ABS_PATH"),"app/creators/specs/syllables_dist.p"), "rb"))
 else:
     syllables = pickle.load(open("app/creators/specs/syllables.p", "rb"))
     syllables_dist = pickle.load(open("app/creators/specs/syllables_dist.p", "rb"))
