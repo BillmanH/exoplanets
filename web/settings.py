@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY","unset_key")
 
 # Building a variable to pivot between prod and dev environments
-stage = os.getenv("stage","predeploymigrations")
+stage = os.getenv("STAGE","predeploymigrations")
 
 if stage == "prod":
     DEBUG = False
@@ -122,7 +122,7 @@ USE_TZ = True
 # STATIC_URL = "/static/"
 if stage == "predeploymigrations":
     log_path = "not_really_running.log"
-    abs_path = os.environ.get('abspath','.')
+    abs_path = os.environ.get('ABS_PATH','.')
     STATIC_ROOT = 'static'
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'

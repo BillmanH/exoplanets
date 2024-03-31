@@ -2,7 +2,7 @@ import yaml
 import os
 
 ### The goal here is to load as little information as needed. So yaml files are broken into functions. 
-abs_path = os.getenv("abspath",".")
+abs_path = os.getenv("ABS_PATH",".")
 
 def get_configurations():
     configuration = {
