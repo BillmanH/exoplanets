@@ -21,6 +21,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: remove ignored function files
+        run: rm -rf docs/* infra/* notebooks/* scripts/* simulation/* data/* .vscode/* static/*
+
       - name: Setup Python version
         uses: actions/setup-python@v1
         with:
