@@ -1,7 +1,7 @@
 # Exoplanets
 
 [![Live web game deployment](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yml)
-[![Azure Function deployment](https://github.com/BillmanH/exoplanets/actions/workflows/main_exo-jobs2.yml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exo-jobs2.yml)
+[![Azure Function deployment](https://github.com/BillmanH/exoplanets/actions/workflows/main_exo_functions.yml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exo_functions.yml)
 
 
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
