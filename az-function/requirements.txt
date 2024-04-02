@@ -1,0 +1,22 @@
+pip
+requests
+pyOpenSSL
+
+gremlinpython==3.5.1
+scikit-learn
+pyyaml
+pandas
+openai
+psycopg2-binary==2.9.2
+cryptography
+azure-functions
+azure-eventhub
+azure-identity
+azure-eventhub-checkpointstoreblob-aio
+
+django==3.2.7
+django-storages[azure]
+
+# MS AUTH
+git+https://github.com/azure-samples/ms-identity-python-utilities@main
+
