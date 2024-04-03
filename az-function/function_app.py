@@ -3,7 +3,6 @@ from azure.eventhub.aio import EventHubProducerClient
 from azure.identity.aio import DefaultAzureCredential
 
 import datetime
-import json
 import ast
 import os
 import logging
@@ -30,7 +29,7 @@ credential = DefaultAzureCredential()
 @app.event_hub_message_trigger(arg_name="event",
                                event_hub_name=EVENT_HUB_NAME,
                                connection="EVENT_HUB_CONNECTION_STR")
-def eventGridTest(event: func.EventHubEvent):
+def resolve_action_event(event: func.EventHubEvent):
     message = ast.literal_eval(event.get_body().decode('utf-8'))
     logging.info(f'Python EventHub trigger processed an messasge: {message} : {type(message)}')
     c = cmdb_graph.CosmosdbClient()
@@ -46,7 +45,7 @@ def eventGridTest(event: func.EventHubEvent):
 @app.schedule(schedule="0 */2 * * * *", 
               arg_name="mytimer",
               run_on_startup=True) 
-def test_function(mytimer: func.TimerRequest) -> None:
+def actopm_resolver(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
     if mytimer.past_due:
@@ -60,10 +59,10 @@ def test_function(mytimer: func.TimerRequest) -> None:
 
 # UTU is the universal time unit
 @app.function_name(name="ututimer")
-@app .schedule(schedule="0 */2 * * * *", 
+@app.schedule(schedule="0 */2 * * * *", 
               arg_name="mytimer",
               run_on_startup=True) 
-def test_function(mytimer: func.TimerRequest) -> None:
+def uit_timer(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
     if mytimer.past_due:
