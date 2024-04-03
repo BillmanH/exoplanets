@@ -3,7 +3,6 @@ from azure.eventhub.aio import EventHubProducerClient
 from azure.identity.aio import DefaultAzureCredential
 
 import datetime
-import json
 import ast
 import os
 import logging
