@@ -60,7 +60,7 @@ def test_function(mytimer: func.TimerRequest) -> None:
 
 # UTU is the universal time unit
 @app.function_name(name="ututimer")
-@app .schedule(schedule="0 */2 * * * *", 
+@app.schedule(schedule="0 */2 * * * *", 
               arg_name="mytimer",
               run_on_startup=True) 
 def test_function(mytimer: func.TimerRequest) -> None:
