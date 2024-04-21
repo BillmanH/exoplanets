@@ -25,7 +25,7 @@ class Baseobject:
             "label":self.label
         }
     def __repr__(self) -> str:
-        return f"<{self.label}: {self.type if hasattr(self, 'type') else None}; {self.uuid}; {self.name}>"
+        return f"<{self.label}: {self.type if hasattr(self, 'type') else None}; {self.objid}; {self.name}>"
 
 class NewGame():
     def __init__(self,data):
