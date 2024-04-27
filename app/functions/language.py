@@ -2,14 +2,13 @@ import pickle
 import numpy as np
 import os
 
-if os.getenv("ABS_PATH") is not None:
-    syllables = pickle.load(open(os.path.join(os.getenv("ABS_PATH"),"app/creators/specs/syllables.p"), "rb"))
-    syllables_dist = pickle.load(open(os.path.join(os.getenv("ABS_PATH"),"app/creators/specs/syllables_dist.p"), "rb"))
-else:
-    syllables = pickle.load(open("app/creators/specs/syllables.p", "rb"))
-    syllables_dist = pickle.load(open("app/creators/specs/syllables_dist.p", "rb"))
-
+abs_path = os.getenv("ABS_PATH",".")
 # See `notebooks/Naming Things.ipynb` for the logic
+
+
+syllables = pickle.load(open(os.path.join(abs_path,"app/creators/specs/syllables.p"), "rb"))
+syllables_dist = pickle.load(open(os.path.join(abs_path,"app/creators/specs/syllables_dist.p"), "rb"))
+
 
 # Makes random words using syllables
 def make_word(n):

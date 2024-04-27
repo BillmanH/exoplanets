@@ -1,83 +1,107 @@
 import pandas as pd
 import numpy as np
 import logging
-from app.objects import time
+from app.objects import species
 from app.objects import population
 from app.functions import language
+from app.functions import maths
 
 
-
-
-def grow(c,params):
-
-    def get_faction(objid):
-        res = [i for i in factions if i.objid == objid]
-        return res[0]
-    
+def calculate_growth(c,t,params):
     # Get data regarding growth
-    global_health_manager = population.Global_Pop_Manager(params,c)
-    global_health_manager.get_pop_health()
+    healthy_pops_query = f"""
+            g.V().has('label','pop')
+                .has('health',gt({params.get("pop_health_requirement")})).as('pop')
+                .values('objid','health','wealth')
+            """
+    c.run_query(healthy_pops_query)
 
-    pops_df = pd.DataFrame([d['pop'] for d in global_health_manager.data])
-    species_df = pd.DataFrame([d['species'] for d in global_health_manager.data])
-    locations_df = pd.DataFrame([d['location'] for d in global_health_manager.data])
-    factions_df = pd.DataFrame([d['faction'] for d in global_health_manager.data])
+    a = np.array(c.res)
+    np.split(a,len(a)/3)
+    pops_df = pd.DataFrame(np.split(a,len(a)/3),columns=['objid','health','wealth'])
+    pops_df[['health','wealth']] = pops_df[['health','wealth']].astype(float)
 
-    if len(pops_df)==0:
+    # Add random roll to each pop
+    pops_df['roll'] = pops_df['objid'].apply(lambda x: np.random.random())
+    pops_df['grow'] = pops_df[['wealth','health']].T.mean() >= pops_df['roll']
+    reproducing_pops = pops_df[pops_df['grow']].drop(['roll','grow'],axis=1).reset_index(drop=True)
+
+
+    messages = []
+    if len(reproducing_pops)==0:
         logging.info(f'**** No pops capable of reproducing ****')
-        reproducing_pops = []
-
-    # facilitate the die roll
-    else:
-        pops_df['roll'] = pops_df['objid'].apply(lambda x: np.random.random())
-        pops_df['grow'] = pops_df[['wealth','health']].T.mean() >= pops_df['roll']
-
-        reproducing_pops = pops_df[pops_df['grow']].drop(['roll','grow'],axis=1)
-
+        logging.info(f"**** Growth Complete *****")
+        return messages
+    
     if len(reproducing_pops)>0:
-        
         logging.info(f"{len(reproducing_pops)} of {len(pops_df)} pops will grow")
-        species = [population.species.Species(species_df.drop_duplicates().T.to_dict()[i]) for i in  species_df.drop_duplicates().T.to_dict().keys()]
-        for i in species:
-            global_health_manager.species_dict[i.objid]=i
-        factions = [population.Faction(factions_df.drop_duplicates().T.to_dict()[i]) for i in  factions_df.drop_duplicates().T.to_dict().keys()]
 
-        children = []
-        events = []
-        event_edges = []
-        for i in reproducing_pops.index.to_list():
-            s = global_health_manager.species_dict[species_df.loc[i].to_dict()['objid']]
-            p = reproducing_pops.loc[i].to_dict()
-            #adding the current pop as a defautl to the species.
-            s.config['defaults'] = p
-            f = factions_df.loc[i].to_dict()
-            l = locations_df.loc[i].to_dict()
-            child = population.Pop(s)
-            child.birthplace = l
-            child.inhabitsEdge = {"node1": child.objid, "node2": l['objid'], "label": "inhabits"}
-            child.name = p['name']+language.make_word(1).lower()
-            get_faction(f['objid']).assign_pop_to_faction(child)
-            event = global_health_manager.population_growth_event(p,l,child)
-            events.append(event)
-            event_edges.append({"node1": event['objid'], "node2": l['objid'], "label": "happenedAt"})
-            event_edges.append({"node1": p['objid'], "node2": event['objid'], "label": "caused"})
-            children.append(child)    
+        for parent_pop in reproducing_pops.to_dict(orient='records'):
+            logging.info(f"Growing Pop {parent_pop['objid']}")
+            messages.append(get_growth_message(parent_pop))
+        logging.info(f"**** Growth Complete *****")
+        return messages
 
-        factionedges = []
-        [f.get_pop_edges(factionedges) for f in factions]
-        childofEdges = [c.childOf for c in children]
-        isOfEdges = [c.isOfSpecies for c in children]
-        inhabitsEdges = [c.inhabitsEdge for c in children]
+    
 
-        logging.info(f"Expecting {len(reproducing_pops)} children, got {len(children)}")
-        logging.info(f"Expecting event_edges {len(event_edges)} (both caused and happenedAt)")
+def get_growth_message(pop):
+    message = {"agent":pop,"action":"reproduce"}
+    return message
+    
+def grow_population(c,t, parent_pop):
+    query_pop_species_faction = f"""
+            g.V().has('objid','{parent_pop["objid"]}')
+                .local(
+                    union(
+                        out('inhabits').as('location'),
+                        out('isOf').as('species'),
+                        out('isIn').as('faction')
+                        )
+                        .fold()).as('pop','location','species','faction')
+                    .path()
+                    .by(unfold().valueMap().fold())
+            """
 
-        data = {"nodes":[c.get_data() for c in children] + events ,"edges":isOfEdges + inhabitsEdges + childofEdges + factionedges + event_edges }
-        print(f"The final dataset is {len(data.get('nodes'))} nodes and {len(data.get('edges'))} edges")
-        logging.info(f"Population Growth Data Started")
-        c.upload_data('notebook',data)
-        logging.info(f"Population Growth Data Complete")
-    else:
-        logging.info(f"zero population growth")
 
-    logging.info(f"**** Growth Complete *****")
+    c.run_query(query_pop_species_faction)
+    # creating some data objects
+    pop_dict = c.clean_node(c.res[0]['objects'][0][0])
+    loc_dict = c.clean_node(c.res[0]['objects'][1][0])
+    sp_dict = c.clean_node(c.res[0]['objects'][1][1])
+    fact_dict = c.clean_node(c.res[0]['objects'][1][2])
+
+    # creating the objects
+    sp = species.Species(sp_dict)
+    sp.config['defaults'] = pop_dict
+
+    # the child
+    child = population.Pop(sp)
+    child.name = sp.config['defaults']['name']+language.make_word(1).lower()
+    child_data = child.get_data()
+    child_data['userguid'] = pop_dict['userguid'] 
+    
+    isIn_edge = child.get_isInFaction()
+    isIn_edge['node2'] = fact_dict['objid']
+    
+    inhabits_edge = {'node1': child.objid, 'node2': loc_dict['objid'], 'label': 'inhabits'}
+
+    event = population_growth_event(t,pop_dict,loc_dict,child)
+    event_edge = {'node1': child.objid, 'node2': event['objid'], 'label': 'caused'}
+
+    data = {"nodes":[child_data, event] ,"edges":[inhabits_edge,child.isOfSpecies,isIn_edge,event_edge] }
+    c.upload_data(pop_dict['userguid'],data)
+    return data
+
+
+def population_growth_event(t,parent,location,child):
+    node = {
+        'objid':maths.uuid(),
+        'name':'population growth',
+        'label':'event',
+        'text': f"The population ({parent['name']}) inhabiting {location['name']} has grown to produce the population: {child.name}.",
+        'visibleTo':parent['userguid'],
+        'time':t.params['currentTime'],
+        'userguid':parent['userguid'],
+        'source':'notebook'
+    }
+    return node
