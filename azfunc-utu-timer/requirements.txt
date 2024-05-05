@@ -1,0 +1,16 @@
+pip
+requests
+pyOpenSSL
+
+gremlinpython==3.5.1
+scikit-learn
+pyyaml
+pandas
+openai
+psycopg2-binary==2.9.2
+cryptography
+azure-functions
+azure-eventhub
+azure-identity
+azure-eventhub-checkpointstoreblob-aio
+
