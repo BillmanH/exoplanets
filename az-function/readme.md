@@ -24,3 +24,4 @@ traces
 | order by timestamp desc
 | limit 50
 ```
+.
