@@ -25,3 +25,5 @@ traces
 | limit 50
 ```
 .
+
+If one of the errors shows `0 functions loaded`, this could mean that a syntax error in your code prevented the function from loading. 
