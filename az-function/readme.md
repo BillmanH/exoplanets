@@ -21,6 +21,7 @@ Troubleshooting in the loggs:
 # Kusto in Application insights
 ```kusto
 traces
+| where customDimensions.LogLevel == "Information"
 | order by timestamp desc
 | limit 50
 ```

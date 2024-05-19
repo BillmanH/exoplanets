@@ -24,8 +24,6 @@ EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 
-eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
-credential = DefaultAzureCredential() 
 
 # func start --functions [a space separated list of functions]
 # func start --functions actionResolverTimer resolveActionEvents ututimer
@@ -53,8 +51,10 @@ def resolve_action_event(event: func.EventHubEvent):
 @app.function_name(name="actionResolverTimer")
 @app.schedule(schedule="0 */5 * * * *", 
               arg_name="mytimer",
-              run_on_startup=True) 
-def actopm_resolver(mytimer: func.TimerRequest) -> None:
+              run_on_startup=False) 
+def action_resolver(mytimer: func.TimerRequest) -> None:
+    eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
+    credential = DefaultAzureCredential() 
     utc_timestamp = datetime.datetime.now(datetime.timezone.utc).replace(
         tzinfo=datetime.timezone.utc).isoformat()
     c = cmdb_graph.CosmosdbClient()
@@ -74,8 +74,8 @@ def actopm_resolver(mytimer: func.TimerRequest) -> None:
 @app.function_name(name="ututimer")
 @app.schedule(schedule="0 */5 * * * *", 
               arg_name="mytimer",
-              run_on_startup=True) 
-def uit_timer(mytimer: func.TimerRequest) -> None:
+              run_on_startup=False) 
+def utu_timer(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
     if mytimer.past_due:

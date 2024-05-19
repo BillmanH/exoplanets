@@ -5,8 +5,12 @@ import logging
 
 
 # note that languages should get this file from the same location in the az function. This will be different for the app
-syllables = pickle.load(open("/home/site/wwwroot/syllables.p", "rb"))
-syllables_dist = pickle.load(open("/home/site/wwwroot/syllables_dist.p", "rb"))
+try:
+    syllables = pickle.load(open("/home/site/wwwroot/syllables.p", "rb"))
+    syllables_dist = pickle.load(open("/home/site/wwwroot/syllables_dist.p", "rb"))
+except:
+    syllables = pickle.load(open("syllables.p", "rb"))
+    syllables_dist = pickle.load(open("syllables_dist.p", "rb"))
 
 # See `notebooks/Naming Things.ipynb` for the logic
 
