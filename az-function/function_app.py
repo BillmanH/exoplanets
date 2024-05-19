@@ -43,7 +43,7 @@ def resolve_action_event(event: func.EventHubEvent):
         action.add_updates_to_c(t)
         c.upload_data(action.agent['userguid'], action.data)
         logging.info(f'EXOADMIN:       -------And with that processed an action: {action} at UTU:{t}')
-    if message.get('action')=="rerpoduce":
+    if message.get('action')=="reproduce":
         growth.grow_population(c,t, message['agent'])
         logging.info(f'EXOADMIN:       -------And with that processed reproduction: {action} at UTU:{t}')
 
