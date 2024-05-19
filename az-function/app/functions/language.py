@@ -6,8 +6,8 @@ import logging
 print("Loading syllables from: " + os.getcwd())
 
 # note that languages should get this file from the same location in the az function. This will be different for the app
-syllables = pickle.load(open(os.path.join("app","functions","syllables.p"), "rb"))
-syllables_dist = pickle.load(open(os.path.join("app","functions","syllables_dist.p"), "rb"))
+syllables = pickle.load(open("/home/site/wwwroot/syllables.p", "rb"))
+syllables_dist = pickle.load(open("/home/site/wwwroot/syllables_dist.p", "rb"))
 
 # See `notebooks/Naming Things.ipynb` for the logic
 
