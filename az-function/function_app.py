@@ -36,7 +36,7 @@ credential = DefaultAzureCredential()
                                connection="EVENT_HUB_CONNECTION_STR")
 def resolve_action_event(event: func.EventHubEvent):
     message = ast.literal_eval(event.get_body().decode('utf-8'))
-    logging.info(f'Python EventHub trigger processed an messasge: {message} : {type(message)}')
+    logging.info(f'EXOADMIN: Python EventHub trigger processed an messasge: {message} : {type(message)}')
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()
@@ -44,10 +44,10 @@ def resolve_action_event(event: func.EventHubEvent):
         action = time.Action(c,message)
         action.add_updates_to_c(t)
         c.upload_data(action.agent['userguid'], action.data)
-        logging.info(f'      -------And with that processed an action: {action} at UTU:{t}')
+        logging.info(f'EXOADMIN:       -------And with that processed an action: {action} at UTU:{t}')
     if message.get('action')=="rerpoduce":
         growth.grow_population(c,t, message['agent'])
-        logging.info(f'      -------And with that processed reproduction: {action} at UTU:{t}')
+        logging.info(f'EXOADMIN:       -------And with that processed reproduction: {action} at UTU:{t}')
 
 # Check the open actions and resolve them
 @app.function_name(name="actionResolverTimer")
@@ -68,7 +68,7 @@ def actopm_resolver(mytimer: func.TimerRequest) -> None:
 
     messages = growth_messasges + job_messages
     jobs.send_to_eventhub(messages, eh_producer)
-    logging.info(f'Total Messages sent to EH: {len(messages)} at: {utc_timestamp}')
+    logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {utc_timestamp}')
 
 # UTU is the universal time unit
 @app.function_name(name="ututimer")
@@ -79,31 +79,10 @@ def uit_timer(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
     if mytimer.past_due:
-        logging.info('The timer is past due!')
+        logging.info('EXOADMIN: The timer is past due!')
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()
     r = t.global_ticker()
-    logging.info(f'UTU was updated, result: {r} at: {utc_timestamp}')
+    logging.info(f'EXOADMIN: UTU was updated, result: {r} at: {utc_timestamp}')
 
-
-# @app.route(route="HttpExample", auth_level=func.AuthLevel.ANONYMOUS)
-# def HttpExample(req: func.HttpRequest) -> func.HttpResponse:
-#     logging.info('Python HTTP trigger function processed a request.')
-
-#     name = req.params.get('name')
-#     if not name:
-#         try:
-#             req_body = req.get_json()
-#         except ValueError:
-#             pass
-#         else:
-#             name = req_body.get('name')
-
-#     if name:
-#         return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-#     else:
-#         return func.HttpResponse(
-#              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-#              status_code=200
-#         )

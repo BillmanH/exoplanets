@@ -3,7 +3,6 @@ import numpy as np
 import os
 import logging
 
-print("Loading syllables from: " + os.getcwd())
 
 # note that languages should get this file from the same location in the az function. This will be different for the app
 syllables = pickle.load(open("/home/site/wwwroot/syllables.p", "rb"))

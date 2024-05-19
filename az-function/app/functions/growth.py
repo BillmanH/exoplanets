@@ -29,17 +29,17 @@ def calculate_growth(c,t,params):
 
     messages = []
     if len(reproducing_pops)==0:
-        logging.info(f'**** No pops capable of reproducing ****')
-        logging.info(f"**** Growth Complete *****")
+        logging.info(f'EXOADMIN: **** No pops capable of reproducing ****')
+        logging.info(f"EXOADMIN: **** Growth Complete *****")
         return messages
     
     if len(reproducing_pops)>0:
         logging.info(f"{len(reproducing_pops)} of {len(pops_df)} pops will grow")
 
         for parent_pop in reproducing_pops.to_dict(orient='records'):
-            logging.info(f"Growing Pop {parent_pop['objid']}")
+            logging.info(f"EXOADMIN: Growing Pop {parent_pop['objid']}")
             messages.append(get_growth_message(parent_pop))
-        logging.info(f"**** Growth Complete *****")
+        logging.info(f"EXOADMIN: **** Growth Complete *****")
         return messages
 
     
