@@ -1,0 +1,82 @@
+planet_types: 
+  dwarf:
+    name: dwarf
+    count: 6.0
+    prob: 0.42857142857142855
+    mass_mean: 0.0011061666666666668
+    mass_std: 0.0011102811205576121
+    radius_mean: 0.129
+    radius_std: 0.04591683787021923
+    distance_min: 30
+    distance_max: 50
+    has_atmosphere: false
+
+  gas:
+    name: gas
+    count: 2.0
+    prob: 0.14285714285714285
+    mass_mean: 206.49599999999998
+    mass_std: 157.45005275324613
+    radius_mean: 10.055
+    radius_std: 1.2940054095713813
+    distance_min: 5.2
+    distance_max: 10
+    has_atmosphere: true
+
+  ice: 
+    name: ice
+    count: 2.0
+    prob: 0.14285714285714285
+    mass_mean: 15.8415
+    mass_std: 1.846255805678074
+    radius_mean: 3.923
+    radius_std: 0.08202438661763928
+    distance_min: 15
+    distance_max: 29
+    has_atmosphere: false
+
+  terrestrial: 
+    name: terrestrial
+    count: 4.0
+    prob: 0.2857142857142857
+    mass_mean: 0.49432499999999996
+    mass_std: 0.4834953524423305
+    radius_mean: 0.7162
+    radius_std: 0.3056014070648236
+    distance_min: 0.39
+    distance_max: 1.52
+    has_atmosphere: true
+    resources:
+      vegitation:
+        name: "organics"
+        type: "vegitable"
+        description: "bilogical material that can be consumed by pops"
+        mean: 1000
+        std: 100
+        replenish_rate: 10
+      minerals_common:
+        name: "common minerals"
+        type: "mineral"
+        description: "Iron and other common material used in constructuion of infrastructure" 
+        mean: 100
+        std: 10
+      minerals_rare:
+        name: "rare minerals"
+        type: "mineral"
+        description: "lithium, silver and other rare minerals used in infrastructure and technology"
+        mean: 50
+        std: 10
+      water:
+        name: "water"
+        type: "mineral"
+        description: "H2O ready to be consumed, either frozen or in ice format"
+        mean: 10000
+        std: 1000
+    
+
+
+
+
+
+
+

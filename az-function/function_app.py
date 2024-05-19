@@ -58,7 +58,7 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.now(datetime.timezone.utc).replace(
         tzinfo=datetime.timezone.utc).isoformat()
     c = cmdb_graph.CosmosdbClient()
-    params = yaml.safe_load(open(os.path.join(os.getenv("abspath"),"app/configurations/popgrowthconfig.yaml")))
+    params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/popgrowthconfig.yaml")))
     # Establish the time
     t = time.Time(c)
     t.get_current_UTU()
