@@ -19,7 +19,7 @@ from app.functions import jobs
 from app.functions import growth
 
 
- 
+RUNNING_LOCALLY = False
 EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
@@ -51,7 +51,7 @@ def resolve_action_event(event: func.EventHubEvent):
 @app.function_name(name="actionResolverTimer")
 @app.schedule(schedule="0 */5 * * * *", 
               arg_name="mytimer",
-              run_on_startup=False) 
+              run_on_startup=RUNNING_LOCALLY) 
 def action_resolver(mytimer: func.TimerRequest) -> None:
     eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
     credential = DefaultAzureCredential() 
@@ -74,7 +74,7 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
 @app.function_name(name="ututimer")
 @app.schedule(schedule="0 */5 * * * *", 
               arg_name="mytimer",
-              run_on_startup=False) 
+              run_on_startup=RUNNING_LOCALLY) 
 def utu_timer(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
