@@ -45,7 +45,7 @@ def resolve_action_event(event: func.EventHubEvent):
         logging.info(f'EXOADMIN:       -------And with that processed an action: {action} at UTU:{t}')
     if message.get('action')=="reproduce":
         growth.grow_population(c,t, message['agent'])
-        logging.info(f'EXOADMIN:       -------And with that processed reproduction: {action} at UTU:{t}')
+        logging.info(f"EXOADMIN:       -------And with that processed reproduction: {message['agent']} at UTU:{t}")
 
 # Check the open actions and resolve them
 @app.function_name(name="actionResolverTimer")
