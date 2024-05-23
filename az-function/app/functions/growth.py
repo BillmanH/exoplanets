@@ -17,7 +17,6 @@ def calculate_growth(c,t,params):
     c.run_query(healthy_pops_query)
 
     a = np.array(c.res)
-    np.split(a,len(a)/3)
     pops_df = pd.DataFrame(np.split(a,len(a)/3),columns=['objid','health','wealth'])
     pops_df[['health','wealth']] = pops_df[['health','wealth']].astype(float)
 
