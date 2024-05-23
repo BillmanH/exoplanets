@@ -9,6 +9,7 @@ from app.functions import maths
 
 def calculate_growth(c,t,params):
     # Get data regarding growth
+    logging.info(f"EXOADMIN: health requirement {params.get("pop_health_requirement")}")
     healthy_pops_query = f"""
             g.V().has('label','pop')
                 .has('health',gt({params.get("pop_health_requirement")})).as('pop')
@@ -17,6 +18,7 @@ def calculate_growth(c,t,params):
     c.run_query(healthy_pops_query)
 
     a = np.array(c.res)
+    logging.info(f"EXOADMIN: healthy_pops_query {c.res}")
     pops_df = pd.DataFrame(np.split(a,len(a)/3),columns=['objid','health','wealth'])
     pops_df[['health','wealth']] = pops_df[['health','wealth']].astype(float)
 
