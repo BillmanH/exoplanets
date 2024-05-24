@@ -9,7 +9,8 @@ from app.functions import maths
 
 def calculate_growth(c,t,params):
     # Get data regarding growth
-    logging.info(f"EXOADMIN: health requirement {params.get("pop_health_requirement")}")
+    messages = []
+    logging.info(f"EXOADMIN: health requirement {params.get('pop_health_requirement')}")
     healthy_pops_query = f"""
             g.V().has('label','pop')
                 .has('health',gt({params.get("pop_health_requirement")})).as('pop')
@@ -18,7 +19,10 @@ def calculate_growth(c,t,params):
     c.run_query(healthy_pops_query)
 
     a = np.array(c.res)
-    logging.info(f"EXOADMIN: healthy_pops_query {c.res}")
+    logging.info(f"EXOADMIN: healthy_pops_query {len(a)}")
+    if len(a)>=0:
+        logging.info(f"EXOADMIN: No pops that meet the pop_health_requirement")
+        return messages
     pops_df = pd.DataFrame(np.split(a,len(a)/3),columns=['objid','health','wealth'])
     pops_df[['health','wealth']] = pops_df[['health','wealth']].astype(float)
 
@@ -28,7 +32,6 @@ def calculate_growth(c,t,params):
     reproducing_pops = pops_df[pops_df['grow']].drop(['roll','grow'],axis=1).reset_index(drop=True)
 
 
-    messages = []
     if len(reproducing_pops)==0:
         logging.info(f'EXOADMIN: **** No pops capable of reproducing ****')
         logging.info(f"EXOADMIN: **** Growth Complete *****")
