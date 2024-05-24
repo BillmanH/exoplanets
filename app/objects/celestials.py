@@ -42,6 +42,7 @@ class Body:
         self.name = "unnamed"
         self.atmosphere = None
         self.resources = []
+        self.pop_cap = 100 # Natural population cap
 
     def make_name(self, n1, n2):
         self.name = language.make_word(maths.rnd(n1, n2))
@@ -52,6 +53,7 @@ class Body:
             "class": self.type,
             "objid": self.objid,
             "label": self.label,
+            "pop_cap": self.pop_cap,
         }
         if self.atmosphere:
             fundamental_data["atmosphere"] = self.atmosphere
