@@ -1,0 +1,49 @@
+explanation:
+  - type: all buildings have a 'type'/'label' of building
+  - name: name_with_underscore. UI can remove the '_' at display time.
+  - augments_resource: OPTIONAL augments a specific resource, creates it if it does not exist
+  - built_by: type of object that can build the building
+  - owned_by: type of object that can own/maintain this building, assuming a relationhsip to that object
+  - changes: stats changed by the owner
+  - faction_augments: if owned by a pop in the faction,  raises the stat for all pops in factions
+  - effort: "time in `universal time units` that the action will take to complete"
+  - requires_attr: required attributes of the agent. Determines if the agent can do the action.
+  - render_type: "guides the rendering in buildings.js. Available types: 'block'"
+
+buildings:
+  -
+    name: farmland
+    description: "Generates organic foodstuffs, populations will consume food before consuming natural resources"
+    planet_requirements: {'isHabitable':'true'}
+    augments_resource: {'vegitable_foodstuff':10}
+    changes: 
+      wealth: -0.01
+    owned_by: pop
+    effort: 1
+    render_type: 'block'
+
+  - 
+    name: hospital
+    description: "Boosts the health of all populations in this faction."
+    owned_by: pop
+    changes: 
+      wealth: -0.01
+    faction_augments:
+      health: 0.01
+    effort: 3
+    requires_attr: 
+      industry: .6
+    render_type: 'block'
+
+  -
+    name: solar_panel
+    description: "Generates wealth for all populations in this faction except the owner"
+    owned_by: pop
+    effort: 3
+    changes: 
+      wealth: -0.01
+    faction_augments:
+      wealth: 0.01
+    requires_attr: 
+      industry: .51
+    render_type: 'block'

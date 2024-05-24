@@ -25,7 +25,7 @@ def all_pops_consumption(c):
     pops_df = pd.DataFrame([d['pop'] for d in data])
     species_df = pd.DataFrame([d['species'] for d in data])
     locations_df = pd.DataFrame([d['location'] for d in data])
-    logging.info(f"A total of {len(pops_df)} are about to be processed for consumption")
+    logging.info(f"EXOADMIN: A total of {len(pops_df)} are about to be processed for consumption")
     return(pops_df,species_df,locations_df)
 
 def get_consumption_df(locations_df,species_df,params):
@@ -38,7 +38,7 @@ def get_consumption_df(locations_df,species_df,params):
 
     consumption_df.columns = ['location_id','consumes','pop']
     consumption_df['consumption'] = consumption_df['pop'] * params['pop_consumes']
-    logging.info(f"A total of {consumption_df['pop'].sum()} pops will consume {consumption_df['consumption'].sum()} resources")
+    logging.info(f"EXOADMIN: A total of {consumption_df['pop'].sum()} pops will consume {consumption_df['consumption'].sum()} resources")
     return consumption_df
 
 def expand_consumption_df(consumption_df):
@@ -61,12 +61,12 @@ def make_resource_query(consumption_df):
     consumesstring = get_unique_consumption_values(consumption_df['consumes'].drop_duplicates().tolist())
     query = f"g.V().has('objid',within('{withinstring}')).as('location')"
     query += f".out('has').has('name',within({consumesstring})).as('resource').path().by(valueMap('objid','name')).by(valueMap('volume','objid','name'))"
-    logging.info(f'Resources to consume: {consumesstring}')
+    logging.info(f'EXOADMIN: Resources to consume: {consumesstring}')
     return query
 
 def make_resource_update_query(c,x):
     query = f"g.V().has('objid','{x.location_id}').out('has').has('name','{x.consumes}').property('volume',{int(x.remaining)})"
-    logging.info(f'{x.location_id} consumed {x.consumes}: {x.consumption}, remaining: {x.remaining}')
+    logging.info(f'EXOADMIN: {x.location_id} consumed {x.consumes}: {x.consumption}, remaining: {x.remaining}')
     c.run_query(query)
 
 def tally_consumption(c,consumption_df,resources):
@@ -162,7 +162,7 @@ def lower_health(c,params,x):
             c.add_query(e)
     # logging.info(f'stack: {len(c.stack)}')
     c.run_queries()
-    logging.info(f'Total deaths due to starvation at {x.location_id}: {all_death}')
+    logging.info(f'EXOADMIN: Total deaths due to starvation at {x.location_id}: {all_death}')
 
 
 # this is the 'main' function:       

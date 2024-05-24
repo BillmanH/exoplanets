@@ -2,6 +2,7 @@
 pop_health_requirement: .7
 pop_consumes: 2
 starve_damage: .05
+
 changing_values:
   - conformity
   - literacy

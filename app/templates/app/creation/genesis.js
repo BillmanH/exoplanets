@@ -128,6 +128,9 @@ function delete_existing_game(c,n) {
             cnsl(data)
             d3.selectAll('#loading').remove()
             form_solar_system()
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.status + ': ' + xhr.statusText);
         }
     });
 }

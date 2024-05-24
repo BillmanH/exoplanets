@@ -1,13 +1,16 @@
 import pickle
 import numpy as np
 import os
+import logging
 
-if os.getenv("ABS_PATH") is not None:
-    syllables = pickle.load(open(os.path.join(os.getenv("ABS_PATH"),"app/creators/specs/syllables.p"), "rb"))
-    syllables_dist = pickle.load(open(os.path.join(os.getenv("ABS_PATH"),"app/creators/specs/syllables_dist.p"), "rb"))
-else:
-    syllables = pickle.load(open("app/creators/specs/syllables.p", "rb"))
-    syllables_dist = pickle.load(open("app/creators/specs/syllables_dist.p", "rb"))
+
+# note that languages should get this file from the same location in the az function. This will be different for the app
+try:
+    syllables = pickle.load(open("/home/site/wwwroot/syllables.p", "rb"))
+    syllables_dist = pickle.load(open("/home/site/wwwroot/syllables_dist.p", "rb"))
+except:
+    syllables = pickle.load(open("syllables.p", "rb"))
+    syllables_dist = pickle.load(open("syllables_dist.p", "rb"))
 
 # See `notebooks/Naming Things.ipynb` for the logic
 

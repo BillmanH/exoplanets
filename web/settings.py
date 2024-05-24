@@ -26,6 +26,8 @@ if stage == "prod":
 if stage == "dev":
     DEBUG = True
 
+abs_path = os.environ.get('ABS_PATH','.')
+
 # Using pipe delimeted string to allow the environment vars to separate a list of hosts. 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS","ERROR: `ALLOWED_HOSTS` NOT FOUND IN ENVIRONMENT VARIABLES").split('|')
 
@@ -122,7 +124,6 @@ USE_TZ = True
 # STATIC_URL = "/static/"
 if stage == "predeploymigrations":
     log_path = "not_really_running.log"
-    abs_path = os.environ.get('ABS_PATH','.')
     STATIC_ROOT = 'static'
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
