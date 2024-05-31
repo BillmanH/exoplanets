@@ -194,6 +194,31 @@ class CosmosdbClient():
             fab.append(t)
         return fab
 
+    def split_list_to_dict(self,lst,cols):
+        """
+        Some queries return a list of items that repeats. this breaks them down, but you have to know the column names. 
+        **Note** that this requres that the length of the list is divisible by the length of the columns.
+        example:
+        ```
+        ['Damshamunling',
+        'planet',
+        '6135767546801',
+        'Teinspringsgio',
+        'planet',
+        '9482778660790']
+        
+        split_list_to_dict(c.res, ['name','label','objid'])
+        ```
+        turns into 
+        ```
+        [{'name': 'Damshamunling', 'label': 'planet', 'objid': '6135767546801'},
+        {'name': 'Teinspringsgio', 'label': 'planet', 'objid': '9482778660790'}]
+        ```
+        """
+        n_items = int(len(lst)/len(cols))
+        res_dct = [{cols[i]:lst[(n_items*j)+i+j] for i in range(len(cols))} for j in range(n_items)]
+        return res_dct
+
     def test_fields(self,data):
         for n in data['nodes']:
             n['id']=n['objid']

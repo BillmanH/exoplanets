@@ -3,58 +3,42 @@ import numpy as np
 import logging
 import yaml
 
-def get_unique_consumption_values(x):
-    y = [f"'{i.strip('][')}'" for i in x]
-    y = ",".join(y)
-    return y
+from functools import reduce
+import operator
 
-def all_pops_consumption(c):
-    all_pops_query = f"""
-    g.V().has('label','pop').as('pop')
-        .local(
-            union(
-                out('inhabits').as('location'),
-                out('isOf').as('species')
-                )
-                .fold()).as('location','species')
-            .path()
-            .by(unfold().valueMap().fold())
+# static queries that don't require variables
+count_of_consumed_query = f"""
+g.E()
+    .has('label','inhabits').outV()
+    .out('inhabits').dedup().values('name','label','objid')
+"""
+
+# count_of_consumed = f"""
+# g.V().has('objid','{resourceId}').as('resource')
+#     .in('has').out('inhabits').as('planet').groupcount().by('name').as('planet').path()
+# """
+
+def get_planets_consumption(c,planetId):
+    count_of_consumed = f"""
+    g.V().has('objid','{planetId}').as('planet')
+        .in('inhabits').out('isOf').as('species').groupcount().by('consumes').as('consumes').path()
     """
-    c.run_query(all_pops_query)
-    data = c.reduce_res(c.res)
-    pops_df = pd.DataFrame([d['pop'] for d in data])
-    species_df = pd.DataFrame([d['species'] for d in data])
-    locations_df = pd.DataFrame([d['location'] for d in data])
-    logging.info(f"EXOADMIN: A total of {len(pops_df)} are about to be processed for consumption")
-    return(pops_df,species_df,locations_df)
+    c.run_query(count_of_consumed)
+    return reduce(operator.concat, [i['objects'] for i in c.res])
 
-def get_consumption_df(locations_df,species_df,params):
-    consumption_df = pd.DataFrame(pd.concat([
-            locations_df,species_df.drop('objid',axis=1)
-        ],axis=1).groupby([
-            'objid',
-            'consumes'
-            ]).count().iloc[:,1]).reset_index()
+def get_consuming_planets(c):
+    c.run_query(count_of_consumed_query)
+    planets_that_have_pops = c.split_list_to_dict(c.res, ['name','label','objid'])
+    # for each planet, get the consumption
+    for iter,item in enumerate(planets_that_have_pops):
+        planets_that_have_pops[iter]['consumes'] = get_planets_consumption(c,planets_that_have_pops[0]['objid'])
+    return planets_that_have_pops
 
-    consumption_df.columns = ['location_id','consumes','pop']
-    consumption_df['consumption'] = consumption_df['pop'] * params['pop_consumes']
-    logging.info(f"EXOADMIN: A total of {consumption_df['pop'].sum()} pops will consume {consumption_df['consumption'].sum()} resources")
-    return consumption_df
 
-def expand_consumption_df(consumption_df):
-    consumption_df['multi'] = consumption_df['consumes'].apply(lambda x: '[' in x )
 
-    multi_consumption = pd.DataFrame(columns=consumption_df.columns)
 
-    for i in consumption_df[consumption_df['multi']].index:
-        l = yaml.safe_load(consumption_df.loc[i,'consumes'])
-        for j in l:
-            ser = consumption_df.loc[i]
-            ser.consumes = j
-            multi_consumption.loc[i] = ser
-    consumption_df = consumption_df[consumption_df['multi']==False]
-    consumption_df = pd.concat([consumption_df,multi_consumption]).reset_index(drop=True)
-    return consumption_df
+
+
 
 def make_resource_query(consumption_df):
     withinstring = "','".join(consumption_df['location_id'].drop_duplicates().tolist())

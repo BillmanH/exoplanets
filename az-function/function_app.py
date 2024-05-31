@@ -17,6 +17,7 @@ from app.objects import time
 from app.connectors import cmdb_graph
 from app.functions import jobs
 from app.functions import growth
+from app.functions import consumption
 
 
 RUNNING_LOCALLY = False
@@ -46,6 +47,7 @@ def resolve_action_event(event: func.EventHubEvent):
     if message.get('action')=="reproduce":
         growth.grow_population(c,t, message['agent'])
         logging.info(f"EXOADMIN:       -------And with that processed reproduction: {message['agent']} at UTU:{t}")
+        
 
 # Check the open actions and resolve them
 @app.function_name(name="actionResolverTimer")
