@@ -47,6 +47,9 @@ def resolve_action_event(event: func.EventHubEvent):
     if message.get('action')=="reproduce":
         growth.grow_population(c,t, message['agent'])
         logging.info(f"EXOADMIN:       -------And with that processed reproduction: {message['agent']} at UTU:{t}")
+    if message.get('action')=="consume":
+        # TOOD: Consumttion ation for single pop
+        pass
         
 
 # Check the open actions and resolve them
@@ -67,8 +70,8 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
 
     growth_messasges = growth.calculate_growth(c,t,params)
     job_messages = jobs.resolve_jobs(c,t,time.Action)
-
-    messages = growth_messasges + job_messages
+    consumption_messages = consumption.calculate_consumption(c,t)
+    messages = growth_messasges + job_messages + consumption_messages
     jobs.send_to_eventhub(messages, eh_producer)
     logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {utc_timestamp}')
 

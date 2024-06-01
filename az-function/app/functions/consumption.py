@@ -31,41 +31,19 @@ def get_consuming_planets(c):
     planets_that_have_pops = c.split_list_to_dict(c.res, ['name','label','objid'])
     # for each planet, get the consumption
     for iter,item in enumerate(planets_that_have_pops):
-        planets_that_have_pops[iter]['consumes'] = get_planets_consumption(c,planets_that_have_pops[0]['objid'])
+        planets_that_have_pops[iter]['consumes'] = get_planets_consumption(c,planets_that_have_pops[iter]['objid'])
     return planets_that_have_pops
 
+def calculate_consumption(c,t):
+    messages = []
+    consuming_planets = get_consuming_planets(c)
+    for planet in consuming_planets:
+        messages.append(get_consumption_message(planet))
+    return c.res
 
-
-
-
-
-
-def make_resource_query(consumption_df):
-    withinstring = "','".join(consumption_df['location_id'].drop_duplicates().tolist())
-    consumesstring = get_unique_consumption_values(consumption_df['consumes'].drop_duplicates().tolist())
-    query = f"g.V().has('objid',within('{withinstring}')).as('location')"
-    query += f".out('has').has('name',within({consumesstring})).as('resource').path().by(valueMap('objid','name')).by(valueMap('volume','objid','name'))"
-    logging.info(f'EXOADMIN: Resources to consume: {consumesstring}')
-    return query
-
-def make_resource_update_query(c,x):
-    query = f"g.V().has('objid','{x.location_id}').out('has').has('name','{x.consumes}').property('volume',{int(x.remaining)})"
-    logging.info(f'EXOADMIN: {x.location_id} consumed {x.consumes}: {x.consumption}, remaining: {x.remaining}')
-    c.run_query(query)
-
-def tally_consumption(c,consumption_df,resources):
-    for r in resources:
-        resource = c.clean_node(r['objects'][1])
-        location = c.clean_node(r['objects'][0])
-        consumption_df.loc[consumption_df['location_id']==location['objid'],'available'] = int(resource['volume'])
-    consumption_df['remaining'] = consumption_df['available']-consumption_df['consumption']
-    consumption_df.loc[consumption_df['remaining']<0,'remaining'] = -1
-    consumption_df['remaining'] = consumption_df['remaining'].fillna(-1)
-    return consumption_df
-
-
-def uuid(n=13):
-    return "".join([str(i) for i in np.random.choice(range(10), n)])
+def get_consumption_message(planet):
+    message = {"agent":planet,"action":"consume"}
+    return message
 
 
 def death_by_starvation_event(loc,pop,params):
