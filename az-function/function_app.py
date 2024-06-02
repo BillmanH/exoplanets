@@ -39,6 +39,7 @@ def resolve_action_event(event: func.EventHubEvent):
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()
+    logging.info(f'EXOADMIN: processing message: {message.get('action')} at UTU:{t}')
     if 'job' in message.keys():
         action = time.Action(c,message)
         action.add_updates_to_c(t)
@@ -77,11 +78,9 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
     job_messages = jobs.resolve_jobs(c,t,time.Action)
     consumption_messages = consumption.calculate_consumption(c,t)
     renewal_messages = growth.calculate_renewal(c,t,params)
-    messages = growth_messasges + job_messages + consumption_messages
+    messages = growth_messasges + job_messages + consumption_messages + renewal_messages
     jobs.send_to_eventhub(messages, eh_producer)
-    logging.info(f'EXOADMIN: Messages -  growth_messasges: {len(growth_messasges)} at: {utc_timestamp}')
-    logging.info(f'EXOADMIN: Messages -  job_messages: {len(job_messages)} at: {utc_timestamp}')
-    logging.info(f'EXOADMIN: Messages -  consumption_messages: {len(consumption_messages)} at: {utc_timestamp}')
+    logging.info(f'EXOADMIN: messages: job:{len(job_messages)}, growth:{len(growth_messasges)}, consumption:{len(consumption_messages)}, renewal:{len(renewal_messages)} - at: {utc_timestamp}')
     logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {utc_timestamp}')
 
 # UTU is the universal time unit
