@@ -46,6 +46,38 @@ def get_consumption_message(planet):
     return message
 
 
+def reduce_location_resource(c,message, consumption):
+    # find out if the location has the resource
+    objid = message['agent']['objid']
+    consuming = list(consumption.keys())[0]
+    quantity = list(consumption.values())[0]
+    resource_query = f"""
+    g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}').valuemap()
+    """
+    c.run_query(resource_query)
+    if len(c.res) != 1:
+        print(f"{objid} has a resource issue - c.res:{c.res}")
+    resource = c.clean_nodes(c.res)[0]
+    if resource['volume'] > quantity:
+        new_volume = resource['volume'] - quantity
+        patch_resource_query = f"""
+        g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}')
+            .property('volume', {new_volume})
+        """
+        c.run_query(patch_resource_query)
+        print(f"resources on {message['agent']['name']} reduced by {quantity}, {resource['volume']}-> {new_volume}")
+    if resource['volume'] <= quantity:
+        new_volume = 0
+        patch_resource_query = f"""
+        g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}')
+            .property('volume', {new_volume})
+        """
+        c.run_query(patch_resource_query)
+        print(f"resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
+    return resource
+
+
+
 def death_by_starvation_event(loc,pop,params):
     node = {
         'objid':uuid(),
