@@ -45,9 +45,6 @@ def get_consumption_message(planet):
     message = {"agent":planet,"action":"consume"}
     return message
 
-def get_renewal_message(resource):
-    message = {"agent":resource,"action":"consume"}
-    return message
 
 def reduce_location_resource(c,message, consumption):
     # find out if the location has the resource
@@ -79,31 +76,6 @@ def reduce_location_resource(c,message, consumption):
         logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
     return resource
 
-
-def calculate_renewal(c,t,params):
-    renewing_resources_query =f"""
-    g.V().has('label','resource').has('replenish_rate').valuemap()
-    """
-    c.run_query(renewing_resources_query)
-    renewing_resources = c.clean_nodes(c.res)
-    messages = []
-    for resource in renewing_resources:
-        if resource['volume'] <= resource['max_volume']:
-            messages.append(get_renewal_message(resource))
-    return messages
-
-def renew_resource(c,message):
-    objid = message['agent']['objid']
-    new_volume = message['agent']['volume'] + message['agent']['replenish_rate']
-    if new_volume > message['agent']['volume']:
-        new_volume = message['agent']['max_volume']
-    patch_resource_query = f"""
-    g.V().has('objid','{objid}').out('has').has('label','resource')
-        .property('volume', {new_volume})
-    """
-    c.run_query(patch_resource_query)
-    logging.info(f"EXOADMIN: {message['agent']['name']}:{message['agent']['objid']} increased by {message['agent']['replenish_rate']}, {message['agent']['volume']}-> {new_volume}")
-    return None
 
 
 def death_by_starvation_event(loc,pop,params):
