@@ -56,7 +56,7 @@ def reduce_location_resource(c,message, consumption):
     """
     c.run_query(resource_query)
     if len(c.res) != 1:
-        print(f"{objid} has a resource issue - c.res:{c.res}")
+        logging.info(f"EXOADMIN: {objid} has a resource issue - c.res:{c.res}")
     resource = c.clean_nodes(c.res)[0]
     if resource['volume'] > quantity:
         new_volume = resource['volume'] - quantity
@@ -65,7 +65,7 @@ def reduce_location_resource(c,message, consumption):
             .property('volume', {new_volume})
         """
         c.run_query(patch_resource_query)
-        print(f"resources on {message['agent']['name']} reduced by {quantity}, {resource['volume']}-> {new_volume}")
+        logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, {resource['volume']}-> {new_volume}")
     if resource['volume'] <= quantity:
         new_volume = 0
         patch_resource_query = f"""
@@ -73,7 +73,7 @@ def reduce_location_resource(c,message, consumption):
             .property('volume', {new_volume})
         """
         c.run_query(patch_resource_query)
-        print(f"resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
+        logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
     return resource
 
 
