@@ -17,6 +17,7 @@ from app.objects import time
 from app.connectors import cmdb_graph
 from app.functions import jobs
 from app.functions import growth
+from app.functions import consumption
 
 
 RUNNING_LOCALLY = False
@@ -42,10 +43,16 @@ def resolve_action_event(event: func.EventHubEvent):
         action = time.Action(c,message)
         action.add_updates_to_c(t)
         c.upload_data(action.agent['userguid'], action.data)
-        logging.info(f'EXOADMIN:       -------And with that processed an action: {action} at UTU:{t}')
+        logging.info(f'EXOADMIN:       -------And with that processed a JOB: {action} at UTU:{t}')
     if message.get('action')=="reproduce":
         growth.grow_population(c,t, message['agent'])
-        logging.info(f"EXOADMIN:       -------And with that processed reproduction: {message['agent']} at UTU:{t}")
+        logging.info(f"EXOADMIN:       -------And with that processed REPRODUCTION: {message['agent']} at UTU:{t}")
+    if message.get('action')=="consume":
+        for resource in message['agent']['consumes']:
+            consumption.reduce_location_resource(c,message,resource)
+        logging.info(f"EXOADMIN:       -------And with that processed CONSUMPTION: {message['agent']} at UTU:{t}")
+        
+        
 
 # Check the open actions and resolve them
 @app.function_name(name="actionResolverTimer")
@@ -65,9 +72,12 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
 
     growth_messasges = growth.calculate_growth(c,t,params)
     job_messages = jobs.resolve_jobs(c,t,time.Action)
-
-    messages = growth_messasges + job_messages
+    consumption_messages = consumption.calculate_consumption(c,t)
+    messages = growth_messasges + job_messages + consumption_messages
     jobs.send_to_eventhub(messages, eh_producer)
+    logging.info(f'EXOADMIN: Messages -  growth_messasges:{len(growth_messasges)} at: {utc_timestamp}')
+    logging.info(f'EXOADMIN: Messages -  job_messages:{len(job_messages)} at: {utc_timestamp}')
+    logging.info(f'EXOADMIN: Messages -  consumption_messages:{len(consumption_messages)} at: {utc_timestamp}')
     logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {utc_timestamp}')
 
 # UTU is the universal time unit

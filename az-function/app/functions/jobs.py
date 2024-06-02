@@ -16,7 +16,7 @@ def resolve_jobs(c,t,Action):
         try:
             action = Action(c,i)
         except AttributeError as e:
-            logging.info(f'EXOADMIN: Action: {i} was not resolved. error: {e}')
+            logging.info(f'EXOADMIN: Action: {i} was unable to convert to action object in `resolve_jobs`. error: {e}')
             logging.info(f'EXOADMIN: keys: {i.keys()}')
             continue
         if action.validate_action_time(t):
