@@ -39,7 +39,7 @@ def calculate_consumption(c,t):
     consuming_planets = get_consuming_planets(c)
     for planet in consuming_planets:
         messages.append(get_consumption_message(planet))
-    return c.res
+    return messages
 
 def get_consumption_message(planet):
     message = {"agent":planet,"action":"consume"}
