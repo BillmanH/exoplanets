@@ -51,6 +51,9 @@ def resolve_action_event(event: func.EventHubEvent):
         for resource in message['agent']['consumes']:
             consumption.reduce_location_resource(c,message,resource)
         logging.info(f"EXOADMIN:       -------And with that processed CONSUMPTION: {message['agent']} at UTU:{t}")
+    if message.get('action')=="renew":
+        growth.renew_resource(c,t,message)
+        logging.info(f"EXOADMIN:       -------And with that processed RENEWAL: {message['agent']} at UTU:{t}")
         
         
 
@@ -73,6 +76,7 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
     growth_messasges = growth.calculate_growth(c,t,params)
     job_messages = jobs.resolve_jobs(c,t,time.Action)
     consumption_messages = consumption.calculate_consumption(c,t)
+    renewal_messages = growth.calculate_renewal(c,t,params)
     messages = growth_messasges + job_messages + consumption_messages
     jobs.send_to_eventhub(messages, eh_producer)
     logging.info(f'EXOADMIN: Messages -  growth_messasges: {len(growth_messasges)} at: {utc_timestamp}')

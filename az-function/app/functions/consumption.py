@@ -45,6 +45,9 @@ def get_consumption_message(planet):
     message = {"agent":planet,"action":"consume"}
     return message
 
+def get_renewal_message(resource):
+    message = {"agent":resource,"action":"consume"}
+    return message
 
 def reduce_location_resource(c,message, consumption):
     # find out if the location has the resource
@@ -77,6 +80,31 @@ def reduce_location_resource(c,message, consumption):
     return resource
 
 
+def calculate_renewal(c,t,params):
+    renewing_resources_query =f"""
+    g.V().has('label','resource').has('replenish_rate').valuemap()
+    """
+    c.run_query(renewing_resources_query)
+    renewing_resources = c.clean_nodes(c.res)
+    messages = []
+    for resource in renewing_resources:
+        if resource['volume'] <= resource['max_volume']:
+            messages.append(get_renewal_message(resource))
+    return messages
+
+def renew_resource(c,message):
+    objid = message['agent']['objid']
+    new_volume = message['agent']['volume'] + message['agent']['replenish_rate']
+    if new_volume > message['agent']['volume']:
+        new_volume = message['agent']['max_volume']
+    patch_resource_query = f"""
+    g.V().has('objid','{objid}').out('has').has('label','resource')
+        .property('volume', {new_volume})
+    """
+    c.run_query(patch_resource_query)
+    logging.info(f"EXOADMIN: {message['agent']['name']}:{message['agent']['objid']} increased by {message['agent']['replenish_rate']}, {message['agent']['volume']}-> {new_volume}")
+    return None
+
 
 def death_by_starvation_event(loc,pop,params):
     node = {
@@ -90,90 +118,3 @@ def death_by_starvation_event(loc,pop,params):
     }
     return node
 
-
-def delete_dead_pops(c,dead_pop_ids):
-    ids = ",".join([f"'{i}'"  for i in dead_pop_ids])
-    query = f"""
-    g.V().has('objid',within({ids})).drop()
-    """
-
-    c.run_query(query)
-
-
-def lower_health(c,params,x):
-    dead_pop_nodes = []
-    dead_pop_ids = []
-    death_event_edges = []
-    query =f"""
-    g.V().has('objid','{x.location_id}').as('location').in('inhabits')
-        .haslabel('pop').as('pop')
-        .out('isOf').as('species')
-        .path()
-            .by(valueMap('objid','name'))
-            .by(valueMap('name','objid','health','username'))
-            .by(valueMap('name','objid','consumes'))
-    """
-    c.run_query(query)
-    out = c.res
-    print(f"{len(out)} pops will starve in {x.location_id}")
-    all_death = 0
-    for i in out:
-        health = i['objects'][1]['health'][0]
-        objid = i['objects'][1]['objid'][0]
-        consumes = yaml.safe_load(i['objects'][2]['consumes'][0])
-        # logging.info(f'health: {x.consumes,consumes}')
-        if x.consumes in consumes:
-            if health <= 0:
-                death_event = death_by_starvation_event(c.clean_node(i['objects'][0]),i['objects'][1],params)
-                dead_pop_nodes.append(death_event)
-                death_event_edges.append(c.create_custom_edge(death_event, c.clean_node(i['objects'][0]), 'happenedAt'))
-                dead_pop_ids.append(objid)
-                all_death+=1
-                if len(dead_pop_ids) > 30:
-                    print(f"cache threshold of n pops reached. Purging {len(dead_pop_ids)}")
-                    delete_dead_pops(c, dead_pop_ids)
-                    upload_data = {'nodes':dead_pop_nodes,'edges':[]}
-                    c.upload_data(data=upload_data,username='azfunc')
-                    dead_pop_ids = []
-                    dead_pop_nodes = []
-                    death_event_edges = []
-                    for e in death_event_edges:
-                        c.add_query(e)
-                    c.run_queries()
-                    print('.',end="")
-            else:
-                # logging.info(f'starving: {health}')
-                starve_query = f"""
-                g.V().has('objid','{objid}').property('health',{health-params['starve_damage']})
-                """
-                c.add_query(starve_query)
-            
-    if len(dead_pop_ids)>0:
-        delete_dead_pops(c, dead_pop_ids)
-        upload_data = {'nodes':dead_pop_nodes,'edges':[]}
-        c.upload_data(data=upload_data,username='azfunc')
-        for e in death_event_edges:
-            c.add_query(e)
-    # logging.info(f'stack: {len(c.stack)}')
-    c.run_queries()
-    logging.info(f'EXOADMIN: Total deaths due to starvation at {x.location_id}: {all_death}')
-
-
-# this is the 'main' function:       
-def consume(c,params):
-    # query to get all pops
-    pops_df,species_df,locations_df = all_pops_consumption(c)
-    # get the origional list of populations who would consume resources
-    consumption_df = get_consumption_df(locations_df,species_df,params)
-    # Some species consume more than one resource, so we extend
-    consumption_df = expand_consumption_df(consumption_df)
-    # Get the available resources for those locations
-    c.run_query(make_resource_query(consumption_df))
-    resources = c.res
-    # Tally the consumption to get the remaining resources
-    consumption_df = tally_consumption(c,consumption_df,resources)
-    # for resources > 0 (have enough to eat), update those resources
-    consumption_df.apply(lambda x: make_resource_update_query(c,x),axis=1)
-    # for locations with resources < 0 we lower the health of all populations
-    consumption_df[consumption_df['remaining']<=0].apply(lambda x: lower_health(c,params,x),axis=1)
-    print(consumption_df)
