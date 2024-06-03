@@ -128,8 +128,9 @@ class Action:
     def query_patch_properties(self):
         query = f"g.V().has('objid','{self.agent['objid']}')"
         for n in yaml.safe_load(self.action["augments_self_properties"]):
-            logging.info(f"EXOADMIN: job function updating property {n} to {self.agent[n]}")
-            query += f".property('{n}',{self.agent[n]})"
+            augmented_vaue = self.agent[n] + float(self.action["augments_self_properties"][n])
+            logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
+            query += f".property('{n}',{augmented_vaue})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
 
     def add_updates_to_c(self,time):
