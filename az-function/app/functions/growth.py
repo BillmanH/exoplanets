@@ -145,14 +145,14 @@ def calculate_renewal(c,t,params):
     renewing_resources = c.clean_nodes(c.res)
     messages = []
     for resource in renewing_resources:
-        if resource['volume'] <= resource['max_volume']:
+        if resource['volume'] < resource['max_volume']:
             messages.append(get_renewal_message(resource))
     return messages
 
 def renew_resource(c,message):
     objid = message['agent']['objid']
     new_volume = message['agent']['volume'] + message['agent']['replenish_rate']
-    if new_volume > message['agent']['volume']:
+    if new_volume > message['agent']['max_volume']:
         new_volume = message['agent']['max_volume']
     patch_resource_query = f"""
     g.V().has('objid','{objid}').out('has').has('label','resource')
