@@ -6,12 +6,44 @@
 
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
-
 [The work-in-progress game is here.](http://exodestiny.azurewebsites.net/), however I won't be granting access until I've completed:
-* testing costs of eventhub functions running with throughput limite
-* entra ID groups to manage access and subscription levels
-* cost testing for consumption plans make sure I won't go broke
-* resources are duplicated in a testing environment (current process is just local->prod)
+Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out (to my email)[mailto:william.jeffrey.harding@gmail.com]
+
+# What is left to do, and when to do it:
+## June
+* Simulation platform in Azure functions
+* Population growth, consumption, waste, and jobs
+## July
+* Buildings
+* Ongoing actions, such as buildings that produce effects
+* Planetary space observation
+## August
+* UI Overhaul
+* Faction settings
+* Government choices
+* Enhanced Genisis options
+## September
+* Spaceships
+* Space Travel
+* Cargo Routes
+## October
+* Conflict
+* Rebellion
+* War
+* Terrorism
+* Peace
+## November
+* Space Stations
+* Megastructures
+## December
+* Entra ID Access Management
+* Patron Account
+* Production Environment
+
+
+
+
+
 
 
 Exoplanets is a real-time, multi-player, online game where you manage a civilization and its people. Starting at the moment where your technology makes it possible to launch an individual into outer space, you must make choices that guide your people on its journey to the stars.
