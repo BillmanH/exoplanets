@@ -39,12 +39,12 @@ def resolve_action_event(event: func.EventHubEvent):
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()
-    logging.info(f'EXOADMIN: processing message: {message.get('action')} at UTU:{t}')
+    logging.info(f"EXOADMIN: processing message: {message.get('action')} at UTU:{t}")
     if 'job' in message.keys():
         action = time.Action(c,message)
         action.add_updates_to_c(t)
         c.upload_data(action.agent['userguid'], action.data)
-        logging.info(f'EXOADMIN:       -------And with that processed a JOB: {action} at UTU:{t}')
+        logging.info(f"EXOADMIN:       -------And with that processed a JOB: {action} at UTU:{t}")
     if message.get('action')=="reproduce":
         growth.grow_population(c,t, message['agent'])
         logging.info(f"EXOADMIN:       -------And with that processed REPRODUCTION: {message['agent']} at UTU:{t}")
