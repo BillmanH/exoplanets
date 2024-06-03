@@ -127,6 +127,7 @@ class Action:
     def query_patch_properties(self):
         query = f"g.V().has('objid','{self.agent['objid']}')"
         for n in yaml.safe_load(self.action["augments_self_properties"]):
+            logging.info(f"EXOADMIN: job function updating property {n} to {self.agent[n]}")
             query += f".property('{n}',{self.agent[n]})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
 
@@ -141,7 +142,7 @@ class Action:
             self.c.run_queries()
         except Exception as e:
             logging.error(f"EXOADMIN: job function error updating data {e}")
-            logging.error(f"EXOADMIN: queries ran {self.c.stack}")
+            logging.info(f"EXOADMIN: bad queries ran {self.c.stack}")
 
     def make_building(self):
         pass
