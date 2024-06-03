@@ -62,7 +62,7 @@ class Action:
         and a `Job` that is the edge between the two in the graph
     """
     def __init__(self,c,action):
-        logging.info(f"EXOADMIN: instance of ACTION created: {action}")
+        logging.info(f"EXOADMIN: job instance of ACTION created: {action}")
         self.agent = action['agent']
         self.action = action['action']
         self.job = action['job']
@@ -127,7 +127,9 @@ class Action:
 
     def query_patch_properties(self):
         query = f"g.V().has('objid','{self.agent['objid']}')"
-        for n in yaml.safe_load(self.action["augments_self_properties"]):
+        augmented_properties = yaml.safe_load(self.action["augments_self_properties"])
+        logging.info(f"EXOADMIN: job augmenting {augmented_properties}")
+        for n in augmented_properties.keys():
             augmented_vaue = self.agent[n] + float(self.action["augments_self_properties"][n])
             logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
             query += f".property('{n}',{augmented_vaue})"
@@ -144,7 +146,7 @@ class Action:
             self.c.run_queries()
         except Exception as e:
             logging.error(f"EXOADMIN: job function error updating data {e}")
-            logging.info(f"EXOADMIN: bad queries ran {self.c.stack}")
+            logging.info(f"EXOADMIN: job bad queries ran {self.c.stack}")
 
     def make_building(self):
         pass
