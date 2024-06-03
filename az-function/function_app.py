@@ -80,8 +80,8 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
     renewal_messages = growth.calculate_renewal(c,t,params)
     messages = growth_messasges + job_messages + consumption_messages + renewal_messages
     jobs.send_to_eventhub(messages, eh_producer)
-    logging.info(f'EXOADMIN: messages: job:{len(job_messages)}, growth:{len(growth_messasges)}, consumption:{len(consumption_messages)}, renewal:{len(renewal_messages)} - at: {utc_timestamp}')
-    logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {utc_timestamp}')
+    logging.info(f'EXOADMIN: messages: job:{len(job_messages)}, growth:{len(growth_messasges)}, consumption:{len(consumption_messages)}, renewal:{len(renewal_messages)} - at: {t}')
+    logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {t}')
 
 # UTU is the universal time unit
 @app.function_name(name="ututimer")
@@ -97,5 +97,5 @@ def utu_timer(mytimer: func.TimerRequest) -> None:
     t = time.Time(c)
     t.get_current_UTU()
     r = t.global_ticker()
-    logging.info(f'EXOADMIN: UTU was updated, result: {r} at: {utc_timestamp}')
+    logging.info(f'EXOADMIN: UTU was updated, result: {r} at: {t}')
 
