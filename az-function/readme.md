@@ -64,5 +64,13 @@ traces
 ```
 
 
-## Some examples
-Get all of the counts of functions
+## Some more advanced examples
+Get all of the counts of functions jobs
+```
+traces
+| where timestamp > ago(7d)
+| order by timestamp desc
+| where message has "EXOADMIN: messages:"
+| limit 100
+```
+

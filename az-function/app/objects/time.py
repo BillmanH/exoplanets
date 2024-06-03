@@ -62,6 +62,7 @@ class Action:
         and a `Job` that is the edge between the two in the graph
     """
     def __init__(self,c,action):
+        logging.info(f"EXOADMIN: instance of ACTION created: {action}")
         self.agent = action['agent']
         self.action = action['action']
         self.job = action['job']
