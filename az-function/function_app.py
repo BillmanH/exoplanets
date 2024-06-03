@@ -35,7 +35,6 @@ EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
                                connection="EVENT_HUB_CONNECTION_STR")
 def resolve_action_event(event: func.EventHubEvent):
     message = ast.literal_eval(event.get_body().decode('utf-8'))
-    logging.info(f'EXOADMIN: Python EventHub trigger processed an messasge: {message} : {type(message)}')
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()

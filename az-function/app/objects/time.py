@@ -2,7 +2,7 @@ import datetime
 import pandas as pd
 import numpy as np
 import yaml
-
+import logging
 
 class Time:
     """
@@ -53,7 +53,7 @@ class Time:
         return f"currentTime was updated from:{self.params['currentTime']} to: {currentTime}"
  
     def __repr__(self) -> str:
-        return f"< time at: {self.utc_timestamp} UTU:{self.params.get('currentTime')} >"
+        return f"< time at UTU:{self.params.get('currentTime')} >"
 
 class Action:
     """
@@ -136,6 +136,12 @@ class Action:
         self.make_action_event(time)
         self.mark_action_as_resolved()
         self.mark_agent_idle()
+        logging.info(f"EXOADMIN: job function updating data {self.data}")
+        try:
+            self.c.run_queries()
+        except Exception as e:
+            logging.error(f"EXOADMIN: job function error updating data {e}")
+            logging.error(f"EXOADMIN: queries ran {self.c.stack}")
 
     def make_building(self):
         pass
