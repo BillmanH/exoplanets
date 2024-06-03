@@ -53,10 +53,9 @@ def resolve_action_event(event: func.EventHubEvent):
             consumption.reduce_location_resource(c,message,resource)
         logging.info(f"EXOADMIN:       -------And with that processed CONSUMPTION: {message['agent']} at UTU:{t}")
     if message.get('action')=="renew":
-        growth.renew_resource(c,t,message)
+        growth.renew_resource(c,message)
         logging.info(f"EXOADMIN:       -------And with that processed RENEWAL: {message['agent']} at UTU:{t}")
-        
-        
+
 
 # Check the open actions and resolve them
 @app.function_name(name="actionResolverTimer")
