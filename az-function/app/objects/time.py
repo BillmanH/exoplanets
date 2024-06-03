@@ -131,9 +131,11 @@ class Action:
     def query_patch_properties(self):
         query = f"g.V().has('objid','{self.agent['objid']}')"
         augmented_properties = yaml.safe_load(self.action["augments_self_properties"])
-        logging.info(f"EXOADMIN: job augmenting {augmented_properties}")
+        logging.info(f"EXOADMIN: job augmenting {augmented_properties} on: {self.agent}")
         for n in augmented_properties.keys():
-            augmented_vaue = self.agent[n] + float(self.action["augments_self_properties"][n])
+            logging.info(f"EXOADMIN: job augmenting property n: {n}")
+            logging.info(f"EXOADMIN: job augmenting property n: {self.agent[n]}")
+            augmented_vaue = float(self.agent[n]) + float(self.action["augments_self_properties"][n])
             logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
             query += f".property('{n}',{augmented_vaue})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
