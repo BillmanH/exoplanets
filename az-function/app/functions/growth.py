@@ -134,7 +134,7 @@ def population_growth_event(t,parent,location,child):
 
 
 def get_renewal_message(resource):
-    message = {"agent":resource,"action":"consume"}
+    message = {"agent":resource,"action":"renew"}
     return message
 
 def calculate_renewal(c,t,params):
