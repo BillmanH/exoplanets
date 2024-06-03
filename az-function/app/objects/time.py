@@ -100,6 +100,7 @@ class Action:
                 .property('status', 'resolved')
         """    
         self.c.add_query(patch_job.replace(" ", "").replace("\n", ""))
+        logging.info(f"EXOADMIN: job action resolved: {self}")
 
     def mark_agent_idle(self):
         if 'isIdle' in self.agent.keys():
@@ -107,6 +108,7 @@ class Action:
             g.V().has('objid','{self.agent['objid']}').property('isIdle','true')
             """
             self.c.add_query(idleQuery.replace(" ", "").replace("\n", ""))
+            logging.info(f"EXOADMIN: job agent idle: {self.agent['objid']}:{self.agent['name']}")
         
     def make_action_event(self,time):
         """
@@ -121,6 +123,7 @@ class Action:
             'time': time.params['currentTime'],
             'username':'event'
         }
+        logging.info(f"EXOADMIN: job event created: {node}")
         self.data['nodes'].append(node)
         self.data['edges'].append({'node1':self.agent['objid'],'node2':node['objid'],'label':'completed'})
         
