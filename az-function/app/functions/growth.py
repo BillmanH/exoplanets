@@ -20,7 +20,7 @@ def calculate_growth(c,t,params):
 
     a = np.array(c.res)
     logging.info(f"EXOADMIN: healthy_pops_query {len(a)}")
-    if len(a)>=0:
+    if len(a)<=0:
         logging.info(f"EXOADMIN: No pops that meet the pop_health_requirement")
         return messages
     pops_df = pd.DataFrame(np.split(a,len(a)/3),columns=['objid','health','wealth'])
