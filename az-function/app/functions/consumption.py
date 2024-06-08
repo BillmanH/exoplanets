@@ -76,7 +76,28 @@ def reduce_location_resource(c,message, consumption):
         logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
     return resource
 
-
+def starve_population(c,t,pop):
+    # get the location of the population
+    location_query = f"""
+    g.V().has('objid','{pop['objid']}')
+    """
+    c.run_query(location_query)
+    location = c.clean_nodes(c.res)[0]
+    # get the population
+    pop_query = f"""
+    g.V().has('objid','{pop['objid']}').values('name','label','objid')
+    """
+    c.run_query(pop_query)
+    pop = c.clean_nodes(c.res)[0]
+    # get the event
+    event = death_by_starvation_event(location,pop,t)
+    c.upload_data(pop['username'],event)
+    # remove the population
+    remove_pop_query = f"""
+    g.V().has('objid','{pop['objid']}').drop()
+    """
+    c.run_query(remove_pop_query)
+    return event
 
 def death_by_starvation_event(loc,pop,params):
     node = {

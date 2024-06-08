@@ -34,11 +34,14 @@ EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
                                event_hub_name=EVENT_HUB_NAME,
                                connection="EVENT_HUB_CONNECTION_STR")
 def resolve_action_event(event: func.EventHubEvent):
+    eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
+    credential = DefaultAzureCredential() 
     message = ast.literal_eval(event.get_body().decode('utf-8'))
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()
     logging.info(f"EXOADMIN: processing message: {message.get('action')} at UTU:{t}")
+    outgoing_messages = []
     if 'job' in message.keys():
         action = time.Action(c,message)
         action.add_updates_to_c(t)
@@ -49,11 +52,14 @@ def resolve_action_event(event: func.EventHubEvent):
         logging.info(f"EXOADMIN:       -------And with that processed REPRODUCTION: {message['agent']} at UTU:{t}")
     if message.get('action')=="consume":
         for resource in message['agent']['consumes']:
-            consumption.reduce_location_resource(c,message,resource)
+            # starving messages are generated when pops don't have resources
+            outgoing_messages += consumption.reduce_location_resource(c,message,resource)
         logging.info(f"EXOADMIN:       -------And with that processed CONSUMPTION: {message['agent']} at UTU:{t}")
     if message.get('action')=="renew":
         growth.renew_resource(c,message)
         logging.info(f"EXOADMIN:       -------And with that processed RENEWAL: {message['agent']} at UTU:{t}")
+        jobs.send_to_eventhub(outgoing_messages, eh_producer)
+        logging.info(f"EXOADMIN: Total Messages created by this event: {len(outgoing_messages)} at: {t}")
 
 
 # Check the open actions and resolve them
