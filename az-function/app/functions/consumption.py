@@ -80,7 +80,7 @@ def reduce_location_resource(c,message, consumption):
     return starving_messages
 
 
-def get_starving_populations(c, agent, Action):
+def get_starving_populations(c, agent):
     starving_action = {
     "type": "starve",
     "label": "action",
