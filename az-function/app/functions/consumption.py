@@ -48,11 +48,11 @@ def get_consumption_message(planet):
 
 
 
-def reduce_location_resource(c,t,message, consumption):
+def reduce_location_resource(c,t,message, resource):
     # find out if the location has the resource
     objid = message['agent']['objid']
-    consuming = list(consumption.keys())[0]
-    quantity = list(consumption.values())[0]
+    consuming = list(resource.keys())[0]
+    quantity = list(resource.values())[0]
     resource_query = f"""
     g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}').valuemap()
     """
@@ -76,17 +76,17 @@ def reduce_location_resource(c,t,message, consumption):
         """
         c.run_query(patch_resource_query)
         logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
-        starving_messages = get_starving_populations(c,t,message['agent'])
+        starving_messages = get_starving_population_messages(c,t,message['agent'])
     return starving_messages
 
 
-def get_starving_populations(c,t, agent):
+def get_starving_population_messages(c, t, agent):
     starving_action = {
     "type": "starve",
     "label": "action",
     "applies_to": "pop",
     "effort": 0,
-    "augments_self_properties": {"health": -7},
+    "augments_self_properties": {"health": t.pop_growth_params['starve_damage']},
     "comment": "Populations that don't have enough resources will loose health until it reachees zero"
     }
     starving_job = {

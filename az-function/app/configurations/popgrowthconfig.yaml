@@ -1,7 +1,7 @@
 # minimum health required to grow population
 pop_health_requirement: .7
 pop_consumes: 2
-starve_damage: .05
+starve_damage: -0.05
 
 changing_values:
   - conformity
