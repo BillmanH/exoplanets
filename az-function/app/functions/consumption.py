@@ -41,9 +41,11 @@ def calculate_consumption(c,t):
         messages.append(get_consumption_message(planet))
     return messages
 
+
 def get_consumption_message(planet):
     message = {"agent":planet,"action":"consume"}
     return message
+
 
 
 def reduce_location_resource(c,message, consumption):
@@ -74,30 +76,36 @@ def reduce_location_resource(c,message, consumption):
         """
         c.run_query(patch_resource_query)
         logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
-    return resource
+        starving_messages = get_starving_populations(c,message['agent'])
+    return starving_messages
 
-def starve_population(c,t,pop):
-    # get the location of the population
-    location_query = f"""
-    g.V().has('objid','{pop['objid']}')
+
+def get_starving_populations(c, agent, Action):
+    starving_action = {
+    "type": "starve",
+    "label": "action",
+    "applies_to": "pop",
+    "effort": 0,
+    "augments_self_properties": {"health": -7},
+    "comment": "Populations that don't have enough resources will loose health until it reachees zero"
+    }
+    starving_job = {
+        'created_at':t.params['currentTime'],
+        'objid':f"starving_async_{t.params['currentTime']}",
+    }
+    location = agent['objid']
+    starving_pop_query =f"""
+    g.V().has('objid','{location}').in('inhabits').valuemap()
     """
-    c.run_query(location_query)
-    location = c.clean_nodes(c.res)[0]
-    # get the population
-    pop_query = f"""
-    g.V().has('objid','{pop['objid']}').values('name','label','objid')
-    """
-    c.run_query(pop_query)
-    pop = c.clean_nodes(c.res)[0]
-    # get the event
-    event = death_by_starvation_event(location,pop,t)
-    c.upload_data(pop['username'],event)
-    # remove the population
-    remove_pop_query = f"""
-    g.V().has('objid','{pop['objid']}').drop()
-    """
-    c.run_query(remove_pop_query)
-    return event
+    c.run_query(starving_pop_query)
+    starving_pops = c.clean_nodes(c.res)
+    starving_messages = []
+    for pop in starving_pops:
+        starving_action_message = {"agent":pop,"action":starving_action,"job":starving_job}
+        starving_messages.append(starving_action_message)
+    return starving_messages
+
+
 
 def death_by_starvation_event(loc,pop,params):
     node = {

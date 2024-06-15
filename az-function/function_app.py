@@ -58,8 +58,9 @@ def resolve_action_event(event: func.EventHubEvent):
     if message.get('action')=="renew":
         growth.renew_resource(c,message)
         logging.info(f"EXOADMIN:       -------And with that processed RENEWAL: {message['agent']} at UTU:{t}")
-        jobs.send_to_eventhub(outgoing_messages, eh_producer)
-        logging.info(f"EXOADMIN: Total Messages created by this event: {len(outgoing_messages)} at: {t}")
+    
+    jobs.send_to_eventhub(outgoing_messages, eh_producer)
+    logging.info(f"EXOADMIN: Total additional Messages created by this event: {len(outgoing_messages)} at: {t}")
 
 
 # Check the open actions and resolve them
