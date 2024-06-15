@@ -48,7 +48,7 @@ def get_consumption_message(planet):
 
 
 
-def reduce_location_resource(c,message, consumption):
+def reduce_location_resource(c,t,message, consumption):
     # find out if the location has the resource
     objid = message['agent']['objid']
     consuming = list(consumption.keys())[0]
@@ -76,11 +76,11 @@ def reduce_location_resource(c,message, consumption):
         """
         c.run_query(patch_resource_query)
         logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
-        starving_messages = get_starving_populations(c,message['agent'])
+        starving_messages = get_starving_populations(c,t,message['agent'])
     return starving_messages
 
 
-def get_starving_populations(c, agent):
+def get_starving_populations(c,t, agent):
     starving_action = {
     "type": "starve",
     "label": "action",

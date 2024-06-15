@@ -53,7 +53,7 @@ def resolve_action_event(event: func.EventHubEvent):
     if message.get('action')=="consume":
         for resource in message['agent']['consumes']:
             # starving messages are generated when pops don't have resources
-            outgoing_messages += consumption.reduce_location_resource(c,message,resource)
+            outgoing_messages += consumption.reduce_location_resource(c,t,message,resource)
         logging.info(f"EXOADMIN:       -------And with that processed CONSUMPTION: {message['agent']} at UTU:{t}")
     if message.get('action')=="renew":
         growth.renew_resource(c,message)
