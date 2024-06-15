@@ -150,7 +150,7 @@ class Action:
             self.query_patch_properties()
         self.make_action_event(time)
         # action types that are 'automatic' are not resolved by the agent
-        if self.action.get('actionType') != 'automatic':
+        if self.job.get('actionType') != 'automatic':
             self.mark_action_as_resolved()
             self.mark_agent_idle()
         logging.info(f"EXOADMIN: job function updating data {self.data}")
