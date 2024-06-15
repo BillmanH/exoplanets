@@ -130,7 +130,11 @@ class Action:
 
     def query_patch_properties(self):
         query = f"g.V().has('objid','{self.agent['objid']}')"
-        augmented_properties = yaml.safe_load(self.action["augments_self_properties"])
+        # Doesn't need to parse the yaml if it is already a dictionary
+        if type(self.action["augments_self_properties"]) == str:
+            augmented_properties = yaml.safe_load(self.action["augments_self_properties"])
+        else:
+            augmented_properties = self.action["augments_self_properties"]
         logging.info(f"EXOADMIN: job augmenting {augmented_properties}<{type(augmented_properties)}> on: {self.agent}")
         for n in augmented_properties.keys():
             logging.info(f"EXOADMIN: job augmenting property n: {n}")
