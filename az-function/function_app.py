@@ -44,7 +44,7 @@ def resolve_action_event(event: func.EventHubEvent):
     logging.info(f"EXOADMIN: processing message: {message.get('action')} at UTU:{t}")
     pop_growth_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/popgrowthconfig.yaml")))
     # adding the pop growth params to the time object
-    t.popgrowht_params = pop_growth_params
+    t.pop_growth_params = pop_growth_params
     outgoing_messages = []
     if 'job' in message.keys():
         action = time.Action(c,message)
