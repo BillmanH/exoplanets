@@ -149,8 +149,10 @@ class Action:
         if self.action.get('augments_self_properties') != None:
             self.query_patch_properties()
         self.make_action_event(time)
-        self.mark_action_as_resolved()
-        self.mark_agent_idle()
+        # action types that are 'automatic' are not resolved by the agent
+        if self.action.get('actionType') != 'automatic':
+            self.mark_action_as_resolved()
+            self.mark_agent_idle()
         logging.info(f"EXOADMIN: job function updating data {self.data}")
         try:
             self.c.run_queries()

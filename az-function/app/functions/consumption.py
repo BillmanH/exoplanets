@@ -92,6 +92,7 @@ def get_starving_populations(c,t, agent):
     starving_job = {
         'created_at':t.params['currentTime'],
         'objid':f"starving_async_{t.params['currentTime']}",
+        'actionType':'automatic'
     }
     location = agent['objid']
     starving_pop_query =f"""
