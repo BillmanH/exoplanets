@@ -60,6 +60,7 @@ def reduce_location_resource(c,t,message, resource):
     if len(c.res) != 1:
         logging.info(f"EXOADMIN: {objid} has a resource issue - c.res:{c.res}")
     resource = c.clean_nodes(c.res)[0]
+    starving_messages = []
     if resource['volume'] > quantity:
         new_volume = resource['volume'] - quantity
         patch_resource_query = f"""
