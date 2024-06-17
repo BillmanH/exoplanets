@@ -111,26 +111,9 @@ def grow_population(c,t, parent_pop):
     
     inhabits_edge = {'node1': child.objid, 'node2': loc_dict['objid'], 'label': 'inhabits'}
 
-    event = population_growth_event(t,pop_dict,loc_dict,child)
-    event_edge = {'node1': child.objid, 'node2': event['objid'], 'label': 'caused'}
-
-    data = {"nodes":[child_data, event] ,"edges":[inhabits_edge,child.isOfSpecies,isIn_edge,event_edge] }
+    data = {"nodes":[child_data] ,"edges":[inhabits_edge,child.isOfSpecies,isIn_edge] }
     c.upload_data(pop_dict['userguid'],data)
     return data
-
-
-def population_growth_event(t,parent,location,child):
-    node = {
-        'objid':maths.uuid(),
-        'name':'population growth',
-        'label':'event',
-        'text': f"The population ({parent['name']}) inhabiting {location['name']} has grown to produce the population: {child.name}.",
-        'visibleTo':parent['userguid'],
-        'time':t.params['currentTime'],
-        'userguid':parent['userguid'],
-        'source':'notebook'
-    }
-    return node
 
 
 def get_renewal_message(resource):
