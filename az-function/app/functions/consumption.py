@@ -102,21 +102,15 @@ def get_starving_population_messages(c, t, agent):
     starving_pops = c.clean_nodes(c.res)
     starving_messages = []
     for pop in starving_pops:
-        starving_action_message = {"agent":pop,"action":starving_action,"job":starving_job}
-        starving_messages.append(starving_action_message)
+        if pop.get('health') > 0:
+            starving_action_message = {"agent":pop,"action":starving_action,"job":starving_job}
+            starving_messages.append(starving_action_message)
+        else:
+            pop_dies(c,t,pop)
     return starving_messages
 
-
-
-def death_by_starvation_event(loc,pop,params):
-    node = {
-        'objid':uuid(),
-        'name':'starvation',
-        'label':'event',
-        'text': f"The population ({pop['name'][0]}) inhabiting {loc['name']} has died of starvation.",
-        'visibleTo':pop['username'][0],
-        'time':params['currentTime'],
-        'username':'azfunction'
-    }
-    return node
+def pop_dies(c,t,pop):
+    c.run_query(f"g.V().has('objid','{pop['objid']}').drop()")
+    logging.info(f"EXOADMIN: {pop['name']}:{pop['objid']} has died of starvation.")
+    return pop
 
