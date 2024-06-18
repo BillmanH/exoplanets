@@ -24,7 +24,7 @@ RUNNING_LOCALLY = False
 EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
-function_version_string = "starving pops"
+function_version_string = "missing string"
 
 # func start --functions [a space separated list of functions]
 # func start --functions actionResolverTimer resolveActionEvents ututimer
@@ -41,6 +41,7 @@ def resolve_action_event(event: func.EventHubEvent):
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()
+    t.message_body = {'function_version': function_version_string, 'UTU': t, 'message': message}
     logging.info(f"EXOADMIN: processing message: {message.get('action')} at UTU:{t}")
     pop_growth_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/popgrowthconfig.yaml")))
     # adding the pop growth params to the time object
@@ -63,8 +64,10 @@ def resolve_action_event(event: func.EventHubEvent):
         growth.renew_resource(c,message)
         logging.info(f"EXOADMIN:       -------And with that processed RENEWAL: {message['agent']} at UTU:{t}")
     
-    jobs.send_to_eventhub(outgoing_messages, eh_producer)
-    logging.info(f"EXOADMIN: Total additional Messages created by this event: {len(outgoing_messages)} at: {t}")
+    if outgoing_messages>0:
+        jobs.send_to_eventhub(outgoing_messages, eh_producer)
+    t.message_body["total_messages_generated"] = len(outgoing_messages)
+    logging.info(t.message_body)
 
 
 # Check the open actions and resolve them

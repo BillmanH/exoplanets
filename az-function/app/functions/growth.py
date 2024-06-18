@@ -137,6 +137,7 @@ def renew_resource(c,message):
     new_volume = message['agent']['volume'] + message['agent']['replenish_rate']
     if new_volume > message['agent']['max_volume']:
         new_volume = message['agent']['max_volume']
+
     patch_resource_query = f"""
     g.V().has('objid','{objid}').out('has').has('label','resource')
         .property('volume', {new_volume})
