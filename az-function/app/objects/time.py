@@ -141,8 +141,6 @@ class Action:
             logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
             query += f".property('{n}',{self.agent[n]})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
-        logging.info(f"EXOADMIN: queries sent to cosmosdb {len(self.c.stack)}")
-        logging.info(f"EXOADMIN: c.stack {self.c.stack}")
         self.c.run_queries()
 
     def add_updates_to_c(self,t):
@@ -153,12 +151,17 @@ class Action:
             self.make_action_event(t)
             self.mark_action_as_resolved()
             self.mark_agent_idle()
-        logging.info(f"EXOADMIN: job function updating data {self.data}")
-        try:
+        # updating data only if there is data. 
+        if (self.data['nodes'] != [])&(self.data['edges'] != []):
+            logging.info(f"EXOADMIN: job function updating data {self.data}")
+        else:
+            logging.info(f"EXOADMIN: job function no data to update")
+        if len(self.c.stack)>0:
+            logging.info(f"EXOADMIN: queries sent to cosmosdb {len(self.c.stack)}")
+            logging.info(f"EXOADMIN: c.stack {self.c.stack}")
             self.c.run_queries()
-        except Exception as e:
-            logging.error(f"EXOADMIN: job function error updating data {e}")
-            logging.info(f"EXOADMIN: job bad queries ran {self.c.stack}")
+        logging.info(f"EXOADMIN: updates to c completed.")
+
 
     def make_building(self):
         pass
