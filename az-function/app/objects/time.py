@@ -135,14 +135,12 @@ class Action:
         else:
             augmented_properties = self.action["augments_self_properties"]
         logging.info(f"EXOADMIN: job augmenting {augmented_properties}<{type(augmented_properties)}> on: {self.agent}")
-        self.message_body['augmented_properties'] = augmented_properties.keys()
         for n in augmented_properties.keys():
             logging.info(f"EXOADMIN: job augmenting property n: {n}")
             logging.info(f"EXOADMIN: job augmenting property self.agent[n]: {self.agent[n]}")
             logging.info(f"EXOADMIN: job augmenting property augmented_properties[n]: {augmented_properties[n]}")
             augmented_vaue = float(self.agent[n]) + float(augmented_properties[n])
             logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
-            self.message_body['origional_value'] = augmented_vaue
             query += f".property('{n}',{self.agent[n]})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
 
