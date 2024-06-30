@@ -141,7 +141,8 @@ class Action:
             logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
             query += f".property('{n}',{self.agent[n]})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
-        self.c.run_queries()
+        logging.info(f"EXOADMIN: Gremlin Query Added: {query}")
+
 
     def add_updates_to_c(self,t):
         if self.action.get('augments_self_properties') != None:
@@ -152,6 +153,7 @@ class Action:
             self.mark_action_as_resolved()
             self.mark_agent_idle()
         # updating data only if there is data. 
+        logging.info(f"EXOADMIN: Updates collected: nodes:{len(self.data['nodes'])}, edges:{self.data['edges']}, stack: {len(self.c.stack)}")
         if (self.data['nodes'] != [])&(self.data['edges'] != []):
             logging.info(f"EXOADMIN: job function updating data {self.data}")
         else:
