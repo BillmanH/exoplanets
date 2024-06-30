@@ -126,7 +126,6 @@ class Action:
         logging.info(f"EXOADMIN: job event created: {node}")
         self.data['nodes'].append(node)
         self.data['edges'].append({'node1':self.agent['objid'],'node2':node['objid'],'label':'completed'})
-        
 
     def query_patch_properties(self):
         query = f"g.V().has('objid','{self.agent['objid']}')"

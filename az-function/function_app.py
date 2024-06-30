@@ -47,28 +47,48 @@ def resolve_action_event(event: func.EventHubEvent):
     # adding the pop growth params to the time object
     t.pop_growth_params = pop_growth_params
     outgoing_messages = []
+
+    # jobs happen over take time, and havev an agent, action, and job (which has weight)
     if 'job' in message.keys():
         action = time.Action(c,message)
         action.add_updates_to_c(t)
         c.upload_data(action.agent['userguid'], action.data)
         logging.info(f"EXOADMIN:       -------And with that processed a JOB: {action} at UTU:{t}")
+
+    # given an object, creates a child object and links it to a parent. 
     if message.get('action')=="reproduce":
         growth.grow_population(c,t, message['agent'])
         logging.info(f"EXOADMIN:       -------And with that processed REPRODUCTION: {message['agent']} at UTU:{t}")
+
+    # Objects that consume the resources of a space that they inhabit.
     if message.get('action')=="consume":
         for resource in message['agent']['consumes']:
             # starving messages are generated when pops don't have resources
             outgoing_messages += consumption.reduce_location_resource(c,t,message,resource)
         logging.info(f"EXOADMIN:       -------And with that processed CONSUMPTION: {message['agent']} at UTU:{t}")
+
+    # resources that automatically renew. Like organic resources. 
     if message.get('action')=="renew":
         growth.renew_resource(c,message)
         logging.info(f"EXOADMIN:       -------And with that processed RENEWAL: {message['agent']} at UTU:{t}")
+
+    # Update either increases or decreases a specific property of an object
+    if message.get('action')=="update":
+        growth.renew_resource(c,message)
+        logging.info(f"EXOADMIN:       -------And with that processed UPDATE: {message['agent']} at UTU:{t}")
+
+    # Catchall for messages that are not recognized.
+    if message.get('action') not in ["reproduce","consume","renew","update"]:
+        logging.info(f"EXOADMIN:       ------- UNKNOWN ACTION NOT PROCESSED: {message['agent']} at UTU:{t}")
+
     if outgoing_messages>0:
+        logging.info(f"EXOADMIN: produced {len(outgoing_messages)} outgoing messages")
         jobs.send_to_eventhub(outgoing_messages, eh_producer)
+        logging.info(f"EXOADMIN: additional messages sent to EH. ")
 
 
 
-# Check the open actions and resolve them
+# Generates messages to be resolved asynchronously.
 @app.function_name(name="actionResolverTimer")
 @app.schedule(schedule="0 */5 * * * *", 
               arg_name="mytimer",
@@ -85,6 +105,7 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
     t = time.Time(c)
     t.get_current_UTU()
 
+    # Different kinds of EventHub Messages:
     growth_messasges = growth.calculate_growth(c,t,pop_growth_params)
     job_messages = jobs.resolve_jobs(c,t,time.Action)
     consumption_messages = consumption.calculate_consumption(c,t)

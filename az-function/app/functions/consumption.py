@@ -68,7 +68,7 @@ def reduce_location_resource(c,t,message, resource):
             .property('volume', {new_volume})
         """
         c.run_query(patch_resource_query)
-        logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, {resource['volume']}-> {new_volume}")
+        logging.info(f"EXOADMIN: resources on {message['agent']['name']}:{message['agent']['objid']} reduced by {quantity}, {resource['volume']}-> {new_volume}")
     if resource['volume'] <= quantity:
         new_volume = 0
         patch_resource_query = f"""
@@ -76,7 +76,7 @@ def reduce_location_resource(c,t,message, resource):
             .property('volume', {new_volume})
         """
         c.run_query(patch_resource_query)
-        logging.info(f"EXOADMIN: resources on {message['agent']['name']} reduced by {quantity}, People at this location will starve.")
+        logging.info(f"EXOADMIN: resources on {message['agent']['name']}:{message['agent']['objid']} reduced by {quantity}, People at this location will starve.")
         starving_messages = get_starving_population_messages(c,t,message['agent'])
     return starving_messages
 
@@ -108,6 +108,7 @@ def get_starving_population_messages(c, t, agent):
             starving_messages.append(starving_action_message)
         else:
             pop_dies(c,t,pop)
+    logging.info(f"EXOADMIN: {len(starving_messages)} starving messages created for the inhabitants of: {agent['name']}:{agent['objid']}")
     return starving_messages
 
 def pop_dies(c,t,pop):
