@@ -78,7 +78,7 @@ def resolve_action_event(event: func.EventHubEvent):
         logging.info(f"EXOADMIN:       -------And with that processed UPDATE: {message['agent']} at UTU:{t}")
 
     # Catchall for messages that are not recognized.
-    if message.get('action') not in ["reproduce","consume","renew","update"]:
+    if (message.get('action') not in ["reproduce","consume","renew","update"])&('job' not in message.keys()):
         logging.info(f"EXOADMIN:       ------- UNKNOWN ACTION NOT PROCESSED: {message['agent']} at UTU:{t}")
 
     if len(outgoing_messages)>0:
