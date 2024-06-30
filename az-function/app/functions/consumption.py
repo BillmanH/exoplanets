@@ -103,11 +103,11 @@ def get_starving_population_messages(c, t, agent):
     starving_pops = c.clean_nodes(c.res)
     starving_messages = []
     for pop in starving_pops:
-        if pop.get('health') > 0:
-            starving_action_message = {"agent":pop,"action":starving_action,"job":starving_job}
-            starving_messages.append(starving_action_message)
-        else:
-            pop_dies(c,t,pop)
+            if float(pop.get('health',0)) > 0:
+                starving_action_message = {"agent":pop,"action":starving_action,"job":starving_job}
+                starving_messages.append(starving_action_message)
+            else:
+                pop_dies(c,t,pop)
     logging.info(f"EXOADMIN: {len(starving_messages)} starving messages created for the inhabitants of: {agent['name']}:{agent['objid']}")
     return starving_messages
 
