@@ -136,9 +136,7 @@ class Action:
             augmented_properties = self.action["augments_self_properties"]
         logging.info(f"EXOADMIN: job augmenting {augmented_properties}<{type(augmented_properties)}> on: {self.agent}")
         for n in augmented_properties.keys():
-            logging.info(f"EXOADMIN: job augmenting property n: {n}")
-            logging.info(f"EXOADMIN: job augmenting property self.agent[n]: {self.agent[n]}")
-            logging.info(f"EXOADMIN: job augmenting property augmented_properties[n]: {augmented_properties[n]}")
+            logging.info(f"EXOADMIN: job augmenting property : {n}  -> {self.agent[n]},{augmented_properties[n]}")
             augmented_vaue = float(self.agent[n]) + float(augmented_properties[n])
             logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
             query += f".property('{n}',{self.agent[n]})"
