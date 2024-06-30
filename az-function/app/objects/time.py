@@ -141,13 +141,14 @@ class Action:
             logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
             query += f".property('{n}',{self.agent[n]})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
+        self.c.run_queries()
 
     def add_updates_to_c(self,t):
         if self.action.get('augments_self_properties') != None:
             self.query_patch_properties()
-        self.make_action_event(t)
         # action types that are 'automatic' are not resolved by the agent
         if self.job.get('actionType') != 'automatic':
+            self.make_action_event(t)
             self.mark_action_as_resolved()
             self.mark_agent_idle()
         logging.info(f"EXOADMIN: job function updating data {self.data}")
