@@ -81,7 +81,7 @@ def resolve_action_event(event: func.EventHubEvent):
     if message.get('action') not in ["reproduce","consume","renew","update"]:
         logging.info(f"EXOADMIN:       ------- UNKNOWN ACTION NOT PROCESSED: {message['agent']} at UTU:{t}")
 
-    if outgoing_messages>0:
+    if len(outgoing_messages)>0:
         logging.info(f"EXOADMIN: produced {len(outgoing_messages)} outgoing messages")
         jobs.send_to_eventhub(outgoing_messages, eh_producer)
         logging.info(f"EXOADMIN: additional messages sent to EH. ")
