@@ -142,6 +142,7 @@ class Action:
             query += f".property('{n}',{self.agent[n]})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
         self.c.run_queries()
+        logging.info(f"EXOADMIN: queries sent to cosmosdb {len(self.c.stack)}")
 
     def add_updates_to_c(self,t):
         if self.action.get('augments_self_properties') != None:
