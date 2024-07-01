@@ -78,6 +78,7 @@ def create_job(pop,action,utu):
                     "actionType":action['type'],
                     "created_at": utu.params['currentTime'],
                     "status":"pending"}
+    # TODO: The edge could be irrelivatnt given how events are processed. Investigate and delete if not needed.
     data = {"nodes": [action], "edges": [popToAction]}
     return data
 

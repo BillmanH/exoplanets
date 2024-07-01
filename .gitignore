@@ -169,3 +169,8 @@ infra/server/parameters.json
 az-functions/az-functions/.vscode/extensions.json
 
 .python_packages
+
+
+# Adding Syllables to files so that I can find them out of place. 
+notebooks/People/syllables_dist.p
+notebooks/People/syllables.p

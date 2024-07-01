@@ -20,7 +20,7 @@ def calculate_growth(c,t,params):
 
     a = np.array(c.res)
     logging.info(f"EXOADMIN: healthy_pops_query {len(a)}")
-    if len(a)>=0:
+    if len(a)<=0:
         logging.info(f"EXOADMIN: No pops that meet the pop_health_requirement")
         return messages
     pops_df = pd.DataFrame(np.split(a,len(a)/3),columns=['objid','health','wealth'])
@@ -111,23 +111,37 @@ def grow_population(c,t, parent_pop):
     
     inhabits_edge = {'node1': child.objid, 'node2': loc_dict['objid'], 'label': 'inhabits'}
 
-    event = population_growth_event(t,pop_dict,loc_dict,child)
-    event_edge = {'node1': child.objid, 'node2': event['objid'], 'label': 'caused'}
-
-    data = {"nodes":[child_data, event] ,"edges":[inhabits_edge,child.isOfSpecies,isIn_edge,event_edge] }
+    data = {"nodes":[child_data] ,"edges":[inhabits_edge,child.isOfSpecies,isIn_edge] }
     c.upload_data(pop_dict['userguid'],data)
     return data
 
 
-def population_growth_event(t,parent,location,child):
-    node = {
-        'objid':maths.uuid(),
-        'name':'population growth',
-        'label':'event',
-        'text': f"The population ({parent['name']}) inhabiting {location['name']} has grown to produce the population: {child.name}.",
-        'visibleTo':parent['userguid'],
-        'time':t.params['currentTime'],
-        'userguid':parent['userguid'],
-        'source':'notebook'
-    }
-    return node
+def get_renewal_message(resource):
+    message = {"agent":resource,"action":"renew"}
+    return message
+
+def calculate_renewal(c,t,params):
+    renewing_resources_query =f"""
+    g.V().has('label','resource').has('replenish_rate').valuemap()
+    """
+    c.run_query(renewing_resources_query)
+    renewing_resources = c.clean_nodes(c.res)
+    messages = []
+    for resource in renewing_resources:
+        if resource['volume'] < resource['max_volume']:
+            messages.append(get_renewal_message(resource))
+    return messages
+
+def renew_resource(c,message):
+    objid = message['agent']['objid']
+    new_volume = message['agent']['volume'] + message['agent']['replenish_rate']
+    if new_volume > message['agent']['max_volume']:
+        new_volume = message['agent']['max_volume']
+
+    patch_resource_query = f"""
+    g.V().has('objid','{objid}').out('has').has('label','resource')
+        .property('volume', {new_volume})
+    """
+    c.run_query(patch_resource_query)
+    logging.info(f"EXOADMIN: {message['agent']['name']}:{message['agent']['objid']} increased by {message['agent']['replenish_rate']}, {message['agent']['volume']}-> {new_volume}")
+    return None

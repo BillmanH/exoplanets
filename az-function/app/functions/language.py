@@ -9,6 +9,7 @@ try:
     syllables = pickle.load(open("/home/site/wwwroot/syllables.p", "rb"))
     syllables_dist = pickle.load(open("/home/site/wwwroot/syllables_dist.p", "rb"))
 except:
+    print('loading syllables from ', os.getcwd())
     syllables = pickle.load(open("syllables.p", "rb"))
     syllables_dist = pickle.load(open("syllables_dist.p", "rb"))
 
