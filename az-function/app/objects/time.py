@@ -139,7 +139,7 @@ class Action:
             logging.info(f"EXOADMIN: job augmenting property : {n}  -> {self.agent[n]},{augmented_properties[n]}")
             augmented_vaue = float(self.agent[n]) + float(augmented_properties[n])
             logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
-            query += f".property('{n}',{self.agent[n]})"
+            query += f".property('{n}',{augmented_vaue})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
         logging.info(f"EXOADMIN: Gremlin Query Added: {query}")
 
