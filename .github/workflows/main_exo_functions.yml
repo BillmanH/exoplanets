@@ -7,7 +7,7 @@ name: Build and deploy Python project to Azure Function App - exo-functions
 on:
   push:
     branches:
-      - main
+      - functions
   workflow_dispatch:
 
 env:
