@@ -1,6 +1,6 @@
 # Troubleshooting Azure Python Functions (Python)
 
-There are some docs really good docs (here)[https://learn.microsoft.com/en-us/azure/azure-functions/recover-python-functions?tabs=vscode%2Cbash&pivots=python-mode-decorators], but they don't get into some of the actual details that translate error message to azure function. 
+There are some docs really good docs [here](https://learn.microsoft.com/en-us/azure/azure-functions/recover-python-functions?tabs=vscode%2Cbash&pivots=python-mode-decorators), but they don't get into some of the actual details that translate error message to azure function. 
 The first part to understand is the exact place that your app is failing. Depenidng on where it is failing, the way to troubleshoot could be different. 
 
 In this article: 
@@ -9,6 +9,8 @@ In this article:
 | Function doesn't deploy in VSC    | redeploy    |
 | Function does deploy but doesn't show in the portal | Look up the error and fix your code  |
 | Function is triggering, but crashing on execution | Look up the error and fix your code |
+| Function is completing successfully, but not doing what you want | Deploy some logs to learn more | 
+| Long-term function running is off | Log analytics and KUSTO is your friend | 
 
 When functions are eventhub triggers, they can be tough to troubleshoot because they have to be triggered by event streams. The only real way to troubleshoot them is by deploying them into a dev environment in Azure and watching them go. With all of the tools in Visual Stuido Code you can simulate them locally, but IMO it's not worth it. Just get a small sandbox environment where you can troubleshoot them. 
 
