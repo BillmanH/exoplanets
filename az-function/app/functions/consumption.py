@@ -52,7 +52,7 @@ def reduce_location_resource(c,t,message, resource):
     # find out if the location has the resource
     objid = message['agent']['objid']
     consuming = list(resource.keys())[0]
-    quantity = list(resource.values())[0]
+    quantity = float(list(resource.values())[0])
     resource_query = f"""
     g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}').valuemap()
     """
@@ -61,8 +61,8 @@ def reduce_location_resource(c,t,message, resource):
         logging.info(f"EXOADMIN: {objid} has a resource issue - c.res:{c.res}")
     resource = c.clean_nodes(c.res)[0]
     starving_messages = []
-    if resource['volume'] > quantity:
-        new_volume = resource['volume'] - quantity
+    if float(resource['volume']) > quantity:
+        new_volume = float(resource['volume']) - quantity
         patch_resource_query = f"""
         g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}')
             .property('volume', {new_volume})
