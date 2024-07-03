@@ -63,7 +63,7 @@ If you scroll down you will see stack trace of what has happened. It's not the m
 (I've noted the solution to that issue here)(https://github.com/Azure/azure-functions-python-worker/issues/1262#issuecomment-2129619040).
 
 
-# The app is triggering, but crashing on execution. 
+# Function is triggering, but crashing on execution. 
 Probably something wrong with your code, but what? 
 
 Click on the specific function that is failing and go to the `Invocations` tab. 
@@ -75,3 +75,17 @@ You can see, for each individual execution, what has failed. Click on the `Date 
 ![Alt text](../docs/img/functioninvocationstack.png?raw=true "where is my function failing") 
 
 It's not pretty, but you can see the now obvious error in your programing. 
+
+# Function is completing successfully, but not doing what you want
+Now you've got to get into some logs. 
+
+![Alt text](../docs/img/functioninvokelogs.png?raw=true "where is my function failing") 
+
+You can see in my function logs above that I've got a lot of information. Each step that the function takes is printed out in the logs. Also, all of my python objects have custom `__repr__` functions that give some information as to the object's state. 
+
+Make liberal use of logger functions such as:
+```python
+logging.info(f"EXOADMIN: {message['agent']['name']}:{message['agent']['objid']} increased by {message['agent']['replenish_rate']}, {message['agent']['volume']}-> {new_volume}")
+```
+Note that all of my logs begin with `EXOADMIN`. This makes them easy to see, and benefits when querying in Kusto later on. It separates them from log messages sent by the Azure Function system. 
+
