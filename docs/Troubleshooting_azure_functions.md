@@ -17,17 +17,36 @@ Pretty much the solution is just to run it again. It might work. Here are some t
 * Make sure the AZ Function you want to deploy to in Azure is running. You can try restarting the function.
 * Make sure your app is [not throttled by your daily quota](https://stackoverflow.com/questions/75670569/why-azure-function-with-timer-trigger-suddenly-stops-being-triggered/78098313#78098313)
 
-![Alt text](../docs/img/azurefunction_vsc_deploy.png?raw=true "infra")
-For the most part, you just run your function again and again and eventually it will deploy. 
+For the most part, you just deploy your function again and again and eventually it will deploy. 
 
 ## ERROR: Function does deploy but doesn't show in the portal.
-This assumes that you got the green checkbox in your deployment `Deploy to App "myApp" Succeeded`. Again, there can be many causes. 
+This assumes that you got the green checkbox in your deployment `Deploy to App "myApp" Succeeded`. 
+![Alt text](../docs/img/functionnottrigger.png?raw=true "where is my function failing") 
 
-A common cause is that the function, on startup, crashed while defining the functions. The most common reason is that you are importing a module that isn't in your requirements.txt file. But it could also be because of a missing `]` or anything that would make the application crash if you were to run it locally.
+Look for this in the application logs:
+![Alt text](../docs/img/function0funcloaded.png?raw=true "where is my function failing") 
+That means that it loaded the environment and your code, but when it ran the `python function_app.py` it crashed right away before entering the listening state. 
+
+Most likely the service loaded the new code, but that code crashed when booting up the app:
+* `"0 functions loaded"` means that the app booted your code, but wasn't able to get any of the functions to work. 
+* You have an issue with your code. 
+* Missing a library in the `requirements.txt` is the most common. 
+* Variables that are declared outside of the wrapped function.
+* Calling files that exist locally, but are ignored or pathed to a different location.
+* Modules that have system requirements that the cloud machine doesn't have. 
+* As above, make sure your app is [not throttled by your daily quota](https://stackoverflow.com/questions/75670569/why-azure-function-with-timer-trigger-suddenly-stops-being-triggered/78098313#78098313)
+
+### How to see the specific error:
+Go to the "Diagnose and solve problems">Search>"Functions that are not triggering".
+
+![Alt text](../docs/img/functionsnottriggering.png?raw=true "where is my function failing") 
+
+If you scroll down you will see stack trace of what has happened. It's not the most readable, but it will tell you what had happened. 
+
+![Alt text](../docs/img/functionsstacktrace.png?raw=true "where is my function failing") 
+
 (I've noted the solution to that issue here)(https://github.com/Azure/azure-functions-python-worker/issues/1262#issuecomment-2129619040).
 
-* If you get the error `Module not found` and you are _sure_ that it's in the requirements.txt. Redeploy your app. That just happens sometimes. 
 
-
-# Looking at the error messages  
-You should make use of the `logging.info` capabilities. You can get those logs in App Insights, are available in the portal as well. 
+## The app is executing, but not doing what you think it should be doing. 
+Function deploys, and executes, but isn't responding in the correct way.
