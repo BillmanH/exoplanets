@@ -1,6 +1,7 @@
 # Troubleshooting Azure Python Functions (Python)
 
-There are some docs really good docs [here](https://learn.microsoft.com/en-us/azure/azure-functions/recover-python-functions?tabs=vscode%2Cbash&pivots=python-mode-decorators), but they don't get into some of the actual details that translate error message to azure function. 
+There are some docs really good docs [here](https://learn.microsoft.com/en-us/azure/azure-functions/recover-python-functions?tabs=vscode%2Cbash&pivots=python-mode-decorators), but they don't get into some of the actual details that translate error message to azure function. This guide will show you how to troubleshoot your Azure Function from the local deployment to azure, all the way to the long term log analytics for your app. 
+
 The first part to understand is the exact place that your app is failing. Depenidng on where it is failing, the way to troubleshoot could be different. 
 
 In this article: 
