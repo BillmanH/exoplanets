@@ -6,7 +6,7 @@ The first part to understand is the exact place that your app is failing. Depeni
 In this article: 
 | Error | TLDR What to do |
 |----------|----------|
-| Function doesn't deploy in VSC    | redeploy    |
+| Function doesn't deploy in VSC (or in pipeline)    | redeploy    |
 | Function does deploy but doesn't show in the portal | Look up the error and fix your code  |
 | Function is triggering, but crashing on execution | Look up the error and fix your code |
 | Function is completing successfully, but not doing what you want | Deploy some logs to learn more | 
@@ -63,7 +63,7 @@ If you scroll down you will see stack trace of what has happened. It's not the m
 (I've noted the solution to that issue here)(https://github.com/Azure/azure-functions-python-worker/issues/1262#issuecomment-2129619040).
 
 
-# Function is triggering, but crashing on execution. 
+# Function is triggering, but crashing on execution: 
 Probably something wrong with your code, but what? 
 
 Click on the specific function that is failing and go to the `Invocations` tab. 
@@ -76,7 +76,7 @@ You can see, for each individual execution, what has failed. Click on the `Date 
 
 It's not pretty, but you can see the now obvious error in your programing. 
 
-# Function is completing successfully, but not doing what you want
+# Function is completing successfully, but not doing what you want:
 Now you've got to get into some logs. 
 
 ![Alt text](../docs/img/functioninvokelogs.png?raw=true "where is my function failing") 
@@ -89,3 +89,51 @@ logging.info(f"EXOADMIN: {message['agent']['name']}:{message['agent']['objid']} 
 ```
 Note that all of my logs begin with `EXOADMIN`. This makes them easy to see, and benefits when querying in Kusto later on. It separates them from log messages sent by the Azure Function system. 
 
+# Long-term function running is off:
+Some times your function only fails once in a while and it's difficult to lock down what's happening when it does. Kusto to the rescue. 
+
+### In app insights:
+![Alt text](../docs/img/functionappinsights1.png?raw=true "where is my function failing") 
+
+Get the count of failed executions over time. 
+```
+exceptions
+| where timestamp > ago(2d)
+| extend dateformated = format_datetime(timestamp, 'yyyy-MM-dd hh')
+| where dateformated <> "OTHER"
+| summarize Count=count() by dateformated
+| order by dateformated asc
+```
+Pin that chart to a custom dashboard for your project. Share the dashboard with your stakeholders. 
+
+![Alt text](../docs/img/appInsightsboard.png?raw=true "where is my function failing") 
+
+Getting a list of the functions that are failing over time, with the error message: 
+```
+exceptions
+| where timestamp > ago(7d)
+| summarize Count=count() by innermostMessage, operation_Name
+| project-reorder Count, operation_Name
+| order by Count desc 
+| limit 20
+```
+
+**Note** that the `| limit 20` will keep your query costs down. 
+
+![Alt text](../docs/img/appinisghtsboard2.png?raw=true "where is my function failing") 
+
+
+## Additional Logging fun:
+This you need to customize for your use case, but if you have been good at using logs you can run queries across your invocations. 
+
+for example:
+```
+union traces
+| where timestamp > ago(3d)
+| where message has "EXOADMIN:"
+| where message has "People at this location will starve"
+| order by timestamp desc
+```
+I want to know how _famine_ is being executed across multiple function invocations. This helps me understand how the function is working in aggregate. 
+
+![Alt text](../docs/img/appinsights_starving.png?raw=true "where is my function failing") 
