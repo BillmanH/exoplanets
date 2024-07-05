@@ -25,7 +25,7 @@ EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 #For troubleshooting, making sure the function is the one I think it is. 
-function_version_string = "sunday hackathon"
+function_version_string = "4th July hack"
 
 # func start --functions [a space separated list of functions]
 # func start --functions actionResolverTimer resolveActionEvents ututimer
