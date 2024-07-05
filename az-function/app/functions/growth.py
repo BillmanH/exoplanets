@@ -128,7 +128,7 @@ def calculate_renewal(c,t,params):
     renewing_resources = c.clean_nodes(c.res)
     messages = []
     for resource in renewing_resources:
-        if resource['volume'] < resource['max_volume']:
+        if float(resource['volume']) < float(resource['max_volume']):
             messages.append(get_renewal_message(resource))
     return messages
 
