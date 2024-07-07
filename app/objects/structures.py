@@ -17,8 +17,8 @@ class Building(baseobjects.Baseobject):
         
     def get_owned_by(self):
         edge = {
-            "node1": self.objid,
-            "node2": self.generated_by['objid'],
+            "node1": self.generated_by['objid'],
+            "node2": self.objid,
             "label": "owns",
         }
         return edge
