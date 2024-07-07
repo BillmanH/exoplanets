@@ -118,3 +118,14 @@ buildings:
         industry: .7
       renews_location_resource: 
         hydrocarbons: 10
+
+  marketplace:
+      name: Marketplace
+      description: "Generates wealth for all populations in this faction except the owner"
+      owned_by: pop
+      effort: 10
+      faction_augments:
+        wealth: 1
+      requires_attr: 
+        industry: .51
+      render_type: 'block'
