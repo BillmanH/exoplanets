@@ -48,3 +48,11 @@ If this is your first time building the application, you will need to update the
 python manage.py makemigrations
 python manage.py migrate
 ``` 
+
+
+# Misc
+
+### Gource Setup:
+```
+gource -s 0.1 --user-filter "William Harding|william.harding"
+```
