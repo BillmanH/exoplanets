@@ -18,7 +18,7 @@ from app.connectors import cmdb_graph
 from app.functions import jobs
 from app.functions import growth
 from app.functions import consumption
-
+from app.functions import cleanup
 
 RUNNING_LOCALLY = False
 EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
@@ -86,8 +86,6 @@ def resolve_action_event(event: func.EventHubEvent):
         jobs.send_to_eventhub(outgoing_messages, eh_producer)
         logging.info(f"EXOADMIN: additional messages sent to EH. ")
 
-
-
 # Generates messages to be resolved asynchronously.
 @app.function_name(name="actionResolverTimer")
 @app.schedule(schedule="0 */5 * * * *", 
@@ -114,6 +112,33 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
     jobs.send_to_eventhub(messages, eh_producer)
     logging.info(f'EXOADMIN: messages: job:{len(job_messages)}, growth:{len(growth_messasges)}, consumption:{len(consumption_messages)}, renewal:{len(renewal_messages)} - at: {t}')
     logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {t}')
+
+# Faction and building Updates
+@app.function_name(name="factionBuildingTimer")
+@app.schedule(schedule="0 */5 * * * *", 
+              arg_name="mytimer",
+              run_on_startup=RUNNING_LOCALLY)
+def faction_building_resolver(mytimer: func.TimerRequest) -> None:
+    logging.info(f'EXOADMIN: function deploy version: {function_version_string}')
+    eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
+    credential = DefaultAzureCredential()
+    utc_timestamp = datetime.datetime.now(datetime.timezone.utc).replace(
+        tzinfo=datetime.timezone.utc).isoformat()
+    c = cmdb_graph.CosmosdbClient()
+    # Establish the time
+    t = time.Time(c)
+    t.get_current_UTU()
+    t.building_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/buildingconfig.yaml")))
+
+# UTU is the universal time unit
+@app.function_name(name="cleanup")
+@app.schedule(schedule="0 0 */2 * * *", 
+              arg_name="mytimer",
+              run_on_startup=RUNNING_LOCALLY) 
+def utu_timer(mytimer: func.TimerRequest) -> None:
+    logging.info(f'EXOADMIN: function deploy version: {function_version_string}')
+    c = cmdb_graph.CosmosdbClient()
+    cleanup.cleanup_empty_factions(c)
 
 # UTU is the universal time unit
 @app.function_name(name="ututimer")
