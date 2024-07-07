@@ -18,6 +18,7 @@ from app.connectors import cmdb_graph
 from app.functions import jobs
 from app.functions import growth
 from app.functions import consumption
+from app.functions import structures
 from app.functions import cleanup
 
 RUNNING_LOCALLY = False
@@ -25,7 +26,7 @@ EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 #For troubleshooting, making sure the function is the one I think it is. 
-function_version_string = "4th July hack"
+function_version_string = "sudnay 7th"
 
 # func start --functions [a space separated list of functions]
 # func start --functions actionResolverTimer resolveActionEvents ututimer
@@ -77,8 +78,13 @@ def resolve_action_event(event: func.EventHubEvent):
         growth.renew_resource(c,message)
         logging.info(f"EXOADMIN:       -------And with that processed UPDATE: {message['agent']} at UTU:{t}")
 
+    # individual structure updates
+    if message.get('action')=="structure":
+        structures.process_structure(c,message)
+        logging.info(f"EXOADMIN:       -------And with that processed STRUCTURE: {message['agent']} at UTU:{t}")
+
     # Catchall for messages that are not recognized.
-    if (message.get('action') not in ["reproduce","consume","renew","update"])&('job' not in message.keys()):
+    if (message.get('action') not in ["reproduce","consume","renew","update","structure"])&('job' not in message.keys()):
         logging.info(f"EXOADMIN:       ------- UNKNOWN ACTION NOT PROCESSED: {message['agent']} at UTU:{t}")
 
     if len(outgoing_messages)>0:
@@ -115,7 +121,7 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
 
 # Faction and building Updates
 @app.function_name(name="factionBuildingTimer")
-@app.schedule(schedule="0 */5 * * * *", 
+@app.schedule(schedule="0 */10 * * * *", 
               arg_name="mytimer",
               run_on_startup=RUNNING_LOCALLY)
 def faction_building_resolver(mytimer: func.TimerRequest) -> None:
@@ -129,6 +135,11 @@ def faction_building_resolver(mytimer: func.TimerRequest) -> None:
     t = time.Time(c)
     t.get_current_UTU()
     t.building_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/buildingconfig.yaml")))
+    # getting the list of structures that can take actions:
+    faction_res = structures.get_faction_pop_structures(c)
+    messages = faction_res
+    jobs.send_to_eventhub(messages, eh_producer)
+    logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {t}')
 
 # UTU is the universal time unit
 @app.function_name(name="cleanup")

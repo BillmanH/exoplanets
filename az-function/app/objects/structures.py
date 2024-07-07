@@ -1,3 +1,5 @@
+import yaml
+
 from ..objects import baseobjects
 
 class Building(baseobjects.Baseobject):
