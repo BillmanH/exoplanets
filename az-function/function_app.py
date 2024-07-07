@@ -44,7 +44,7 @@ def resolve_action_event(event: func.EventHubEvent):
     t = time.Time(c)
     t.get_current_UTU()
     logging.info(f"EXOADMIN: processing message: {message.get('action')} at UTU:{t}")
-    pop_growth_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/popgrowthconfig.yaml")))
+    pop_growth_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/populations.yaml")))
     # adding the pop growth params to the time object
     t.pop_growth_params = pop_growth_params
     outgoing_messages = []
@@ -104,7 +104,7 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.now(datetime.timezone.utc).replace(
         tzinfo=datetime.timezone.utc).isoformat()
     c = cmdb_graph.CosmosdbClient()
-    pop_growth_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/popgrowthconfig.yaml")))
+    pop_growth_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/populations.yaml")))
     # Establish the time
     t = time.Time(c)
     t.get_current_UTU()
@@ -134,7 +134,7 @@ def faction_building_resolver(mytimer: func.TimerRequest) -> None:
     # Establish the time
     t = time.Time(c)
     t.get_current_UTU()
-    t.building_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/buildingconfig.yaml")))
+    t.building_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/buildings.yaml")))
     # getting the list of structures that can take actions:
     faction_res = structures.get_faction_pop_structures(c)
     messages = faction_res
