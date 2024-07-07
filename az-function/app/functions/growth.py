@@ -143,7 +143,7 @@ def renew_resource(c,message):
         new_volume = max_volume
 
     patch_resource_query = f"""
-    g.V().has('objid','{objid}').out('has').has('label','resource')
+    g.V().has('objid','{objid}').has('label','resource')
         .property('volume', {new_volume})
     """
     c.run_query(patch_resource_query)
