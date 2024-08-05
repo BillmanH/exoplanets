@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from app.models import *
+from app.models.models import *
 from app.objects.account import Account
 from ..creators import universe
 
@@ -99,13 +99,13 @@ def pop_ui_local(request):
 
 @ms_identity_web.login_required
 def galaxy_map(request):
-    res = get_galaxy_nodes()
-    context = {"galaxies": res}
+    res = get_star_systems()
+    context = {"stars": res}
     return render(request, "app/galaxy_map.html", context)
 
 
 @ms_identity_web.login_required
-def populations_view(request):
+def populations_view(request): 
     res = get_factions(request.identity_context_data.username)
     context = {"factions": res}
     return render(request, "app/populations.html", context)

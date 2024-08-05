@@ -148,7 +148,6 @@ function build_solar_system(c,n) {
         success: function(data){
             var data = data.solar_system
             cnsl(data.status,data.note)
-            {% include "app/charts/solar_system.js" %}
             form_population()
             form_people_culture()
             d3.selectAll('#loading').remove()

@@ -1,4 +1,4 @@
-from app.models import CosmosdbClient
+from app.models.models import CosmosdbClient
 from django.http import JsonResponse
 
 from app.creators import homeworld

@@ -17,7 +17,6 @@ function r(x, n=100) {
 renames = {}
 
 // things we don't print: "objid"
-
 function limitDict(d) {
     var things_we_dont_print = ["name","username", "id", "orbitsId",
                                  "vx", "vy", "x", "y","z", "isIn", "iter",

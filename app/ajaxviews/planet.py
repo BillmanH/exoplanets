@@ -1,4 +1,4 @@
-from app.models import CosmosdbClient
+
 from django.http import JsonResponse
 
 def get_planet(request):
