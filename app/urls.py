@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from .views import core
 from .ajaxviews import (planet, 
                         pop, 
                         overview, 
@@ -10,19 +10,19 @@ from .ajaxviews import (planet,
                         events)
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("new", views.new_game),
-    path("genesis_view", views.genesis, name="genesis"),
-    path("homesystemui", views.home_system_ui, name="home_system_ui"),
-    path("galaxymap", views.galaxy_map, name="galaxy_map"),
-    path("systemmap", views.system_map, name="system_map"),
-    path("systemui", views.system_ui, name="system_ui"),
-    path("popuilocal", views.pop_ui_local, name="pop_ui_local"),
-    path("populations", views.populations_view, name="populations"),
+    path("", core.index, name="index"),
+    path("new", core.new_game),
+    path("genesis_view", core.genesis, name="genesis"),
+    path("homesystemui", core.home_system_ui, name="home_system_ui"),
+    path("galaxymap", core.galaxy_map, name="galaxy_map"),
+    path("systemmap", core.system_map, name="system_map"),
+    path("systemui", core.system_ui, name="system_ui"),
+    path("popuilocal", core.pop_ui_local, name="pop_ui_local"),
+    path("populations", core.populations_view, name="populations"),
+    
     path("ajax/refreshaccount", genesis.refreshaccount, name="refreshaccount"),
     path("ajax/genesissystem", genesis.build_solar_system, name="genesissystem"),
     path("ajax/genesispopulation", genesis.build_population, name="genesispopulation"),
-
     path("ajax/planet", planet.get_planet, name="get_planet"),
     path("ajax/planet-details", planet.get_planet_details, name="get_planet_details"),
     path("ajax/planet-inhabitants", planet.get_planet_inhabitants, name="get_planet_inhabitants"),

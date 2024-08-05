@@ -4,10 +4,10 @@ from django.shortcuts import redirect, render
 
 from app.models import *
 from app.objects.account import Account
-from .creators import universe
+from ..creators import universe
 
 
-from .forms import HomeSystemForm
+from ..forms import HomeSystemForm
 from django.conf import settings
 
 ms_identity_web = settings.MS_IDENTITY_WEB
