@@ -34,7 +34,7 @@
         {% include "app/ui/global_ui.js" %}
         
         // generatiors
-        {% include "app/ui/skybox_night_sky.js" %}
+        {% include "app/ui/skybox_jweb.js" %}
         {% include "app/tooltips.js" %}
 
         return scene;
@@ -42,5 +42,8 @@
 
 
     const scene = createScene();  
+    engine.runRenderLoop(function () {
+        scene.render();
+    });
 </script>
 
