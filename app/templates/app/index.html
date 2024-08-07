@@ -20,7 +20,7 @@
     <p>A real-time, evolving universe of procedurally generated systems
     </br>Manage geo-politics, advance civilizations, expand into space</p>
     <canvas id="staticCanvas" touch-action="none" height="300", width="900"></canvas>
-    <p>This game is in constant development. <a class="menu button" href="https://github.com/BillmanH/exoplanets">View the source code on Github</a>. The `dev` branch will show you what I'm working on right now</p>
+    <p>This game is in constant development. <a class="menu button" href="https://github.com/BillmanH/exoplanets">View the source code on Github</a> </br> The `dev` branch will show you what I'm working on right now</p>
     <p>You can also <a class="menu button" href="https://github.com/BillmanH/exoplanets/issues">report a bug, or request a feature</a></p>
     <p>How big is the game so far:</p>
     <ul>
@@ -65,7 +65,6 @@
 
         const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
         camera.useFramingBehavior = true;
-        camera.attachControl(canvas, true);
 
         const alphaAnimation = new BABYLON.Animation("camAlpha", "alpha", 2, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE)
         const keys2 = [{
