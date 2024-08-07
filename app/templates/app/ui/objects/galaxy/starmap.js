@@ -5,8 +5,8 @@ console.log('starmap.js loaded')
 function createStar(n){
     n.diameter = 1
     n.x = 0 + n.glon
-    n.y = 0 + n.glat
-    n.z = 0 + n.gelat
+    n.y = 0 + n.gelat
+    n.z = 0 + n.glat
 
     const star = BABYLON.MeshBuilder.CreateSphere(n.objid, {diameter: n.diameter});
     star.position = new BABYLON.Vector3(n.x, n.y, n.z);
