@@ -10,7 +10,7 @@ skyboxMaterial.diffuseColor = new BABYLON.Color3(0,0,0)
 skyboxMaterial.specularColor = new BABYLON.Color3(0,0,0)
 
 //texture of six sides
-skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("{% static 'app/objects/skybox/james_web/hudf_hst' %}");
+skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("{% static 'app/objects/skybox/all_black/hudf_hst' %}");
 skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE; 
 
 skybox.material = skyboxMaterial;
