@@ -18,7 +18,7 @@ renames = {}
 
 // things we don't print: "objid"
 function limitDict(d) {
-    var things_we_dont_print = ["name","username", "id", "orbitsId",
+    var things_we_dont_print = ["name","username", "id", "orbitsId","objid",
                                  "vx", "vy", "x", "y","z", "isIn", "iter",
                                 "gui","objtype","coord","ownedByID","userguid"]
     for (i in things_we_dont_print) {
@@ -44,6 +44,10 @@ function toProperCase(s)
 
 //for tooltips, convert a dict to HTML
 function dictToHtml(d) {
+    console.log(d)
+    if (d['objtype']==undefined){
+        d['objtype'] = '<->'
+    }
     html = "<div><strong>"+ d['name'] +"</strong>" + ": "+ d['objtype']+ "</div>"
     var dt = Object.assign({}, d);
     dt = limitDict(dt)
@@ -64,6 +68,10 @@ function dictToHtml(d) {
 }
 
 function dictToSimpleText(d) {
+    console.log(d)
+    if (d['objtype']==undefined){
+        d['objtype'] = '<->'
+    }
     html = d['name'] + " : "+ d['objtype'] +["\n"]
     var dt = Object.assign({}, d);
     dt = limitDict(dt)
