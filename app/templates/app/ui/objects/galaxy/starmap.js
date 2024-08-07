@@ -11,15 +11,9 @@ function createStar(n){
     const star = BABYLON.MeshBuilder.CreateSphere(n.objid, {diameter: n.diameter});
     star.position = new BABYLON.Vector3(n.x, n.y, n.z);
 
+    // light coming of star
     var sunlight = new BABYLON.PointLight("sunlight", new BABYLON.Vector3(n.x, n.y, n.z));
     const surface = new BABYLON.StandardMaterial("surface");
-    
-    // var material = new BABYLON.StandardMaterial(scene);
-    // material.alpha = 1;
-    // material.diffuseColor = new BABYLON.Color3(1.0, 0.9, 0); //255,233,0
-    // star.material = material;
-
-    // light coming of sun
     surface.emissiveColor = new BABYLON.Color3(1, 1, 0);
     sunlight.diffuse = new BABYLON.Color3(0, 1, 1);
     sunlight.specular = new BABYLON.Color3(0, 1, 1);
