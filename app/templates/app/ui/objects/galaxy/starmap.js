@@ -21,12 +21,15 @@ function createStar(n){
     star.metadata = n
 
     star.actionManager = new BABYLON.ActionManager(scene);
-    star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
-        hoverTooltip(star)
-    }));
-    star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
-        dropControlIfExists("uiTooltip")
-    }));
+
+    if(interactive){
+        star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+            hoverTooltip(star)
+        }));
+        star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+            dropControlIfExists("uiTooltip")
+        }));
+    }
     console.log('star ', n.name,' created', n.x, n.y, n.z)  
     return star
 }

@@ -25,10 +25,12 @@ def index(request):
     c.add_query(count_pops_query)
     c.add_query(time_units_query)
     c.run_queries()
+    stars = get_star_systems()
     context = {"all_count": c.res[all_count_query], 
                 "count_accounts": c.res[count_accounts_query], 
                 "time": c.res[time_units_query],
-                "all_pops": c.res[count_pops_query]}
+                "all_pops": c.res[count_pops_query],
+                "stars": stars}
     return render(request, "app/index.html", context)
 
 @ms_identity_web.login_required

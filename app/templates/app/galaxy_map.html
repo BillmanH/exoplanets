@@ -14,13 +14,14 @@
             defaultNodeSize:10}
 
     
-            const canvas = document.getElementById("renderCanvas");
+    const canvas = document.getElementById("renderCanvas");
     const engine = new BABYLON.Engine(canvas, true);
 
     const createScene = function () {
         const scene = new BABYLON.Scene(engine);
         scene.clearColor = new BABYLON.Color3.Black;
 
+        const interactive = true
         const alpha = Math.PI / 4;
         const beta = Math.PI / 3;
         const radius = 300;
