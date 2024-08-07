@@ -4,7 +4,10 @@ function cs(s){
     return r
 }
 
-
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+  }
+  
 function createGroundDecal(o, ground, texture, size){
     const decalMat = new BABYLON.StandardMaterial();
         decalMat.diffuseTexture = new BABYLON.Texture(texture);

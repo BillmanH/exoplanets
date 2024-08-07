@@ -29,14 +29,17 @@
         const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
         camera.useFramingBehavior = true;
         camera.attachControl(canvas, true);
-        
+
+        {% include "app/ui/globals.js" %}
+
         // User interface
         {% include "app/ui/global_ui.js" %}
         
         // generatiors
         {% include "app/ui/skybox_jweb.js" %}
         {% include "app/tooltips.js" %}
-
+        {% include "app/ui/objects/galaxy/starmap.js" %}
+        
         return scene;
     }
 
