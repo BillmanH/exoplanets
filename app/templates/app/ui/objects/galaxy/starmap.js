@@ -6,11 +6,8 @@ function createStar(n){
     n.diameter = 1
     n.x = 0 + n.glon
     n.y = 0 + n.glat
-    if (n.hasOwnProperty('gz')){
-        n.z = 0 + n.gz
-    } else {
-        n.z = 0 + getRndInteger(-5,5)
-    }
+    n.z = 0 + n.gelat
+
     const star = BABYLON.MeshBuilder.CreateSphere(n.objid, {diameter: n.diameter});
     star.position = new BABYLON.Vector3(n.x, n.y, n.z);
 

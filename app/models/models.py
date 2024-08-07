@@ -3,7 +3,7 @@ from ..connectors.cmdb_graph import *
 def get_star_systems():
     # TODO: Add Glat and glon to systems when created
     # TODO: Create edge from user that connects to systems that have been discovered
-    query="g.V().haslabel('system').has('name').valueMap('name','type','objid','glat','glon')"
+    query="g.V().haslabel('system').has('name').valueMap('name','type','objid','glat','glon', 'gelat')"
     c = CosmosdbClient()
     c.run_query(query)
     return c.clean_nodes(c.res)

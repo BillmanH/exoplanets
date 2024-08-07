@@ -11,9 +11,9 @@ class System:
         self.type = "ordered"
         self.label = "system"
         self.isHomeSystem = True
-        self.glat = maths.np.round(maths.np.random.normal(0,20),3)
-        self.glon = maths.np.round(maths.np.random.normal(0,20),3)
-        self.gelat = maths.np.round(maths.np.random.normal(0,5),3)
+        self.glat = maths.np.round(maths.np.random.normal(0,30),3)
+        self.glon = maths.np.round(maths.np.random.normal(0,30),3)
+        self.gelat = maths.np.round(maths.np.random.normal(0,7),3)
 
     def get_data(self):
         system = {
