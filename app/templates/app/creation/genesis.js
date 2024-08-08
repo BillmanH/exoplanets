@@ -1,7 +1,5 @@
 
 // NOTE: These just affect the UI in the creator. This does not affect the actual genesis limits.
-pop_min = 2
-pop_max = 15
 
 var form = {
     "label":"form",
@@ -89,9 +87,6 @@ function add_duality_slider(c,n1,n2){
       }
     document.getElementById(c).appendChild(div);  
 }
-
-
-
 
 
 
