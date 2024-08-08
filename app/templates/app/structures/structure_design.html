@@ -1,0 +1,30 @@
+{% load static %}
+<html>
+{% include "app/head.html" %}
+
+
+<body>
+    <p>Greetings, {{ account.username }}.</p>
+    <h1>In the beginning there was nothing</h1>
+    This process can take some time. 
+    </br>Or you can quit back to the main menu, but you will need to start the creation process again. 
+    <h2>NOTE: If you start the creation process, it will distroy your previous world. A half-created world may be unplayable.</h2>
+    <p class='menu' id='startmenu'>
+        <a class='menu button' href='/'>Quit back to main menu</a>
+    </p>
+    <script>
+        {% include "app/tooltips.js" %}
+        var account = {{ account | safe }}
+        var width = 640,
+            height = 480,
+            defaultNodeSize = 10
+        console.log(account)
+        {% include "app/creation/genesis.js" %}
+    </script>
+
+
+</body>
+
+
+
+</html>
