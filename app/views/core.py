@@ -7,7 +7,6 @@ from app.objects.account import Account
 from ..creators import universe
 
 
-from ..forms import HomeSystemForm
 from django.conf import settings
 
 ms_identity_web = settings.MS_IDENTITY_WEB
@@ -67,20 +66,23 @@ def new_game(request):
 @ms_identity_web.login_required
 def genesis(request):
     acc = Account(request.identity_context_data._id_token_claims, CosmosdbClient()).get_json()
-    context = {"username": request.identity_context_data.username,
-                "userguid": request.identity_context_data.userguid}
+    context = {'account': acc}
     return render(request, "app/creation/genesis_view.html", context)
 
 
 @ms_identity_web.login_required
 def system_map(request):
     res = get_home_system(request.identity_context_data._id_token_claims['oid'])
+    if res == "No home system found":
+        return redirect("genesis")
     context = {"solar_system": res}
     return render(request, "app/system_map.html", context)
 
 @ms_identity_web.login_required
 def home_system_ui(request):
     res = get_home_system(request.identity_context_data._id_token_claims['oid'])
+    if res == "No home system found":
+        return redirect("genesis")
     context = {"solar_system": res}
     return render(request, "app/system_ui.html", context)
 
