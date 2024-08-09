@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import core
+from .views import core, structures
 from .ajaxviews import (planet, 
                         pop, 
                         overview, 
@@ -38,5 +38,7 @@ urlpatterns = [
     path("ajax/take-action", pop.take_action, name="pop_take_action"),
     path("ajax/take-building-action", pop.take_building_action, name="pop_take_building_action"),
     path("ajax/overview", overview.get_overview, name="overview"),
-    path("ajax/newsfeed", overview.get_newsfeed, name="newsfeed")
+    path("ajax/newsfeed", overview.get_newsfeed, name="newsfeed"),
+
+    path("structures/new", structures.new_structure, name="new_structure")
 ]

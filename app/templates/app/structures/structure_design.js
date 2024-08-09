@@ -1,27 +1,22 @@
 
 // NOTE: These just affect the UI in the creator. This does not affect the actual genesis limits.
 
-var form = {
-    "label":"form",
-    "name":"worldgenform",
-    "objid":Math.floor(Math.random()*10000000000000),  // 13 char GUID
-    "owner":"{{ account.username }}",
-    "userguid":"{{ account.userguid }}",
-    "username": "{{ account.username }}",
-    "accountid":account.objid,
-    "conformity":.5,
-    "constitution":.5,
-    "literacy":.5,
-    "aggression":.5,
-    "num_planets": 4,
-    "num_moons": 10,
-    "starting_pop":7,
-    "organics":.5,
-    "minerals":.5,
-    "consumes":"organics",
-    "effuses":"organic waste,plastics"
-    }
-
+var form =     {
+        "name": "Farmland",
+        "description": "Generates organic foodstuffs, populations will consume food before consuming natural resources",
+        "planet_requirements": {
+          "isHabitable": "true"
+        },
+        "faction_augments": {
+          "wealth": -1
+        },
+        "renews_faction_resource": {
+          "granulated_hydrocarbons": 10
+        },
+        "owned_by": "pop",
+        "effort": 1,
+        "render_type": "block"
+      }
 
 function add_menu(t,c) {
     var menu = document.createElement("p")
@@ -31,6 +26,8 @@ function add_menu(t,c) {
     menu.appendChild(text);
     document.body.insertBefore(menu, document.getElementById("startmenu"));
 }
+
+add_menu("Name your structure")
 
 function add_please_wait(){
     var plzwt = document.createElement("p")

@@ -65,8 +65,10 @@ def new_game(request):
 # Creates a new system, using an old acount
 @ms_identity_web.login_required
 def genesis(request):
-    acc = Account(request.identity_context_data._id_token_claims, CosmosdbClient()).get_json()
-    context = {'account': acc}
+    c = CosmosdbClient()
+    acc = Account(request.identity_context_data._id_token_claims, c)
+    acc.sync_to_graph(c)
+    context = {'account': acc.get_json()}
     return render(request, "app/creation/genesis_view.html", context)
 
 
