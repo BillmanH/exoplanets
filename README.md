@@ -1,4 +1,4 @@
-# Exoplanets
+# Exodestiny
 
 [![Live web game deployment](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exodestiny.yml)
 [![Azure Function deployment](https://github.com/BillmanH/exoplanets/actions/workflows/main_exo_functions.yml/badge.svg)](https://github.com/BillmanH/exoplanets/actions/workflows/main_exo_functions.yml)
@@ -10,10 +10,6 @@
 Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out (to my email)[mailto:william.jeffrey.harding@gmail.com]
 
 # What is left to do, and when to do it:
-## July
-* Buildings
-* Ongoing actions, such as buildings that produce effects
-* Planetary space observation
 ## August
 * UI Overhaul
 * Faction settings
