@@ -15,14 +15,6 @@ planet_control_panel = {
     height:"100px"
 }
 
-resources_control_panel = {
-    name:"resources_window",
-    title: "These are the resources known to be avalable in this system",
-    top:20,
-    left:70,
-    width:"400px",
-    height:"100px"
-}
 
 var planets_icon = create_icon({name:'planets_icon',image:icons.planets,top:getIconTop(0)})
 dashboard.addControl(planets_icon);
@@ -47,12 +39,12 @@ planets_icon.onPointerClickObservable.add(function () {
         p.gui = {buttonColor:"white"}
         p.gui.clickButton = function(p) {
             console.log(p.data.name, p.data.objid, " button was pushed")
-            // getPopBox(p)
             planet = scene.getMeshByName(p.data.objid);
             console.log(planet)
             camera.setTarget(new BABYLON.Vector3(planet.metadata.x, planet.metadata.y, planet.metadata.z));
             camera.radius = planet.metadata.diameter + 25  
             objectDetails(p.data)
+            dropAllControls()
         }
         addButtonToBox(p,planet_control)
         if(p.data.isSupportsLife.toLowerCase()=="true"){
