@@ -77,3 +77,8 @@ galaxy_icon.onPointerClickObservable.add(function () {
     console.log('off to galaxy')
     window.location.href = dest;
 });
+
+
+object_to_console = function(o){
+    console.log(o)
+}

@@ -8,10 +8,13 @@ function flipper(){
     }
 }
 
-radiuses = get_values(data["nodes"],"radius", "planet")
+radius_p = get_values(data["nodes"],"radius", "planet")
+radius_m = get_values(data["nodes"],"radius", "moon")
+radiuses = radius_p.concat(radius_m)
+
 var scale_radius = d3.scaleLinear()
             .domain([d3.min(radiuses),d3.max(radiuses)])
-            .range([10,100]);
+            .range([1,100]);
 // console.log("radiuses: ", radiuses)   
 
 distances = get_values(data["nodes"],"orbitsDistance", "planet")
