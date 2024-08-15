@@ -67,38 +67,46 @@ var piovtCamera = function(name){
     camera.radius = 100 
 }
 
-function getPopBox(f){
-    dropControlIfExists("window")
-    dropControlIfExists("action_window")
-    pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-    faction_control_panel.height = (100 * pops.length).toString() + "px"
-    faction_pops_control = createControlBox(faction_control_panel)
-    for (let si = 0; si < pops.length; si++) {
-        p = {}
-        p.data = pops[si].population
-        p.iter = si+1
-        p.gui = {buttonColor:"white"}
-        p.gui.clickButton = function(p) {
-            console.log(p.data.name, p.data.objid, " button was pushed")
-            objectDetails(p.data)
-        };
-        pop_button = addButtonToBox(p,faction_pops_control)
-        // console.log(p.data.isIdle)
-        if(p.data.isIdle.toLowerCase()=="true"){
-            p.gui.buttonColor = "green"
-            p.gui.buttontext = "get actions"
-            p.gui.buttonName = "get_actions_"
-            p.gui.width = "60px"
-            p.gui.actionButton = function(p) {
-                console.log(p.data.name, p.data.objid, " button was pushed")
-                objectDetails(p.data)
-                p.data = pops[si].population
-                prep_actions(p)
-            };
-            addButtonToBox(p,faction_pops_control)
-            }
-    }
+
+function popOptionsWindow(pop){
+    dropAllControls()
+    faction_control_panel.height = (100 * pop.factions.length).toString() + "px"
+    faction_control = createControlBox(faction_control_panel)
+
 }
+
+// function getPopBox(f){
+//     dropControlIfExists("window")
+//     dropControlIfExists("action_window")
+//     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
+//     faction_control_panel.height = (100 * pops.length).toString() + "px"
+//     faction_pops_control = createControlBox(faction_control_panel)
+//     for (let si = 0; si < pops.length; si++) {
+//         p = {}
+//         p.data = pops[si].population
+//         p.iter = si+1
+//         p.gui = {buttonColor:"white"}
+//         p.gui.clickButton = function(p) {
+//             console.log(p.data.name, p.data.objid, " button was pushed")
+//             objectDetails(p.data)
+//         };
+//         pop_button = addButtonToBox(p,faction_pops_control)
+//         // console.log(p.data.isIdle)
+//         if(p.data.isIdle.toLowerCase()=="true"){
+//             p.gui.buttonColor = "green"
+//             p.gui.buttontext = "get actions"
+//             p.gui.buttonName = "get_actions_"
+//             p.gui.width = "60px"
+//             p.gui.actionButton = function(p) {
+//                 console.log(p.data.name, p.data.objid, " button was pushed")
+//                 objectDetails(p.data)
+//                 p.data = pops[si].population
+//                 prep_actions(p)
+//             };
+//             addButtonToBox(p,faction_pops_control)
+//             }
+//     }
+// }
 
 system_icon.onPointerClickObservable.add(function () {
     dropAllControls()
@@ -130,9 +138,8 @@ pop_icon.onPointerClickObservable.add(function () {
         }
         f.gui.clickButton = function(f) {
             console.log(f.data.name, f.data.objid, " button was pushed")
-            console.log(f.data.objid+"_nocol_faction_merged")
             piovtCamera(f.data.objid+"_nocol_faction_merged")
-            getPopBox(f)
+            // getPopBox(f)
             objectDetails(f.data)
         };
         addButtonToBox(f,pop_control)
