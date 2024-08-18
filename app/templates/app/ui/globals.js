@@ -118,4 +118,14 @@ function get_specific_node(nodes,objid){
     return mylist
 }
 
+var targAnimEnded = function(test) {
+    console.log("targAnimEnded:", test);
+}
+
+var animateCameraTargetToObject = function(cam, speed, frameCount, pos) {
+    var ease = new BABYLON.CubicEase();
+    ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+    var aable1 = BABYLON.Animation.CreateAndStartAnimation('at5', cam, 'target', speed, frameCount, cam.target, pos, 0, ease, targAnimEnded);
+    aable1.disposeOnEnd = true;
+}
 

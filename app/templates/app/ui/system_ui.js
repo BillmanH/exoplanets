@@ -78,7 +78,3 @@ galaxy_icon.onPointerClickObservable.add(function () {
     window.location.href = dest;
 });
 
-
-object_to_console = function(o){
-    console.log(o)
-}

@@ -13,7 +13,7 @@ sphere_textures = {
 
 star_base = 100
 shinyness = 0.05
-
+camera_pan_speed = 100
 
 // center
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
@@ -45,7 +45,13 @@ function createStar(n){
     star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
-
+    star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        objectDetails(star.metadata.data)
+        pickedMesh = get_clicked_mesh(star)
+        console.log(pickedMesh)
+        animateCameraTargetToObject(camera, camera_pan_speed, 200, star.getAbsolutePosition())
+    }));
+    
     return star
 }
 
@@ -79,7 +85,10 @@ function createPlanet(n){
         dropControlIfExists("uiTooltip")
     }));
     planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-        object_to_console(planet)
+        objectDetails(planet.metadata.data)
+        pickedMesh = get_clicked_mesh(planet)
+        console.log(pickedMesh)
+        animateCameraTargetToObject(camera, camera_pan_speed, 200, planet.getAbsolutePosition())
     }));
 
     return planet
@@ -112,7 +121,10 @@ function createMoon(n){
         dropControlIfExists("uiTooltip")
     }));
     moon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-        object_to_console(planet)
+        objectDetails(moon.metadata.data)
+        pickedMesh = get_clicked_mesh(moon)
+        console.log(pickedMesh)
+        animateCameraTargetToObject(camera, camera_pan_speed, 200, moon.getAbsolutePosition())
     }));
 }
 

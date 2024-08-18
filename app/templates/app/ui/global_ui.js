@@ -373,3 +373,12 @@ scene.onKeyboardObservable.add((kbInfo) => {
         break;
         }
     }); 
+
+
+function get_clicked_mesh(){
+    var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+    if (pickResult.hit) {
+        console.log(pickResult.pickedMesh.name)
+    }
+    return pickResult.pickedMesh
+}
