@@ -4,6 +4,7 @@ factionbuildingHeight = 10
 ground_dimensions = 5000
 ground_subdivisions = 19
 shinyness = 0.05
+camera_pan_speed = 200
 
 mapData = []
 
@@ -58,12 +59,13 @@ function createFaction(n){
         dropControlIfExists("uiTooltip")
     }));
     faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        dropAllControls()
         console.log(faction.position)
         objectDetails(n.data)
+        pops = getObjectChildren(n.data.objid,'pop')
+        console.log(pops)
+        animateCameraTargetToObject(camera, camera_pan_speed,200, faction.getAbsolutePosition())
     }));
-    // n.faction = faction
-    // console.log(faction.name, x, y,z)
-    // console.log(faction.position)
 
 }
 
@@ -104,9 +106,10 @@ function createPop(n){
         dropControlIfExists("uiTooltip")
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-        console.log(box.position)
+        dropAllControls()
         console.log(scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z))
         objectDetails(n.data.population)
+        animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
     }));
 
 }
