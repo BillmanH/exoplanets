@@ -91,6 +91,8 @@ function createPlanet(n){
         console.log(pickedMesh)
         animateCameraTargetToObject(camera, camera_pan_speed, 200, planet.getAbsolutePosition())
         animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, planet.metadata.diameter + 25)
+        var children = getObjectChildren(planet.metadata.data.objid, 'orbits')
+        console.log(children)
     }));
 
     return planet

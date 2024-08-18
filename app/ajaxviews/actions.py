@@ -11,6 +11,21 @@ def get_buildings_config():
     buildings = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/buildings.yaml")))
     return buildings["buildings"]
 
+def get_object_children(request):
+    c = CosmosdbClient()
+    inacceptable = ['account','form']
+    form = c.clean_node(dict(request.GET))
+    objid = form.get('objid','')
+    label = form.get('type','')
+    if label in inacceptable:
+        return JsonResponse({"error":"inacceptable type"})
+    response = {}
+    c.run_query(f"g.V().has('objid','{objid}').in('{label}').valueMap()")
+    children = c.clean_nodes(c.res)
+    response['children'] = children
+    return JsonResponse(response)
+
+
 class ActionValidator:
     def __init__(self,agent, actions):
         self.agent = agent

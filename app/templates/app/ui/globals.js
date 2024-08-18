@@ -121,7 +121,7 @@ function get_specific_node(nodes,objid){
 }
 
 var targAnimEnded = function(test) {
-    console.log("targAnimEnded:", test);
+    console.log("targAnimEnded", test);
 }
 
 var animateCameraTargetToObject = function(cam, speed, frameCount, pos) {
@@ -132,4 +132,24 @@ var animateCameraTargetToObject = function(cam, speed, frameCount, pos) {
 var animateCameraZoomToObject = function(cam, speed, frameCount, newRadius) {
     var panToObj = BABYLON.Animation.CreateAndStartAnimation('zoom', cam, 'radius', speed, frameCount, cam.radius, newRadius, 0, ease, targAnimEnded);
     panToObj.disposeOnEnd = true;
+}
+
+
+var getObjectChildren = function(objid,type){
+    $.ajax({
+        url: '/ajax/get-object-children',
+        type: 'get',
+        data: {objid: objid, type: type},
+        dataType: 'json',
+        beforeSend: function () {
+            console.log("loading child objects for: ", objid)
+            // dropAllControls()
+        },
+        success: function(data){
+            console.log(data)
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
 }

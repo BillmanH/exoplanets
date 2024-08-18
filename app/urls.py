@@ -34,6 +34,7 @@ urlpatterns = [
     
     path("ajax/get-local-resources", resources.get_local_resourcses, name="get_local_resourcses"),
     path("ajax/get-local-events", events.get_local_events, name="get_local_events"),
+    path("ajax/get-object-children", actions.get_object_children, name="get_object_children"),
 
     path("ajax/take-action", pop.take_action, name="pop_take_action"),
     path("ajax/take-building-action", pop.take_building_action, name="pop_take_building_action"),
