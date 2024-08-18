@@ -13,7 +13,7 @@ sphere_textures = {
 
 star_base = 100
 shinyness = 0.05
-camera_pan_speed = 100
+camera_pan_speed = 200
 
 // center
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
@@ -50,6 +50,7 @@ function createStar(n){
         pickedMesh = get_clicked_mesh(star)
         console.log(pickedMesh)
         animateCameraTargetToObject(camera, camera_pan_speed, 200, star.getAbsolutePosition())
+        animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, star.metadata.diameter + 25)
     }));
     
     return star
@@ -89,6 +90,7 @@ function createPlanet(n){
         pickedMesh = get_clicked_mesh(planet)
         console.log(pickedMesh)
         animateCameraTargetToObject(camera, camera_pan_speed, 200, planet.getAbsolutePosition())
+        animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, planet.metadata.diameter + 25)
     }));
 
     return planet
@@ -125,6 +127,7 @@ function createMoon(n){
         pickedMesh = get_clicked_mesh(moon)
         console.log(pickedMesh)
         animateCameraTargetToObject(camera, camera_pan_speed, 200, moon.getAbsolutePosition())
+        animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, moon.metadata.diameter + 25)
     }));
 }
 
