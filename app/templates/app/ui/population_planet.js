@@ -62,7 +62,7 @@ function createFaction(n){
         dropAllControls()
         console.log(faction.position)
         objectDetails(n.data)
-        pops = getObjectChildren(n.data.objid,'pop')
+        pops = getObjectChildren(n.data.objid,'faction')
         console.log(pops)
         animateCameraTargetToObject(camera, camera_pan_speed,200, faction.getAbsolutePosition())
     }));

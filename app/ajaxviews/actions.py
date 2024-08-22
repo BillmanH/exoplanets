@@ -1,6 +1,7 @@
 from app.models.models import CosmosdbClient
 from django.http import JsonResponse
 import yaml, os
+from app.ajaxviews.ui import planetui
 
 # TODO: Must make the action inheret the properties of the action class in time.py
 def get_actions_config():
@@ -13,16 +14,23 @@ def get_buildings_config():
 
 def get_object_children(request):
     c = CosmosdbClient()
+    # prevent misuse by adding a list of inacceptable types
     inacceptable = ['account','form']
-    form = c.clean_node(dict(request.GET))
-    objid = form.get('objid','')
-    label = form.get('type','')
+    # appending the form to the C object so that I can use it in the function
+    c.form = c.clean_node(dict(request.GET))
+    # type is used to separate which data query the UI needs. 
+    # This allows control without direct queries in the UI.
+    label = c.form.get('type','')
     if label in inacceptable:
-        return JsonResponse({"error":"inacceptable type"})
-    response = {}
-    c.run_query(f"g.V().has('objid','{objid}').in('{label}').valueMap()")
-    children = c.clean_nodes(c.res)
-    response['children'] = children
+        return JsonResponse({"error":f"type {label} is forbidden"})
+    if label == 'planet':
+        response = planetui.getOrbitingBodies(c)
+    if label == 'faction':
+        response = planetui.getPopulations(c)
+    if label == 'pop':
+        response = planetui.getPopActions(c)
+    else:
+        return JsonResponse({"error":f"inacceptable type {label}"})
     return JsonResponse(response)
 
 
