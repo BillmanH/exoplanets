@@ -60,11 +60,12 @@ function createFaction(n){
     }));
     faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         dropAllControls()
-        console.log(faction.position)
+        // console.log(faction.position)
         objectDetails(n.data)
         pops = getObjectChildren(n.data.objid,'faction')
         console.log(pops)
         animateCameraTargetToObject(camera, camera_pan_speed,200, faction.getAbsolutePosition())
+        make_faction_ui(n.data)
     }));
 
 }

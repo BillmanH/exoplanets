@@ -23,7 +23,7 @@ pop_control_panel = {
 faction_control_panel = {
     title: "These are the populations within the faction",
     top:20,
-    left:500,
+    left:80,
     width:"400px",
     height:"100px"
 }
@@ -196,3 +196,7 @@ function make_actions_box(actions){
     }
 }
 
+function make_faction_ui(faction){
+    faction_control = createControlBox(faction_control_panel)
+    console.log("Faction window opened")
+}
