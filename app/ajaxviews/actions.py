@@ -46,10 +46,10 @@ class ActionValidator:
                 if req not in self.agent.keys():
                     return False  
                 if action['requires_attr'][req] > 0:
-                    if self.agent[req] < action['requires_attr'][req]:
+                    if float(self.agent[req]) < float(action['requires_attr'][req]):
                         return False 
                 if action['requires_attr'][req] < 0:
-                    if self.agent[req] > action['requires_attr'][req]:
+                    if float(self.agent[req]) > float(action['requires_attr'][req]):
                         return False 
         return True
 
