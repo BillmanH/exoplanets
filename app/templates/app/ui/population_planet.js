@@ -106,10 +106,14 @@ function createPop(n){
         dropControlIfExists("uiTooltip")
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-        dropAllControls()
-        console.log(scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z))
+        // console.log(scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z))
+        console.log("clicked population: ",n.data.population)
         objectDetails(n.data.population)
         animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
+        if (n.data.population.isIdle.toLowerCase()=="true"){
+            ajax_getActions(n.data.population)
+        }
+        
     }));
 
 }

@@ -23,11 +23,11 @@ def get_object_children(request):
     label = c.form.get('type','')
     if label in inacceptable:
         return JsonResponse({"error":f"type {label} is forbidden"})
-    if label == 'planet':
+    elif label == 'planet':
         response = planetui.getOrbitingBodies(c)
-    if label == 'faction':
+    elif label == 'faction':
         response = planetui.getPopulations(c)
-    if label == 'pop':
+    elif label == 'pop':
         response = planetui.getPopActions(c)
     else:
         return JsonResponse({"error":f"inacceptable type {label}"})

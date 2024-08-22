@@ -68,7 +68,7 @@ function dictToHtml(d) {
 }
 
 function dictToSimpleText(d) {
-    console.log(d)
+    // console.log(d)
     if (d['objtype']==undefined){
         d['objtype'] = '<->'
     }

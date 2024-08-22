@@ -4,7 +4,7 @@
 {% include "app/ajax/events.js" %}
 
 icons = {
-    pop:"{% static 'app/objects/icons/pop_icon_2.png' %}",
+    faction:"{% static 'app/objects/icons/pop_icon_2.png' %}",
     resources:"{% static 'app/objects/icons/resource_icon_1.png' %}",
     system:"{% static 'app/objects/icons/system_icon_1.png' %}",
     events:"{% static 'app/objects/icons/events_icon_1.png' %}",
@@ -32,7 +32,7 @@ actions_control_panel = {
     title: "These are the actions available at this time",
     name:"action_window", 
     top:20,
-    left:920,
+    left:20,
     width:"600px",
     height:"600px"
 }
@@ -56,7 +56,7 @@ events_control_panel = {
 }
 
 var system_icon = create_icon({name:'system_icon',image:icons.system,top:getIconTop(0),tooltiptext:"return to the system"})
-var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:getIconTop(1)})
+var faction_icon = create_icon({name:'pop_faction_iconicon',tooltiptext:"factions and populations",image:icons.faction,top:getIconTop(1)})
 var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:getIconTop(2)})
 var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:getIconTop(3)})
 var exit_icon = create_icon({name:'quit_icon',tooltiptext:"Quit",image:icons.exit,top:getIconTop(4)})
@@ -75,39 +75,6 @@ function popOptionsWindow(pop){
 
 }
 
-// function getPopBox(f){
-//     dropControlIfExists("window")
-//     dropControlIfExists("action_window")
-//     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-//     faction_control_panel.height = (100 * pops.length).toString() + "px"
-//     faction_pops_control = createControlBox(faction_control_panel)
-//     for (let si = 0; si < pops.length; si++) {
-//         p = {}
-//         p.data = pops[si].population
-//         p.iter = si+1
-//         p.gui = {buttonColor:"white"}
-//         p.gui.clickButton = function(p) {
-//             console.log(p.data.name, p.data.objid, " button was pushed")
-//             objectDetails(p.data)
-//         };
-//         pop_button = addButtonToBox(p,faction_pops_control)
-//         // console.log(p.data.isIdle)
-//         if(p.data.isIdle.toLowerCase()=="true"){
-//             p.gui.buttonColor = "green"
-//             p.gui.buttontext = "get actions"
-//             p.gui.buttonName = "get_actions_"
-//             p.gui.width = "60px"
-//             p.gui.actionButton = function(p) {
-//                 console.log(p.data.name, p.data.objid, " button was pushed")
-//                 objectDetails(p.data)
-//                 p.data = pops[si].population
-//                 prep_actions(p)
-//             };
-//             addButtonToBox(p,faction_pops_control)
-//             }
-//     }
-// }
-
 system_icon.onPointerClickObservable.add(function () {
     dropAllControls()
     plz = pleaseWaiter(dashboard)
@@ -117,9 +84,8 @@ system_icon.onPointerClickObservable.add(function () {
 });
 
 
-pop_icon.onPointerClickObservable.add(function () {
+faction_icon.onPointerClickObservable.add(function () {
     dropAllControls()
-
     factions = distinct_list(data.nodes,'faction','objid')
     pop_control_panel.height = (100 * factions.length).toString() + "px"
     pop_control = createControlBox(pop_control_panel)
@@ -141,6 +107,7 @@ pop_icon.onPointerClickObservable.add(function () {
             piovtCamera(f.data.objid+"_nocol_faction_merged")
             // getPopBox(f)
             objectDetails(f.data)
+            dropAllControls()
         };
         addButtonToBox(f,pop_control)
     }

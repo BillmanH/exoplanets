@@ -101,7 +101,7 @@ function createControlBox(control_panel){
 
         textblock.paddingTop = 10 
         textblock.paddingLeft = 40 
-        textblock.fontSize = 18;    
+        textblock.fontSize = 12;    
         textblock.background = "black";
         textblock.color = "white";    
         textblock.text = control_panel.title
