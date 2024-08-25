@@ -29,7 +29,10 @@ urlpatterns = [
     path("ajax/faction-details", pop.get_faction_details, name="get_faction_details"),
     path("ajax/pops-all", pop.get_all_pops, name="get_all_pops"),
 
+    # get the list of possible actions. triggers `make_actions_box` in the UI
     path("ajax/get-actions", actions.get_actions, name="get_actions"),
+    # get the list of possible controls. Affects the UI
+    path("ajax/get-available-controls", actions.get_available_controls, name="get_actions"),
     path("ajax/get-possible-buildings", actions.get_possible_buildings, name="get_possible_buildings"),
     
     path("ajax/get-local-resources", resources.get_local_resourcses, name="get_local_resourcses"),

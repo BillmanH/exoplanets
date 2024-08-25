@@ -82,9 +82,6 @@ function createPop(n){
         depth:4}
     );
 
-    // address = get_address(faction.metadata.pop_locations, n.data.iter)
-    // n.data.population.address = address.toString()
-
     // box.parent = faction
     n.data.population.x = faction.position.x + n.coord.x 
     n.data.population.z = faction.position.z + n.coord.z
@@ -107,14 +104,10 @@ function createPop(n){
         dropControlIfExists("uiTooltip")
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-        // console.log(scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z))
         console.log("clicked population: ",n.data.population)
         objectDetails(n.data.population)
         animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
-        if (n.data.population.isIdle.toLowerCase()=="true"){
-            ajax_getActions(n.data.population)
-        }
-        
+        control_data = get_available_controls(n.data.population)
     }));
 
 }

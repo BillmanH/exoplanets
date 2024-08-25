@@ -382,3 +382,22 @@ function get_clicked_mesh(){
     }
     return pickResult.pickedMesh
 }
+
+function get_available_controls(d){
+            $.ajax({
+                url: '/ajax/get-available-controls',
+                type: 'get',
+                data: d,
+                dataType: 'json',
+                beforeSend: function () {
+                    plz = pleaseWaiter(dashboard)
+                },
+                success: function(data){
+                    plz = dashboard.getControlByName("loadingpleasewait")
+                    plz.dispose()
+                    data.pop = d
+                    console.log(data)
+                    return data
+                }
+            })
+}

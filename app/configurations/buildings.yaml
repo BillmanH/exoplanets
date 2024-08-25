@@ -92,6 +92,7 @@ buildings:
   observatory:
       name: Stellar Observatory
       description: "Scans the solar system for planets, moons, comets,and asteroids."
+      owned_by: pop
       faction_augments: 
         wealth: -10
       requires_attr: 
@@ -102,6 +103,7 @@ buildings:
   prospector:
       name: Prospector
       description: "Searches the location/biome for resources."
+      owned_by: pop
       faction_augments: 
         wealth: -5
       requires_attr: 
@@ -112,6 +114,7 @@ buildings:
   oil_well:
       name: Oil Well
       description: "Produces energy by extracting hydrocarbons from the ground."
+      owned_by: pop
       faction_augments: 
         wealth: 10
       requires_attr: 
