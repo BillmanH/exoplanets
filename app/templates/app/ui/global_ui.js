@@ -2,7 +2,7 @@
 var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 var icon_config = {padding:70,initial:20} // distance between icons.
 
-//global textbox in upper left corner.
+//global textbox in upper right corner.
 var textblock = new BABYLON.GUI.TextBlock("textblock")
     textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
     textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
@@ -14,6 +14,7 @@ var textblock = new BABYLON.GUI.TextBlock("textblock")
 
 dashboard.addControl(textblock);
 
+// dev window in lower right corner
 var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
     troubleshooter.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
     troubleshooter.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
@@ -27,16 +28,19 @@ var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
     dashboard.addControl(troubleshooter);
 
 
+// function to drop a control if it exists.
 function dropControlIfExists(name){
     if(dashboard.getControlByName(name)){
         dashboard.getControlByName(name).dispose()
     }
 }
 
+// find the nth location (down) on the left icon mention
 function getIconTop(iter){
     return (iter*icon_config.padding) + icon_config.initial
 }
 
+// drop all of the controls aka clear the screen
 function dropAllControls(){
     dropControlIfExists("events_window")
     dropControlIfExists("action_window")
@@ -46,12 +50,19 @@ function dropAllControls(){
     dropControlIfExists("planets_window")
     dropControlIfExists("resources_window")
     dropControlIfExists("loadingpleasewait")
+    dropControlIfExists("object_menu_window")
+    dropControlIfExists("object_menu_target")
+    dropControlIfExists("object_menu_line")
+    dropControlIfExists("object_actions_window")
+    dropControlIfExists("object_building_window")
 }
 
+// update the text in the upper right corner
 var objectDetails = function(d){
     textblock.text = dictToSimpleText(d);
 }
 
+// create a control box, aka a window
 function createControlBox(control_panel){
     if (control_panel.hasOwnProperty('name')==false){
         control_panel.name = "window"
@@ -111,7 +122,6 @@ function createControlBox(control_panel){
         dashboard.getControlByName(control_panel.name).dispose()
     });
 
-    // label.control_metadata = control_panel
     return label
 }
 
@@ -232,6 +242,7 @@ var addTextToControl = function(n,control){
     // TODO: Missing text for actions
 }
 
+// adds the "please wait" window to dashboard (d)
 function pleaseWaiter(d){
     const label = new BABYLON.GUI.Rectangle("loadingpleasewait")
     label.background = 'black'
@@ -383,7 +394,8 @@ function get_clicked_mesh(){
     return pickResult.pickedMesh
 }
 
-function get_available_controls(d){
+function get_available_controls(m,d){
+    //m = mesh, d = data
             $.ajax({
                 url: '/ajax/get-available-controls',
                 type: 'get',
@@ -395,9 +407,93 @@ function get_available_controls(d){
                 success: function(data){
                     plz = dashboard.getControlByName("loadingpleasewait")
                     plz.dispose()
-                    data.pop = d
-                    console.log(data)
-                    return data
+                    data.obj = d
+                    dropAllControls()
+                    create_options_window(m, data)
                 }
             })
+}
+
+// create window and tag it to mesh (m)
+function create_options_window(m, control_data){
+    console.log("create_options_window", control_data)
+    var rect1 = new BABYLON.GUI.Rectangle("object_menu_window");
+        rect1.width = 0.2;
+        rect1.height = "40px";
+        rect1.cornerRadius = 10;
+        rect1.color = "white";         
+        rect1.thickness = 2;
+        rect1.background = "black";
+        dashboard.addControl(rect1);
+        rect1.linkWithMesh(m);   
+        rect1.linkOffsetY = 100;
+
+    // buttons to take actions
+    if (control_data.hasOwnProperty('actions')){
+        var actionsRect = new BABYLON.GUI.Rectangle("object_actions_window");
+        actionsRect.width = 0.2;
+        actionsRect.height = "40px";
+        actionsRect.cornerRadius = 10;
+        actionsRect.color = "white";         
+        actionsRect.thickness = 2;
+        actionsRect.background = "black";
+        actionsRect.linkOffsetY = 50;
+        actionsRect.linkOffsetX = -100;
+        dashboard.addControl(actionsRect);
+        actionsRect.linkWithMesh(m);   
+
+        var label = new BABYLON.GUI.TextBlock();
+        label.text = "Adminstration"; 
+        label.color = "white";
+        actionsRect.addControl(label);
+
+        var button = BABYLON.GUI.Button.CreateSimpleButton("actions_button");
+        actionsRect.addControl(button)
+    }
+
+    // buttons to take construction
+    if (control_data.buildings.hasOwnProperty('possible_buildings')){
+        console.log("displaying construction")
+        var buildingsRect = new BABYLON.GUI.Rectangle("object_building_window");
+        buildingsRect.width = 0.2;
+        buildingsRect.height = "40px";
+        buildingsRect.cornerRadius = 10;
+        buildingsRect.color = "white";         
+        buildingsRect.thickness = 2;
+        buildingsRect.background = "black";
+        buildingsRect.linkOffsetY = 50;
+        buildingsRect.linkOffsetX = 100;
+        dashboard.addControl(buildingsRect);
+        buildingsRect.linkWithMesh(m);   
+
+        var label = new BABYLON.GUI.TextBlock();
+        label.text = "Construction"; 
+        label.color = "white";
+        buildingsRect.addControl(label);
+
+        var button = BABYLON.GUI.Button.CreateSimpleButton("building_button");
+        buildingsRect.addControl(button)
+    }
+    var label = new BABYLON.GUI.TextBlock();
+    label.text = control_data.obj['name']; 
+    label.color = "white";
+    rect1.addControl(label);
+
+    var target = new BABYLON.GUI.Ellipse("object_menu_target");
+    target.width = "10px";
+    target.height = "10px";
+    target.color = "white";
+    target.thickness = 2;
+    target.background = "black";
+    dashboard.addControl(target);
+    target.linkWithMesh(m);   
+
+    var line = new BABYLON.GUI.Line("object_menu_line");
+    line.lineWidth = 4;
+    line.color = "white ";
+    line.y2 = -20;
+    line.linkOffsetY = 0;
+    dashboard.addControl(line);
+    line.linkWithMesh(m); 
+    line.connectedControl = rect1;  
 }

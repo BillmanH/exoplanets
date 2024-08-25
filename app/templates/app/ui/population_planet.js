@@ -107,7 +107,7 @@ function createPop(n){
         console.log("clicked population: ",n.data.population)
         objectDetails(n.data.population)
         animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
-        control_data = get_available_controls(n.data.population)
+        get_available_controls(box,n.data.population)
     }));
 
 }
