@@ -448,6 +448,7 @@ function create_options_window(m, control_data){
         actionsRect.addControl(label);
 
         var button = BABYLON.GUI.Button.CreateSimpleButton("actions_button");
+        button.onPointerUpObservable.add(function(){render_actions_control(control_data['actions'])})
         actionsRect.addControl(button)
     }
 
@@ -473,7 +474,10 @@ function create_options_window(m, control_data){
 
         var button = BABYLON.GUI.Button.CreateSimpleButton("building_button");
         buildingsRect.addControl(button)
+
+        button.onPointerUpObservable.add(function() {render_buildings_control(control_data['buildings']['possible_buildings'])})
     }
+
     var label = new BABYLON.GUI.TextBlock();
     label.text = control_data.obj['name']; 
     label.color = "white";
@@ -496,4 +500,12 @@ function create_options_window(m, control_data){
     dashboard.addControl(line);
     line.linkWithMesh(m); 
     line.connectedControl = rect1;  
+}
+
+function render_buildings_control(control_data){ 
+    console.log("render_buildings_control", control_data)
+}
+
+function render_actions_control(control_data){
+    console.log("render_actions_control", control_data)
 }
