@@ -502,10 +502,43 @@ function create_options_window(m, control_data){
     line.connectedControl = rect1;  
 }
 
+
+function make_actions_box(controls){
+    // `controls` is a list of actions that can be taken. Can be buildings to construct, actions to take, etc.
+        console.log("make_actions_box", controls)
+        actions_control_panel.height = (100 * controls.length).toString() + "px"
+        actions_control_panel.title = "Available options:"
+        actions_control = createControlBox(actions_control_panel)
+        for (let i = 0; i < controls.length; i++) {
+            a = {}
+            a.gui = {
+                buttonColor:"white",
+                depth:1,
+                returnButton:true,
+                width:"200px"}
+            a.iter = i+1
+            a.data = controls[i]
+            a.gui.text_button = true
+            a.gui.displayed_values = ["comment","effort"]
+            a.gui.clickButton = function(a) {
+                console.log(actions.data.name,": ", a.data.type, " button was pushed")
+                console.log("action", a)
+                
+            };
+            // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
+            addButtonToBox(a,actions_control)
+            }
+}
+
+
 function render_buildings_control(control_data){ 
+    dropAllControls()
     console.log("render_buildings_control", control_data)
+    make_actions_box(control_data)
 }
 
 function render_actions_control(control_data){
+    dropAllControls()
     console.log("render_actions_control", control_data)
+    make_actions_box(control_data)
 }

@@ -156,45 +156,45 @@ exit_icon.onPointerClickObservable.add(function () {
 });
 
 
-function make_actions_box(actions){
-    dropControlIfExists("action_window")
-    if(actions.hasOwnProperty('actions')){
-        actions_control_panel.height = (100 * actions.actions.length).toString() + "px"
+// function make_actions_box(actions){
+//     dropControlIfExists("action_window")
+//     if(actions.hasOwnProperty('actions')){
+//         actions_control_panel.height = (100 * actions.actions.length).toString() + "px"
         
-        actions_control_panel.title = actions.pop.objtype + ": " + actions.pop.name + ". Has these actions"
-        actions_control = createControlBox(actions_control_panel)
-        for (let i = 0; i < actions.actions.length; i++) {
-            a = {}
-            a.gui = {
-                buttonColor:"white",
-                depth:1,
-                returnButton:true,
-                width:"200px"}
-                a.iter = i+1
-                a.data = actions.actions[i]
-                a.gui.text_button = true
-                a.gui.displayed_values = ["comment","effort"]
-                a.gui.clickButton = function(a) {
-                    console.log(actions.pop.name,": ", a.type, " button was pushed")
-                    console.log("action", a)
-                    if (a.data.type=='build_building'){
-                        ajax_getBuildings(actions.pop).then(function(response){
-                            buildings_window(response)
-                        })
-                    } else {
-                        objectDetails(a.data)
-                        takeAction(actions.pop,a.data)
-                }
-                };
-                // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
-                addButtonToBox(a,actions_control)
-            }
+//         actions_control_panel.title = actions.pop.objtype + ": " + actions.pop.name + ". Has these actions"
+//         actions_control = createControlBox(actions_control_panel)
+//         for (let i = 0; i < actions.actions.length; i++) {
+//             a = {}
+//             a.gui = {
+//                 buttonColor:"white",
+//                 depth:1,
+//                 returnButton:true,
+//                 width:"200px"}
+//                 a.iter = i+1
+//                 a.data = actions.actions[i]
+//                 a.gui.text_button = true
+//                 a.gui.displayed_values = ["comment","effort"]
+//                 a.gui.clickButton = function(a) {
+//                     console.log(actions.pop.name,": ", a.type, " button was pushed")
+//                     console.log("action", a)
+//                     if (a.data.type=='build_building'){
+//                         ajax_getBuildings(actions.pop).then(function(response){
+//                             buildings_window(response)
+//                         })
+//                     } else {
+//                         objectDetails(a.data)
+//                         takeAction(actions.pop,a.data)
+//                 }
+//                 };
+//                 // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
+//                 addButtonToBox(a,actions_control)
+//             }
             
-    } else {
-        actions_control_panel.title = "This population has no actions available to it as this time"
-        ActionBox = createControlBox(actions_control_panel)
-    }
-}
+//     } else {
+//         actions_control_panel.title = "This population has no actions available to it as this time"
+//         ActionBox = createControlBox(actions_control_panel)
+//     }
+// }
 
 function make_faction_ui(faction){
     faction_control = createControlBox(faction_control_panel)
