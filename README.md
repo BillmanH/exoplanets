@@ -10,16 +10,14 @@
 Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out (to my email)[mailto:william.jeffrey.harding@gmail.com]
 
 # What is left to do, and when to do it:
-## August
-* UI Overhaul
-* Faction settings
-* Government choices
-* Enhanced Genisis options
 ## September
 * Spaceships
 * Space Travel
 * Cargo Routes
+* Planetary observation
 ## October
+* Government choices
+* Faction settings
 * Conflict
 * Rebellion
 * War
@@ -56,7 +54,9 @@ The game is about simulation, systems-thinking and collective progress. The only
 
 
 ## Making your own game
-I built this game so that I could clone it and create different versions. You should be able to clone the repo and run it on your own machine or in the cloud of your choice. Some assembly is required as this application uses a lot of tools. I'm working to keep the costs of the game down to <$20 a month. 
+I built this game so that I could clone it and create different versions. You should be able to clone the repo and run it on your own machine or in the cloud of your choice. Some assembly is required as this application uses a lot of tools. I'm working to keep the costs of the game down to ~$20 a month. 
+![Alt text](/docs/img/PopGrowthSystem.png?raw=true "solar system")
+    
 
 Of course, you can also just clone it on your local machine and run for free. Feel free to create an issue and I'll address them as I'm able. 
 
