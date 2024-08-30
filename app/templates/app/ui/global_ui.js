@@ -519,7 +519,7 @@ function make_actions_box(controls){
             a.iter = i+1
             a.data = controls[i]
             a.gui.text_button = true
-            a.gui.displayed_values = ["comment","effort"]
+            a.gui.displayed_values = ["description","effort"]
             a.gui.clickButton = function(a) {
                 console.log(actions.data.name,": ", a.data.type, " button was pushed")
                 console.log("action", a)

@@ -4,7 +4,7 @@ explanation:
     label: "always `action`"
     applies_to: "label of the object type that can perform this action"
     effort: "time in `universal time units` that the action will take to complete"
-    comment: "Human readable comment. Used in UX buttons and tooltips."
+    description: "Human readable description. Used in UX buttons and tooltips."
     augments_self_properties: "OPTIONAL, if action augments attribute values, list attributes required in format `item,item,item;value,value,value`"
     requires_attr: required attributes of the agent. Determines if the agent can do the action.
 
@@ -19,7 +19,7 @@ actions:
     augments_self_properties:
       health: 0.05
       wealth: -.05
-    comment: "increase the health of your population slightly, at the cost of a small amount of wealth"
+    description: "increase the health of your population slightly, at the cost of a small amount of wealth"
   -
     type: individual_education
     label: action
@@ -31,7 +31,7 @@ actions:
       wealth: -.1
       literacy: 0.1
       factionLoyalty: -.05
-    comment: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
+    description: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
   -
     type: patriot_education
     label: action
@@ -43,7 +43,7 @@ actions:
       factionLoyalty: 0.05
       literacy: 0.1
       aggression: 0.05
-    comment: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
+    description: "expand public education programs with a collective theme, increase literacy and faction loyalty. However, will cause some militaristic tendancies."
   -
     type: patriot_propoganda
     label: action
@@ -53,7 +53,7 @@ actions:
       factionLoyalty: .1
       conformity: .1
       aggression: .1
-    comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
+    description: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
 
   -
     type: build_infrastructure
@@ -65,11 +65,5 @@ actions:
     augments_self_properties: 
       wealth: -0.1
       industry: .1
-    comment: "increase industry by investing in local infrastructure, increases industry"
+    description: "increase industry by investing in local infrastructure, increases industry"
 
-  -
-    type: build_building
-    label: action
-    applies_to: "pop"
-    effort: 1
-    comment: "opens the building window for that population to create a new building"
