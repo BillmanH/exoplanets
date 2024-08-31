@@ -84,7 +84,7 @@ function dictToSimpleText(d) {
         } else if (typeof (y) == "number") {
             y = r(y)
         } else if (typeof (y) == "object") {
-            y = dt[k].toString().replace(/_/g, " ")
+            y = "<<obj>>"
         }
         html += x + ": " + y + "\n"
     }
@@ -102,12 +102,14 @@ function dictToSingleLIne(d, displayed_values) {
         } else if (typeof (y) == "number") {
             y = r(y)
         } else if (typeof (y) == "object") {
-            y = dt[k].toString().replace(/_/g, " ")
+            y = "<<obj>>"
         }
         if(x=='name'){
             html += y +"\n"
         } else if (x=='volume'){
             html += "\n  " + x + ": " + y
+        } else if (x=='description'){
+            html += y +"\n"
         } else {
             html += x + ": " + y + "  "   
         }

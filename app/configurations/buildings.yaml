@@ -1,6 +1,7 @@
 explanation:
-  - type: all buildings have a 'type'/'label' of building
-  - name: name_with_underscore. UI can remove the '_' at display time.
+  - type: id_name of the building. lower, underscores
+  - label: "'class' of the object. in this case it is always 'building'"
+  - name: pretty printed name of the building. UI can remove the '_' at display time.
   - augments_resource: OPTIONAL augments a specific resource, creates it if it does not exist
   - owned_by: type of object that can own/maintain this building, assuming a relationhsip to that object
   - faction_augments: if owned by a pop in the faction,  raises the stat for all pops in factions
@@ -16,6 +17,8 @@ explanation:
 
 buildings:
   farm:
+      type: farmland
+      label: building
       name: Farmland
       description: "Generates organic foodstuffs, populations will consume food before consuming natural resources"
       planet_requirements: {'isHabitable':'true'}
@@ -28,6 +31,8 @@ buildings:
       render_type: 'block'
 
   hospital:
+      type: hospital
+      label: building
       name: Hostpital
       description: "Boosts the health of all populations in this faction."
       owned_by: pop
@@ -41,6 +46,8 @@ buildings:
       render_type: 'block'
 
   solar_panel:
+      type: solar_panel
+      label: building
       name: Solar Panel
       description: "Generates wealth for all populations in this faction except the owner"
       owned_by: pop
@@ -52,6 +59,8 @@ buildings:
       render_type: 'block'
 
   forrestry:
+      type: forrestry
+      label: building
       name: Department of Forestry
       description: "Generates organic foodstuffs, populations will consume food before consuming natural resources"
       planet_requirements: {'isHabitable':'true'}
@@ -64,8 +73,10 @@ buildings:
       render_type: 'block'
 
   infrastructure:
+      type: infrastructure
+      label: building
       name: Public Infrastructure
-      description: "Boosts the infrastructure of all populations in this faction."
+      description: "Public transportation and logistics used in comerce. Boosts the infrastructure of all populations in this faction."
       owned_by: pop
       faction_augments: 
         wealth: -10
@@ -77,6 +88,8 @@ buildings:
       render_type: 'block'
   
   university:
+      type: university
+      label: building
       name: Institute of Higher Learning
       description: "Boosts the literacy of all populations in this faction."
       owned_by: pop
@@ -90,6 +103,8 @@ buildings:
       render_type: 'block'
 
   observatory:
+      type: observatory
+      label: building
       name: Stellar Observatory
       description: "Scans the solar system for planets, moons, comets,and asteroids."
       owned_by: pop
@@ -101,6 +116,8 @@ buildings:
         - scan_system
     
   prospector:
+      type: prospector
+      label: building
       name: Prospector
       description: "Searches the location/biome for resources."
       owned_by: pop
@@ -112,6 +129,8 @@ buildings:
         - prospect_local
 
   oil_well:
+      type: oil_well
+      label: building
       name: Oil Well
       description: "Produces energy by extracting hydrocarbons from the ground."
       owned_by: pop
@@ -123,6 +142,8 @@ buildings:
         hydrocarbons: 10
 
   marketplace:
+      type: marketplace
+      label: building
       name: Marketplace
       description: "Generates wealth for all populations in this faction except the owner"
       owned_by: pop

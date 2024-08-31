@@ -521,11 +521,9 @@ function make_actions_box(controls){
             a.gui.text_button = true
             a.gui.displayed_values = ["description","effort"]
             a.gui.clickButton = function(a) {
-                console.log(actions.data.name,": ", a.data.type, " button was pushed")
-                console.log("action", a)
+                console.log(" button was pushed: ", a.data.name,"; ", a.data.type)
                 
             };
-            // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
             addButtonToBox(a,actions_control)
             }
 }
