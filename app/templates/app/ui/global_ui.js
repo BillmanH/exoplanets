@@ -448,7 +448,7 @@ function create_options_window(m, control_data){
         actionsRect.addControl(label);
 
         var button = BABYLON.GUI.Button.CreateSimpleButton("actions_button");
-        button.onPointerUpObservable.add(function(){render_actions_control(control_data['actions'])})
+        button.onPointerUpObservable.add(function(){render_actions_control(control_data['actions'],control_data.obj)})
         actionsRect.addControl(button)
     }
 
@@ -475,7 +475,7 @@ function create_options_window(m, control_data){
         var button = BABYLON.GUI.Button.CreateSimpleButton("building_button");
         buildingsRect.addControl(button)
 
-        button.onPointerUpObservable.add(function() {render_buildings_control(control_data['buildings']['possible_buildings'])})
+        button.onPointerUpObservable.add(function() {render_buildings_control(control_data['buildings']['possible_buildings'],control_data.obj)})
     }
 
     var label = new BABYLON.GUI.TextBlock();
@@ -503,7 +503,7 @@ function create_options_window(m, control_data){
 }
 
 
-function make_actions_box(controls){
+function make_actions_box(controls,agent,clickHandler){
     // `controls` is a list of actions that can be taken. Can be buildings to construct, actions to take, etc.
         console.log("make_actions_box", controls)
         actions_control_panel.height = (100 * controls.length).toString() + "px"
@@ -521,22 +521,25 @@ function make_actions_box(controls){
             a.gui.text_button = true
             a.gui.displayed_values = ["description","effort"]
             a.gui.clickButton = function(a) {
-                console.log(" button was pushed: ", a.data.name,"; ", a.data.type)
-                
+                console.log(" button was pushed: ", a.data, agent)
+                clickHandler(agent,a.data)
             };
             addButtonToBox(a,actions_control)
             }
 }
 
 
-function render_buildings_control(control_data){ 
+
+function render_buildings_control(control_data,agent){ 
+    // control_data = buildings that can be constructed, agent = pop, or agent commiting the action
     dropAllControls()
     console.log("render_buildings_control", control_data)
-    make_actions_box(control_data)
+    make_actions_box(control_data,agent, takeAction)
 }
 
-function render_actions_control(control_data){
+function render_actions_control(control_data,agent){
+    // control_data = actions that can be taken, agent = pop, or agent commiting the action
     dropAllControls()
     console.log("render_actions_control", control_data)
-    make_actions_box(control_data)
+    make_actions_box(control_data,agent, constructBuilding)
 }

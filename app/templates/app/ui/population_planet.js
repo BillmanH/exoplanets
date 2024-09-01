@@ -107,7 +107,11 @@ function createPop(n){
         console.log("clicked population: ",n.data.population)
         objectDetails(n.data.population)
         animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
-        get_available_controls(box,n.data.population)
+        if (n.data['isIdle']=='false'){
+            console.log(n.data['objid'], ' is not idle')
+        } else {
+            get_available_controls(box,n.data.population)
+        }
     }));
 
 }

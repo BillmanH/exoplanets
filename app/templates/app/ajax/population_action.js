@@ -20,7 +20,7 @@ function takeAction(p,a){
     });
 }
 
-function takeBuildingAction(p,b){
+function constructBuilding(p,b){
     var d = {"agent":p,
         "building":b}
     cnsl(d)

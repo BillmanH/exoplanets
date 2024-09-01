@@ -114,6 +114,7 @@ buildings:
         industry: .7
       on_cycle:
         - scan_system
+      effort: 5
     
   prospector:
       type: prospector
@@ -127,6 +128,7 @@ buildings:
         industry: .5
       on_cycle:
         - prospect_local
+      effort: 2
 
   oil_well:
       type: oil_well
@@ -140,6 +142,7 @@ buildings:
         industry: .7
       renews_location_resource: 
         hydrocarbons: 10
+      effort: 2
 
   marketplace:
       type: marketplace
@@ -153,3 +156,4 @@ buildings:
       requires_attr: 
         industry: .51
       render_type: 'block'
+      effort: 2
