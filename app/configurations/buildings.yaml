@@ -58,8 +58,8 @@ buildings:
         industry: .51
       render_type: 'block'
 
-  forrestry:
-      type: forrestry
+  forestry:
+      type: forestry
       label: building
       name: Department of Forestry
       description: "Generates organic foodstuffs, populations will consume food before consuming natural resources"
