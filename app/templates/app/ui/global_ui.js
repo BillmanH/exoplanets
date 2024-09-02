@@ -534,12 +534,12 @@ function render_buildings_control(control_data,agent){
     // control_data = buildings that can be constructed, agent = pop, or agent commiting the action
     dropAllControls()
     console.log("render_buildings_control", control_data)
-    make_actions_box(control_data,agent, takeAction)
+    make_actions_box(control_data,agent,constructBuilding )
 }
 
 function render_actions_control(control_data,agent){
     // control_data = actions that can be taken, agent = pop, or agent commiting the action
     dropAllControls()
     console.log("render_actions_control", control_data)
-    make_actions_box(control_data,agent, constructBuilding)
+    make_actions_box(control_data,agent, takeAction)
 }
