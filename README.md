@@ -35,14 +35,11 @@ Until I roll into production, I'll be making breaking changes constantly. Not a 
 
 
 
-
-
 Exoplanets is a real-time, multi-player, online game where you manage a civilization and its people. Starting at the moment where your technology makes it possible to launch an individual into outer space, you must make choices that guide your people on its journey to the stars.
 
 At the start of the game, your civilization is growing rapidly. It is also consuming organic resources at a rate faster than the planet can restore. In time the resources will diminish and your people will starve and die. Your goal is to build infrastructure and technology to stabilize this.
 
-
-![Alt text](/docs/img/cityview.png?raw=true "solar system")
+![Alt text](/docs/img/cityview.png?raw=true "local view")
 
 The game is a simulation platform first, with some interaction that influences the running simulation. Your civilization is growing, consuming resources, fighting wars without your interaction. Your goal is to nudge them into a sustainable future. 
 
@@ -50,12 +47,12 @@ The game is a simulation platform first, with some interaction that influences t
 
 The game is about simulation, systems-thinking and collective progress. The only adversary is the erosion of your own cosmic destiny. 
 
-![Alt text](/docs/img/PopGrowthSystem.png?raw=true "solar system")
+![Alt text](/docs/img/PopGrowthSystem.png?raw=true "pop growth system")
 
 
 ## Making your own game
 I built this game so that I could clone it and create different versions. You should be able to clone the repo and run it on your own machine or in the cloud of your choice. Some assembly is required as this application uses a lot of tools. I'm working to keep the costs of the game down to ~$20 a month. 
-![Alt text](/docs/img/PopGrowthSystem.png?raw=true "solar system")
+![Alt text](\docs\img\infra.png?raw=true "Architecture")
     
 
 Of course, you can also just clone it on your local machine and run for free. Feel free to create an issue and I'll address them as I'm able. 
