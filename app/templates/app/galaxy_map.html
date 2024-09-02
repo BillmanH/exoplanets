@@ -1,28 +1,54 @@
 {% load static %}
 <html>
-{% include "app/head.html" %}
-
+    {% include "app/head.html" %}
+</html>
 <body>
-    {% include "app/menu_top.html" %}
-    <p></p>
-    {% include "app/overview.html" %}
+    <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 
 <script>
-    {% include "app/tooltips.js" %}
 
-    var galaxies = {{ galaxies | safe }}
-    var width = 640,
-        height = 480,
-        defaultNodeSize = 10
+    var stars = {{ stars | safe }}
+    conf = {width:640,
+            height:480,
+            defaultNodeSize:10}
 
-    // the last table in this sheet is the driver, that holds the business logic for the page. 
-    {% include "app/charts/base_scatter.js" %}
-    {% include "app/charts/base_table.js" %}
-    {% include "app/charts/galaxy.js" %}
-    {% include "app/text_description.js" %}
-</script>
-
-<script>
     
+    const canvas = document.getElementById("renderCanvas");
+    const engine = new BABYLON.Engine(canvas, true);
+
+    const createScene = function () {
+        const scene = new BABYLON.Scene(engine);
+        scene.clearColor = new BABYLON.Color3.Black;
+
+        const interactive = true
+        const alpha = Math.PI / 4;
+        const beta = Math.PI / 3;
+        const radius = 300;
+        const target = new BABYLON.Vector3(0, 0, 0);
+
+        const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
+        camera.useFramingBehavior = true;
+        camera.attachControl(canvas, true);
+
+        {% include "app/ui/globals.js" %}
+
+        // User interface
+        {% include "app/ui/global_ui.js" %}
+        
+        // generatiors
+        {% include "app/ui/objects/skyboxes/skybox_all_black.js" %}
+        {% include "app/tooltips.js" %}
+        {% include "app/ui/objects/galaxy/starmap.js" %}
+        {% include "app/ui/objects/galaxy/starmap_ui.js" %}
+        
+        return scene;
+    }
+
+
+    const scene = createScene();  
+    engine.runRenderLoop(function () {
+        scene.render();
+    });
 </script>
+

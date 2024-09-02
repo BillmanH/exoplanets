@@ -2,11 +2,11 @@
 var dashboard = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 var icon_config = {padding:70,initial:20} // distance between icons.
 
-//global textbox in upper left corner.
+//global textbox in upper right corner.
 var textblock = new BABYLON.GUI.TextBlock("textblock")
     textblock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
     textblock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-    textblock.fontSize = 24;    
+    textblock.fontSize = 16;    
     textblock.background = "black";
     textblock.color = "white";    
     textblock.paddingRight = 20
@@ -14,6 +14,7 @@ var textblock = new BABYLON.GUI.TextBlock("textblock")
 
 dashboard.addControl(textblock);
 
+// dev window in lower right corner
 var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
     troubleshooter.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
     troubleshooter.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
@@ -27,16 +28,19 @@ var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
     dashboard.addControl(troubleshooter);
 
 
+// function to drop a control if it exists.
 function dropControlIfExists(name){
     if(dashboard.getControlByName(name)){
         dashboard.getControlByName(name).dispose()
     }
 }
 
+// find the nth location (down) on the left icon mention
 function getIconTop(iter){
     return (iter*icon_config.padding) + icon_config.initial
 }
 
+// drop all of the controls aka clear the screen
 function dropAllControls(){
     dropControlIfExists("events_window")
     dropControlIfExists("action_window")
@@ -46,12 +50,19 @@ function dropAllControls(){
     dropControlIfExists("planets_window")
     dropControlIfExists("resources_window")
     dropControlIfExists("loadingpleasewait")
+    dropControlIfExists("object_menu_window")
+    dropControlIfExists("object_menu_target")
+    dropControlIfExists("object_menu_line")
+    dropControlIfExists("object_actions_window")
+    dropControlIfExists("object_building_window")
 }
 
+// update the text in the upper right corner
 var objectDetails = function(d){
     textblock.text = dictToSimpleText(d);
 }
 
+// create a control box, aka a window
 function createControlBox(control_panel){
     if (control_panel.hasOwnProperty('name')==false){
         control_panel.name = "window"
@@ -101,7 +112,7 @@ function createControlBox(control_panel){
 
         textblock.paddingTop = 10 
         textblock.paddingLeft = 40 
-        textblock.fontSize = 18;    
+        textblock.fontSize = 12;    
         textblock.background = "black";
         textblock.color = "white";    
         textblock.text = control_panel.title
@@ -111,7 +122,6 @@ function createControlBox(control_panel){
         dashboard.getControlByName(control_panel.name).dispose()
     });
 
-    // label.control_metadata = control_panel
     return label
 }
 
@@ -232,6 +242,7 @@ var addTextToControl = function(n,control){
     // TODO: Missing text for actions
 }
 
+// adds the "please wait" window to dashboard (d)
 function pleaseWaiter(d){
     const label = new BABYLON.GUI.Rectangle("loadingpleasewait")
     label.background = 'black'
@@ -359,4 +370,185 @@ function removeSingleCollsion(obj,toCheck){
             }
         }
     }
+}
+
+scene.onKeyboardObservable.add((kbInfo) => {
+    switch (kbInfo.type) {
+        case BABYLON.KeyboardEventTypes.KEYDOWN:
+        switch (kbInfo.event.key) {
+        case "x":
+        case "X":
+            dropAllControls()
+        break
+        }
+        break;
+        }
+    }); 
+
+
+function get_clicked_mesh(){
+    var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+    if (pickResult.hit) {
+        console.log(pickResult.pickedMesh.name)
+    }
+    return pickResult.pickedMesh
+}
+
+function get_available_controls(m,d){
+    //m = mesh, d = data
+            $.ajax({
+                url: '/ajax/get-available-controls',
+                type: 'get',
+                data: d,
+                dataType: 'json',
+                beforeSend: function () {
+                    plz = pleaseWaiter(dashboard)
+                },
+                success: function(data){
+                    plz = dashboard.getControlByName("loadingpleasewait")
+                    plz.dispose()
+                    data.obj = d
+                    dropAllControls()
+                    create_options_window(m, data)
+                }
+            })
+}
+
+// create window and tag it to mesh (m)
+function create_options_window(m, control_data){
+    console.log("create_options_window", control_data)
+    var rect1 = new BABYLON.GUI.Rectangle("object_menu_window");
+        rect1.width = 0.2;
+        rect1.height = "40px";
+        rect1.cornerRadius = 10;
+        rect1.color = "white";         
+        rect1.thickness = 2;
+        rect1.background = "black";
+        dashboard.addControl(rect1);
+        rect1.linkWithMesh(m);   
+        rect1.linkOffsetY = 100;
+
+    // buttons to take actions
+    if (control_data.hasOwnProperty('actions')){
+        var actionsRect = new BABYLON.GUI.Rectangle("object_actions_window");
+        actionsRect.width = 0.2;
+        actionsRect.height = "40px";
+        actionsRect.cornerRadius = 10;
+        actionsRect.color = "white";         
+        actionsRect.thickness = 2;
+        actionsRect.background = "black";
+        actionsRect.linkOffsetY = 50;
+        actionsRect.linkOffsetX = -100;
+        dashboard.addControl(actionsRect);
+        actionsRect.linkWithMesh(m);   
+
+        var label = new BABYLON.GUI.TextBlock();
+        label.text = "Adminstration"; 
+        label.color = "white";
+        actionsRect.addControl(label);
+
+        var button = BABYLON.GUI.Button.CreateSimpleButton("actions_button");
+        button.onPointerUpObservable.add(function(){render_actions_control(control_data['actions'],control_data.obj)})
+        actionsRect.addControl(button)
+    }
+
+    // buttons to take construction
+    if (control_data.buildings.hasOwnProperty('possible_buildings')){
+        console.log("displaying construction")
+        var buildingsRect = new BABYLON.GUI.Rectangle("object_building_window");
+        buildingsRect.width = 0.2;
+        buildingsRect.height = "40px";
+        buildingsRect.cornerRadius = 10;
+        buildingsRect.color = "white";         
+        buildingsRect.thickness = 2;
+        buildingsRect.background = "black";
+        buildingsRect.linkOffsetY = 50;
+        buildingsRect.linkOffsetX = 100;
+        dashboard.addControl(buildingsRect);
+        buildingsRect.linkWithMesh(m);   
+
+        var label = new BABYLON.GUI.TextBlock();
+        label.text = "Construction"; 
+        label.color = "white";
+        buildingsRect.addControl(label);
+
+        var button = BABYLON.GUI.Button.CreateSimpleButton("building_button");
+        buildingsRect.addControl(button)
+
+        button.onPointerUpObservable.add(function() {render_buildings_control(control_data['buildings']['possible_buildings'],control_data.obj)})
+    }
+
+    var label = new BABYLON.GUI.TextBlock();
+    label.text = control_data.obj['name']; 
+    label.color = "white";
+    rect1.addControl(label);
+
+    var target = new BABYLON.GUI.Ellipse("object_menu_target");
+    target.width = "10px";
+    target.height = "10px";
+    target.color = "white";
+    target.thickness = 2;
+    target.background = "black";
+    dashboard.addControl(target);
+    target.linkWithMesh(m);   
+
+    var line = new BABYLON.GUI.Line("object_menu_line");
+    line.lineWidth = 4;
+    line.color = "white ";
+    line.y2 = -20;
+    line.linkOffsetY = 0;
+    dashboard.addControl(line);
+    line.linkWithMesh(m); 
+    line.connectedControl = rect1;  
+}
+
+
+function make_actions_box(controls,agent,clickHandler){
+    // `controls` is a list of actions that can be taken. Can be buildings to construct, actions to take, etc.
+        console.log("make_actions_box", controls)
+        actions_control_panel.height = (100 * controls.length).toString() + "px"
+        actions_control_panel.title = "Available options:"
+        actions_control = createControlBox(actions_control_panel)
+        for (let i = 0; i < controls.length; i++) {
+            a = {}
+            a.gui = {
+                buttonColor:"white",
+                depth:1,
+                returnButton:true,
+                width:"200px"}
+            a.iter = i+1
+            a.data = controls[i]
+            a.gui.text_button = true
+            a.gui.displayed_values = ["description","effort"]
+            a.gui.clickButton = function(a) {
+                console.log(" button was pushed: ", a.data, agent)
+                clickHandler(agent,a.data)
+            };
+            addButtonToBox(a,actions_control)
+            }
+}
+
+
+
+function render_buildings_control(control_data,agent){ 
+    // control_data = buildings that can be constructed, agent = pop, or agent commiting the action
+    dropAllControls()
+    console.log("render_buildings_control", control_data)
+    make_actions_box(control_data,agent,constructBuilding )
+}
+
+function render_actions_control(control_data,agent){
+    // control_data = actions that can be taken, agent = pop, or agent commiting the action
+    dropAllControls()
+    console.log("render_actions_control", control_data)
+    make_actions_box(control_data,agent, takeAction)
+}
+
+function make_current_action_box(generic_control,action){
+    // `controls` is a list of actions that can be taken. Can be buildings to construct, actions to take, etc.
+        console.log("make_current_action_box")
+        generic_control.height = "100px"
+        generic_control.title = "Current action: \n" + dictToSimpleText(action)
+        generic_control.left = 80
+        current_action_control = createControlBox(generic_control)
 }

@@ -1,3 +1,4 @@
+import logging
 from ..objects import baseobjects
 
 class Building(baseobjects.Baseobject):
@@ -25,7 +26,30 @@ class Building(baseobjects.Baseobject):
 
     def get_data(self):
         fund = self.get_fundimentals()
+        fund['owns'] = self.generated_by['objid']
         for k in self.conf.keys():
             fund[k] = self.conf[k]
         return fund
     
+
+def count_factions(c):
+    faction_count_query = f"""
+    g.V().has('label','faction').count()
+    """
+    c.run_query(faction_count_query)
+    return c.res[0]
+
+def get_faction_pop_structures(c):
+    building_query = f"""
+    g.V().has('label','faction').as('faction').in('isIn').has('label','pop').as('pop').out('owns').as('structure').path().by(valueMap())
+    """
+    c.run_query(building_query)
+    faction_res = c.query_to_dict(c.res)
+    logging.info(f"EXOADMIN: number of items: {len(faction_res)}")
+    for item in faction_res:
+        item['action'] = 'structure'
+    return faction_res
+
+def process_structure(c,message):
+    logging.info(f"EXOADMIN: processing structure, PASS")
+    pass

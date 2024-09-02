@@ -1,5 +1,5 @@
 from app.connectors.cmdb_graph import CosmosdbClient
-from app.models import get_home_system
+from app.models.models import get_home_system
 from django.http import JsonResponse
 
 from app.creators import homeworld, universe

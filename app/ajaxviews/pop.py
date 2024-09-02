@@ -1,4 +1,4 @@
-from app.models import CosmosdbClient
+from app.models.models import CosmosdbClient
 from django.http import JsonResponse
 
 from app.creators import homeworld
@@ -134,6 +134,7 @@ def take_building_action(request):
     return JsonResponse(response) 
 
 def get_all_actions(request):
+    c = CosmosdbClient()
     query = f"""
     g.E().haslabel('takingAction')
         .has('status',within('pending','resolved')).as('job')
@@ -143,7 +144,18 @@ def get_all_actions(request):
             .by(values('name').fold())
             .by(values('name','class','objtype').fold())
     """
-    c = CosmosdbClient()
     c.run_query(query)
     return c.query_to_dict(c.res)
     
+def get_current_action(request):
+    # return the current action, when the pop is not idle
+    request = ast.literal_eval(request.GET['values'])
+    c = CosmosdbClient()
+    agent = request['agent']
+    query = f"""
+    g.V().has('objid','{agent.get('objid','')}').outE().has('status','pending').has('name','takingAction').valueMap()
+    """
+    c.run_query(query)
+    res = c.clean_nodes(c.res)[0]
+    response = {'current_action':res}
+    return JsonResponse(response) 

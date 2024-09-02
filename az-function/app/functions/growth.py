@@ -128,20 +128,24 @@ def calculate_renewal(c,t,params):
     renewing_resources = c.clean_nodes(c.res)
     messages = []
     for resource in renewing_resources:
-        if resource['volume'] < resource['max_volume']:
+        if float(resource['volume']) < float(resource['max_volume']):
             messages.append(get_renewal_message(resource))
     return messages
 
 def renew_resource(c,message):
     objid = message['agent']['objid']
-    new_volume = message['agent']['volume'] + message['agent']['replenish_rate']
-    if new_volume > message['agent']['max_volume']:
-        new_volume = message['agent']['max_volume']
+    old_volume = float(message['agent']['volume'])
+    replenish_rate = float(message['agent']['replenish_rate'])
+    max_volume = float(message['agent']['max_volume'])  
+
+    new_volume = old_volume + replenish_rate
+    if new_volume > max_volume:
+        new_volume = max_volume
 
     patch_resource_query = f"""
-    g.V().has('objid','{objid}').out('has').has('label','resource')
+    g.V().has('objid','{objid}').has('label','resource')
         .property('volume', {new_volume})
     """
     c.run_query(patch_resource_query)
-    logging.info(f"EXOADMIN: {message['agent']['name']}:{message['agent']['objid']} increased by {message['agent']['replenish_rate']}, {message['agent']['volume']}-> {new_volume}")
+    logging.info(f"EXOADMIN: {message['agent']['name']}:{message['agent']['objid']} increased by {replenish_rate}, {old_volume}-> {new_volume}")
     return None

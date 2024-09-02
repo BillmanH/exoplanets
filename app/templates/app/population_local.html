@@ -3,8 +3,6 @@
 {% include "app/head.html" %}
 
 <body>
-    <!-- {% include "app/menu_top.html" %}
-    <p></p> -->
     <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 <script>
@@ -49,7 +47,7 @@
     }
 
 
-    const scene = createScene();
+    const scene = createScene();    
     engine.runRenderLoop(function () {
         scene.render();
         {% include "app/ui/render_cleanup.js" %}

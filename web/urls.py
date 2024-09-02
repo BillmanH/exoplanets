@@ -3,7 +3,7 @@ from django.urls import include, path
 from ms_identity_web.django.msal_views_and_urls import MsalViews
 from django.conf.urls.static import static
 from django.conf import settings
-from app import views
+from app.views import core
 
 msal_urls = MsalViews(settings.MS_IDENTITY_WEB).url_patterns()
 

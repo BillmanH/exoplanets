@@ -14,13 +14,13 @@
                                                        __/ |
                                                       |___/ 
         </pre>
-        <div>
-            <img src="{% static 'app/objects/space_cover.png' %}" alt="image made with stable diffusion">
-        </div>
+
+        
     </p>
     <p>A real-time, evolving universe of procedurally generated systems
     </br>Manage geo-politics, advance civilizations, expand into space</p>
-    <p>This game is in constant development. <a class="menu button" href="https://github.com/BillmanH/exoplanets">View the source code on Github</a>. The `dev` branch will show you what I'm working on right now</p>
+    <canvas id="staticCanvas" touch-action="none" height="300", width="900"></canvas>
+    <p>This game is in constant development. <a class="menu button" href="https://github.com/BillmanH/exoplanets">View the source code on Github</a> </br> The `dev` branch will show you what I'm working on right now</p>
     <p>You can also <a class="menu button" href="https://github.com/BillmanH/exoplanets/issues">report a bug, or request a feature</a></p>
     <p>How big is the game so far:</p>
     <ul>
@@ -29,7 +29,6 @@
         <li class="info">Total Galactic Population: {{all_pops}}</li>
         <li class="info">Universal Time Units (TU): {{time}}</li>
     </ul>
-
     <div>
         <p>
             <a class="menu button" href="/new">Create a new civilization</a>
@@ -47,4 +46,54 @@
     </div>
 </body>
 
+<script>
+    var stars = {{ stars | safe }}
+
+        
+    const canvas = document.getElementById("staticCanvas");
+    const engine = new BABYLON.Engine(canvas, true);
+
+    const createScene = function () {
+        const scene = new BABYLON.Scene(engine);
+        scene.clearColor = new BABYLON.Color3.Black;
+
+        const interactive = false
+        const alpha = Math.PI / 4;
+        const beta = Math.PI / 3;
+        const radius = 50;
+        const target = new BABYLON.Vector3(0, 0, 0);
+
+        const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
+        camera.useFramingBehavior = true;
+
+        const alphaAnimation = new BABYLON.Animation("camAlpha", "alpha", 2, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE)
+        const keys2 = [{
+            frame : 0,
+            value : Math.PI
+            }, {
+            frame : 100,
+            value :-Math.PI
+        }]
+        alphaAnimation.setKeys(keys2)
+
+        camera.animations.push(alphaAnimation)
+        scene.beginAnimation(camera, 0, 100, true)
+
+        {% include "app/ui/globals.js" %}
+        {% include "app/ui/global_ui.js" %}
+
+        // generators
+        {% include "app/ui/objects/galaxy/starmap.js" %}
+        {% include "app/tooltips.js" %}
+
+        dropControlIfExists("troubleshoot_box")
+        return scene;
+    }
+
+
+    const scene = createScene();  
+    engine.runRenderLoop(function () {
+        scene.render();
+    });
+</script>
 </html>  

@@ -1,4 +1,4 @@
-from app.models import CosmosdbClient
+from app.connectors.cmdb_graph import CosmosdbClient
 from django.http import JsonResponse
 
 

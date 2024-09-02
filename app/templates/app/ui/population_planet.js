@@ -1,9 +1,11 @@
 {% load static %}
 
 factionbuildingHeight = 10
+factionbuildingWidth = 10
 ground_dimensions = 5000
 ground_subdivisions = 19
 shinyness = 0.05
+camera_pan_speed = 200
 
 mapData = []
 
@@ -30,8 +32,8 @@ function render_resources(resources, readyMesh){
 function createFaction(n){
     const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_nocol_faction", 
         {height:factionbuildingHeight,
-        width:10,
-        depth:10}
+        width:factionbuildingWidth,
+        depth:factionbuildingWidth}
         );
 
 
@@ -58,12 +60,14 @@ function createFaction(n){
         dropControlIfExists("uiTooltip")
     }));
     faction.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-        console.log(faction.position)
+        dropAllControls()
+        // console.log(faction.position)
         objectDetails(n.data)
+        pops = getObjectChildren(n.data.objid,'faction')
+        console.log(pops)
+        animateCameraTargetToObject(camera, camera_pan_speed,200, faction.getAbsolutePosition())
+        make_faction_ui(n.data)
     }));
-    // n.faction = faction
-    // console.log(faction.name, x, y,z)
-    // console.log(faction.position)
 
 }
 
@@ -79,9 +83,6 @@ function createPop(n){
         depth:4}
     );
 
-    // address = get_address(faction.metadata.pop_locations, n.data.iter)
-    // n.data.population.address = address.toString()
-
     // box.parent = faction
     n.data.population.x = faction.position.x + n.coord.x 
     n.data.population.z = faction.position.z + n.coord.z
@@ -92,6 +93,9 @@ function createPop(n){
     box.position = n.position
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
+        if (n.data.population.isIdle=='false'){
+            boxMat.diffuseColor = new BABYLON.Color3(.9,0,.1)
+        }
         box.material = boxMat; 
 
     box.metadata = n.data.population
@@ -104,9 +108,16 @@ function createPop(n){
         dropControlIfExists("uiTooltip")
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-        console.log(box.position)
-        console.log(scene.getMeshById("ground").getHeightAtCoordinates(n.data.population.x,n.data.population.z))
+        console.log("clicked population: ",n.data.population)
         objectDetails(n.data.population)
+        animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
+        if (n.data.population['isIdle']=='false'){
+            console.log(n.data.population['objid'], ' is not idle')
+            action = get_current_action(n.data.population)
+            console.log(action)
+        } else {
+            get_available_controls(box,n.data.population)
+        }
     }));
 
 }
@@ -132,9 +143,9 @@ for (let i = 0; i < factions.length; i++) {
     f.iter = guiIter
     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
     f.coord = {
-        x:f.data.lat*ground_dimensions,
+        x:(f.data.lat*ground_dimensions), 
         y:0,
-        z:f.data.lat*ground_dimensions
+        z:(f.data.lat*ground_dimensions) + (factionbuildingWidth/2)
     }
     // console.log(faction,f.coord)
     createFaction(f)

@@ -174,3 +174,6 @@ az-functions/az-functions/.vscode/extensions.json
 # Adding Syllables to files so that I can find them out of place. 
 notebooks/People/syllables_dist.p
 notebooks/People/syllables.p
+
+# Scrap notebooks that I don't need versioned.
+notebooks/scrap.ipynb

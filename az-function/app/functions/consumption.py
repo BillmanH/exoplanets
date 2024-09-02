@@ -69,7 +69,7 @@ def reduce_location_resource(c,t,message, resource):
         """
         c.run_query(patch_resource_query)
         logging.info(f"EXOADMIN: resources on {message['agent']['name']}:{message['agent']['objid']} reduced by {quantity}, {resource['volume']}-> {new_volume}")
-    if resource['volume'] <= quantity:
+    if float(resource['volume']) <= quantity:
         new_volume = 0
         patch_resource_query = f"""
         g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}')

@@ -1,13 +1,17 @@
-from .connectors.cmdb_graph import *
+from ..connectors.cmdb_graph import *
 
-def get_galaxy_nodes():
-    # TODO: Add Glat and glon to systems when created
-    # TODO: Create edge from user that connects to systems that have been discovered
-    query="g.V().haslabel('system').valueMap('hostname','objid','disc_facility','glat','glon')"
+def get_object_by_id(objid):
+    query=f"g.V().has('objid','{objid}').valueMap()"
     c = CosmosdbClient()
     c.run_query(query)
     return c.clean_nodes(c.res)
 
+def get_star_systems():
+    # TODO: Create edge from user that connects to systems that have been discovered
+    query="g.V().haslabel('system').has('name').valueMap('name','type','objid','glat','glon', 'gelat')"
+    c = CosmosdbClient()
+    c.run_query(query)
+    return c.clean_nodes(c.res)
 
 
 def get_home_system(userguid):
@@ -23,6 +27,9 @@ def get_home_system(userguid):
     c.add_query(system_query)
     c.run_queries()   
     nodes = c.res[nodes_query]
+    if c.res[system_query]==[]:
+        system = "No home system found"
+        return system
     system = c.clean_nodes(c.res[system_query])[0]
     edges = [{"source":i['objid'][0],"target":i['orbitsId'][0],"label":"orbits"} for i in nodes if "orbitsId" in i.keys()]
     system = {"nodes": c.clean_nodes(nodes), "edges": edges, "system":system}
@@ -82,7 +89,7 @@ def get_local_population(objid):
     )
     building_query = (f"""g.V().has('objid','{objid}').as('location')
         .in('inhabits').as('population')
-        .in('owns').as('building')
+        .out('owns').as('building')
         .path()
             .by(valueMap('objid','name'))
             .by(valueMap('objid','name'))

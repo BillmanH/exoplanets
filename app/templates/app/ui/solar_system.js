@@ -13,6 +13,7 @@ sphere_textures = {
 
 star_base = 100
 shinyness = 0.05
+camera_pan_speed = 200
 
 // center
 const center = BABYLON.MeshBuilder.CreateBox("center", {"height":20,"size":1})
@@ -44,7 +45,14 @@ function createStar(n){
     star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
-
+    star.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        objectDetails(star.metadata.data)
+        pickedMesh = get_clicked_mesh(star)
+        console.log(pickedMesh)
+        animateCameraTargetToObject(camera, camera_pan_speed, 200, star.getAbsolutePosition())
+        animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, star.metadata.diameter + 25)
+    }));
+    
     return star
 }
 
@@ -52,11 +60,12 @@ function createStar(n){
 // Planet
 function createPlanet(n){
     var orbiting = scene.getMeshByName(n.data.orbitsId);
-    n.diameter = scale_radius(n.data.radius)/2  // should be r*2 but I want smaller plantets. 
+    n.diameter = scale_radius(n.data.radius)  // should be r*2 but I want smaller planets. 
     n.x = scale_distance(n.iter)
     
     n.y = 0
     n.z = scale_distance(n.data.orbitsDistance)
+    n.data.rendered_radius = n.diameter
     const planet = BABYLON.MeshBuilder.CreateSphere(n.data.objid,  {diameter: n.diameter});
     planet.parent = orbiting
     planet.position = new BABYLON.Vector3(n.x, n.y, n.z);
@@ -76,6 +85,15 @@ function createPlanet(n){
     planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
+    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        objectDetails(planet.metadata.data)
+        pickedMesh = get_clicked_mesh(planet)
+        console.log(pickedMesh)
+        animateCameraTargetToObject(camera, camera_pan_speed, 200, planet.getAbsolutePosition())
+        animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, planet.metadata.diameter + 25)
+        var children = getObjectChildren(planet.metadata.data.objid, 'orbits')
+        console.log(children)
+    }));
 
     return planet
 }
@@ -84,14 +102,12 @@ function createPlanet(n){
 function createMoon(n){
     var orbiting = scene.getMeshByName(n.data.orbitsId);
 
-    n.diameter = scale_radius(n.data.radius)/2  // should be r*2 but I want smaller plantets. 
-    n.x = (scale_distance_ln(n.data.orbitsDistance) + 20) * flipper()
-    n.y = (scale_distance_ln(n.data.orbitsDistance) + 20) * flipper()
-    n.z = (scale_distance_ln(n.data.orbitsDistance) + 20) * flipper()
-
+    n.diameter = scale_radius(n.data.radius)  // should be r*2 but I want smaller moons.  
+    // n.diameter = 1
     const moon = BABYLON.MeshBuilder.CreateSphere(n.data.objid,  {diameter: n.diameter});
     moon.parent = orbiting
-    moon.position = new BABYLON.Vector3(n.x, n.y, n.z);
+    moon.position = new BABYLON.Vector3(orbiting.position);
+    orbiting_translation(moon, orbiting.metadata.data.rendered_radius)
     var phi = Math.random() * 2 * Math.PI; 
     moon.rotation.y = phi;
     // texture
@@ -108,6 +124,22 @@ function createMoon(n){
     moon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
         dropControlIfExists("uiTooltip")
     }));
+    moon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+        objectDetails(moon.metadata.data)
+        pickedMesh = get_clicked_mesh(moon)
+        console.log(pickedMesh)
+        animateCameraTargetToObject(camera, camera_pan_speed, 200, moon.getAbsolutePosition())
+        animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, moon.metadata.diameter + 25)
+    }));
+}
+
+function orbiting_translation(obj,dist){
+    const translateX = BABYLON.Scalar.RandomRange((30 + dist)*-1, 30 + dist);
+    const translateY = BABYLON.Scalar.RandomRange((30 + dist)*-1, 30 + dist);
+    const translateZ = BABYLON.Scalar.RandomRange((30 + dist)*-1, 30 + dist);
+
+    const translationMatrix = BABYLON.Matrix.Translation(translateX, translateY, translateZ);
+    translationMatrix.decomposeToTransformNode(obj);
 }
 
 

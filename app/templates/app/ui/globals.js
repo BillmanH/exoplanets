@@ -1,10 +1,15 @@
+var ease = new BABYLON.CubicEase();
+ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
 
 function cs(s){
     r = s.replace('_', ' ')
     return r
 }
 
-
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+  }
+  
 function createGroundDecal(o, ground, texture, size){
     const decalMat = new BABYLON.StandardMaterial();
         decalMat.diffuseTexture = new BABYLON.Texture(texture);
@@ -115,4 +120,36 @@ function get_specific_node(nodes,objid){
     return mylist
 }
 
+var targAnimEnded = function(test) {
+    console.log("targAnimEnded", test);
+}
 
+var animateCameraTargetToObject = function(cam, speed, frameCount, pos) {
+    var panToObj = BABYLON.Animation.CreateAndStartAnimation('move', cam, 'target', speed, frameCount, cam.target, pos, 0, ease, targAnimEnded);
+    panToObj.disposeOnEnd = true;
+}
+
+var animateCameraZoomToObject = function(cam, speed, frameCount, newRadius) {
+    var panToObj = BABYLON.Animation.CreateAndStartAnimation('zoom', cam, 'radius', speed, frameCount, cam.radius, newRadius, 0, ease, targAnimEnded);
+    panToObj.disposeOnEnd = true;
+}
+
+
+var getObjectChildren = function(objid,type){
+    $.ajax({
+        url: '/ajax/get-object-children',
+        type: 'get',
+        data: {objid: objid, type: type},
+        dataType: 'json',
+        beforeSend: function () {
+            console.log("loading child objects for: ", objid)
+            // dropAllControls()
+        },
+        success: function(data){
+            console.log(data)
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+}

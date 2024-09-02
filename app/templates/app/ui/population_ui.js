@@ -4,7 +4,7 @@
 {% include "app/ajax/events.js" %}
 
 icons = {
-    pop:"{% static 'app/objects/icons/pop_icon_2.png' %}",
+    faction:"{% static 'app/objects/icons/pop_icon_2.png' %}",
     resources:"{% static 'app/objects/icons/resource_icon_1.png' %}",
     system:"{% static 'app/objects/icons/system_icon_1.png' %}",
     events:"{% static 'app/objects/icons/events_icon_1.png' %}",
@@ -23,7 +23,7 @@ pop_control_panel = {
 faction_control_panel = {
     title: "These are the populations within the faction",
     top:20,
-    left:500,
+    left:80,
     width:"400px",
     height:"100px"
 }
@@ -32,7 +32,7 @@ actions_control_panel = {
     title: "These are the actions available at this time",
     name:"action_window", 
     top:20,
-    left:920,
+    left:20,
     width:"600px",
     height:"600px"
 }
@@ -56,7 +56,7 @@ events_control_panel = {
 }
 
 var system_icon = create_icon({name:'system_icon',image:icons.system,top:getIconTop(0),tooltiptext:"return to the system"})
-var pop_icon = create_icon({name:'pop_icon',tooltiptext:"factions and populations",image:icons.pop,top:getIconTop(1)})
+var faction_icon = create_icon({name:'pop_faction_iconicon',tooltiptext:"factions and populations",image:icons.faction,top:getIconTop(1)})
 var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:getIconTop(2)})
 var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:getIconTop(3)})
 var exit_icon = create_icon({name:'quit_icon',tooltiptext:"Quit",image:icons.exit,top:getIconTop(4)})
@@ -67,37 +67,12 @@ var piovtCamera = function(name){
     camera.radius = 100 
 }
 
-function getPopBox(f){
-    dropControlIfExists("window")
-    dropControlIfExists("action_window")
-    pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
-    faction_control_panel.height = (100 * pops.length).toString() + "px"
-    faction_pops_control = createControlBox(faction_control_panel)
-    for (let si = 0; si < pops.length; si++) {
-        p = {}
-        p.data = pops[si].population
-        p.iter = si+1
-        p.gui = {buttonColor:"white"}
-        p.gui.clickButton = function(p) {
-            console.log(p.data.name, p.data.objid, " button was pushed")
-            objectDetails(p.data)
-        };
-        pop_button = addButtonToBox(p,faction_pops_control)
-        // console.log(p.data.isIdle)
-        if(p.data.isIdle.toLowerCase()=="true"){
-            p.gui.buttonColor = "green"
-            p.gui.buttontext = "get actions"
-            p.gui.buttonName = "get_actions_"
-            p.gui.width = "60px"
-            p.gui.actionButton = function(p) {
-                console.log(p.data.name, p.data.objid, " button was pushed")
-                objectDetails(p.data)
-                p.data = pops[si].population
-                prep_actions(p)
-            };
-            addButtonToBox(p,faction_pops_control)
-            }
-    }
+
+function popOptionsWindow(pop){
+    dropAllControls()
+    faction_control_panel.height = (100 * pop.factions.length).toString() + "px"
+    faction_control = createControlBox(faction_control_panel)
+
 }
 
 system_icon.onPointerClickObservable.add(function () {
@@ -109,9 +84,8 @@ system_icon.onPointerClickObservable.add(function () {
 });
 
 
-pop_icon.onPointerClickObservable.add(function () {
+faction_icon.onPointerClickObservable.add(function () {
     dropAllControls()
-
     factions = distinct_list(data.nodes,'faction','objid')
     pop_control_panel.height = (100 * factions.length).toString() + "px"
     pop_control = createControlBox(pop_control_panel)
@@ -130,10 +104,10 @@ pop_icon.onPointerClickObservable.add(function () {
         }
         f.gui.clickButton = function(f) {
             console.log(f.data.name, f.data.objid, " button was pushed")
-            console.log(f.data.objid+"_nocol_faction_merged")
             piovtCamera(f.data.objid+"_nocol_faction_merged")
-            getPopBox(f)
+            // getPopBox(f)
             objectDetails(f.data)
+            dropAllControls()
         };
         addButtonToBox(f,pop_control)
     }
@@ -181,57 +155,7 @@ exit_icon.onPointerClickObservable.add(function () {
     window.location.href = dest;
 });
 
-
-function make_actions_box(actions){
-    dropControlIfExists("action_window")
-    if(actions.hasOwnProperty('actions')){
-        actions_control_panel.height = (100 * actions.actions.length).toString() + "px"
-        
-        actions_control_panel.title = actions.pop.objtype + ": " + actions.pop.name + ". Has these actions"
-        actions_control = createControlBox(actions_control_panel)
-        for (let i = 0; i < actions.actions.length; i++) {
-            a = {}
-            a.gui = {
-                buttonColor:"white",
-                depth:1,
-                returnButton:true,
-                width:"200px"}
-                a.iter = i+1
-                a.data = actions.actions[i]
-                a.gui.text_button = true
-                a.gui.displayed_values = ["comment","effort"]
-                a.gui.clickButton = function(a) {
-                    console.log(actions.pop.name,": ", a.type, " button was pushed")
-                    console.log("action", a)
-                    if (a.data.type=='build_building'){
-                        ajax_getBuildings(actions.pop).then(function(response){
-                            buildings_window(response)
-                        })
-                    } else {
-                        objectDetails(a.data)
-                        takeAction(actions.pop,a.data)
-                }
-                };
-                // textblock.text += cs(a.data.type) + ": " + a.data.comment + "\n" + "\n"
-                addButtonToBox(a,actions_control)
-            }
-            
-    } else {
-        actions_control_panel.title = "This population has no actions available to it as this time"
-        ActionBox = createControlBox(actions_control_panel)
-    }
+function make_faction_ui(faction){
+    faction_control = createControlBox(faction_control_panel)
+    console.log("Faction window opened")
 }
-
-
-scene.onKeyboardObservable.add((kbInfo) => {
-    switch (kbInfo.type) {
-        case BABYLON.KeyboardEventTypes.KEYDOWN:
-        switch (kbInfo.event.key) {
-        case "x":
-        case "X":
-            dropAllControls()
-        break
-        }
-        break;
-        }
-    }); 
