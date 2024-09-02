@@ -52,7 +52,7 @@ The game is about simulation, systems-thinking and collective progress. The only
 
 ## Making your own game
 I built this game so that I could clone it and create different versions. You should be able to clone the repo and run it on your own machine or in the cloud of your choice. Some assembly is required as this application uses a lot of tools. I'm working to keep the costs of the game down to ~$20 a month. 
-![Alt text](\docs\img\infra.png?raw=true "Architecture")
+![Alt text](/docs/img/infra.png?raw=true "Architecture")
     
 
 Of course, you can also just clone it on your local machine and run for free. Feel free to create an issue and I'll address them as I'm able. 
