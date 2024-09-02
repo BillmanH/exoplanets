@@ -1,6 +1,7 @@
 {% load static %}
 
 factionbuildingHeight = 10
+factionbuildingWidth = 10
 ground_dimensions = 5000
 ground_subdivisions = 19
 shinyness = 0.05
@@ -31,8 +32,8 @@ function render_resources(resources, readyMesh){
 function createFaction(n){
     const box = BABYLON.MeshBuilder.CreateBox(n.data.objid+"_nocol_faction", 
         {height:factionbuildingHeight,
-        width:10,
-        depth:10}
+        width:factionbuildingWidth,
+        depth:factionbuildingWidth}
         );
 
 
@@ -137,9 +138,9 @@ for (let i = 0; i < factions.length; i++) {
     f.iter = guiIter
     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
     f.coord = {
-        x:f.data.lat*ground_dimensions,
+        x:(f.data.lat*ground_dimensions) + (factionbuildingWidth/2), 
         y:0,
-        z:f.data.lat*ground_dimensions
+        z:(f.data.lat*ground_dimensions) + (factionbuildingWidth/2)
     }
     // console.log(faction,f.coord)
     createFaction(f)
