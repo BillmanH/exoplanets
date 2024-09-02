@@ -130,8 +130,8 @@ if stage == "predeploymigrations":
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-AZURE_STORAGE_KEY = os.environ.get('AZURE_STORAGE_KEY', False)+"==" # wierd env string issue
-AZURE_ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', False)
+AZURE_STORAGE_KEY = os.environ.get('AZURE_STORAGE_KEY', "AzureStorageKeyMissing")+"==" # wierd env string issue
+AZURE_ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', "AzureStorageKeyMissing")
 AZURE_STATIC_CONTAINER = os.environ.get('AZURE_STATIC_CONTAINER', 'static')
 AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'  # CDN URL
 STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_STATIC_CONTAINER}/'
