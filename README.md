@@ -31,6 +31,11 @@ Until I roll into production, I'll be making breaking changes constantly. Not a 
 * Patron Account
 * Production Environment
 
+## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
+## January
+* Simulation overhaul (will need some user data to do it)
+
+
 
 
 
