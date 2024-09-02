@@ -543,3 +543,12 @@ function render_actions_control(control_data,agent){
     console.log("render_actions_control", control_data)
     make_actions_box(control_data,agent, takeAction)
 }
+
+function make_current_action_box(generic_control,action){
+    // `controls` is a list of actions that can be taken. Can be buildings to construct, actions to take, etc.
+        console.log("make_current_action_box")
+        generic_control.height = "100px"
+        generic_control.title = "Current action: \n" + dictToSimpleText(action)
+        generic_control.left = 80
+        current_action_control = createControlBox(generic_control)
+}

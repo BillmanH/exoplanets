@@ -41,6 +41,9 @@ urlpatterns = [
 
     path("ajax/take-action", pop.take_action, name="pop_take_action"),
     path("ajax/take-building-action", pop.take_building_action, name="pop_take_building_action"),
+    # get the current action of an agent, when not idle
+    path("ajax/get-current-action", pop.get_current_action, name="pop_get_current_action"),
+
     path("ajax/overview", overview.get_overview, name="overview"),
     path("ajax/newsfeed", overview.get_newsfeed, name="newsfeed"),
 

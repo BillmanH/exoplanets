@@ -93,6 +93,9 @@ function createPop(n){
     box.position = n.position
     const boxMat = new BABYLON.StandardMaterial(n.data.population.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/skyscraper_2.png' %}");
+        if (n.data.population.isIdle=='false'){
+            boxMat.diffuseColor = new BABYLON.Color3(.9,0,.1)
+        }
         box.material = boxMat; 
 
     box.metadata = n.data.population
@@ -108,8 +111,10 @@ function createPop(n){
         console.log("clicked population: ",n.data.population)
         objectDetails(n.data.population)
         animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
-        if (n.data['isIdle']=='false'){
-            console.log(n.data['objid'], ' is not idle')
+        if (n.data.population['isIdle']=='false'){
+            console.log(n.data.population['objid'], ' is not idle')
+            action = get_current_action(n.data.population)
+            console.log(action)
         } else {
             get_available_controls(box,n.data.population)
         }
@@ -138,7 +143,7 @@ for (let i = 0; i < factions.length; i++) {
     f.iter = guiIter
     pops = filter_nodes_res(data.nodes,'faction','name', f.data.name)
     f.coord = {
-        x:(f.data.lat*ground_dimensions) + (factionbuildingWidth/2), 
+        x:(f.data.lat*ground_dimensions), 
         y:0,
         z:(f.data.lat*ground_dimensions) + (factionbuildingWidth/2)
     }
