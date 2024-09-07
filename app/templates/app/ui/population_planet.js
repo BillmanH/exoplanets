@@ -157,7 +157,6 @@ for (let i = 0; i < factions.length; i++) {
         var pop_margin = 5
         var pop_spread = (((j+pops.length)/2) + pop_margin)
         p.coord = pivotLocal(pop_spread*-1,pop_spread, pop_margin)
-        console.log(p.coord)
         createPop(p)
         createGroundDecal(p,ground,"{% static 'app/objects/planet/surface/planet_city_decal.png' %}", 20 * p.data.population.industry)
     }
