@@ -1,0 +1,24 @@
+explanation:
+  - name: name of the resource
+  - type: type of the resource
+  - description: description of the resource
+  - replenish_rate: rate at which the resource is replenished
+  
+resources:
+  vegitation:
+    name: "organics"
+    type: "vegitable"
+    description: "native plants and animals in an ecosystem"
+    replenish_rate: 10
+  minerals_common:
+    name: "common minerals"
+    type: "mineral"
+    description: "Iron and other common material used in constructuion of infrastructure" 
+  minerals_rare:
+    name: "rare minerals"
+    type: "mineral"
+    description: "lithium, silver and other rare minerals used in infrastructure and technology"
+  water:
+    name: "water"
+    type: "mineral"
+    description: "H2O ready to be consumed, either frozen or in ice format"

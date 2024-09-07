@@ -1,0 +1,34 @@
+explanation:
+
+
+components:
+  - cargo:
+      type: cargo
+      label: component
+      name: Cargo
+      description: "Cargo holds for the ship. Increases the amount of resources that can be carried."
+      augments_ship_stat: cargo
+      holds: 20
+      effort: 1
+      cost: 5
+      render: 'ball'
+  - engine:
+      type: engine
+      label: component
+      name: Engine
+      description: "Engines for the ship. Increases the speed and cargo capacity."
+      augments_ship_stat: speed
+      speed: 1
+      effort: 1
+      cost: 5
+      render: 'ball'
+  - habitat:
+      type: habitat
+      label: component
+      name: Habitat
+      description: "Supports one population."
+      augments_ship_stat: population
+      holds: 1
+      effort: 3
+      cost: 5
+      render: 'ball'
