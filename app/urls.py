@@ -15,10 +15,8 @@ urlpatterns = [
     path("genesis_view", core.genesis, name="genesis"),
     path("homesystemui", core.home_system_ui, name="home_system_ui"),
     path("galaxymap", core.galaxy_map, name="galaxy_map"),
-    path("systemmap", core.system_map, name="system_map"),
     path("systemui", core.system_ui, name="system_ui"),
     path("popuilocal", core.pop_ui_local, name="pop_ui_local"),
-    path("populations", core.populations_view, name="populations"),
     
     path("ajax/refreshaccount", genesis.refreshaccount, name="refreshaccount"),
     path("ajax/genesissystem", genesis.build_solar_system, name="genesissystem"),

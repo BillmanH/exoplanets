@@ -8,8 +8,8 @@ function flipper(){
     }
 }
 
-radius_p = get_values(data["nodes"],"radius", "planet")
-radius_m = get_values(data["nodes"],"radius", "moon")
+radius_p = get_values(data["solar_system"]["nodes"],"radius", "planet")
+radius_m = get_values(data["solar_system"]["nodes"],"radius", "moon")
 radiuses = radius_p.concat(radius_m)
 
 var scale_radius = d3.scaleLinear()
@@ -17,7 +17,7 @@ var scale_radius = d3.scaleLinear()
             .range([1,100]);
 // console.log("radiuses: ", radiuses)   
 
-distances = get_values(data["nodes"],"orbitsDistance", "planet")
+distances = get_values(data["solar_system"]["nodes"],"orbitsDistance", "planet")
 // console.log("distances: ", distances)            
 var scale_distance = d3.scaleSqrt()
             .domain([d3.min(distances),d3.max(distances)])

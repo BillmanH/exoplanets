@@ -30,7 +30,6 @@ function createStar(n){
             dropControlIfExists("uiTooltip")
         }));
     }
-    console.log('star ', n.name,' created', n.x, n.y, n.z)  
     return star
 }
 

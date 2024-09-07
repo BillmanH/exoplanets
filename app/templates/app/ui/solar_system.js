@@ -145,11 +145,11 @@ function orbiting_translation(obj,dist){
 
 // Main -- rendering loops
 // Primary objects that don't rely on the relative position
-function createprimry_bodies(pdata){
+function createprimry_bodies(){
     var guiIter = 0
-    for (let i = 0; i < data.nodes.length; i++) {
+    for (let i = 0; i < data.solar_system.nodes.length; i++) {
         n = {}
-        n.data = data["nodes"][i]
+        n.data = data["solar_system"]["nodes"][i]
         n.gui = {buttonColor:"white",
                 depth:0}
         if (n.data.objtype=="star"){
@@ -218,5 +218,5 @@ function createMoons(pdata){
     }
 }
 
-createprimry_bodies(filter_nodes_list(data["nodes"],'objtype','planet'))
-createMoons(filter_nodes_list(data["nodes"],'objtype','moon'))
+createprimry_bodies()
+createMoons(filter_nodes_list(data['solar_system']["nodes"],'objtype','moon'))
