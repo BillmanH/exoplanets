@@ -98,6 +98,8 @@ def system_ui(request):
 @ms_identity_web.login_required
 def pop_ui_local(request):
     res = get_local_population(request.GET['objid'])
+    time = get_time()
+    res['time'] = time
     context = {"data": res,"global_location":request.GET['objid']}
     return render(request, "app/population_local.html", context)
 
