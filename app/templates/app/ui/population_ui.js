@@ -78,7 +78,7 @@ function popOptionsWindow(pop){
 system_icon.onPointerClickObservable.add(function () {
     dropAllControls()
     plz = pleaseWaiter(dashboard)
-    dest = '/systemui?objid=' + global_location + '&orientation=planet'
+    dest = '/systemui?objid=' + data.location.objid + '&orientation=planet'
     console.log(dest)
     window.location.href = dest;
 });
