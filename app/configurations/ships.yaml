@@ -1,5 +1,15 @@
 explanation:
-
+  - type: id_name of the ship. lower, underscores
+  - label: "'class' of the object. in this case it is always 'ship'"
+  - name: pretty printed name of the ship. UI can remove the '_' at display time.
+  - augments_ship_stat: OPTIONAL augments a specific stat, creates it if it does not exist
+  - effort: time in universal time units (UTU) that the action will take to complete
+  - cost: cost in wealth to build the ship
+  - render: "guides the rendering in ships.js. Available types: 'ball'"
+  - components: list of components that make up the ship
+  - cargo: cargo component
+  - engine: engine component
+  - habitat: habitat component
 
 components:
   - cargo:
@@ -7,10 +17,12 @@ components:
       label: component
       name: Cargo
       description: "Cargo holds for the ship. Increases the amount of resources that can be carried."
-      augments_ship_stat: cargo
+      augments_ship_stats: 
+        wieght: 1
+        cost: 1
       holds: 20
+      full: 0
       effort: 1
-      cost: 5
       render: 'ball'
   - engine:
       type: engine
@@ -18,10 +30,10 @@ components:
       name: Engine
       description: "Engines for the ship. Increases the speed and cargo capacity."
       augments_ship_stat: speed
+      fuel: 0
       speed: 1
       effort: 1
-      cost: 5
-      render: 'ball'
+      render: 'cone'
   - habitat:
       type: habitat
       label: component
@@ -29,6 +41,6 @@ components:
       description: "Supports one population."
       augments_ship_stat: population
       holds: 1
+      full: 0
       effort: 3
-      cost: 5
       render: 'ball'

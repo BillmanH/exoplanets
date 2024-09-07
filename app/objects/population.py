@@ -91,6 +91,8 @@ class Faction(baseobjects.Baseobject):
             self.pops = []
             self.lat = i['lat']
             self.long = i['long']
+            self.wealth = i.get('wealth', 0)
+            self.infrastructure = i.get('infrastructure', 0)
         else:
             self.name = self.make_name(2, 2)
             self.label = "faction"
@@ -98,12 +100,16 @@ class Faction(baseobjects.Baseobject):
             self.pops = []
             self.lat = 0
             self.long = 0
+            self.wealth = 2 # default wealth.
+            self.infrastructure = 0
 
 
     def get_data(self):
         fund = self.get_fundimentals()
         fund['lat'] = self.lat
         fund['long'] = self.long
+        fund['wealth'] = self.wealth
+        fund['infrastructure'] = self.infrastructure
         return fund
 
     def assign_pop_to_faction(self, pop):
