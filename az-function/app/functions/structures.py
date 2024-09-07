@@ -1,5 +1,6 @@
 import logging
 from ..objects import baseobjects
+import yaml 
 
 class Building(baseobjects.Baseobject):
     def __init__(self,gen,building):
@@ -52,4 +53,7 @@ def get_faction_pop_structures(c):
 
 def process_structure(c,message):
     logging.info(f"EXOADMIN: processing structure, PASS")
-    pass
+    to_build = yaml.safe_load(message['action']['to_build'])
+    building = Building(message['agent'],to_build)
+    data = {"nodes": [building.get_data()], "edges": [building.get_owned_by()]}
+    c.upload_data(message['agent']['userguid'], data)

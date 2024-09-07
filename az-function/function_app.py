@@ -54,6 +54,8 @@ def resolve_action_event(event: func.EventHubEvent):
         action = time.Action(c,message)
         action.add_updates_to_c(t)
         c.upload_data(action.agent['userguid'], action.data)
+        if message['job']['actionType'] == "construction":
+            structures.process_structure(c,message)
         logging.info(f"EXOADMIN:       -------And with that processed a JOB: {action} at UTU:{t}")
 
     # given an object, creates a child object and links it to a parent. 

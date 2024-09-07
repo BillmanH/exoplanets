@@ -1,0 +1,38 @@
+{
+    "action": {
+        "type": "construction",
+        "comment": "constructing a Farmland",
+        "effort": 1,
+        "applies_to": "pop",
+        "owned_by": "pop",
+        "building": "Farmland",
+        "created_at": 45174,
+        "objid": "6834704429780",
+        "userguid": "8d5b667f-b225-4641-b499-73b77558ff86",
+        "objtype": "action"
+    },
+    "job": {
+        "status": "pending",
+        "userguid": "8d5b667f-b225-4641-b499-73b77558ff86",
+        "name": "takingAction",
+        "weight": "45175",
+        "actionType": "construction",
+        "created_at": "45174"
+    },
+    "agent": {
+        "isIdle": "false",
+        "factionLoyalty": 0.769,
+        "conformity": 0.711,
+        "aggression": 0.629,
+        "name": "Hillslostipu Ronaschan",
+        "objid": "1953275892700",
+        "literacy": "0.543",
+        "constitution": "0.405",
+        "health": "0.7",
+        "isIn": "1268336423893",
+        "industry": "0.467",
+        "wealth": "0.505",
+        "userguid": "8d5b667f-b225-4641-b499-73b77558ff86",
+        "objtype": "pop"
+    }
+}
