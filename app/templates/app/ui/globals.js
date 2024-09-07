@@ -88,11 +88,17 @@ function distinct_list(nodes,element,field){
 }
 
 // coordinate makers
-function pivotLocal(min,max){
+function pivotLocal(min,max,margin){
     coord = {}
     coord.x = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
     coord.y = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
     coord.z = Math.floor(Math.random() * (+max + 1 - +min)) + +min; 
+    if (coord.x < 0){coord.x = coord.x - margin}
+    if (coord.y < 0){coord.y = coord.y - margin}
+    if (coord.z < 0){coord.z = coord.z - margin}
+    if (coord.x > 0){coord.x = coord.x + margin}
+    if (coord.y > 0){coord.y = coord.y + margin}
+    if (coord.z > 0){coord.z = coord.z + margin}
     return coord
   }
 

@@ -26,6 +26,7 @@ function make_tree(coord){
 function build_organic_resource(r){
     for (let i = 0; i < r.volume; i++){
         var range = ground_dimensions/2
-        make_tree(pivotLocal((-1*range),range))
+        var resource_margin = 0
+        make_tree(pivotLocal((-1*range),range, resource_margin))
     }
 }

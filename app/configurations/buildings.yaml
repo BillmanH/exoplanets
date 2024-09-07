@@ -149,7 +149,7 @@ buildings:
       type: marketplace
       label: building
       name: Marketplace
-      description: "Generates wealth for all populations in this faction except the owner"
+      description: "Generates wealth for the faction."
       owned_by: pop
       effort: 10
       faction_augments:
