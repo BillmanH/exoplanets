@@ -59,7 +59,7 @@ def construct_building(c,message):
     data = {"nodes": [building.get_data()], "edges": [building.get_owned_by()]}
     c.upload_data(message['agent']['userguid'], data)
 
-
+ 
 def process_structure(c,message):
     logging.info(f"EXOADMIN: TODO: process_structure")
     pass
