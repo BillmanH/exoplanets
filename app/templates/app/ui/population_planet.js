@@ -166,11 +166,11 @@ function renderBuildings(ground){
     // Buildings attached to pops, not pops themselves. 
     for (let i = 0; i < data.buildings.length; i++) {
         d = data.buildings[i]
+        var owner = scene.getMeshByName(d.owner+'_nocol_box')
         if(d.render_type=='block'){
-            var owner = scene.getMeshByName(d.owner+'_nocol_box')
             render_block(owner, d)
         } else if(d.render_type=='mesh'){
-            render_mesh(owner, d,)
+            render_mesh(owner, d)
         }
     }
 }
