@@ -14,6 +14,9 @@ __pycache__/
 # Static files that are just for Admin
 app/static/app/*
 
+# Diffuser assets are the same as static
+notebooks/diffusors/*.png
+
 # Distribution / packaging
 .Python
 build/
@@ -177,3 +180,4 @@ notebooks/People/syllables.p
 
 # Scrap notebooks that I don't need versioned.
 notebooks/scrap.ipynb
+

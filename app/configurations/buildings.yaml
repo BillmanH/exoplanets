@@ -138,12 +138,13 @@ buildings:
       description: "Produces energy by extracting hydrocarbons from the ground."
       owned_by: pop
       faction_augments: 
-        wealth: 10
+        wealth: 1
       requires_attr: 
         industry: .7
       renews_location_resource: 
         hydrocarbons: 10
       effort: 2
+      render_type: 'mesh'
 
   marketplace:
       type: marketplace
