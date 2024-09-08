@@ -482,6 +482,11 @@ function create_options_window(m, control_data){
 
         button.onPointerUpObservable.add(function() {render_buildings_control(control_data['buildings']['possible_buildings'],control_data.obj)})
     }
+    else if (control_data.buildings.hasOwnProperty('current_buildings')){
+        console.log("pop has buildings")
+        // should only be one building per population
+        make_current_building_box(actions_control_panel, control_data.buildings['current_buildings'])
+    }
 
     var label = new BABYLON.GUI.TextBlock();
     label.text = control_data.obj['name']; 
@@ -551,9 +556,21 @@ function render_actions_control(control_data,agent){
 
 function make_current_action_box(generic_control,action){
     // `controls` is a list of actions that can be taken. Can be buildings to construct, actions to take, etc.
-        console.log("make_current_action_box")
         generic_control.height = "100px"
         generic_control.title = "Current action: \n" + dictToSimpleText(action)
         generic_control.left = 80
         current_action_control = createControlBox(generic_control)
+}
+
+function make_current_building_box(generic_control,buildings){
+    // `controls` is a list of actions that can be taken. Can be buildings to construct, actions to take, etc.
+    if (buildings.length > 1){
+        console.log("Error: more than one building per pop: ", buildings.length)
+    }
+    building = buildings[0]
+        generic_control.height = "400px"
+        generic_control.title = "Current action: \n" + dictToSimpleText(building)
+        generic_control.left = 80
+        current_action_control = createControlBox(generic_control)
+        current_action_control
 }
