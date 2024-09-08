@@ -70,8 +70,8 @@ function render_mesh(pop,building){
     box.metadata.ownedByID = metadata.objid
     box.actionManager = new BABYLON.ActionManager(scene);
 
-    mesh = BABYLON.SceneLoader.ImportMeshAsync("semi_house", "{% static 'app/objects/planet/surface/buildings/oil_well.glb' %}");
-    console.log("mesh: ", mesh)
+    // mesh = BABYLON.SceneLoader.ImportMeshAsync("semi_house", "{% static 'app/objects/planet/surface/buildings/oil_well.glb' %}");
+    // console.log("mesh: ", mesh)
 
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
         hoverTooltip(box)
