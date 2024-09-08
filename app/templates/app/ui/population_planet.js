@@ -168,7 +168,9 @@ function renderBuildings(ground){
         d = data.buildings[i]
         if(d.render_type=='block'){
             var owner = scene.getMeshByName(d.owner+'_nocol_box')
-            render_block(owner, d, ground)
+            render_block(owner, d)
+        } else if(d.render_type=='mesh'){
+            render_mesh(owner, d,)
         }
     }
 }
