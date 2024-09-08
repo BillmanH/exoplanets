@@ -1,5 +1,6 @@
 import logging
 from ..objects import baseobjects
+import yaml 
 
 class Building(baseobjects.Baseobject):
     def __init__(self,gen,building):
@@ -26,7 +27,7 @@ class Building(baseobjects.Baseobject):
 
     def get_data(self):
         fund = self.get_fundimentals()
-        fund['owns'] = self.generated_by['objid']
+        fund['ownedBy'] = self.generated_by['objid']
         for k in self.conf.keys():
             fund[k] = self.conf[k]
         return fund
@@ -50,6 +51,15 @@ def get_faction_pop_structures(c):
         item['action'] = 'structure'
     return faction_res
 
+def construct_building(c,message):
+    logging.info(f"EXOADMIN: Constucting a building")
+    logging.info(f"EXOADMIN: {message}")
+    to_build = yaml.safe_load(message['action']['to_build'])
+    building = Building(message['agent'],to_build)
+    data = {"nodes": [building.get_data()], "edges": [building.get_owned_by()]}
+    c.upload_data(message['agent']['userguid'], data)
+
+ 
 def process_structure(c,message):
-    logging.info(f"EXOADMIN: processing structure, PASS")
+    logging.info(f"EXOADMIN: TODO: process_structure")
     pass

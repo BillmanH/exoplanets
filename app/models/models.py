@@ -13,6 +13,12 @@ def get_star_systems():
     c.run_query(query)
     return c.clean_nodes(c.res)
 
+def get_time():
+    query = "g.V().hasLabel('time').valueMap()"
+    c = CosmosdbClient()
+    c.run_query(query)
+    time = c.clean_nodes(c.res)[0] #should only be one time
+    return time
 
 def get_home_system(userguid):
     # If they just created a new game, they will only have one system. 
@@ -95,15 +101,19 @@ def get_local_population(objid):
             .by(valueMap('objid','name'))
             .by(valueMap('objid','name','changes','augments_resource','planet_requirements','description','render_type'))
     """)
+    location_query = f"g.V().has('objid','{objid}').valueMap()"
+
     c = CosmosdbClient()
     c.add_query(population_query)
     c.add_query(resource_query)
     c.add_query(building_query)
     c.add_query(biome_query)
+    c.add_query(location_query)
     c.run_queries()   
     nodes = c.reduce_res(c.res[population_query])
     resources = c.clean_nodes(c.res[resource_query])
     biome = c.clean_nodes(c.res[biome_query])
+    location = c.clean_nodes(c.res[location_query])[0] # should only be one location.
     buildings = []
     for iter, item in enumerate(c.res[building_query]):
         build = c.clean_node(item["objects"][2])
@@ -111,5 +121,5 @@ def get_local_population(objid):
         build.update({"owner": owner["objid"]})
         buildings.append(build)
     buildings
-    data = {"nodes": nodes, "edges": [], "resources":resources,"buildings":buildings, "biome":biome}
+    data = {"nodes": nodes, "edges": [], "resources":resources,"buildings":buildings, "biome":biome, "location":location}
     return data

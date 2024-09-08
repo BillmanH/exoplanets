@@ -23,7 +23,12 @@ var troubleshooter = new BABYLON.GUI.TextBlock("troubleshoot_box")
     troubleshooter.color = "white";    
     troubleshooter.paddingRight = 20
     troubleshooter.paddingTop = 20
-    var troubleshooting = {"name":"dev","objtype":"window","width":window.screen.width}
+    var troubleshooting = {
+        "name":"dev",
+        "objtype":"window",
+        "width":window.screen.width,
+        "UT": data['time'].currentTime,
+    }
     troubleshooter.text = dictToSimpleText(troubleshooting)
     dashboard.addControl(troubleshooter);
 

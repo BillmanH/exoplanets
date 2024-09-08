@@ -17,9 +17,18 @@ function createGroundDecal(o, ground, texture, size){
            
     pos = o.position
     pos.y = ground.getHeightAtCoordinates(o.position.x,o.position.z)
-    // var y = ground.getHeightAtCoordinates(o.coord.x,o.coord.z)
+    if (o.hasOwnProperty('data')){
+    if (o.data.hasOwnProperty('objid')){
+        decalName = o.data.objid + "_decal"
+    } else {
+        decalName = o.data.population.objid + "_decal"
+    }
+    } else {
+        decalName = o.metadata.objid + "_decal"
+    }
 
-    groundDecal = BABYLON.MeshBuilder.CreateDecal("decal",
+    console.log("decalName: ", decalName)   
+    groundDecal = BABYLON.MeshBuilder.CreateDecal(decalName + "_decal",
                                                     ground,
                                                     {
                                                         position: pos,
@@ -28,7 +37,6 @@ function createGroundDecal(o, ground, texture, size){
                                                     , false);
 
     groundDecal.material = decalMat;
-    // console.log("decal", groundDecal.position, o.coord)
 }
 
 // filtering data formats like [{},{},{}]
@@ -88,11 +96,17 @@ function distinct_list(nodes,element,field){
 }
 
 // coordinate makers
-function pivotLocal(min,max){
+function pivotLocal(min,max,margin){
     coord = {}
     coord.x = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
     coord.y = Math.floor(Math.random() * (+max + 1 - +min)) + +min;
     coord.z = Math.floor(Math.random() * (+max + 1 - +min)) + +min; 
+    if (coord.x < 0){coord.x = coord.x - margin}
+    if (coord.y < 0){coord.y = coord.y - margin}
+    if (coord.z < 0){coord.z = coord.z - margin}
+    if (coord.x > 0){coord.x = coord.x + margin}
+    if (coord.y > 0){coord.y = coord.y + margin}
+    if (coord.z > 0){coord.z = coord.z + margin}
     return coord
   }
 

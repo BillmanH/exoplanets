@@ -5,8 +5,7 @@
     <canvas id="renderCanvas" touch-action="none"></canvas>
 </body>
 <script>
-    var data = {{ solar_system | safe }}
-    var global_location = data.system.objid
+    var data = {{ data | safe }}
     console.log(data)
     
     {% include "app/ui/globals.js" %}

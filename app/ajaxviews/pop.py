@@ -121,8 +121,9 @@ def take_building_action(request):
         "effort":building['effort'],
         "applies_to":agent['objtype'],
         "owned_by":building['owned_by'],
-        "building":building['name'],
-        "created_at": utu.params['currentTime']
+        "building":building['type'],
+        "created_at": utu.params['currentTime'],
+        "to_build":building
     }
 
     setIdle = f"g.V().has('objid','{agent['objid']}').property('isIdle','false')"

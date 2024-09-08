@@ -29,7 +29,10 @@ def index(request):
                 "count_accounts": c.res[count_accounts_query], 
                 "time": c.res[time_units_query],
                 "all_pops": c.res[count_pops_query],
-                "stars": stars}
+                "stars": stars,
+                "data": {"time":{'currentTime':c.res[time_units_query]}}
+    }
+    
     return render(request, "app/index.html", context)
 
 @ms_identity_web.login_required
@@ -72,33 +75,40 @@ def genesis(request):
     return render(request, "app/creation/genesis_view.html", context)
 
 
-@ms_identity_web.login_required
-def system_map(request):
-    res = get_home_system(request.identity_context_data._id_token_claims['oid'])
-    if res == "No home system found":
-        return redirect("genesis")
-    context = {"solar_system": res}
-    return render(request, "app/system_map.html", context)
 
 @ms_identity_web.login_required
 def home_system_ui(request):
     res = get_home_system(request.identity_context_data._id_token_claims['oid'])
+    time = get_time()
     if res == "No home system found":
         return redirect("genesis")
-    context = {"solar_system": res}
+    context = {
+        "data": {"time":time,
+                 "solar_system": res,
+                 }
+    }
     return render(request, "app/system_ui.html", context)
 
 @ms_identity_web.login_required
 def system_ui(request):
     res = get_system(request.GET['objid'],request.GET['orientation'])
-    context = {"solar_system": res}
+    time = get_time()
+    context = {
+        "data": {"time":time,
+                 "solar_system": res,
+                 }
+    }
     return render(request, "app/system_ui.html", context)
 
 
 @ms_identity_web.login_required
 def pop_ui_local(request):
     res = get_local_population(request.GET['objid'])
-    context = {"data": res,"global_location":request.GET['objid']}
+    time = get_time()
+    res['time'] = time
+    context = {
+        "data": res
+        }
     return render(request, "app/population_local.html", context)
 
 
@@ -106,14 +116,12 @@ def pop_ui_local(request):
 @ms_identity_web.login_required
 def galaxy_map(request):
     res = get_star_systems()
+    time = get_time()
     context = {"stars": res}
+    context = {
+        "data": {"time":time},
+        "stars": res
+        }
     return render(request, "app/galaxy_map.html", context)
-
-
-@ms_identity_web.login_required
-def populations_view(request): 
-    res = get_factions(request.identity_context_data.username)
-    context = {"factions": res}
-    return render(request, "app/populations.html", context)
 
 

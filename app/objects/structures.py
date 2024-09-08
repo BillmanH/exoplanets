@@ -25,6 +25,7 @@ class Building(baseobjects.Baseobject):
 
     def get_data(self):
         fund = self.get_fundimentals()
+        fund['ownedBy'] = self.generated_by['objid']
         for k in self.conf.keys():
             fund[k] = self.conf[k]
         return fund
