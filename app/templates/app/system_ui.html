@@ -6,7 +6,6 @@
 </body>
 <script>
     var data = {{ data | safe }}
-    var global_location = data.solar_system.system.objid
     console.log(data)
     
     {% include "app/ui/globals.js" %}

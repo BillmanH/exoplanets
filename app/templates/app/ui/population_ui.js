@@ -115,7 +115,7 @@ faction_icon.onPointerClickObservable.add(function () {
 
 resource_icon.onPointerClickObservable.add(function () {
     dropAllControls()
-    ajax_get_local_resources({location:global_location}).then(function(response){
+    ajax_get_local_resources({location:data.location.objid}).then(function(response){
         const resources = response.resources
         resources_control_panel.height = (100 * resources.length).toString() + "px"
         resource_control = createControlBox(resources_control_panel)
@@ -132,7 +132,7 @@ resource_icon.onPointerClickObservable.add(function () {
 
 events_icon.onPointerClickObservable.add(function () {
     dropAllControls()
-    ajax_get_local_events({location:global_location}).then(function(response){
+    ajax_get_local_events({location:data.location.objid}).then(function(response){
         const events = response.events
         events_control_panel.height = ((100 * events.length)+100).toString() + "px"
         events_control = createControlBox(events_control_panel)
