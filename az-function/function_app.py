@@ -97,7 +97,7 @@ def resolve_action_event(event: func.EventHubEvent):
 
 # Generates messages to be resolved asynchronously.
 @app.function_name(name="actionResolverTimer")
-@app.schedule(schedule="0 */2 * * * *", 
+@app.schedule(schedule="0 */5 * * * *", 
               arg_name="mytimer",
               run_on_startup=RUNNING_LOCALLY) 
 def action_resolver(mytimer: func.TimerRequest) -> None:
