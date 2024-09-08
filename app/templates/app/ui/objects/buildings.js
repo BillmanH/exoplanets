@@ -1,8 +1,8 @@
 {% load static %} 
 
 bulding_config = {
-    "farmland": {texture:"{% static 'app/objects/planet/surface/texture_farm_1.png' %}",
-                height: 1,
+    "Farmland": {texture:"{% static 'app/objects/planet/surface/texture_farm_1.png' %}",
+                height: 2,
                 decalsize: 20,
                 boxsize: 10,
                 from_ground:-1
@@ -48,6 +48,11 @@ function buildings_window(response){
 
 
 function render_block(pop,building,ground){
+    console.log("pop: ", pop)
+    console.log("objid: ", pop.metadata.objid + "_decal") 
+    if(scene.getMeshByName(pop.metadata.objid + "_decal")){
+        scene.getMeshByName(pop.metadata.objid + "_decal").dispose()
+    }
     var box = BABYLON.MeshBuilder.CreateBox(pop.metadata.objid+"_nocol_box", 
     {"height":bulding_config[building.name].height,
         "size":bulding_config[building.name].boxsize}
