@@ -25,7 +25,7 @@ Until I roll into production, I'll be making breaking changes constantly. Not a 
 * Peace
 ## November
 * Space Stations
-* Megastructures
+* Building and simulation refinement
 ## December
 * Entra ID Access Management
 * Patron Account
@@ -35,6 +35,12 @@ Until I roll into production, I'll be making breaking changes constantly. Not a 
 ## January
 * Simulation overhaul (will need some user data to do it)
 
+## Hopefull things to implement in 2025
+* Megastructures
+* Technology development
+* More complicated race and generation process
+* More Biomes
+* More statistical reporting for later game managment
 
 
 
