@@ -7,7 +7,7 @@
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
 [The work-in-progress game is here.](http://exodestiny.azurewebsites.net/), however I won't be granting access until I've completed:
-Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out (to my email)[mailto:william.jeffrey.harding@gmail.com]
+Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out [to my email](mailto:william.jeffrey.harding@gmail.com)
 
 # What is left to do, and when to do it:
 ## September
