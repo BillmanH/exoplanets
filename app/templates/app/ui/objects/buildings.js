@@ -50,32 +50,35 @@ function buildings_window(response){
 }
 
 function render_mesh(pop,building){
-    var metadata = pop.metadata
     if(building.type in bulding_config==false){
         conf = bulding_config["concrete_slab"]
     } else {
         conf = bulding_config[building.type]
     }
-    var box = BABYLON.MeshBuilder.CreateBox(metadata.objid+"_nocol_box", 
+    var box = BABYLON.MeshBuilder.CreateBox(pop.metadata.objid+"_nocol_box", 
         {"height":conf.height,
             "size":conf.boxsize}
         );
         y = scene.getMeshById("ground").getHeightAtCoordinates(pop.position.x,pop.position.z)
         box.position = new BABYLON.Vector3(pop.position.x, y + conf.from_ground, pop.position.z) 
         
-        var boxMat = new BABYLON.StandardMaterial(metadata.objid + "_groundMat");
+        var boxMat = new BABYLON.StandardMaterial(pop.metadata.objid + "_groundMat");
         boxMat.diffuseTexture =  new BABYLON.Texture(conf.texture);
         box.material = boxMat; 
         
-        box.metadata = building
-        box.metadata.ownedBy = metadata.name
-        box.metadata.ownedByID = metadata.objid
-        box.actionManager = new BABYLON.ActionManager(scene);
+        box.metadata = {}
+        box.metadata.building = building
+        box.metadata.pop = pop.metadata
         
+        box.metadata.ownedBy = pop.metadata.name
+        box.metadata.ownedByID = pop.metadata.objid
+
         createGroundDecal(pop ,ground,conf.decaltexture, conf.decalsize)
+        
         mesh = BABYLON.SceneLoader.ImportMeshAsync("", "{% static 'app/objects/planet/surface/buildings/' %}", "/oil_well.glb");
         console.log("mesh: ", mesh)
         
+        box.actionManager = new BABYLON.ActionManager(scene);
         box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
             hoverTooltip(box)
         }));
@@ -83,9 +86,10 @@ function render_mesh(pop,building){
             dropControlIfExists("uiTooltip")
         }));
         box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-            objectDetails(box.metadata)
+            objectDetails(box.metadata.pop)
             animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
             console.log("box: ", box.position, pop.position)
+            building_controls(box)
         }));
         
         pop.dispose()
@@ -94,7 +98,6 @@ function render_mesh(pop,building){
 
 
 function render_block(pop,building){
-    console.log("bld: ", building.type)
     if(building.type in bulding_config==false){
         conf = bulding_config["concrete_slab"]
     } else {
@@ -119,7 +122,10 @@ function render_block(pop,building){
 
     createGroundDecal(pop ,ground,conf.decaltexture, conf.decalsize)
 
-    box.metadata = building
+    box.metadata = {}
+    box.metadata.building = building
+    box.metadata.pop = pop.metadata
+
     box.metadata.ownedBy = pop.metadata.name
     box.metadata.ownedByID = pop.metadata.objid
     box.actionManager = new BABYLON.ActionManager(scene);
@@ -130,14 +136,27 @@ function render_block(pop,building){
         dropControlIfExists("uiTooltip")
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-        objectDetails(box.metadata)
+        objectDetails(box.metadata.pop)
         dropAllControls()
         animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
-        console.log("box: ", box.position, pop.position)
+        building_controls(box)
     }));
     pop.dispose()
 
     return box
 }
 
-
+function building_controls(box){
+    generic_control = {
+        name:"building_window",
+        title: "Building: " + box.metadata.building.name,
+        top:20,
+        left:80,
+        width:"400px",
+        height:"400px"
+    }
+    console.log("building_controls: ", box.metadata)
+    generic_control.title = "Current action: \n" + dictToSimpleText(box.metadata.building)
+    current_action_control = createControlBox(generic_control)
+    current_action_control
+}
