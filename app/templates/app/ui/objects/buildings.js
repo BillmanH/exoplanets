@@ -137,7 +137,6 @@ function render_block(pop,building){
     }));
     box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
         objectDetails(box.metadata.pop)
-        dropAllControls()
         animateCameraTargetToObject(camera, camera_pan_speed,200, box.getAbsolutePosition())
         building_controls(box)
     }));
@@ -155,6 +154,7 @@ function building_controls(box){
         width:"400px",
         height:"400px"
     }
+    dropAllControls()
     console.log("building_controls: ", box.metadata)
     generic_control.title = "Current action: \n" + dictToSimpleText(box.metadata.building)
     current_action_control = createControlBox(generic_control)

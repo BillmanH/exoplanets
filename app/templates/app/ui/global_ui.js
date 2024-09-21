@@ -47,6 +47,7 @@ function getIconTop(iter){
 
 // drop all of the controls aka clear the screen
 function dropAllControls(){
+    dropControlIfExists("building_window")
     dropControlIfExists("events_window")
     dropControlIfExists("action_window")
     dropControlIfExists("faction_window")
