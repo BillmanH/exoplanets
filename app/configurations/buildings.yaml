@@ -8,7 +8,6 @@ explanation:
   - effort: time in universal time units (UTU) that the action will take to complete
   - requires_attr: required attributes of the agent. Determines if the agent can do the action.
   - requires_faction: requires that the faction have this attribute
-  - render_type: "guides the rendering in buildings.js. Available types: 'block'"
   - renews_faction_resource: augments (or diminishes) a resource in the faction. Creates if it does not exist.
   - renews_location_resource: augments (or diminishes) a resource in the location. Creates if it does not exist.
   - each_population_augments_once: augments a stat for each population in the faction
@@ -29,7 +28,6 @@ buildings:
         granulated_hydrocarbons: 10
       owned_by: pop
       effort: 1
-      render_type: 'block'
 
   hospital:
       type: hospital
@@ -44,7 +42,6 @@ buildings:
       effort: 3
       requires_attr: 
         industry: .6
-      render_type: 'block'
 
   solar_panel:
       type: solar_panel
@@ -57,7 +54,6 @@ buildings:
         wealth: 1
       requires_attr: 
         industry: .51
-      render_type: 'block'
 
   forestry:
       type: forestry
@@ -71,7 +67,6 @@ buildings:
         organics: 10
       owned_by: pop
       effort: 10
-      render_type: 'block'
 
   infrastructure:
       type: infrastructure
@@ -86,7 +81,6 @@ buildings:
       effort: 20
       requires_attr: 
         industry: .6
-      render_type: 'block'
   
   university:
       type: university
@@ -101,7 +95,6 @@ buildings:
       effort: 3
       requires_attr: 
         industry: .6
-      render_type: 'block'
 
   observatory:
       type: observatory
@@ -144,7 +137,6 @@ buildings:
       renews_location_resource: 
         hydrocarbons: 10
       effort: 2
-      render_type: 'mesh'
 
   marketplace:
       type: marketplace
@@ -157,7 +149,6 @@ buildings:
         wealth: 1
       requires_attr: 
         industry: .51
-      render_type: 'block'
 
   shipyard:
       type: shipyard
