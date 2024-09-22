@@ -23,7 +23,8 @@ bulding_config = {
         box_size: 10,
         box_height_from_ground:-1,
         cone_height: 5,
-        cone_color: "black"
+        cone_color: "black",
+        cone_diameter: 2
     }
 }
 
@@ -90,8 +91,8 @@ function render_building(pop,building){
 
     // cone component
     if (conf.cone_height != undefined){
-        var cone = BABYLON.MeshBuilder.CreateCylinder(pop.metadata.objid+"bld_nocol_cone", {height: conf.cone_height, diameter : 3});
-        cone.position = new BABYLON.Vector3(pop.position.x, y + conf.height, pop.position.z) 
+        var cone = BABYLON.MeshBuilder.CreateCylinder(pop.metadata.objid+"bld_nocol_cone", {height: conf.cone_height, diameter : conf.cone_diameter});
+        cone.position = new BABYLON.Vector3(pop.position.x, y, pop.position.z) 
         cone.material = new BABYLON.StandardMaterial(pop.metadata.objid + "bld_groundMat");
         cone.material.diffuseColor = BABYLON.Color3.FromHexString(conf.cone_color)
         console.log("cone: ", cone)
@@ -136,14 +137,17 @@ function building_controls(box){
     generic_control.title = "Building: \n" + dictToSimpleText(box.metadata.building)
     current_building_control = createControlBox(generic_control)
     
-    destroy_building_button = BABYLON.GUI.Button.CreateSimpleButton("destroy_bld", "remove");
-        destroy_building_button.top = 20 
-        destroy_building_button.left = 5
-        destroy_building_button.width = "75px"
-        destroy_building_button.height = "30px"
-        destroy_building_button.color = "white"
-        destroy_building_button.cornerRadius = 5
 
-    current_building_control.addControl(destroy_building_button)
+
+    f = {}
+    f.gui = {buttonColor:"white", depth:0, top: 300}
+    f.metadata = box.metadata.building
+    f.data = {name:"remove", "objid":box.metadata.building.objid}
+    f.iter = 4
+    f.gui.clickButton = function(f) {
+        console.log(f.data.name, f.data.objid, " button was pushed")
+        dropAllControls()
+    };
+    addButtonToBox(f,current_building_control)
 
 }
