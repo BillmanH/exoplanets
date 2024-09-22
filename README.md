@@ -27,7 +27,7 @@ Until I roll into production, I'll be making breaking changes constantly. Not a 
 ## December
 * Entra ID Access Management
 * Patron Account
-* Production Environment
+* Production Environment    
 
 ## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
 ## January
