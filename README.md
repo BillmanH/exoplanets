@@ -10,11 +10,6 @@
 Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out [to my email](mailto:william.jeffrey.harding@gmail.com)
 
 # What is left to do, and when to do it:
-## September
-* Spaceships
-* Space Travel
-* Cargo Routes
-* Planetary observation
 ## October
 * Government choices
 * Faction settings
@@ -23,9 +18,12 @@ Until I roll into production, I'll be making breaking changes constantly. Not a 
 * War
 * Terrorism
 * Peace
+* Planetary observation
 ## November
 * Space Stations
-* Building and simulation refinement
+* Spaceships
+* Space Travel
+* Cargo Routes
 ## December
 * Entra ID Access Management
 * Patron Account
