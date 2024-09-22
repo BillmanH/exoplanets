@@ -47,6 +47,7 @@ def get_faction_pop_structures(c):
     c.run_query(building_query)
     faction_res = c.query_to_dict(c.res)
     logging.info(f"EXOADMIN: number of items: {len(faction_res)}")
+    # Here we are attaching `structure` to the message so that the EventHub trigger can catch it and process it. 
     for item in faction_res:
         item['action'] = 'structure'
     return faction_res
