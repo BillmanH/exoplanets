@@ -93,6 +93,7 @@ function createPlanet(n){
         animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, planet.metadata.diameter + 25)
         var children = getObjectChildren(planet.metadata.data.objid, 'orbits')
         console.log(children)
+        celestial_body_controls(pickedMesh)
     }));
 
     return planet
@@ -130,6 +131,7 @@ function createMoon(n){
         console.log(pickedMesh)
         animateCameraTargetToObject(camera, camera_pan_speed, 200, moon.getAbsolutePosition())
         animateCameraZoomToObject(camera, camera_pan_speed, 200, camera.radius, moon.metadata.diameter + 25)
+        celestial_body_controls(pickedMesh)
     }));
 }
 
@@ -216,6 +218,39 @@ function createMoons(pdata){
             createMoon(n)
         }
     }
+}
+
+
+function celestial_body_controls(obj){
+    generic_control = {
+        name:"celestial_window",
+        title: obj.metadata.data.class + ": " + obj.metadata.data.name,
+        top:20,
+        left:80,
+        width:"400px",
+        height:"400px"
+    }
+    dropAllControls()
+    console.log("celestial_controls: ", obj.metadata)
+    generic_control.title = obj.metadata.data.objtype + ": \n" + dictToSimpleText(obj.metadata.data)
+    current_building_control = createControlBox(generic_control)
+    
+
+    if(obj.metadata.data.isPopulated.toLowerCase()=="true"){
+        f = {}
+        f.gui = {buttonColor:"white", depth:0, top: 300}
+        f.metadata = obj.metadata.data
+        f.data = {name:"visit", "objid":obj.metadata.data.objid}
+        f.iter = 4
+        f.gui.clickButton = function(f) {
+            console.log(obj.metadata.data.name, obj.metadata.data.objid, " visit button was pushed")
+            window.location.href = '/popuilocal' + '?objid=' + obj.metadata.data.objid;
+            dropAllControls()
+            pleaseWaiter(dashboard)
+        };
+        addButtonToBox(f,current_building_control)
+    }
+
 }
 
 createprimry_bodies()
