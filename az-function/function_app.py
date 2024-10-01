@@ -14,11 +14,11 @@ import yaml
 
 # I should be able to pull the modules from the same libraries as the game iteself. 
 from app.objects import time
+from app.objects import structures
 from app.connectors import cmdb_graph
 from app.functions import jobs
 from app.functions import growth
 from app.functions import consumption
-from app.functions import structures
 from app.functions import cleanup
 
 RUNNING_LOCALLY = False

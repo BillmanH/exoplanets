@@ -41,6 +41,9 @@ def count_factions(c):
     return c.res[0]
 
 def get_faction_pop_structures(c):
+    """
+    for each structure, returns the faction and pop that owns it. Result is a list of dicts.
+    """
     building_query = f"""
     g.V().has('label','faction').as('faction').in('isIn').has('label','pop').as('pop').out('owns').as('structure').path().by(valueMap())
     """
@@ -60,7 +63,21 @@ def construct_building(c,message):
     data = {"nodes": [building.get_data()], "edges": [building.get_owned_by()]}
     c.upload_data(message['agent']['userguid'], data)
 
- 
+def augemt_faction(c, message):
+    faction = message['faction']
+    augment = yaml.safe_load(message['structure']['faction_augments'])
+    for item in augment.keys():
+        old_value = faction.get(item,0)
+        new_value = old_value + augment[item]
+        logging.info("EXOADMIN: ", item, "has changed from", old_value, "to" ,new_value)
+        augment_query = f"""
+            g.V().has('label','faction').has('objid','{faction["objid"]}').property('{item}', {new_value})
+        """
+        c.run_query(augment_query)
+        logging.info(augment_query)
+    return augment  
+
 def process_structure(c,message):
-    logging.info(f"EXOADMIN: TODO: process_structure")
-    pass
+    logging.info(f"EXOADMIN: process_structure, structure: {message['structure']['name']}: {message['structure']['objid']}")
+    if message['structure']['faction_augments']:
+        augemt_faction(c, message)
