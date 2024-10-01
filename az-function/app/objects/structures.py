@@ -69,7 +69,7 @@ def augemt_faction(c, message):
     for item in augment.keys():
         old_value = faction.get(item,0)
         new_value = old_value + augment[item]
-        logging.info("EXOADMIN: ", item, "has changed from", old_value, "to" ,new_value)
+        logging.info(f"EXOADMIN: {item} has changed from {old_value} to {new_value}")
         augment_query = f"""
             g.V().has('label','faction').has('objid','{faction["objid"]}').property('{item}', {new_value})
         """
