@@ -54,7 +54,6 @@ actions:
       conformity: .1
       aggression: .1
     comment: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
-
   -
     type: build_infrastructure
     label: action
