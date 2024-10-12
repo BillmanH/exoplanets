@@ -58,18 +58,12 @@ actions:
   -
     type: build_infrastructure
     label: action
-    applies_to: "pop"
+    applies_to: "pop" 
     effort: 3
     requires_attr: 
-      wealth: .5
+      wealth: .1
     augments_self_properties: 
       wealth: -0.1
       industry: .1
     comment: "increase industry by investing in local infrastructure, increases industry"
 
-  -
-    type: build_building
-    label: action
-    applies_to: "pop"
-    effort: 1
-    comment: "opens the building window for that population to create a new building"
