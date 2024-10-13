@@ -101,9 +101,9 @@ def generate_new_resource(c,resource,location,value,resource_config):
 
 def process_structure(c,message):
     logging.info(f"EXOADMIN: process_structure, structure: {message['structure']['name']}: {message['structure']['objid']}")
-    if message['structure']['faction_augments']:
+    if message['structure'].get('faction_augments'):
         augemt_faction(c, message)
-    if message['structure']['renews_location_resource']:
+    if message['structure'].get('renews_location_resource'):
         resources_to_renew = yaml.safe_load(message['structure']['renews_location_resource'])
         popobjid = message['pop']['objid']
         location_resources_query = f"g.V().has('objid','{popobjid}').out('inhabits').out('has').has('label','resource').valueMap()"
@@ -125,11 +125,11 @@ def process_structure(c,message):
                 print(f"EXOADMIN: resource {r} not found in location, and will be created")
                 generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
 
-    if message['structure']['consumes_location_resource']:
+    if message['structure'].get('consumes_location_resource'):
         pass
-    if message['structure']['renews_faction_resource']:
+    if message['structure'].get('renews_faction_resource'):
         pass
-    if message['structure']['each_population_augments_once']:
+    if message['structure'].get('each_population_augments_once'):
         pass
-    if message['structure']['each_population_augments_on_cycle']:
+    if message['structure'].get('each_population_augments_on_cycle'):
         pass
