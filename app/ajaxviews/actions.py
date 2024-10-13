@@ -50,25 +50,35 @@ def get_object_children(request):
 class ActionValidator:
     def __init__(self,agent, actions):
         self.agent = agent
-        self.actions = [a for a in actions if a["applies_to"]==agent["objtype"]]
-        
+        # Actions are valid by default
+        self.valid_actions = [a for a in actions if a["applies_to"]==agent["objtype"]]
+        self.invalid_actions = []
 
+    def invaldiate_action(self,action,reason):
+        type = action['type']
+        action['rejection'] = reason
+        self.invalid_actions.append(action)
+        self.valid_actions = [a for a in self.valid_actions if a["type"]!=type]
+        
     def check_has_attr(self, action):
         if "requires_attr" in action.keys():
             for req in action['requires_attr'].keys():
                 if req not in self.agent.keys():
-                    return False  
+                    reason = "agent does not have req attribute"
+                    self.invaldiate_action(action,reason)
                 if action['requires_attr'][req] > 0:
                     if float(self.agent[req]) < float(action['requires_attr'][req]):
-                        return False 
+                        reason = f"agent {req} is less than the required value: {self.agent[req]} < {action['requires_attr'][req]}"
+                        self.invaldiate_action(action,reason)
                 if action['requires_attr'][req] < 0:
                     if float(self.agent[req]) > float(action['requires_attr'][req]):
-                        return False 
-        return True
+                        reason = f"agent {req} is greater than the required value: {self.agent[req]} > {action['requires_attr'][req]}"
+                        self.invaldiate_action(action,reason)
 
     def validate(self):
-        valid_actions = [act for act in self.actions if self.check_has_attr(act)]
-        return valid_actions
+        for act in self.valid_actions:
+            self.check_has_attr(act)
+
     
 class BuildingValidator:
     def __init__(self,agent, buildings):
@@ -104,8 +114,8 @@ def get_actions(data):
     agent = c.clean_nodes(c.res)       
     agent = agent[0]
     validator = ActionValidator(agent,actions)
-    valid_actions = validator.validate()
-    return valid_actions
+    validator.validate()
+    return validator.valid_actions
 
 
 def get_possible_buildings(data):
