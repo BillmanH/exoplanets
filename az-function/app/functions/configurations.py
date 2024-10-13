@@ -26,6 +26,12 @@ def get_building_configurations():
     }
     return configuration
 
+def get_resource_configurations():
+    configuration = {
+        'resource':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/resources.yaml"))),
+    }
+    return configuration
+
 
 def add_atmosphere_configurations(configuration):
     atmosphere_config = yaml.safe_load(open(os.path.join(abs_path,"app/configurations/atmospheres.yaml")))

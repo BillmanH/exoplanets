@@ -36,7 +36,7 @@ buildings:
     description: "Boosts the health of all populations in this faction."
     owned_by: pop
     faction_augments: 
-      wealth: 5
+      wealth: -5
     each_population_augments_on_cycle:
       health: 0.01
     effort: 3
@@ -54,6 +54,18 @@ buildings:
       wealth: 1
     requires_attr: 
       industry: .51
+
+  commercial:
+    type: commercial
+    label: building
+    name: Commercial District
+    description: "Generates wealth for the faction."
+    owned_by: pop
+    effort: 1
+    faction_augments:
+      wealth: 1
+    requires_attr: 
+      industry: .1
 
   forestry:
     type: forestry
@@ -77,7 +89,7 @@ buildings:
     faction_augments: 
       wealth: -10
     each_population_augments_once:
-      health: 0.01
+      industry: 0.1
     effort: 20
     requires_attr: 
       industry: .6
