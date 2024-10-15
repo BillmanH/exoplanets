@@ -71,6 +71,8 @@ def augemt_faction(c, message):
     for item in augment.keys():
         old_value = faction.get(item,0)
         new_value = old_value + augment[item]
+        if new_value < 0:
+            new_value = 0
         logging.info(f"EXOADMIN: {item} has changed from {old_value} to {new_value}")
         augment_query = f"""
             g.V().has('label','faction').has('objid','{faction["objid"]}').property('{item}', {new_value})
@@ -83,6 +85,8 @@ def augment_resources(c,resource,value):
     if resource['volume'] < resource['max_volume']:
         old_volume = resource['volume']
         new_volume = resource['volume'] + value
+        if new_volume < 0:
+            new_volume = 0
         logging.info(f"EXOADMIN: resources {resource['name']}:{resource['objid']} changed by {value}, {old_volume}-> {new_volume}")
         renew_query = f"g.V().has('objid','{resource['objid']}').property('volume','{new_volume}')"
         logging.info(renew_query)
@@ -92,6 +96,8 @@ def augment_resources(c,resource,value):
 def generate_new_resource(c,resource,location,value,resource_config):
     new_resource = resource_config['resource']['resources'][resource]
     new_resource['objid'] = maths.uuid()
+    if value < 0:
+        value = 0
     new_resource['volume'] = value
     data = {'nodes:': [new_resource], 'edges': [{'from': location['objid'], 'to': new_resource['objid'], 'label': 'has'}]}
     logging.info(f"EXOADMIN: resources {new_resource['name']}:{new_resource['objid']} with volume: {value}")

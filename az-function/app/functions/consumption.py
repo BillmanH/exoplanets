@@ -6,45 +6,53 @@ import yaml
 from functools import reduce
 import operator
 
-# static queries that don't require variables
-count_of_consumed_query = f"""
-g.E()
-    .has('label','inhabits').outV()
-    .out('inhabits').dedup().values('name','label','objid')
-"""
+# # static queries that don't require variables
+# count_of_consumed_query = f"""
+# g.E()
+#     .has('label','inhabits').outV()
+#     .out('inhabits').dedup().values('name','label','objid')
+# """
 
 # count_of_consumed = f"""
 # g.V().has('objid','{resourceId}').as('resource')
 #     .in('has').out('inhabits').as('planet').groupcount().by('name').as('planet').path()
 # """
 
-def get_planets_consumption(c,planetId):
-    count_of_consumed = f"""
-    g.V().has('objid','{planetId}').as('planet')
-        .in('inhabits').out('isOf').as('species').groupcount().by('consumes').as('consumes').path()
-    """
-    c.run_query(count_of_consumed)
-    return reduce(operator.concat, [i['objects'] for i in c.res])
+# def get_planets_consumption(c,planetId):
+#     count_of_consumed = f"""
+#     g.V().has('objid','{planetId}').as('planet')
+#         .in('inhabits').out('isOf').as('species').groupcount().by('consumes').as('consumes').path()
+#     """
+#     c.run_query(count_of_consumed)
+#     return reduce(operator.concat, [i['objects'] for i in c.res])
 
-def get_consuming_planets(c):
-    c.run_query(count_of_consumed_query)
-    planets_that_have_pops = c.split_list_to_dict(c.res, ['name','label','objid'])
-    # for each planet, get the consumption
-    for iter,item in enumerate(planets_that_have_pops):
-        planets_that_have_pops[iter]['consumes'] = get_planets_consumption(c,planets_that_have_pops[iter]['objid'])
-    return planets_that_have_pops
+
+
+def get_consuming_pops(c):
+    consuming_pops_query = "g.V().hasLabel('pop').as('pop').out('isOf').as('species').path().by('objid').by(values('consumes','effuses').fold())"
+    c.run_query(consuming_pops_query)
+    consuming_pops_res = [p['objects'] for p in c.res]
+    consuming_pops = []
+    for i in consuming_pops_res:
+        a = {'objid': i[0], 'consumes': i[1][0].split(), 'effuses': i[1][1].split(',')}
+        consuming_pops.append(a)
+    return consuming_pops
+
 
 def calculate_consumption(c,t):
     messages = []
-    consuming_planets = get_consuming_planets(c)
-    for planet in consuming_planets:
+    consuming_pops = get_consuming_pops(c)
+    for r in consuming_pops:
         messages.append(get_consumption_message(planet))
     return messages
 
-
-def get_consumption_message(planet):
-    message = {"agent":planet,"action":"consume"}
+def get_consumption_message(pop):
+    message = {"agent":pop,"action":"consume"}
     return message
+ 
+
+def consumption.reduce_location_or_faction_resource(c,t,message,resource):
+
 
 
 
