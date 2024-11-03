@@ -43,7 +43,7 @@ def calculate_consumption(c,t):
     messages = []
     consuming_pops = get_consuming_pops(c)
     for r in consuming_pops:
-        messages.append(get_consumption_message(planet))
+        messages.append(get_consumption_message(r))
     return messages
 
 def get_consumption_message(pop):
@@ -51,7 +51,7 @@ def get_consumption_message(pop):
     return message
  
 
-def consumption.reduce_location_or_faction_resource(c,t,message,resource):
+# def consumption.reduce_location_or_faction_resource(c,t,message,resource):
 
 
 
