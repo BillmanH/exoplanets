@@ -5,31 +5,89 @@ explanation:
   replenish_rate: rate at which the resource is replenished
   mean: used in genesis, the mean value of the resource when generated
   std: used in genesis, the standard deviation of the resource when generated
-  
+  contained_by: the type of object that contains the resources
+
 resources:
-  organics:
-    name: "organics"
-    type: "vegitable"
-    description: "bilogical material that can be consumed by pops"
+  natural_ecosystem:
+    name: "Natural Ecosystmem"
+    type: "organics"
+    contained_by: 
+      - "planet"
+      - "moon"
+    description: "bilogical material that can be consumed by pops, replenises by itself over time."
     mean: 1000
     std: 100
     replenish_rate: 10
+
+
+  grains:
+    name: "grains"
+    type: "organics"
+    description: "grains that can be consumed by pops"
+    contained_by: 
+      - "ship"
+      - "faction"
+
   minerals_common:
+    contained_by: 
+      - "planet"
+      - "moon"
+      - "ship"
+      - "faction"
+      - "asteroid"
     name: "common minerals"
     type: "mineral"
     description: "Iron and other common material used in constructuion of infrastructure" 
     mean: 100
     std: 10
+
+
   minerals_rare:
+    contained_by: 
+      - "planet"
+      - "moon"
+      - "ship"
+      - "faction"
+      - "asteroid"
     name: "rare minerals"
     type: "mineral"
     description: "lithium, silver and other rare minerals used in infrastructure and technology"
     mean: 50
     std: 10
-  water:
-    name: "water"
+
+  fossil_fuel:
+    contained_by: 
+      - "planet"
+      - "moon"
+      - "ship"
+      - "faction"
+    name: "fossil fuel"
     type: "mineral"
-    description: "H2O ready to be consumed, either frozen or in ice format"
+    description: "coal, oil and other fossil fuels used in energy production"
+    mean: 100
+    std: 10
+
+  water:
+    contained_by: 
+      - "planet"
+      - "moon"
+      - "ship"
+      - "faction"
+    name: "water"
+    type: "liquid"
+    description: "H2O ready to be consumed"
     mean: 10000
     std: 1000
 
+  ice:
+    contained_by: 
+      - "planet"
+      - "moon"
+      - "ship"
+      - "faction"
+      - "asteroid"
+    name: "ice"
+    type: "liquid"
+    description: "H2O in solid form, requires proccesing to be consumed by pops"
+    mean: 100
+    std: 10

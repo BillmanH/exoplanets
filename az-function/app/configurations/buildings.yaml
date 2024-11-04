@@ -140,16 +140,16 @@ buildings:
     type: oil_well
     label: building
     name: Oil Well
-    description: "Produces energy by extracting hydrocarbons from the ground."
+    description: "Produces energy by extracting fossil fuel from the ground."
     owned_by: pop
     faction_augments: 
       wealth: 1
     renews_faction_resource: 
-      hydrocarbons: 1
+      fossil_fuel: 1
     requires_attr: 
       industry: .7
     renews_location_resource: 
-      hydrocarbons: -1
+      fossil_fuel: -1
     effort: 2
 
   marketplace:

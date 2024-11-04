@@ -8,9 +8,11 @@ def get_configurations():
     configuration = {
         'planet_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/planet.yaml")))["planet_types"],
         'moon_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/moon.yaml")))["moon_types"],
-        'star_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/star.yaml")))
+        'star_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/star.yaml"))),
+        'resource_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/resources.yaml")))
     }
     configuration = add_atmosphere_configurations(configuration)
+    configuration['planet_config']['resources'] = configuration['resource_config']['resources']
     return configuration
 
 def get_homeworld_configurations():

@@ -34,8 +34,8 @@ g.V().has('objid','7615388501660').as('location')
 	.in('inhabits').as('population')
 	.local(
 		union(
-			out('isInFaction').as('faction'),
-			out('isOfSpecies').as('species')
+			out('isIn').as('faction'),
+			out('isOf').as('species')
 			)
 			.fold()).as('faction','species')
 			.path()
