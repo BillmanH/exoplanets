@@ -1,8 +1,0 @@
-# web app folders
-__blobstroage__/*
-__quuestorage__/*
-
-
-
-# Root directory files not associated with functions
-__*__.json

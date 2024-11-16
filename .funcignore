@@ -1,0 +1,35 @@
+# web app folders
+__blobstroage__/*
+__quuestorage__/*
+__pycache__/*
+
+
+# Root directory files not associated with functions
+__*__.json
+
+
+# vscode misc
+.vscode/*
+.github/*
+
+# older function files
+az-function/*
+
+
+# local files
+data/*
+docs/*
+infra/*
+notebooks/*
+scripts/*
+environment_local.yaml
+db.sqlite3
+
+# only used in the webapp
+templates/*
+web/*
+aad.config.json
+
+LICENCE
+manage.py
+README.md
