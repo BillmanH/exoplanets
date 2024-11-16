@@ -41,6 +41,11 @@ If any variables are missing (you'll find out when you run `python manage.py run
 conda env config vars set varname=value
 ```
 
+remove env vars with:
+```
+conda env config vars unset MY_VARs
+```
+
 3. Make your migrations
 
 If this is your first time building the application, you will need to update the login data using:
