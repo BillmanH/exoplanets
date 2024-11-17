@@ -12,7 +12,6 @@ def get_configurations():
         'resource_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/resources.yaml")))
     }
     configuration = add_atmosphere_configurations(configuration)
-    configuration['planet_config']['resources'] = configuration['resource_config']['resources']
     return configuration
 
 def get_homeworld_configurations():
