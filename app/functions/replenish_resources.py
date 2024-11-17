@@ -19,12 +19,12 @@ def update_replenishing_resources(r):
 
 def renew_resources(c):
     data = get_replenishing_resources(c)
-    logging.info(f"Total resources with the ability to renew: {len(data)}")
+    logging.info(f"EXOADMIN: Total resources with the ability to renew: {len(data)}")
     if len(data)>0:
         for r in data:
             if r['volume'] < r['max_volume']:
                 c.add_query(update_replenishing_resources(r))
         c.run_queries()
-        logging.info(f'**** resources have been renewed ****')
+        logging.info(f'EXOADMIN: **** resources have been renewed ****')
     else:
-        logging.info(f'**** No resources to renew ****')
+        logging.info(f'EXOADMIN: **** No resources to renew ****')
