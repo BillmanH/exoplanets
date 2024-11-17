@@ -8,6 +8,8 @@ class Time:
     """
     c : the `CosmosdbClient` object
     UTU : Universal Time Units, the unit of measurement of time in the game.
+
+    Note, don't use the `time` module, it is a reserved word in python. use `t` instead.
     """
     def __init__(self,c):
         self.params = {}
