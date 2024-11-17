@@ -59,7 +59,7 @@ function buildings_window(response){
 
 
 function render_building(pop,building){
-    // console.log("render_building: ", pop, building)
+    console.log("render_building: ", pop, building)
     if(building.type in bulding_config==false){
         conf = bulding_config["concrete_slab"]
         console.log("building type not found: ", building.type)
