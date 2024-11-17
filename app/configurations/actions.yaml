@@ -19,20 +19,8 @@ actions:
       wealth: .1
     augments_self_properties:
       health: 0.05
-      wealth: -.05
-    description: "increase the health of your population slightly, at the cost of a small amount of wealth"
-  -
-    type: individual_education
-    label: action
-    requires_attr: 
-      wealth: .1
-    applies_to: pop
-    effort: 2
-    augments_self_properties: 
       wealth: -.1
-      literacy: 0.1
-      factionLoyalty: -.05
-    description: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
+    description: "Spend wealth to increase the health of your population slightly."
   -
     type: patriot_education
     label: action
