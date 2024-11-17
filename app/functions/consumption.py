@@ -51,7 +51,7 @@ def get_consumption_message(pop):
     return message
  
 
-def consumption.reduce_location_or_faction_resource(c,t,message,resource):
+def reduce_location_or_faction_resource(c,t,message,resource):
     resource_query = f"""
     g.V().has('objid','{objid}').as('pop')
         .local(
