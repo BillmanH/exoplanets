@@ -12,9 +12,6 @@ __*__.json
 .vscode/*
 .github/*
 
-# older function files
-az-function/*
-
 
 # local files
 data/*
