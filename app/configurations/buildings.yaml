@@ -174,9 +174,22 @@ buildings:
       wealth: -2
     requires_faction: 
       infrastructure: 10
+    # TODO: Arbitrarily lowering for dev purposes. Should be higher in release. 
     requires_attr: 
-      industry: .7
+      industry: .1
     effort: 5
+
+  industrial_complex:
+    type: manufacturing
+    label: building
+    name: Industrial manufacturing complex
+    description: "Builds ships and other large objects for the faction."
+    owned_by: pop
+    effort: 10
+    faction_augments:
+      wealth: 1
+    requires_attr: 
+      industry: .1
 
   flight_control:
     type: flight_control
@@ -201,7 +214,8 @@ buildings:
     faction_augments: 
       wealth: -1
     requires_faction: 
-      infrastructure: 10
+    # TODO: Arbitrarily lowering for dev purposes. Should be higher in release. 
+      infrastructure: .1
     requires_attr: 
       industry: .7
     effort: 5
