@@ -54,4 +54,15 @@ actions:
       wealth: -0.1
       industry: .1
     description: "increase industry by investing in local infrastructure, increases industry"
+  -
+    type: test_action
+    label: action
+    applies_to: "pop"
+    effort: 1
+    requires_attr: 
+      wealth: 200
+    augments_self_properties:
+      wealth: -200
+      health: 0.1
+    description: "Test action for debugging purposes. Should never show up."
 
