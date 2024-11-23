@@ -12,11 +12,10 @@ Until I roll into production, I'll be making breaking changes constantly. Not a 
 # What is left to do, and when to do it:
 The `dev` branch has the more current workload. Unless I get too busy with other things I'll pull those changes into `main` every month. 
 
-## November
-* Space Stations
+## November - additions
 * Spaceships
 * Space Travel
-* Cargo Routes
+
 
 ## December
 * Entra ID Access Management
