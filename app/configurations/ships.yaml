@@ -12,43 +12,59 @@ explanation:
   - habitat: habitat component
 
 components:
-  - cargo:
-      type: cargo
-      label: component
-      name: Cargo
-      description: "Cargo holds for the ship. Increases the amount of resources that can be carried."
-      augments_ship_stats: 
-        wieght: 1
-        cost: 1
-      holds: 20
-      full: 0
-      effort: 1
-      render: 'ball'
-  - engine:
-      type: engine
-      label: component
-      name: Engine
-      description: "Engines for the ship. Increases the speed and cargo capacity."
-      augments_ship_stat: speed
-      fuel: 0
+  cargo:
+    type: cargo
+    label: component
+    name: Cargo
+    description: "Cargo holds for the ship. Increases the amount of resources that can be carried."
+    augments_ship_stats: 
+      wieght: 1
+      cost: 1
+      build_effort: 1
+    holds: 20
+    full: 0
+    render: 'ball'
+  engine:
+    type: engine
+    label: component
+    name: Engine
+    description: "Engines for the ship. Increases the speed and cargo capacity."
+    augments_ship_stats: 
       speed: 1
-      effort: 1
-      render: 'cone'
-  - habitat:
-      type: habitat
-      label: component
-      name: Habitat
-      description: "Supports one population."
-      augments_ship_stat: population
-      holds: 1
-      full: 0
-      effort: 3
-      render: 'ball'
-  - scanner:
-      type: scanner
-      label: component
-      name: Scanner
-      description: "Scans the environment for resources."
-      augments_ship_stat: scan
-      effort: 1
-      render: 'ball'
+      build_effort: 1
+      cost: 1
+    fuel: 0
+    render: 'cone'
+  habitat:
+    type: habitat
+    label: component
+    name: Habitat
+    description: "Supports one population."
+    augments_ship_stats: 
+      wieght: 10
+      cost: 10
+      build_effort: 10
+    holds: 1
+    effort: 3
+    render: 'ball'
+  scanner:
+    type: scanner
+    label: component
+    name: Scanner
+    description: "Scans the environment for resources."
+    grants_capability: 
+      - scan
+    augments_ship_stats:
+      cost: 1
+      build_effort: 1
+    render: 'ball'
+
+designs:
+  probe:
+    type: probe
+    label: ship
+    name: Probe
+    description: "One way scanning machine to observe a location. Requires "
+    components:
+      - engine
+      - scanner

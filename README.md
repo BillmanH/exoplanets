@@ -73,7 +73,6 @@ Of course, you can also just clone it on your local machine and run for free. Fe
 | Document |
 | ----------- |
 | [Building the Azure infrastructure](docs/readme.md) | 
-| [Managing Azure Functions](az-functions/readme.md) | 
 | [Building the Local (dev) infrastructure](docs/local_setup.md) | 
 | [Standards and Conventions](docs/Standards%20and%20Conventions.md) | 
 

@@ -179,6 +179,7 @@ buildings:
       industry: .1
     effort: 5
 
+
   industrial_complex:
     type: manufacturing
     label: building
@@ -190,6 +191,9 @@ buildings:
       wealth: 1
     requires_attr: 
       industry: .1
+    has_buttons:
+      - build_ship
+
 
   flight_control:
     type: flight_control
@@ -205,7 +209,7 @@ buildings:
       industry: .7
     effort: 5
 
-  Launch Complex:
+  launch_complex:
     type: launch_complex
     label: building
     name: Launch Complex
