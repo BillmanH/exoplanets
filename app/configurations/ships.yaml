@@ -44,3 +44,11 @@ components:
       full: 0
       effort: 3
       render: 'ball'
+  - scanner:
+      type: scanner
+      label: component
+      name: Scanner
+      description: "Scans the environment for resources."
+      augments_ship_stat: scan
+      effort: 1
+      render: 'ball'

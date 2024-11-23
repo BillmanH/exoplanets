@@ -168,7 +168,7 @@ buildings:
     type: shipyard
     label: building
     name: Shipyard
-    description: "Stores ships built in the system"
+    description: "Stores ships for the faction "
     owned_by: pop
     faction_augments: 
       wealth: -2
