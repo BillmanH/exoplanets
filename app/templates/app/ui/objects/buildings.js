@@ -59,7 +59,7 @@ function buildings_window(response){
 
 
 function render_building(pop,building){
-    // console.log("render_building: ", pop, building)
+    console.log("render_building: ", pop, building)
     if(building.type in bulding_config==false){
         conf = bulding_config["concrete_slab"]
         console.log("building type not found: ", building.type)
@@ -145,6 +145,7 @@ function building_controls(box){
     f.data = {name:"remove", "objid":box.metadata.building.objid}
     f.iter = 4
     f.gui.clickButton = function(f) {
+        // TODO: add configure to remove building
         console.log(f.data.name, f.data.objid, " button was pushed")
         dropAllControls()
     };

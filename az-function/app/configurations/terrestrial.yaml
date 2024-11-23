@@ -1,7 +1,0 @@
-matrix_length: 20
-mountains:
-  n_mountains: 10
-  range_length_low: 5
-  range_length_high: 10
-  height_avg: 5
-  heihgt_std: 2

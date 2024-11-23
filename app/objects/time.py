@@ -2,12 +2,14 @@ import datetime
 import pandas as pd
 import numpy as np
 import yaml
-
+import logging
 
 class Time:
     """
     c : the `CosmosdbClient` object
     UTU : Universal Time Units, the unit of measurement of time in the game.
+
+    Note, don't use the `time` module, it is a reserved word in python. use `t` instead.
     """
     def __init__(self,c):
         self.params = {}
@@ -53,7 +55,7 @@ class Time:
         return f"currentTime was updated from:{self.params['currentTime']} to: {currentTime}"
  
     def __repr__(self) -> str:
-        return f"< time at: {self.utc_timestamp} UTU:{self.params.get('currentTime')} >"
+        return f"< time at UTU:{self.params.get('currentTime')} >"
 
 class Action:
     """
@@ -62,6 +64,7 @@ class Action:
         and a `Job` that is the edge between the two in the graph
     """
     def __init__(self,c,action):
+        logging.info(f"EXOADMIN: job instance of ACTION created: {action}")
         self.agent = action['agent']
         self.action = action['action']
         self.job = action['job']
@@ -99,6 +102,7 @@ class Action:
                 .property('status', 'resolved')
         """    
         self.c.add_query(patch_job.replace(" ", "").replace("\n", ""))
+        logging.info(f"EXOADMIN: job action resolved: {self}")
 
     def mark_agent_idle(self):
         if 'isIdle' in self.agent.keys():
@@ -106,6 +110,7 @@ class Action:
             g.V().has('objid','{self.agent['objid']}').property('isIdle','true')
             """
             self.c.add_query(idleQuery.replace(" ", "").replace("\n", ""))
+            logging.info(f"EXOADMIN: job agent idle: {self.agent['objid']}:{self.agent['name']}")
         
     def make_action_event(self,time):
         """
@@ -120,22 +125,47 @@ class Action:
             'time': time.params['currentTime'],
             'username':'event'
         }
+        logging.info(f"EXOADMIN: job event created: {node}")
         self.data['nodes'].append(node)
         self.data['edges'].append({'node1':self.agent['objid'],'node2':node['objid'],'label':'completed'})
-        
 
     def query_patch_properties(self):
         query = f"g.V().has('objid','{self.agent['objid']}')"
-        for n in yaml.safe_load(self.action["augments_self_properties"]):
-            query += f".property('{n}',{self.agent[n]})"
+        # Doesn't need to parse the yaml if it is already a dictionary
+        if type(self.action["augments_self_properties"]) == str:
+            augmented_properties = yaml.safe_load(self.action["augments_self_properties"])
+        else:
+            augmented_properties = self.action["augments_self_properties"]
+        logging.info(f"EXOADMIN: job augmenting {augmented_properties}<{type(augmented_properties)}> on: {self.agent}")
+        for n in augmented_properties.keys():
+            logging.info(f"EXOADMIN: job augmenting property : {n}  -> {self.agent[n]},{augmented_properties[n]}")
+            augmented_vaue = float(self.agent[n]) + float(augmented_properties[n])
+            logging.info(f"EXOADMIN: job function updating property {n} from {self.agent[n]} to {augmented_vaue}")
+            query += f".property('{n}',{augmented_vaue})"
         self.c.add_query(query.replace(" ", "").replace("\n", ""))
+        logging.info(f"EXOADMIN: Gremlin Query Added: {query}")
 
-    def add_updates_to_c(self,time):
+
+    def add_updates_to_c(self,t):
         if self.action.get('augments_self_properties') != None:
             self.query_patch_properties()
-        self.make_action_event(time)
-        self.mark_action_as_resolved()
-        self.mark_agent_idle()
+        # action types that are 'automatic' are not resolved by the agent
+        if self.job.get('actionType') != 'automatic':
+            self.make_action_event(t)
+            self.mark_action_as_resolved()
+            self.mark_agent_idle()
+        # updating data only if there is data. 
+        logging.info(f"EXOADMIN: Updates collected: nodes:{len(self.data['nodes'])}, edges:{self.data['edges']}, stack: {len(self.c.stack)}")
+        if (self.data['nodes'] != [])&(self.data['edges'] != []):
+            logging.info(f"EXOADMIN: job function updating data {self.data}")
+        else:
+            logging.info(f"EXOADMIN: job function no data to update")
+        if len(self.c.stack)>0:
+            logging.info(f"EXOADMIN: queries sent to cosmosdb {len(self.c.stack)}")
+            logging.info(f"EXOADMIN: c.stack {self.c.stack}")
+            self.c.run_queries()
+        logging.info(f"EXOADMIN: updates to c completed.")
+
 
     def make_building(self):
         pass

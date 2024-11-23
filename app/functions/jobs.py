@@ -10,21 +10,21 @@ def resolve_jobs(c,t,Action):
     # Get all pending actions 
     t.get_global_actions()
     
-    logging.info(f'Total jobs: {len(t.actions)}')
+    logging.info(f'EXOADMIN: Total jobs: {len(t.actions)}')
     validjob = 0 
     for i in t.actions:
         try:
             action = Action(c,i)
         except AttributeError as e:
-            logging.info(f'Action: {i} was not resolved. error: {e}')
-            logging.info(f'keys: {i.keys()}')
+            logging.info(f'EXOADMIN: Action: {i} was unable to convert to action object in `resolve_jobs`. error: {e}')
+            logging.info(f'EXOADMIN: keys: {i.keys()}')
             continue
         if action.validate_action_time(t):
             validjob += 1
             messages.append(action.get_action_message())
             logging.info(f'{action} was added to the message queue')
 
-    logging.info(f'Total actions resolved in this run: {validjob}')
+    logging.info(f'EXOADMIN: Total actions resolved in this run: {validjob}')
 
     return messages
 

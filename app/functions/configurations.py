@@ -12,7 +12,6 @@ def get_configurations():
         'resource_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/resources.yaml")))
     }
     configuration = add_atmosphere_configurations(configuration)
-    configuration['planet_config']['resources'] = configuration['resource_config']['resources']
     return configuration
 
 def get_homeworld_configurations():
@@ -31,6 +30,12 @@ def get_building_configurations():
 def get_resource_configurations():
     configuration = {
         'resource':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/resources.yaml"))),
+    }
+    return configuration
+
+def get_ship_configurations():
+    configuration = {
+        'ship':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/ships.yaml"))),
     }
     return configuration
 
