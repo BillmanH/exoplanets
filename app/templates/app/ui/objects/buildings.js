@@ -137,19 +137,14 @@ function building_controls(box){
     generic_control.title = "Building: \n" + dictToSimpleText(box.metadata.building)
     current_building_control = createControlBox(generic_control)
     
-
-
     f = {}
     f.gui = {buttonColor:"white", depth:0, top: 300}
     f.metadata = box.metadata.building
     f.data = {name:"remove", "objid":box.metadata.building.objid}
     f.iter = 4
-    f.gui.clickButton = function(f) {
-        // TODO: add configure to remove building
-        console.log(f.data.name, f.data.objid, " button was pushed")
-        dropAllControls()
-    };
+    f.gui.clickButton = function(f) {building_remove(box.metadata.building)};
     addButtonToBox(f,current_building_control)
+
     if (box.metadata.building.actions != undefined){
         for(let i = 0; i < box.metadata.building.actions.length; i++){
             f = {}

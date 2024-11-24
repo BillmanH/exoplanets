@@ -23,7 +23,7 @@ function building_take_action(b, action){
 
 
 
-function building_remove(p,b){
+function building_remove(b){
     var d = {"building":b}
     cnsl("buildign being removed: ",d)
     $.ajax({

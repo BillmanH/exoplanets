@@ -160,3 +160,13 @@ def get_current_action(request):
     res = c.clean_nodes(c.res)[0]
     response = {'current_action':res}
     return JsonResponse(response) 
+
+def remove_building(b):
+    """
+    remove a building from the planet
+    """
+    c = CosmosdbClient()
+    objid = b.get('objid','')
+    query = f"g.V().has('objid','{objid}').drop()"
+    c.run_query(query)
+    return JsonResponse({'result':f'Building [{objid}] removed'})
