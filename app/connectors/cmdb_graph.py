@@ -32,9 +32,9 @@ class GraphFormatError(Exception):
     pass
 
 
-# class ConnectionIssue(Exception):
-#     print("Exodest cmdb connetion issue: ")
-#     pass
+class ExoAdminGremlinQueryIssue(Exception):
+    print("something wrong with your query: ")
+    pass
 
 #%%
 # my Gremlin Model is like Django models in name only.
@@ -90,7 +90,12 @@ class CosmosdbClient():
     def run_query(self, query="g.V().count()"):
         self.open_client()
         callback = self.c.submitAsync(query)
-        res = callback.result().all().result()
+        try:
+            res = callback.result().all().result()
+        except GremlinServerError as e:
+            print(f"GremlinServerError: {e}")
+            raise ExoAdminGremlinQueryIssue
+            res = e
         self.close_client()
         self.res = res
 
