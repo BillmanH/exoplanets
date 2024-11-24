@@ -150,5 +150,17 @@ function building_controls(box){
         dropAllControls()
     };
     addButtonToBox(f,current_building_control)
+    if (box.metadata.building.actions != undefined){
+        for(let i = 0; i < box.metadata.building.actions.length; i++){
+            f = {}
+            f.gui = {buttonColor:"white", depth:0, top: 300}
+            f.metadata = box.metadata.building
+            f.data = box.metadata.building.actions[i]
+            f.iter = 4
+            f.gui.clickButton = function(f) {
 
+            }
+            addButtonToBox(f,current_building_control)
+        }
+    }
 }
