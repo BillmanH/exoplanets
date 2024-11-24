@@ -161,12 +161,13 @@ def get_current_action(request):
     response = {'current_action':res}
     return JsonResponse(response) 
 
-def remove_building(b):
+def remove_building(request):
     """
     remove a building from the planet
     """
+    request = ast.literal_eval(request.GET['values'])
     c = CosmosdbClient()
-    objid = b.get('objid','')
+    objid = request['building']['objid']
     query = f"g.V().has('objid','{objid}').drop()"
     c.run_query(query)
     return JsonResponse({'result':f'Building [{objid}] removed'})

@@ -1,4 +1,5 @@
 {% load static %} 
+{% include "app/ajax/building_action.js" %}
 
 bulding_config = {
     "farmland": {box_texture:"{% static 'app/objects/planet/surface/texture_farm_1.png' %}",
