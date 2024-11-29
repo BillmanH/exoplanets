@@ -125,6 +125,7 @@ function render_building(pop,building){
 }
 
 function building_controls(box){
+    bottom_of_controls = 200
     generic_control = {
         name:"building_window",
         title: "Building: " + box.metadata.building.name,
@@ -138,25 +139,30 @@ function building_controls(box){
     generic_control.title = "Building: \n" + dictToSimpleText(box.metadata.building)
     current_building_control = createControlBox(generic_control)
     
+    // Remove button is always available
     f = {}
-    f.gui = {buttonColor:"white", depth:0, top: 300}
+    f.gui = {buttonColor:"white", depth:0, top: bottom_of_controls}
     f.metadata = box.metadata.building
     f.data = {name:"remove", "objid":box.metadata.building.objid}
     f.iter = 4
     f.gui.clickButton = function(f) {building_remove(box.metadata.building)};
     addButtonToBox(f,current_building_control)
 
-    if (box.metadata.building.actions != undefined){
-        for(let i = 0; i < box.metadata.building.actions.length; i++){
+    if(box.metadata.building.has_buttons != undefined){
+        building_buttons = box.metadata.building.has_buttons.slice(1, -1).split(",");
+        console.log("building_buttons: ", building_buttons)
+        for(let i = 0; i < building_buttons.length; i++){
             f = {}
-            f.gui = {buttonColor:"white", depth:0, top: 300}
-            f.metadata = box.metadata.building
-            f.data = box.metadata.building.actions[i]
-            f.iter = 4
+            f.gui = {buttonColor:"white", depth:0, top: bottom_of_controls+(i+1)*40}
+            f.data = {}
+            f.data['name'] = stringCleaner(building_buttons[i])
+            f.gui['buttonName'] = stringCleaner(building_buttons[i])
+            f.iter = i
             f.gui.clickButton = function(f) {
-
+                    console.log("building button clicked: ", f)
             }
             addButtonToBox(f,current_building_control)
         }
+
     }
 }

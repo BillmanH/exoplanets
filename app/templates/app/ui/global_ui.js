@@ -353,6 +353,10 @@ function pxToNum(px){
     return i
 }
 
+function stringCleaner(s){
+    return s.replace(/_/g, ' ')
+}
+
 function removeCollidingMesh(owner,tresspasser){
     // owner = the mesh that is supposed to be there, tresspasser = the mesh that is supposed to go away. 
     // both inputs are strings
