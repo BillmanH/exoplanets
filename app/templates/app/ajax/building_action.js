@@ -1,10 +1,10 @@
 // Takes an (agent) and an (action)
-function building_take_action(b, action){
-    var d = {"agent":b,
+function building_take_action(building, action){
+    var d = {"agent":building,
         "action":action}
     cnsl(d)
     $.ajax({
-        url: '/ajax/take-action',
+        url: '/ajax/building-take-action',
         type: 'get',
         data: { 'values' : JSON.stringify(d) },
         dataType: 'json',

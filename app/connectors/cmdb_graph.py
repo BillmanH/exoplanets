@@ -32,8 +32,9 @@ class GraphFormatError(Exception):
     pass
 
 
+# TODO: For some reason this exception triggers when the app starts, but doesn't seem to be an issue. 
 class ExoAdminGremlinQueryIssue(Exception):
-    print("something wrong with your query: ")
+    print(f"something wrong with your query: {Exception}")
     pass
 
 #%%

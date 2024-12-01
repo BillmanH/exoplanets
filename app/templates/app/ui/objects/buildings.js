@@ -135,7 +135,7 @@ function building_controls(box){
         height:"400px"
     }
     dropAllControls()
-    console.log("building_controls: ", box.metadata)
+    console. log("building_controls: ", box.metadata)
     generic_control.title = "Building: \n" + dictToSimpleText(box.metadata.building)
     current_building_control = createControlBox(generic_control)
     
@@ -159,7 +159,8 @@ function building_controls(box){
             f.gui['buttonName'] = stringCleaner(building_buttons[i])
             f.iter = i
             f.gui.clickButton = function(f) {
-                    console.log("building button clicked: ", f)
+                building_take_action(box.metadata.building, building_buttons[i])
+                console.log("building button clicked: ", f)
             }
             addButtonToBox(f,current_building_control)
         }

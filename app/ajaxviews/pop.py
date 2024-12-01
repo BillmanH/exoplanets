@@ -1,8 +1,9 @@
-from app.models.models import CosmosdbClient
+from app.connectors.cmdb_graph import CosmosdbClient
 from django.http import JsonResponse
 
-from app.creators import homeworld
+
 from app.objects import time as t
+from app.objects import structures
 from ..functions import maths
 import ast
 
@@ -103,7 +104,7 @@ def take_action(request):
     return JsonResponse(response) 
 
 
-def take_building_action(request):
+def pop_construction_action(request):
     request = ast.literal_eval(request.GET['values'])
     agent = request["agent"]
     building = request["building"]
@@ -171,3 +172,11 @@ def remove_building(request):
     query = f"g.V().has('objid','{objid}').drop()"
     c.run_query(query)
     return JsonResponse({'result':f'Building [{objid}] removed'})
+
+def building_take_action(request):
+    message = ast.literal_eval(request.GET['values'])
+    check = structures.validate_building_can_take_action(message)
+    if check['result'] == 'valid':
+        return JsonResponse(check)
+    else:
+        return JsonResponse(check)

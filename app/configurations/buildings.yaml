@@ -186,13 +186,15 @@ buildings:
     name: Industrial manufacturing complex
     description: "Builds ships and other large objects for the faction."
     owned_by: pop
-    effort: 10
+    effort: 1
     faction_augments:
-      wealth: 1
+      wealth: -1
     requires_attr: 
       industry: .1
     has_buttons:
       - build_ship
+    # current design set to 'probe' by default. when changed, the new value will be the objid of said design. 
+    current_design: probe
 
 
   flight_control:

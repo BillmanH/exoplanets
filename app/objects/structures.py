@@ -139,3 +139,12 @@ def process_structure(c,message):
         pass
     if message['structure'].get('each_population_augments_on_cycle'):
         pass
+
+
+def validate_building_can_take_action(message):
+    """
+    check if the building can take the action. 
+    """
+    response = {}
+    response['result'] = False
+    return response
