@@ -160,7 +160,7 @@ function building_controls(box){
             f.iter = i
             f.gui.clickButton = function(f) {
                 building_take_action(box.metadata.building, building_buttons[i])
-                console.log("building button clicked: ", f)
+                console.log("building button clicked: ", f) 
             }
             addButtonToBox(f,current_building_control)
         }

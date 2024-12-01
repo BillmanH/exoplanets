@@ -13,7 +13,14 @@ function building_take_action(building, action){
         },
         success: function(data){
             dropAllControls()
-            document.location.reload()
+            // document.location.reload()
+            console.log("results: ",data)
+            if (data['result'] == false){
+                building['status'] = "unable to build: " + data['message'] 
+            } else {
+                building['status'] = "building: " + data['job']
+            }
+            objectDetails(building)
         },
         error: function(data){
             cnsl(data)
