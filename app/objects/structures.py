@@ -154,7 +154,7 @@ def validate_building_can_take_action(c,message):
     check if the building can take the action. 
     """
     response = {}
-    response['result'] = False
+    response['result'] = True
     agent = message['agent']
     if message['action'] == 'build_ship':
         if check_faction_has_shipyard(c,agent):

@@ -164,7 +164,7 @@ def get_current_action(request):
     return JsonResponse(response) 
 
 def get_building_owner(c,building):
-    owner_query = f"g.V().has('objid','{building['objid']}').out('owns').valueMap()"
+    owner_query = f"g.V().has('objid','{building['objid']}').in('owns').valueMap()"
     c.run_query(owner_query)
     owner = c.clean_nodes(c.res)[0]
     return owner
@@ -200,17 +200,20 @@ def build_ship(c, message):
         "to_build":design_config
     }
     setIdle = f"g.V().has('objid','{building_owner['objid']}').property('isIdle','false')"
-    c.upload_data(building_owner['userguid'], create_job(building_owner,message['action'],utu))
+    job = create_job(building_owner,action,utu)
+    c.upload_data(building_owner['userguid'], job)
     setIdleResp = c.run_query(setIdle)
-    return action
+    return job
 
 
 def building_take_action(request):
     c = CosmosdbClient()
     message = ast.literal_eval(request.GET['values'])
-    check = structures.validate_building_can_take_action(message)
-    if check['result'] == 'valid':
+    check = structures.validate_building_can_take_action(c,message)
+    if check['result']:
           if message['action'] == 'build_ship':
-              build_ship(c,message)
+              job = build_ship(c,message)
+              return JsonResponse({'result':'valid: Building can take action',
+                                   'job':job})
     else:
         return JsonResponse(check)
