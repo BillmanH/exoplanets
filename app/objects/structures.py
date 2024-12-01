@@ -158,6 +158,8 @@ def validate_building_can_take_action(c,message):
     agent = message['agent']
     if message['action'] == 'build_ship':
         if check_faction_has_shipyard(c,agent):
+            return response
+        else:
             response['result'] = False
-            response['message'] = "Faction does not have a shipyard"           
+            response['message'] = "Faction does not have a shipyard"        
     return response
