@@ -4,6 +4,7 @@ from django.http import JsonResponse
 
 from app.objects import time as t
 from app.objects import structures
+from app.objects import ships
 from ..functions import maths
 import ast
 
@@ -162,6 +163,12 @@ def get_current_action(request):
     response = {'current_action':res}
     return JsonResponse(response) 
 
+def get_building_owner(c,building):
+    owner_query = f"g.V().has('objid','{building['objid']}').out('owns').valueMap()"
+    c.run_query(owner_query)
+    owner = c.clean_nodes(c.res)[0]
+    return owner
+
 def remove_building(request):
     """
     remove a building from the planet
@@ -173,10 +180,37 @@ def remove_building(request):
     c.run_query(query)
     return JsonResponse({'result':f'Building [{objid}] removed'})
 
+
+def build_ship(c, message):
+    # probe is the default ship design. It is always available. 
+    if message['agent']['current_design'] == 'probe':
+        design_config = ships.ship_configurations['designs']['probe']
+        ship = ships.Ship(design_config, ships.ship_configurations['components'])
+    utu = t.Time(c)
+    utu.get_current_UTU()
+    building_owner = get_building_owner(c,message['agent'])
+    action = {
+        "type": "fabricating",
+        "label": "action",
+        "comment": f"{building_owner['name']}:{building_owner['objid']} building a {design_config['name'].replace('_',' ')}",
+        "effort":ship.stats['build_effort'],
+        "building":design_config['type'],
+        "faction_costs": ship.stats['build_effort'],
+        "created_at": utu.params['currentTime'],
+        "to_build":design_config
+    }
+    setIdle = f"g.V().has('objid','{building_owner['objid']}').property('isIdle','false')"
+    c.upload_data(building_owner['userguid'], create_job(building_owner,message['action'],utu))
+    setIdleResp = c.run_query(setIdle)
+    return action
+
+
 def building_take_action(request):
+    c = CosmosdbClient()
     message = ast.literal_eval(request.GET['values'])
     check = structures.validate_building_can_take_action(message)
     if check['result'] == 'valid':
-        return JsonResponse(check)
+          if message['action'] == 'build_ship':
+              build_ship(c,message)
     else:
         return JsonResponse(check)

@@ -140,11 +140,24 @@ def process_structure(c,message):
     if message['structure'].get('each_population_augments_on_cycle'):
         pass
 
+def build_ship(c,message):
+    pass
 
-def validate_building_can_take_action(message):
+def check_faction_has_shipyard(c,building):
+    faction_buildings_query = f"g.V().has('objid','{building['owner']}').out('isIn').in('isIn').out('owns').values('type')"
+    c.run_query(faction_buildings_query)    
+    has_shipyard = ('shipyard' in c.res)
+    return has_shipyard
+
+def validate_building_can_take_action(c,message):
     """
     check if the building can take the action. 
     """
     response = {}
     response['result'] = False
+    agent = message['agent']
+    if message['action'] == 'build_ship':
+        if check_faction_has_shipyard(c,agent):
+            response['result'] = False
+            response['message'] = "Faction does not have a shipyard"           
     return response

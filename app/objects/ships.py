@@ -1,4 +1,7 @@
 from ..objects import baseobjects
+from ..functions import configurations
+
+ship_configurations = configurations.get_ship_configurations()['ship']
 
 class Component(baseobjects.Baseobject):
     def __init__(self, config):
