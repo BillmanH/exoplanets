@@ -47,6 +47,8 @@ function getIconTop(iter){
 
 // drop all of the controls aka clear the screen
 function dropAllControls(){
+    dropControlIfExists("celestial_window")
+    dropControlIfExists("building_window")
     dropControlIfExists("events_window")
     dropControlIfExists("action_window")
     dropControlIfExists("faction_window")
@@ -177,18 +179,25 @@ var addButtonToBox = function(n,control) {
         buttonText = n.data.name
     }
 
+    var top = 50 * n.iter
     var button = BABYLON.GUI.Button.CreateSimpleButton(buttonName + n.data.objid, buttonText);
+    
         if(n.gui.hasOwnProperty('width')){
             button.width = n.gui.width
         } else {button.width = "150px"}
         button.height = "40px"
-        button.top = 50 * n.iter
         if(n.gui.buttonColor=="green"){
             button.left = 170
         } else {
             button.left = 20
         }
-        
+
+        if(n.gui.hasOwnProperty('top')){
+            top = n.gui.top
+        }
+
+
+        button.top = top
         button.color = n.gui.buttonColor;
         button.cornerRadius = 10;
         button.background = "black";
@@ -342,6 +351,10 @@ function create_icon(params){
 function pxToNum(px){
     var i = parseInt(px.replace(/px/g, ""))
     return i
+}
+
+function stringCleaner(s){
+    return s.replace(/_/g, ' ')
 }
 
 function removeCollidingMesh(owner,tresspasser){

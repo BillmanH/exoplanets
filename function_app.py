@@ -14,11 +14,12 @@ import yaml
 
 # I should be able to pull the modules from the same libraries as the game iteself. 
 from app.objects import time
+from app.objects import structures
+from app.objects import ships
 from app.connectors import cmdb_graph
 from app.functions import jobs
 from app.functions import growth
 from app.functions import consumption
-from app.functions import structures
 from app.functions import cleanup
 
 RUNNING_LOCALLY = False
@@ -26,7 +27,7 @@ EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 #For troubleshooting, making sure the function is the one I think it is. 
-function_version_string = "sudnay 7th"
+function_version_string = "dec1"
 
 # func start --functions [a space separated list of functions]
 # func start --functions actionResolverTimer resolveActionEvents ututimer
@@ -49,7 +50,7 @@ def resolve_action_event(event: func.EventHubEvent):
     t.pop_growth_params = pop_growth_params
     outgoing_messages = []
 
-    # jobs happen over take time, and havev an agent, action, and job (which has weight)
+    # jobs happen over time, and havev an agent, action, and job (which has weight)
     if 'job' in message.keys():
         action = time.Action(c,message)
         action.add_updates_to_c(t)
@@ -57,6 +58,9 @@ def resolve_action_event(event: func.EventHubEvent):
         if message['job']['actionType'] == "construction":
             logging.info(f"EXOADMIN: 'actionType is construction")
             structures.construct_building(c,message)
+        if message['job']['actionType'] == "fabricating":
+            logging.info(f"EXOADMIN: 'actionType is fabricating")
+            ships.fabricate(c,message)
         logging.info(f"EXOADMIN:       -------And with that processed a JOB: {action} at UTU:{t}")
 
     # given an object, creates a child object and links it to a parent. 

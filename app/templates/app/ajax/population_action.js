@@ -47,7 +47,7 @@ function constructBuilding(p,b){
         "building":b}
     cnsl(d)
     $.ajax({
-        url: '/ajax/take-building-action',
+        url: '/ajax/pop-construction-action',
         type: 'get',
         data: { 'values' : JSON.stringify(d) },
         dataType: 'json',

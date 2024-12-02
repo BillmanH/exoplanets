@@ -6,78 +6,92 @@ import yaml
 from functools import reduce
 import operator
 
-# static queries that don't require variables
-count_of_consumed_query = f"""
-g.E()
-    .has('label','inhabits').outV()
-    .out('inhabits').dedup().values('name','label','objid')
-"""
+# # static queries that don't require variables
+# count_of_consumed_query = f"""
+# g.E()
+#     .has('label','inhabits').outV()
+#     .out('inhabits').dedup().values('name','label','objid')
+# """
 
 # count_of_consumed = f"""
 # g.V().has('objid','{resourceId}').as('resource')
 #     .in('has').out('inhabits').as('planet').groupcount().by('name').as('planet').path()
 # """
 
-def get_planets_consumption(c,planetId):
-    count_of_consumed = f"""
-    g.V().has('objid','{planetId}').as('planet')
-        .in('inhabits').out('isOf').as('species').groupcount().by('consumes').as('consumes').path()
-    """
-    c.run_query(count_of_consumed)
-    return reduce(operator.concat, [i['objects'] for i in c.res])
+# def get_planets_consumption(c,planetId):
+#     count_of_consumed = f"""
+#     g.V().has('objid','{planetId}').as('planet')
+#         .in('inhabits').out('isOf').as('species').groupcount().by('consumes').as('consumes').path()
+#     """
+#     c.run_query(count_of_consumed)
+#     return reduce(operator.concat, [i['objects'] for i in c.res])
 
-def get_consuming_planets(c):
-    c.run_query(count_of_consumed_query)
-    planets_that_have_pops = c.split_list_to_dict(c.res, ['name','label','objid'])
-    # for each planet, get the consumption
-    for iter,item in enumerate(planets_that_have_pops):
-        planets_that_have_pops[iter]['consumes'] = get_planets_consumption(c,planets_that_have_pops[iter]['objid'])
-    return planets_that_have_pops
+
+
+def get_consuming_pops(c):
+    consuming_pops_query = "g.V().hasLabel('pop').as('pop').out('isOf').as('species').path().by('objid').by(values('consumes','effuses').fold())"
+    c.run_query(consuming_pops_query)
+    consuming_pops_res = [p['objects'] for p in c.res]
+    consuming_pops = []
+    for i in consuming_pops_res:
+        a = {'objid': i[0], 'consumes': i[1][0].split(), 'effuses': i[1][1].split(',')}
+        consuming_pops.append(a)
+    return consuming_pops
+
 
 def calculate_consumption(c,t):
     messages = []
-    consuming_planets = get_consuming_planets(c)
-    for planet in consuming_planets:
-        messages.append(get_consumption_message(planet))
+    consuming_pops = get_consuming_pops(c)
+    for r in consuming_pops:
+        messages.append(get_consumption_message(r))
     return messages
 
-
-def get_consumption_message(planet):
-    message = {"agent":planet,"action":"consume"}
+def get_consumption_message(pop):
+    message = {"agent":pop,"action":"consume"}
     return message
+ 
 
+def reduce_location_or_faction_resource(c,t,message,resource):
+    resource_query = f"""
+    g.V().has('objid','{objid}').as('pop')
+        .local(
+            union(
+                out('isIn').as('faction').out('has').has('objtype','resource').as('faction_resource'),
+                out('inhabits').as('location').out('has').has('objtype','resource').as('location_resource'),
+                )
+                .fold()).as('faction_resource','location_resource')
+                .path()
+                .by(unfold().valueMap().fold())
+    """
+    c.run_query(resource_query)
+    c.res
 
-
-def reduce_location_resource(c,t,message, resource):
+def reduce_location_resource(c,t,message, consuming):
     # find out if the location has the resource
     objid = message['agent']['objid']
     consuming = list(resource.keys())[0]
-    quantity = float(list(resource.values())[0])
+    quantity = t.pop_growth_params['pop_consumes']
     resource_query = f"""
-    g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}').valuemap()
+    g.V().has('objid','{objid}').out('inhabits').out('has').has('objtype','resource').has('name','{consuming}').valuemap()
     """
     c.run_query(resource_query)
+
     if len(c.res) != 1:
-        logging.info(f"EXOADMIN: {objid} has a resource issue - c.res:{c.res}")
+        logging.info(f"EXOADMIN: {objid} was not able to locate the resource - c.res:{c.res}")
     resource = c.clean_nodes(c.res)[0]
     starving_messages = []
     if float(resource['volume']) > quantity:
-        new_volume = float(resource['volume']) - quantity
-        patch_resource_query = f"""
-        g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}')
-            .property('volume', {new_volume})
-        """
-        c.run_query(patch_resource_query)
         logging.info(f"EXOADMIN: resources on {message['agent']['name']}:{message['agent']['objid']} reduced by {quantity}, {resource['volume']}-> {new_volume}")
+        new_volume = float(resource['volume']) - quantity
     if float(resource['volume']) <= quantity:
-        new_volume = 0
-        patch_resource_query = f"""
-        g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}')
-            .property('volume', {new_volume})
-        """
-        c.run_query(patch_resource_query)
         logging.info(f"EXOADMIN: resources on {message['agent']['name']}:{message['agent']['objid']} reduced by {quantity}, People at this location will starve.")
+        new_volume = 0
         starving_messages = get_starving_population_messages(c,t,message['agent'])
+    patch_resource_query = f"""
+    g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}')
+        .property('volume', {new_volume})
+    """
+    c.run_query(patch_resource_query)
     return starving_messages
 
 

@@ -4,10 +4,11 @@ explanation:
     label: "always `action`"
     applies_to: "label of the object type that can perform this action"
     effort: "time in `universal time units` that the action will take to complete"
-    description: "Human readable description. Used in UX buttons and tooltips."
+    description: "Human readable comment. Used in UX buttons and tooltips."
     augments_self_properties: "OPTIONAL, if action augments attribute values, list attributes required in format `item,item,item;value,value,value`"
     requires_attr: required attributes of the agent. Determines if the agent can do the action.
 
+# TODO: Make this into a dict, but you'll have to change the other fucntions that use this. 
 actions:
   -
     type: healthcare_initiatives
@@ -18,20 +19,8 @@ actions:
       wealth: .1
     augments_self_properties:
       health: 0.05
-      wealth: -.05
-    description: "increase the health of your population slightly, at the cost of a small amount of wealth"
-  -
-    type: individual_education
-    label: action
-    requires_attr: 
-      wealth: .1
-    applies_to: pop
-    effort: 2
-    augments_self_properties: 
       wealth: -.1
-      literacy: 0.1
-      factionLoyalty: -.05
-    description: "expand privatized education, increase literacy and wealth at the cost of faction loyalty"
+    description: "Spend wealth to increase the health of your population slightly."
   -
     type: patriot_education
     label: action
@@ -54,16 +43,26 @@ actions:
       conformity: .1
       aggression: .1
     description: "build national pride, increasin faction loyalty at the cost of rising agressiveness"
-
   -
     type: build_infrastructure
     label: action
-    applies_to: "pop"
+    applies_to: "pop" 
     effort: 3
     requires_attr: 
-      wealth: .5
+      wealth: .1
     augments_self_properties: 
       wealth: -0.1
       industry: .1
     description: "increase industry by investing in local infrastructure, increases industry"
+  -
+    type: test_action
+    label: action
+    applies_to: "pop"
+    effort: 1
+    requires_attr: 
+      wealth: 200
+    augments_self_properties:
+      wealth: -200
+      health: 0.1
+    description: "Test action for debugging purposes. Should never show up."
 

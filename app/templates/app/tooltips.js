@@ -70,10 +70,16 @@ function dictToHtml(d) {
 function dictToSimpleText(d) {
     // console.log(d)
     if (d['objtype']==undefined){
-        d['objtype'] = '<->'
+        d['objtype'] = '<->'    
     }
     html = d['name'] + " : "+ d['objtype'] +["\n"]
-    var dt = Object.assign({}, d);
+    if (d.hasOwnProperty('building')){
+        var dt = Object.assign({}, d['building']);
+        html = dt['name'] + " : "+ dt['objtype'] +["\n"]
+    }
+    else{
+        var dt = Object.assign({}, d);
+    }
     dt = limitDict(dt)
     for (var k in dt) {
         x = k.replace(/_/g, " ")

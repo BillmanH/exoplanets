@@ -11,6 +11,9 @@ function getRndInteger(min, max) {
   }
   
 function createGroundDecal(o, ground, texture, size){
+    if (texture == undefined){
+        return false
+    }
     const decalMat = new BABYLON.StandardMaterial();
         decalMat.diffuseTexture = new BABYLON.Texture(texture);
         decalMat.zOffset = -1;
@@ -26,9 +29,7 @@ function createGroundDecal(o, ground, texture, size){
     } else {
         decalName = o.metadata.objid + "_decal"
     }
-
-    console.log("decalName: ", decalName)   
-    groundDecal = BABYLON.MeshBuilder.CreateDecal(decalName + "_decal",
+    groundDecal = BABYLON.MeshBuilder.CreateDecal(decalName,
                                                     ground,
                                                     {
                                                         position: pos,

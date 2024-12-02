@@ -7,15 +7,21 @@
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
 [The work-in-progress game is here.](http://exodestiny.azurewebsites.net/), however I won't be granting access until I've completed:
-Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out (to my email)[mailto:william.jeffrey.harding@gmail.com]
+Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out [to my email](mailto:william.jeffrey.harding@gmail.com)
 
 # What is left to do, and when to do it:
-## September
-* Spaceships
-* Space Travel
-* Cargo Routes
-* Planetary observation
-## October
+The `dev` branch has the more current workload. Unless I get too busy with other things I'll pull those changes into `main` every month. 
+
+
+## December
+* Entra ID Access Management
+* Patron Account
+* Production Environment
+* Delete game / new game improvements
+
+## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
+
+## January
 * Government choices
 * Faction settings
 * Conflict
@@ -23,17 +29,7 @@ Until I roll into production, I'll be making breaking changes constantly. Not a 
 * War
 * Terrorism
 * Peace
-## November
-* Space Stations
-* Building and simulation refinement
-## December
-* Entra ID Access Management
-* Patron Account
-* Production Environment
-
-## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
-## January
-* Simulation overhaul (will need some user data to do it)
+* Planetary observation
 
 ## Hopefull things to implement in 2025
 * Megastructures
@@ -73,7 +69,6 @@ Of course, you can also just clone it on your local machine and run for free. Fe
 | Document |
 | ----------- |
 | [Building the Azure infrastructure](docs/readme.md) | 
-| [Managing Azure Functions](az-functions/readme.md) | 
 | [Building the Local (dev) infrastructure](docs/local_setup.md) | 
 | [Standards and Conventions](docs/Standards%20and%20Conventions.md) | 
 
