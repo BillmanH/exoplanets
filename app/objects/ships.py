@@ -1,3 +1,5 @@
+import yaml
+
 from ..objects import baseobjects
 from ..functions import configurations
 
@@ -78,3 +80,39 @@ class Ship(baseobjects.Baseobject):
         fund['type'] = self.type
         return fund
 
+
+# Actions resolving the construction of ships. 
+def place_ship_in_shipyard(c,ship, message):
+    objid = message['agent']['objid']
+    faction_shipyard = (
+        f"g.V().has('objid','{objid}').in('isIn').has('label','pop').out('owns').has('type','shipyard').valueMap()"
+    )
+    c.run_query(faction_shipyard)
+    if len(c.res) == 0:
+        print(f"EXOADMIN: No shipyard found for faction {objid}")
+        return None
+    shipyard = c.clean_nodes(c.res)[0]
+    edge = {
+        "node1": ship.get_data['objid'],
+        "node2": shipyard['objid'],
+        "label": "isIn"
+    }
+    return edge
+
+def expense_ship(c, ship, message):
+    # TODO: Implement ship costs
+    pass
+
+
+def fabricate(c, message):
+    design = yaml.safe_load(ship_configurations[message['action']['to_build']])
+    data = {"nodes": [], "edges": []}
+    if design['label'] == "ship":
+        ship = Ship(design, ship_configurations)
+        data = ship.get_upload_data()
+        ship_in_yard = place_ship_in_shipyard(c, ship, message)
+        if ship_in_yard != None:
+            data.edges.append(ship_in_yard)
+    expense_ship(c, ship, message)
+    c.upload_data(message['agent']['userguid'], data)
+    print(f"EXOADMIN: fabrication complete for ship: {ship.get_data()}")
