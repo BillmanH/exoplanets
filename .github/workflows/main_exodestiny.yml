@@ -77,7 +77,7 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3DCA25E224E64D3082C65A78C7955379 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F0918C9F7B9B428AA686F17D5B6CA2EB }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8204C30D68B042B5BB343F28D8FDC5D6 }}
-          auth-type: federated
+          auth-type: SERVICE_PRINCIPAL
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2

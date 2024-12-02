@@ -68,6 +68,7 @@ def reduce_location_or_faction_resource(c,t,message,resource):
 
 def reduce_location_resource(c,t,message, consuming):
     # find out if the location has the resource
+    logging.info(f"EXOADMIN: Processing reduce_location_resource for: {message['agent']}")
     objid = message['agent']['objid']
     quantity = t.pop_growth_params['pop_consumes']
     resource_query = f"""
