@@ -69,7 +69,12 @@ def reduce_location_or_faction_resource(c,t,message,resource):
 def reduce_location_resource(c,t,message, consuming):
     # find out if the location has the resource
     objid = message['agent']['objid']
+    consuming = list(resource.keys())[0]
     quantity = t.pop_growth_params['pop_consumes']
+    resource_query = f"""
+    g.V().has('objid','{objid}').out('inhabits').out('has').has('objtype','resource').has('name','{consuming}').valuemap()
+    """
+    c.run_query(resource_query)
 
     if len(c.res) != 1:
         logging.info(f"EXOADMIN: {objid} was not able to locate the resource - c.res:{c.res}")
