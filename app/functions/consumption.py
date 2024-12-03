@@ -6,27 +6,6 @@ import yaml
 from functools import reduce
 import operator
 
-# # static queries that don't require variables
-# count_of_consumed_query = f"""
-# g.E()
-#     .has('label','inhabits').outV()
-#     .out('inhabits').dedup().values('name','label','objid')
-# """
-
-# count_of_consumed = f"""
-# g.V().has('objid','{resourceId}').as('resource')
-#     .in('has').out('inhabits').as('planet').groupcount().by('name').as('planet').path()
-# """
-
-# def get_planets_consumption(c,planetId):
-#     count_of_consumed = f"""
-#     g.V().has('objid','{planetId}').as('planet')
-#         .in('inhabits').out('isOf').as('species').groupcount().by('consumes').as('consumes').path()
-#     """
-#     c.run_query(count_of_consumed)
-#     return reduce(operator.concat, [i['objects'] for i in c.res])
-
-
 
 def get_consuming_pops(c):
     consuming_pops_query = "g.V().hasLabel('pop').as('pop').out('isOf').as('species').path().by('objid').by(values('consumes','effuses').fold())"
@@ -67,6 +46,10 @@ def reduce_location_or_faction_resource(c,t,message,resource):
     c.res
 
 def reduce_location_resource(c,t,message, consuming):
+    """
+    the message should contain the incoming pop (objid) and the resources that it consumes.
+    query here will get the resources at the location the pop `inhabits`
+    """
     # find out if the location has the resource
     logging.info(f"EXOADMIN: Processing reduce_location_resource for: {message['agent']}")
     objid = message['agent']['objid']
@@ -81,10 +64,10 @@ def reduce_location_resource(c,t,message, consuming):
     resource = c.clean_nodes(c.res)[0]
     starving_messages = []
     if float(resource['volume']) > quantity:
-        logging.info(f"EXOADMIN: resources on {message['agent']['name']}:{message['agent']['objid']} reduced by {quantity}, {resource['volume']}-> {new_volume}")
+        logging.info(f"EXOADMIN: resources {resource['objid']} consumed by {message['agent']['objid']}: reduced by {quantity}, {resource['volume']}-> {new_volume}")
         new_volume = float(resource['volume']) - quantity
     if float(resource['volume']) <= quantity:
-        logging.info(f"EXOADMIN: resources on {message['agent']['name']}:{message['agent']['objid']} reduced by {quantity}, People at this location will starve.")
+        logging.info(f"EXOADMIN: **starve** resources({resource['objid']}) is reduced to {new_volume}. {message['agent']['objid']} will starve.")
         new_volume = 0
         starving_messages = get_starving_population_messages(c,t,message['agent'])
     patch_resource_query = f"""
