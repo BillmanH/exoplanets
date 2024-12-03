@@ -71,8 +71,11 @@ def reduce_location_resource(c,t,message, consuming):
         new_volume = 0
         starving_messages = get_starving_population_messages(c,t,message['agent'])
     patch_resource_query = f"""
-    g.V().has('objid','{objid}').out('has').has('label','resource').has('name','{consuming}')
-        .property('volume', {new_volume})
+        g.V().has('objid','8586185400272')
+            .out('inhabits')
+            .out('has').has('label','resource')
+            .has('name','{message['agent']['consumes']}')
+            .property('volume',{new_volume})
     """
     c.run_query(patch_resource_query)
     return starving_messages
