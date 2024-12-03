@@ -64,11 +64,11 @@ def reduce_location_resource(c,t,message, consuming):
     resource = c.clean_nodes(c.res)[0]
     starving_messages = []
     if float(resource['volume']) > quantity:
-        logging.info(f"EXOADMIN: resources {resource['objid']} consumed by {message['agent']['objid']}: reduced by {quantity}, {resource['volume']}-> {new_volume}")
         new_volume = float(resource['volume']) - quantity
+        logging.info(f"EXOADMIN: resources {resource['objid']} consumed by {message['agent']['objid']}: reduced by {quantity}, {resource['volume']}-> {new_volume}")
     if float(resource['volume']) <= quantity:
-        logging.info(f"EXOADMIN: **starve** resources({resource['objid']}) is reduced to {new_volume}. {message['agent']['objid']} will starve.")
         new_volume = 0
+        logging.info(f"EXOADMIN: **starve** resources({resource['objid']}) is reduced to {new_volume}. {message['agent']['objid']} will starve.")
         starving_messages = get_starving_population_messages(c,t,message['agent'])
     patch_resource_query = f"""
         g.V().has('objid','8586185400272')

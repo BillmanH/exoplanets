@@ -32,3 +32,5 @@ aad.config.json
 LICENCE
 manage.py
 README.md
+
+.venv
