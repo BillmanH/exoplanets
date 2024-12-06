@@ -68,48 +68,26 @@ def reduce_location_resource(c,t,message, consuming):
         logging.info(f"EXOADMIN: resources {resource['objid']} consumed by {message['agent']['objid']}: reduced by {quantity}, {resource['volume']}-> {new_volume}")
     if float(resource['volume']) <= quantity:
         new_volume = 0
-        logging.info(f"EXOADMIN: **starve** resources({resource['objid']}) is reduced to {new_volume}. {message['agent']['objid']} will starve.")
-        starving_messages = get_starving_population_messages(c,t,message['agent'])
+        logging.info(f"EXOADMIN: location resources({resource['objid']}) is reduced to {new_volume}. {message['agent']['objid']} will starve.")
+        starving_messages = starve_population(c,t,message)
     patch_resource_query = f"""
-        g.V().has('objid','8586185400272')
+        g.V().has('objid','{objid}')
             .out('inhabits')
             .out('has').has('label','resource')
-            .has('name','{message['agent']['consumes']}')
+            .has('name','{message['agent']['consumes'][0]}')
             .property('volume',{new_volume})
     """
     c.run_query(patch_resource_query)
     return starving_messages
 
 
-def get_starving_population_messages(c, t, agent):
-    starving_action = {
-    "type": "starve",
-    "label": "action",
-    "applies_to": "pop",
-    "effort": 0,
-    "augments_self_properties": {"health": t.pop_growth_params['starve_damage']},
-    "comment": "Populations that don't have enough resources will loose health until it reachees zero"
-    }
-    starving_job = {
-        'created_at':t.params['currentTime'],
-        'objid':f"starving_async_{t.params['currentTime']}",
-        'actionType':'automatic'
-    }
-    location = agent['objid']
-    starving_pop_query =f"""
-    g.V().has('objid','{location}').in('inhabits').valuemap()
-    """
-    c.run_query(starving_pop_query)
-    starving_pops = c.clean_nodes(c.res)
+def starve_population(c, t, message):
+    starved_pop = c.delta_property(message['agent']['objid'],'health',.05)
+    if starved_pop['health'] < 0:
+        pop_dies(c,t,message['agent'])
     starving_messages = []
-    for pop in starving_pops:
-            if float(pop.get('health',0)) > 0:
-                starving_action_message = {"agent":pop,"action":starving_action,"job":starving_job}
-                starving_messages.append(starving_action_message)
-            else:
-                pop_dies(c,t,pop)
-    logging.info(f"EXOADMIN: {len(starving_messages)} starving messages created for the inhabitants of: {agent['name']}:{agent['objid']}")
     return starving_messages
+
 
 def pop_dies(c,t,pop):
     c.run_query(f"g.V().has('objid','{pop['objid']}').drop()")
