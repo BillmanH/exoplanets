@@ -29,7 +29,7 @@ app/migrations/*
 web/*
 aad.config.json
 
-LICENCE
+LICENSE
 manage.py
 README.md
 
