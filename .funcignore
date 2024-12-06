@@ -1,5 +1,6 @@
 # web app folders
 __blobstroage__/*
+__blobstorage__/*
 __quuestorage__/*
 __pycache__/*
 
@@ -11,6 +12,16 @@ __*__.json
 # vscode misc
 .vscode/*
 .github/*
+
+# __pycache__
+app/ajaxviews/__pycache__/*
+app/__pycache__/*
+app/functions/__pycache__/*
+app/creators/__pycache__/*
+app/objects/__pycache__/*
+app/models/__pycache__/*
+app/connectors/__pycache__/*
+app/views/__pycache__/*
 
 
 # local files
@@ -26,6 +37,7 @@ db.sqlite3
 templates/*
 app/templates/*
 app/migrations/*
+app/static/*
 web/*
 aad.config.json
 
