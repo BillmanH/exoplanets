@@ -1,15 +1,19 @@
 {% extends './content.html' %}
 
     {% block header %}
+    <p>
         401: Unauthorized
+    </p>
     {% endblock %}
 
     {% block text %}
-        Visiting this page requires you to be <strong>authenticated</strong>.
-        Use the button on the top right to sign in.
-
-        Note that Access is managed through active directory, which isn't configured to take on new users at this time. 
-        Backlog has it scheduled to integrate in December 2024.
-        In the meantime you can email me at william.jeffrey.harding@gmail.com to request access, but I'll likely ignore it until I'm ready to start testing. 
-        
+    <p>
+        Other than your email, and your authentication guid, I don't store any personal information. I don't track your activity or sell your data.
+    </p>
+    <p>
+        I don't control the MS Auth process, that's managed by Microsoft.
+    </p>
+    <p>
+        <a href="https://github.com/BillmanH/exoplanets/blob/main/docs/creating_a_new_account.md">More information on the Login Process</a>
+    </p>
     {% endblock %}

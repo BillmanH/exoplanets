@@ -22,18 +22,4 @@
 
     {% block footer %}
 
-        {% if request.identity_context_data.authenticated == False %}
-            <div id="wrapper">
-                <div id="left">
-                    <svg id="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z"></path></svg>
-                </div>
-                <div id="right">
-                    Note that Access is managed through active directory, which isn't configured to take on new users at this time. 
-                    Backlog has it scheduled to integrate in December 2024.
-                    In the meantime you can email me at william.jeffrey.harding@gmail.com to request access, but I'll likely ignore it until I'm ready to start testing.             
-                    <br>
-                </div>
-            </div>
-        {% endif %}
-
     {% endblock %}

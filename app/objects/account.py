@@ -19,7 +19,7 @@ class Account:
             self.fetch_from_graph(c)
         else:
             self.objid = maths.uuid(n=13)
-            self.type = "pre_beta_account"
+            self.type = "open_beta_public"
             self.created = datetime.now()
             self.last_used = datetime.now()
             self.label = "account"

@@ -2,6 +2,8 @@
 // NOTE: These just affect the UI in the creator. This does not affect the actual genesis limits.
 {% load static %}
 
+const_account_types = ["pre_beta_account","open_beta_public"]
+
 var form = {
     "label":"form",
     "name":"worldgenform",
@@ -112,10 +114,7 @@ add_p("accountinfo", "Your account type is: " + account.type)
 add_p("accountinfo","created: " + account.created)
 add_p("accountinfo","last used: "+account.last_used)
 add_p("accountinfo","Owner: "+account.username)
-
-function back_to_home(){
-    window.location.href = '/';
-}
+// add_p("accountinfo","Userguid: "+account.userguid)
 
 function delete_existing_game() {
     $.ajax({
@@ -188,10 +187,9 @@ function goto_system(data){
 
 
 // Step 1: verify the account and request the user to delete the existing game
-if(account.type=="pre_beta_account"){
+if(const_account_types.includes(account.type)){
     add_p("accountinfo","your account requires that you can only have one account open at a time. Do you want to delete your old game and start over?")
-    add_button("accountinfo",1,"delete everything, start over", delete_existing_game)
-    add_button("accountinfo",2,"return to the main menu", back_to_home)
+    add_button("accountinfo",1,"Start a new game (Deletes previous game)", delete_existing_game)
 }
 
 // Step 2: Build the solar system, after success of the delete_existing_game

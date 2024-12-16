@@ -27,7 +27,7 @@ EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 #For troubleshooting, making sure the function is the one I think it is. 
-function_version_string = "dec1"
+function_version_string = "dec3.2"
 
 # func start --functions [a space separated list of functions]
 # func start --functions actionResolverTimer resolveActionEvents ututimer

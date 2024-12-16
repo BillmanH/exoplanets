@@ -309,7 +309,29 @@ class CosmosdbClient():
         g.V().has('objid','{objid}').property('{property}','{value}')
         """ 
         res = self.run_query(query)
-        self.res = res 
+        self.res = res
+
+    def delta_property(self,objid,property,x):
+        """
+        augments or diminishes a numerical property.
+        e.g. health + x, or wealth + x
+        if x is negative it will subtract
+        """
+        get_object_query = f"""
+        g.V().has('objid','{objid}').valueMap()
+        """
+        self.run_query(get_object_query)
+        o = self.clean_nodes(self.res)[0]
+        og_value = o[property]
+        new_value = og_value + x
+        if new_value < 0:
+            new_value = 0
+        patch_query = f"""
+            g.V().has('objid','{objid}').property('{property}','{new_value}')
+        """ 
+        self.run_query(patch_query)
+        o[property] = new_value
+        return o
 
     def query_patch_properties(self, agent, action):
         query = f"g.V().has('objid','{agent['objid']}')"
