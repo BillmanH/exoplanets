@@ -6,15 +6,13 @@
 
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
-[The work-in-progress game is here.](http://exodestiny.azurewebsites.net/), however I won't be granting access until I've completed:
-Until I roll into production, I'll be making breaking changes constantly. Not a great experience. However, if you are interested in creating a `pre_beta_account` feel free to reach out [to my email](mailto:william.jeffrey.harding@gmail.com)
+The game is now in **OPEN BETA** Meaning I've still got a long way to go, but the game is playable enough where I can start opening it up to users. [How to create an account](docs/creating_a_new_account.md)
 
 # What is left to do, and when to do it:
 The `dev` branch has the more current workload. Unless I get too busy with other things I'll pull those changes into `main` every month. 
 
 
 ## December
-* Entra ID Access Management
 * Patron Account
 * Production Environment
 * Delete game / new game improvements
