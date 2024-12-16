@@ -1,5 +1,7 @@
 # How to create a new account.
 
+Setting up an account is required so that I can save your game. It is only done the first time you create a new game. Once created the game will always link with that email address. 
+
 Account management is all through [Azure Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id). I don't manage any of it. 
 
 This is the best way to manage authentication without having me store passwords (which I don't want). It is the most secure for you and for me. It uses MS Live Login to authenticate, taking the whole process out of my hands. 
