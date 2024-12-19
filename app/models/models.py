@@ -2,11 +2,16 @@ from ..connectors.cmdb_graph import *
 
 def get_foreign_systems(request, data):
     userguid = request.identity_context_data._id_token_claims['oid']
-    if 'solar_system' in data.keys():
-        if userguid != data['solar_system']['system']['userguid']:
-            userguid = data['solar_system']['system']['hascontrol'] = "False"
+    if 'system' in data.keys():
+        if userguid != data['system']['userguid']:
+            data['system']['hascontrol'] = "False"
+            new_data = {'system':data['system'],
+                        'nodes':[],
+                        'edges':[]
+                        }
         else:
-            userguid = data['solar_system']['system']['hascontrol'] = "True"
+            data['system']['hascontrol'] = "True"
+            new_data = data
     if 'location' in data.keys():
         if userguid != data['location']['userguid']:
             data['location']['hascontrol'] = "False"
