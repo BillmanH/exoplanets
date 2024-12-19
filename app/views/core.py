@@ -80,11 +80,12 @@ def genesis(request):
 def home_system_ui(request):
     res = get_home_system(request.identity_context_data._id_token_claims['oid'])
     time = get_time()
+    data = get_foreign_systems(request, res)
     if res == "No home system found":
         return redirect("genesis")
     context = {
         "data": {"time":time,
-                 "solar_system": res,
+                 "solar_system": data,
                  }
     }
     return render(request, "app/system_ui.html", context)
@@ -93,9 +94,10 @@ def home_system_ui(request):
 def system_ui(request):
     res = get_system(request.GET['objid'],request.GET['orientation'])
     time = get_time()
+    data = get_foreign_systems(request, res)
     context = {
         "data": {"time":time,
-                 "solar_system": res,
+                 "solar_system": data,
                  }
     }
     return render(request, "app/system_ui.html", context)
@@ -103,11 +105,13 @@ def system_ui(request):
 
 @ms_identity_web.login_required
 def pop_ui_local(request):
+    identity = request.identity_context_data._id_token_claims['oid']
     res = get_local_population(request.GET['objid'])
     time = get_time()
     res['time'] = time
+    data = get_foreign_systems(request, res)
     context = {
-        "data": res
+        "data": data
         }
     return render(request, "app/population_local.html", context)
 

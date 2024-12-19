@@ -128,10 +128,13 @@ function createPop(n){
 // ground
 const ground = BABYLON.MeshBuilder.CreateGround("ground", {height: ground_dimensions, width: ground_dimensions, subdivisions: ground_subdivisions, updatable: true})
 var ground_arr = ground.getVerticesData(BABYLON.VertexBuffer.PositionKind);
-var altiudes = JSON.parse(data['biome'][0]['grid'])
-for (let i=0;i<altiudes.length;i++){ground_arr[(i*3)+1] = altiudes[i]*10}
 
-ground.updateVerticesData(BABYLON.VertexBuffer.PositionKind, ground_arr);
+
+if (data.hasOwnProperty('biome')){
+    var altiudes = JSON.parse(data['biome'][0]['grid'])
+    for (let i=0;i<altiudes.length;i++){ground_arr[(i*3)+1] = altiudes[i]*10}
+    ground.updateVerticesData(BABYLON.VertexBuffer.PositionKind, ground_arr);
+}
 
 var guiIter = 0
 factions = distinct_list(data.nodes,'faction','objid')
@@ -177,10 +180,15 @@ renderBuildings(ground)
 
 
 // ground.optimize(10)
-
+if (data.hasOwnProperty('biome')){
 const groundMat = new BABYLON.StandardMaterial("groundMat");
     groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_green_2.png' %}");
     ground.material = groundMat; //Place the material property of the ground
     ground.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
-
+} else {
+    const groundMat = new BABYLON.StandardMaterial("groundMat");
+    groundMat.diffuseTexture =  new BABYLON.Texture("{% static 'app/objects/planet/surface/surface_unknown.png' %}");
+    ground.material = groundMat; //Place the material property of the ground
+    ground.material.specularColor = new BABYLON.Color3(shinyness, shinyness, shinyness);
+}
 

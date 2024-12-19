@@ -1,5 +1,30 @@
 from ..connectors.cmdb_graph import *
 
+def get_foreign_systems(request, data):
+    userguid = request.identity_context_data._id_token_claims['oid']
+    if 'solar_system' in data.keys():
+        if userguid != data['solar_system']['system']['userguid']:
+            userguid = data['solar_system']['system']['hascontrol'] = "False"
+        else:
+            userguid = data['solar_system']['system']['hascontrol'] = "True"
+    if 'location' in data.keys():
+        if userguid != data['location']['userguid']:
+            data['location']['hascontrol'] = "False"
+            new_data = {'location':{
+                        'objid':data['location']['objid'],
+                        'hascontrol':data['location']['hascontrol'],
+            },
+                        'time':data['time'],
+                        'nodes':[],
+                        'buildings':[],
+                        'resources':[]
+                        }
+            
+        else:
+            userguid = data['location']['hascontrol'] = "True"
+            new_data = data
+    return new_data
+
 def get_object_by_id(objid):
     query=f"g.V().has('objid','{objid}').valueMap()"
     c = CosmosdbClient()
