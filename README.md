@@ -6,6 +6,10 @@
 
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
+## [Play the open beta game here](https://exodestiny.azurewebsites.net/)
+
+The process will guide you through creating an account. 
+
 The game is now in **OPEN BETA** Meaning I've still got a long way to go, but the game is playable enough where I can start opening it up to users. [How to create an account](docs/creating_a_new_account.md)
 
 # What is left to do, and when to do it:
