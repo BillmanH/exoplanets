@@ -37,7 +37,7 @@ function_version_string = "dec3.2"
                                event_hub_name=EVENT_HUB_NAME,
                                connection="EVENT_HUB_CONNECTION_STR")
 def resolve_action_event(event: func.EventHubEvent):
-    logging.info(f'EXOADMIN: function deploy version: {function_version_string}')
+    logging.info(f'EXOADMIN: <resolveActionEvents> deploy version: {function_version_string}')
     eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
     credential = DefaultAzureCredential() 
     message = ast.literal_eval(event.get_body().decode('utf-8'))
@@ -105,7 +105,7 @@ def resolve_action_event(event: func.EventHubEvent):
               arg_name="mytimer",
               run_on_startup=RUNNING_LOCALLY) 
 def action_resolver(mytimer: func.TimerRequest) -> None:
-    logging.info(f'EXOADMIN: function deploy version: {function_version_string}')
+    logging.info(f'EXOADMIN: <actionResolverTimer> deploy version: {function_version_string}')
     eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
     credential = DefaultAzureCredential() 
     utc_timestamp = datetime.datetime.now(datetime.timezone.utc).replace(
@@ -132,7 +132,7 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
               arg_name="mytimer",
               run_on_startup=RUNNING_LOCALLY)
 def faction_building_resolver(mytimer: func.TimerRequest) -> None:
-    logging.info(f'EXOADMIN: function deploy version: {function_version_string}')
+    logging.info(f'EXOADMIN: <faction_building_resolver> deploy version: {function_version_string}')
     eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
     credential = DefaultAzureCredential()
     utc_timestamp = datetime.datetime.now(datetime.timezone.utc).replace(
@@ -154,7 +154,7 @@ def faction_building_resolver(mytimer: func.TimerRequest) -> None:
               arg_name="mytimer",
               run_on_startup=RUNNING_LOCALLY) 
 def utu_timer(mytimer: func.TimerRequest) -> None:
-    logging.info(f'EXOADMIN: function deploy version: {function_version_string}')
+    logging.info(f'EXOADMIN: <cleanup> deploy version: {function_version_string}')
     c = cmdb_graph.CosmosdbClient()
     cleanup.cleanup_empty_factions(c)
 
@@ -164,7 +164,7 @@ def utu_timer(mytimer: func.TimerRequest) -> None:
               arg_name="mytimer",
               run_on_startup=RUNNING_LOCALLY) 
 def utu_timer(mytimer: func.TimerRequest) -> None:
-    logging.info(f'EXOADMIN: function deploy version: {function_version_string}')
+    logging.info(f'EXOADMIN: <ututimer> deploy version: {function_version_string}')
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
     if mytimer.past_due:
