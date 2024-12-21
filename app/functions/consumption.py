@@ -63,6 +63,8 @@ def reduce_location_resource(c,t,message, consuming):
     if len(c.res) != 1:
         logging.info(f"EXOADMIN: {objid} was not able to locate the resource - c.res:{c.res}")
     resource = c.clean_nodes(c.res)[0]
+    old_volume = float(resource['volume'])
+    new_volume = old_volume
     starving_messages = []
     if float(resource['volume']) > quantity:
         new_volume = float(resource['volume']) - quantity
@@ -80,6 +82,7 @@ def reduce_location_resource(c,t,message, consuming):
     """
     logging.info(f"EXOADMIN: patch_resource_query: {patch_resource_query}")
     c.run_query(patch_resource_query)
+    logging.info(f"EXOADMIN: agent: {objid} consumed resource: {resource['objid']}. {old_volume}->{new_volume}")
     return starving_messages
 
 
