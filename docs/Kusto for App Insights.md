@@ -44,6 +44,20 @@ traces
 | order by timestamp asc
 ```
 
+## Looking at a bunch of operations
+first get a list of operation ids from another query, set it to list and then get the full traces from those queries. 
+```
+let operationIds = exceptions
+| where innermostMessage contains "ExoAdminGremlinQueryIssue"
+| distinct operation_Id;
+
+traces
+| where operation_Id in (operationIds)
+| order by timestamp desc
+| where message has "EXOADMIN:"
+| order by operation_Id
+| limit 10
+```
 
 ## Some more advanced examples
 Get all of the counts of functions jobs

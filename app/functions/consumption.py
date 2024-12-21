@@ -57,6 +57,7 @@ def reduce_location_resource(c,t,message, consuming):
     resource_query = f"""
     g.V().has('objid','{objid}').out('inhabits').out('has').has('objtype','resource').has('name','{consuming}').valuemap()
     """
+    logging.info(f"EXOADMIN: resource_query query: {resource_query}")
     c.run_query(resource_query)
 
     if len(c.res) != 1:
@@ -77,6 +78,7 @@ def reduce_location_resource(c,t,message, consuming):
             .has('name','{message['agent']['consumes'][0]}')
             .property('volume',{new_volume})
     """
+    logging.info(f"EXOADMIN: patch_resource_query: {patch_resource_query}")
     c.run_query(patch_resource_query)
     return starving_messages
 
