@@ -12,28 +12,25 @@ The process will guide you through creating an account.
 
 The game is now in **OPEN BETA** Meaning I've still got a long way to go, but the game is playable enough where I can start opening it up to users. [How to create an account](docs/creating_a_new_account.md)
 
+The **STAGING Enviroment** is [here](exodestiny-stage-guepbuc0bmcudnbh.westus2-01.azurewebsites.net) this should mirror the production site, but be one step ahead so that I can test things. You log into both tenants in the same way. 
+
 # What is left to do, and when to do it:
 The `dev` branch has the more current workload. Unless I get too busy with other things I'll pull those changes into `main` every month. 
 
 
-## December
-* Patron Account
-* Production Environment
-* Delete game / new game improvements
-
 ## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
 
 ## January
-* Government choices
-* Faction settings
-* Conflict
-* Rebellion
-* War
-* Terrorism
-* Peace
-* Planetary observation
+* Faction resources vs. location resources
+    - location resources are shared to all people that live there, but faction resources have limited access. This will cause some populations to starve while others generate food. Some buildings create faction resources while diminishing location resources.
 
-## Hopefull things to implement in 2025
+* Planetary observation
+    - Building the planetary observation building should enable you to scan the skies to find resources on celestial bodies. 
+
+* Ship Building
+    - which is complicated, but hopefully I'll have this finished in Jan. 
+
+## Hopeful things to implement in 2025
 * Megastructures
 * Technology development
 * More complicated race and generation process
