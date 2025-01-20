@@ -69,7 +69,7 @@ planet_types:
       water:
         name: "water"
         type: "mineral"
-        description: "H2O ready to be consumed, either frozen or in ice format"
+        description: "H2O ready to be consumed, either liquid or in ice format"
         mean: 10000
         std: 1000
     

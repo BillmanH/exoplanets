@@ -70,7 +70,7 @@ def augemt_faction(c, message):
     augment = yaml.safe_load(message['structure']['faction_augments'])
     for item in augment.keys():
         old_value = faction.get(item,0)
-        new_value = old_value + augment[item]
+        new_value = float(old_value) + float(augment[item])
         if new_value < 0:
             new_value = 0
         logging.info(f"EXOADMIN: {item} has changed from {old_value} to {new_value}")

@@ -56,9 +56,60 @@ events_control_panel = {
 }
 
 var system_icon = create_icon({name:'system_icon',image:icons.system,top:getIconTop(0),tooltiptext:"return to the system"})
-var faction_icon = create_icon({name:'pop_faction_iconicon',tooltiptext:"factions and populations",image:icons.faction,top:getIconTop(1)})
-var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:getIconTop(2)})
-var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:getIconTop(3)})
+if (data.nodes.length > 0){
+    var faction_icon = create_icon({name:'pop_faction_iconicon',tooltiptext:"factions and populations",image:icons.faction,top:getIconTop(1)})
+    faction_icon.onPointerClickObservable.add(function () {
+        dropAllControls()
+        factions = distinct_list(data.nodes,'faction','objid')
+        pop_control_panel.height = (100 * factions.length).toString() + "px"
+        pop_control = createControlBox(pop_control_panel)
+        var guiIter = 0
+        for (let i = 0; i < factions.length; i++){
+            guiIter ++
+            f = {}
+            f.data = get_specific_node(data.nodes,factions[i])[0]
+            f.iter = guiIter
+            f.gui = {buttonColor:"white",
+                depth:0}
+            f.coord = {
+                x:f.data.lat*ground_dimensions,
+                y:0,
+                z:f.data.lat*ground_dimensions
+            }
+            f.gui.clickButton = function(f) {
+                console.log(f.data.name, f.data.objid, " button was pushed")
+                piovtCamera(f.data.objid+"_nocol_faction_merged")
+                // getPopBox(f)
+                objectDetails(f.data)
+                dropAllControls()
+            };
+            addButtonToBox(f,pop_control)
+        }
+    });
+}
+if (data.resources.length > 0) {
+    var resource_icon = create_icon({name:'resource_icon',tooltiptext:"resources at this location",image:icons.resources,top:getIconTop(2)})
+    resource_icon.onPointerClickObservable.add(function () {
+        dropAllControls()
+        ajax_get_local_resources({location:data.location.objid}).then(function(response){
+            const resources = response.resources
+            resources_control_panel.height = (100 * resources.length).toString() + "px"
+            resource_control = createControlBox(resources_control_panel)
+            for (let i = 0; i < resources.length; i++){
+                n = {}
+                n.iter = i+1
+                n.displayed_values = ["name","description","volume"]
+                n.data = resources[i]
+                addTextBlockToBox(n,resource_control)
+            }
+        })
+        dropControlIfExists("loadingpleasewait")
+    });
+}
+
+if (data.location.hascontrol == "True"){
+    var events_icon = create_icon({name:'events_icon',tooltiptext:"Events",image:icons.events,top:getIconTop(3)})
+}
 var exit_icon = create_icon({name:'quit_icon',tooltiptext:"Quit",image:icons.exit,top:getIconTop(4)})
 
 var piovtCamera = function(name){
@@ -84,68 +135,9 @@ system_icon.onPointerClickObservable.add(function () {
 });
 
 
-faction_icon.onPointerClickObservable.add(function () {
-    dropAllControls()
-    factions = distinct_list(data.nodes,'faction','objid')
-    pop_control_panel.height = (100 * factions.length).toString() + "px"
-    pop_control = createControlBox(pop_control_panel)
-    var guiIter = 0
-    for (let i = 0; i < factions.length; i++){
-        guiIter ++
-        f = {}
-        f.data = get_specific_node(data.nodes,factions[i])[0]
-        f.iter = guiIter
-        f.gui = {buttonColor:"white",
-            depth:0}
-        f.coord = {
-            x:f.data.lat*ground_dimensions,
-            y:0,
-            z:f.data.lat*ground_dimensions
-        }
-        f.gui.clickButton = function(f) {
-            console.log(f.data.name, f.data.objid, " button was pushed")
-            piovtCamera(f.data.objid+"_nocol_faction_merged")
-            // getPopBox(f)
-            objectDetails(f.data)
-            dropAllControls()
-        };
-        addButtonToBox(f,pop_control)
-    }
-});
 
-resource_icon.onPointerClickObservable.add(function () {
-    dropAllControls()
-    ajax_get_local_resources({location:data.location.objid}).then(function(response){
-        const resources = response.resources
-        resources_control_panel.height = (100 * resources.length).toString() + "px"
-        resource_control = createControlBox(resources_control_panel)
-        for (let i = 0; i < resources.length; i++){
-            n = {}
-            n.iter = i+1
-            n.displayed_values = ["name","description","volume"]
-            n.data = resources[i]
-            addTextBlockToBox(n,resource_control)
-        }
-    })
-    dropControlIfExists("loadingpleasewait")
-});
 
-events_icon.onPointerClickObservable.add(function () {
-    dropAllControls()
-    ajax_get_local_events({location:data.location.objid}).then(function(response){
-        const events = response.events
-        events_control_panel.height = ((100 * events.length)+100).toString() + "px"
-        events_control = createControlBox(events_control_panel)
-        for (let i = 0; i < events.length; i++){
-            n = {}
-            n.iter = i+1
-            n.displayed_values = ["name","text","time"]
-            n.data = events[i]
-            addTextBlockToBox(n,events_control)
-        }
-    })
-    dropControlIfExists("loadingpleasewait")
-});
+
 
 exit_icon.onPointerClickObservable.add(function () {
     dropAllControls()
