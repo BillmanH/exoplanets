@@ -140,12 +140,12 @@ var targAnimEnded = function(test) {
 }
 
 var animateCameraTargetToObject = function(cam, speed, frameCount, pos) {
-    var panToObj = BABYLON.Animation.CreateAndStartAnimation('move', cam, 'target', speed, frameCount, cam.target, pos, 0, ease, targAnimEnded);
+    var panToObj = BABYLON.Animation.CreateAndStartAnimation('move', cam, 'target', speed, frameCount, cam.target, pos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT, ease, targAnimEnded);
     panToObj.disposeOnEnd = true;
 }
 
 var animateCameraZoomToObject = function(cam, speed, frameCount, newRadius) {
-    var panToObj = BABYLON.Animation.CreateAndStartAnimation('zoom', cam, 'radius', speed, frameCount, cam.radius, newRadius, 0, ease, targAnimEnded);
+    var panToObj = BABYLON.Animation.CreateAndStartAnimation('zoom', cam, 'radius', speed, frameCount, cam.radius, newRadius, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT, ease, targAnimEnded);
     panToObj.disposeOnEnd = true;
 }
 
