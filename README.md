@@ -20,7 +20,7 @@ The `dev` branch has the more current workload. Unless I get too busy with other
 
 ## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
 
-## January
+## February
 * Faction resources vs. location resources
     - location resources are shared to all people that live there, but faction resources have limited access. This will cause some populations to starve while others generate food. Some buildings create faction resources while diminishing location resources.
 
