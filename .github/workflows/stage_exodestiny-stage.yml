@@ -27,9 +27,13 @@ jobs:
           python -m venv venv
           source venv/bin/activate
       
+      # I don't use django tables in this code, but the app requires them so I add the default ones.
       - name: Install dependencies
         run: pip install -r requirements.txt
-        
+
+      - name: run migrations
+        run: python manage.py migrate
+         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
