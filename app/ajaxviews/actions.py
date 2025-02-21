@@ -39,7 +39,7 @@ def get_object_children(request):
     elif label == 'planet':
         response = planetui.getOrbitingBodies(c)
     elif label == 'faction':
-        response = planetui.getPopulations(c)
+        response = planetui.getFactionChildren(c)
     elif label == 'pop':
         response = planetui.getPopActions(c)
     else:

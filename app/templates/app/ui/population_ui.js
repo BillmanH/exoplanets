@@ -118,13 +118,6 @@ var piovtCamera = function(name){
     camera.radius = 100 
 }
 
-
-function popOptionsWindow(pop){
-    dropAllControls()
-    faction_control_panel.height = (100 * pop.factions.length).toString() + "px"
-    faction_control = createControlBox(faction_control_panel)
-}
-
 system_icon.onPointerClickObservable.add(function () {
     dropAllControls()
     plz = pleaseWaiter(dashboard)
@@ -132,11 +125,6 @@ system_icon.onPointerClickObservable.add(function () {
     console.log(dest)
     window.location.href = dest;
 });
-
-
-
-
-
 
 exit_icon.onPointerClickObservable.add(function () {
     dropAllControls()

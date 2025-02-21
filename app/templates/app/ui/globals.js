@@ -158,11 +158,10 @@ var getObjectChildren = function(objid,type, callback){
         async: false,
         beforeSend: function () {
             console.log("loading child objects for: ", objid)
-            // dropAllControls()
         },
         success: function(data){
-            console.log(data)
-            {
+            console.log("got child objects for: ", objid)
+            if (callback){
                 callback(data);
             }
         },
