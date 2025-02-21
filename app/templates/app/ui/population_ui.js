@@ -123,7 +123,6 @@ function popOptionsWindow(pop){
     dropAllControls()
     faction_control_panel.height = (100 * pop.factions.length).toString() + "px"
     faction_control = createControlBox(faction_control_panel)
-
 }
 
 system_icon.onPointerClickObservable.add(function () {
