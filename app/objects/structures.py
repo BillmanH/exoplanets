@@ -108,6 +108,7 @@ def generate_new_resource(c,resource,location,value,resource_config):
 def process_structure(c,message):
     logging.info(f"EXOADMIN: process_structure, structure: {message['structure']['name']}: {message['structure']['objid']}")
     if message['structure'].get('faction_augments'):
+        logging.info(f"EXOADMIN: this structure augments a property of the faction")
         augemt_faction(c, message)
     if message['structure'].get('renews_location_resource'):
         logging.info(f"EXOADMIN: this structure renews the resources of the location")
@@ -133,16 +134,16 @@ def process_structure(c,message):
                 generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
 
     if message['structure'].get('consumes_location_resource'):
-         logging.info(f"EXOADMIN: this structure consumes the resources of the location")
+        logging.info(f"EXOADMIN: this structure consumes the resources of the location")
 
     if message['structure'].get('renews_faction_resource'):
         logging.info(f"EXOADMIN: this structure renews the resources of the faction")
 
     if message['structure'].get('each_population_augments_once'):
-         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction, but only one time")
+        logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction, but only one time")
 
     if message['structure'].get('each_population_augments_on_cycle'):
-         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction")
+        Slogging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction")
 
 
 def build_ship(c,message):
