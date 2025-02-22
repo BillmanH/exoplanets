@@ -35,13 +35,6 @@ class Building(baseobjects.Baseobject):
         return fund
     
 
-def count_factions(c):
-    faction_count_query = f"""
-    g.V().has('label','faction').count()
-    """
-    c.run_query(faction_count_query)
-    return c.res[0]
-
 def get_faction_pop_structures(c):
     """
     for each structure, returns the faction and pop that owns it. Result is a list of dicts.
@@ -106,6 +99,7 @@ def generate_new_resource(c,resource,location,value,resource_config):
     return resource
 
 def process_structure(c,message):
+    popobjid = message['pop']['objid']
     logging.info(f"EXOADMIN: process_structure, structure: {message['structure']['name']}: {message['structure']['objid']}")
     if message['structure'].get('faction_augments'):
         logging.info(f"EXOADMIN: this structure augments a property of the faction")
@@ -113,7 +107,6 @@ def process_structure(c,message):
     if message['structure'].get('renews_location_resource'):
         logging.info(f"EXOADMIN: this structure renews the resources of the location")
         resources_to_renew = yaml.safe_load(message['structure']['renews_location_resource'])
-        popobjid = message['pop']['objid']
         location_resources_query = f"g.V().has('objid','{popobjid}').out('inhabits').out('has').has('label','resource').valueMap()"
         location_query = f"g.V().has('objid','{popobjid}').out('inhabits').valueMap()"
         c.add_query(location_resources_query)
@@ -131,19 +124,34 @@ def process_structure(c,message):
                 augment_resources(c,resource, value)
             if not resource_exists:
                 print(f"EXOADMIN: resource {r} not found in location, and will be created")
-                generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
+                generate_new_resource(c,r,faction,resources_to_renew[r],resource_config)
 
     if message['structure'].get('consumes_location_resource'):
         logging.info(f"EXOADMIN: this structure consumes the resources of the location")
 
     if message['structure'].get('renews_faction_resource'):
         logging.info(f"EXOADMIN: this structure renews the resources of the faction")
+        resources_to_renew = yaml.safe_load(message['structure']['renews_faction_resource'])
+        faction_resources_query = f"g.V().has('objid','{popobjid}').out('isin').out('has').has('label','resource').valueMap()" 
+        c.add_query(faction_resources_query)
+        c.run_queries()
+        faction_resources = c.clean_nodes(c.res[faction_resources_query])
+        faction = message['faction']
+        for r in resources_to_renew.keys():
+            resource_exists = len([i for i in faction_resources if i['name']==r])>0
+            if resource_exists:
+                resource = [i for i in location_resources if i['name']==r][0]
+                value = resources_to_renew[r]
+                augment_resources(c,resource, value)
+            if not resource_exists:
+                print(f"EXOADMIN: resource {r} not found at faction, and will be created")
+                generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
 
     if message['structure'].get('each_population_augments_once'):
         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction, but only one time")
 
     if message['structure'].get('each_population_augments_on_cycle'):
-        Slogging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction")
+        logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction")
 
 
 def build_ship(c,message):
