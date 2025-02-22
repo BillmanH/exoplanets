@@ -110,6 +110,7 @@ def process_structure(c,message):
     if message['structure'].get('faction_augments'):
         augemt_faction(c, message)
     if message['structure'].get('renews_location_resource'):
+        logging.info(f"EXOADMIN: this structure renews the resources of the location")
         resources_to_renew = yaml.safe_load(message['structure']['renews_location_resource'])
         popobjid = message['pop']['objid']
         location_resources_query = f"g.V().has('objid','{popobjid}').out('inhabits').out('has').has('label','resource').valueMap()"
@@ -132,13 +133,17 @@ def process_structure(c,message):
                 generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
 
     if message['structure'].get('consumes_location_resource'):
-        pass
+         logging.info(f"EXOADMIN: this structure consumes the resources of the location")
+
     if message['structure'].get('renews_faction_resource'):
-        pass
+        logging.info(f"EXOADMIN: this structure renews the resources of the faction")
+
     if message['structure'].get('each_population_augments_once'):
-        pass
+         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction, but only one time")
+
     if message['structure'].get('each_population_augments_on_cycle'):
-        pass
+         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction")
+
 
 def build_ship(c,message):
     pass
