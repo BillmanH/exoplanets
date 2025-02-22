@@ -24,11 +24,16 @@ The `dev` branch has the more current workload. Unless I get too busy with other
 * Faction resources vs. location resources
     - location resources are shared to all people that live there, but faction resources have limited access. This will cause some populations to starve while others generate food. Some buildings create faction resources while diminishing location resources.
 
+## March
 * Planetary observation
     - Building the planetary observation building should enable you to scan the skies to find resources on celestial bodies. 
 
 * Ship Building
     - which is complicated, but hopefully I'll have this finished in Jan. 
+
+* Consumption of faction resources before local resources. 
+    - "eat grain stores before eating organic wildlife"
+    - species will need to cosume resources by resource class and not resource name
 
 ## Hopeful things to implement in 2025
 * Megastructures
