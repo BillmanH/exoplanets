@@ -87,8 +87,9 @@ def resolve_action_event(event: func.EventHubEvent):
 
     # individual structure updates
     if message.get('action')=="structure":
+        # structures may not have agents. Write the whole message to log. 
+        logging.info(f"EXOADMIN:       -------And with that processed STRUCTURE: {message} at UTU:{t}")
         structures.process_structure(c,message)
-        logging.info(f"EXOADMIN:       -------And with that processed STRUCTURE: {message['agent']} at UTU:{t}")
 
     # Catchall for messages that are not recognized.
     if (message.get('action') not in ["reproduce","consume","renew","update","structure"])&('job' not in message.keys()):

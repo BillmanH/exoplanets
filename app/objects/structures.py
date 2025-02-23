@@ -71,20 +71,21 @@ def augemt_faction(c, message):
             g.V().has('label','faction').has('objid','{faction["objid"]}').property('{item}', {new_value})
         """
         c.run_query(augment_query)
-        logging.info(augment_query)
     return augment  
 
 def augment_resources(c,resource,value):
-    if resource['volume'] < resource['max_volume']:
-        old_volume = resource['volume']
-        new_volume = resource['volume'] + value
+    old_volume = float(resource['volume'])
+    new_volume = float(resource['volume']) + float(value)
+    if new_volume < float(resource['max_volume']):
         if new_volume < 0:
             new_volume = 0
-        logging.info(f"EXOADMIN: resources {resource['name']}:{resource['objid']} changed by {value}, {old_volume}-> {new_volume}")
-        renew_query = f"g.V().has('objid','{resource['objid']}').property('volume','{new_volume}')"
-        logging.info(renew_query)
-        c.run_query(renew_query)
-    return resource
+    if new_volume >= float(resource['max_volume']):
+        new_volume = float(resource['max_volume'])
+
+    logging.info(f"EXOADMIN: resources {resource['name']}:{resource['objid']} changed by {value}, {old_volume}-> {new_volume}")
+    renew_query = f"g.V().has('objid','{resource['objid']}').property('volume','{new_volume}')"
+    logging.info(f"EXOADMIN: renew_query: {renew_query}")
+    c.run_query(renew_query)
 
 def generate_new_resource(c,resource,location,value,resource_config):
     new_resource = resource_config['resource']['resources'][resource]
