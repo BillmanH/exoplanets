@@ -32,6 +32,23 @@ function_version_string = "dec3.2"
 # func start --functions [a space separated list of functions]
 # func start --functions actionResolverTimer resolveActionEvents ututimer
 
+# quick debugging in app insights: 
+
+# union traces
+# | union exceptions
+# | where timestamp > ago(1d)
+# | where message contains "this structure renews the resources of the faction"
+# | order by timestamp desc
+# | limit 100 
+
+# union traces
+# | union exceptions
+# | where timestamp > ago(30d)
+# | where operation_Id == "ef9ad9f6b1831037fb33480fd5300c1c"
+# | order by timestamp asc
+# | limit 100 
+
+
 @app.function_name(name="resolveActionEvents")
 @app.event_hub_message_trigger(arg_name="event",
                                event_hub_name=EVENT_HUB_NAME,

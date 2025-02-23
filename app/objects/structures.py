@@ -125,7 +125,7 @@ def process_structure(c,message):
                 augment_resources(c,resource, value)
             if not resource_exists:
                 print(f"EXOADMIN: resource {r} not found in location, and will be created")
-                generate_new_resource(c,r,faction,resources_to_renew[r],resource_config)
+                generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
 
     if message['structure'].get('consumes_location_resource'):
         logging.info(f"EXOADMIN: this structure consumes the resources of the location")
@@ -133,10 +133,12 @@ def process_structure(c,message):
     if message['structure'].get('renews_faction_resource'):
         logging.info(f"EXOADMIN: this structure renews the resources of the faction")
         resources_to_renew = yaml.safe_load(message['structure']['renews_faction_resource'])
+        logging.info(f"EXOADMIN: resources_to_renew: {resources_to_renew}")
         faction_resources_query = f"g.V().has('objid','{popobjid}').out('isin').out('has').has('label','resource').valueMap()" 
         c.add_query(faction_resources_query)
         c.run_queries()
         faction_resources = c.clean_nodes(c.res[faction_resources_query])
+        logging.info(f"EXOADMIN: faction_resources: {faction_resources}")
         faction = message['faction']
         for r in resources_to_renew.keys():
             resource_exists = len([i for i in faction_resources if i['name']==r])>0
@@ -146,7 +148,7 @@ def process_structure(c,message):
                 augment_resources(c,resource, value)
             if not resource_exists:
                 print(f"EXOADMIN: resource {r} not found at faction, and will be created")
-                generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
+                generate_new_resource(c,r,faction,resources_to_renew[r],resource_config)
 
     if message['structure'].get('each_population_augments_once'):
         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction, but only one time")
