@@ -102,6 +102,7 @@ def generate_new_resource(c,resource,location,value,resource_config):
 def process_structure(c,message):
     popobjid = message['pop']['objid']
     logging.info(f"EXOADMIN: process_structure, structure: {message['structure']['name']}: {message['structure']['objid']}")
+    resource_config = configurations.get_resource_configurations()
     if message['structure'].get('faction_augments'):
         logging.info(f"EXOADMIN: this structure augments a property of the faction")
         augemt_faction(c, message)
@@ -115,7 +116,6 @@ def process_structure(c,message):
         c.run_queries()
         location_resources = c.clean_nodes(c.res[location_resources_query])
         location = c.clean_nodes(c.res[location_query])[0]
-        resource_config = configurations.get_resource_configurations()
         for r in resources_to_renew.keys():
             # check if the resource is in the location
             resource_exists = len([i for i in location_resources if i['name']==r])>0
@@ -124,7 +124,7 @@ def process_structure(c,message):
                 value = resources_to_renew[r]
                 augment_resources(c,resource, value)
             if not resource_exists:
-                print(f"EXOADMIN: resource {r} not found in location, and will be created")
+                print(f"EXOADMIN: resource [{r}] not found in location, and will be created")
                 generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
 
     if message['structure'].get('consumes_location_resource'):
@@ -147,7 +147,7 @@ def process_structure(c,message):
                 value = resources_to_renew[r]
                 augment_resources(c,resource, value)
             if not resource_exists:
-                print(f"EXOADMIN: resource {r} not found at faction, and will be created")
+                print(f"EXOADMIN: resource [{r}] not found at faction, and will be created")
                 generate_new_resource(c,r,faction,resources_to_renew[r],resource_config)
 
     if message['structure'].get('each_population_augments_once'):
