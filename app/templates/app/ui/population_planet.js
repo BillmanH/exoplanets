@@ -68,7 +68,7 @@ function createFaction(n){
             n.children = children
         })
         animateCameraTargetToObject(camera, camera_pan_speed,200, faction.getAbsolutePosition())
-        make_faction_ui(n.data)
+        make_faction_ui(n)
     }));
 
 }
