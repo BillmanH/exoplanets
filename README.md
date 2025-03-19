@@ -15,32 +15,30 @@ The game is now in **OPEN BETA** Meaning I've still got a long way to go, but th
 The **STAGING Enviroment** is [here](exodestiny-stage-guepbuc0bmcudnbh.westus2-01.azurewebsites.net) this should mirror the production site, but be one step ahead so that I can test things. You log into both tenants in the same way. 
 
 # What is left to do, and when to do it:
-The `dev` branch has the more current workload. Unless I get too busy with other things I'll pull those changes into `main` every month. 
+The `dev` branch has the more current workload. Unless I get too busy with other things I'll pull those changes into `main` every month (depending on how much time I have to spend on it). 
 
 
 ## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
 
-## February
-* Faction resources vs. location resources
-    - location resources are shared to all people that live there, but faction resources have limited access. This will cause some populations to starve while others generate food. Some buildings create faction resources while diminishing location resources.
-
 ## March
-* Planetary observation
-    - Building the planetary observation building should enable you to scan the skies to find resources on celestial bodies. 
-
-* Ship Building
-    - which is complicated, but hopefully I'll have this finished in Jan. 
-
 * Consumption of faction resources before local resources. 
     - "eat grain stores before eating organic wildlife"
-    - species will need to cosume resources by resource class and not resource name
+    - species will need to consume resources by resource class and not resource name
+* Actions taken when not enough of a resource is available. 
+    - Must be a generic process so that I can reuse it.
+
+## April
+* Planetary observation
+    - Building the planetary observation building should enable you to scan the skies to find resources on celestial bodies. 
+* Ship Building
+    - which is complicated, but hopefully I'll have this finished in Jan. 
 
 ## Hopeful things to implement in 2025
 * Megastructures
 * Technology development
 * More complicated race and generation process
 * More Biomes
-* More statistical reporting for later game managment
+* More statistical reporting for later game management
 
 
 
