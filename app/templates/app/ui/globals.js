@@ -136,7 +136,6 @@ function get_specific_node(nodes,objid){
 }
 
 var targAnimEnded = function(test) {
-    console.log("targAnimEnded", test);
 }
 
 var animateCameraTargetToObject = function(cam, speed, frameCount, pos) {
@@ -150,18 +149,21 @@ var animateCameraZoomToObject = function(cam, speed, frameCount, newRadius) {
 }
 
 
-var getObjectChildren = function(objid,type){
+var getObjectChildren = function(objid,type, callback){
     $.ajax({
         url: '/ajax/get-object-children',
         type: 'get',
         data: {objid: objid, type: type},
         dataType: 'json',
+        async: false,
         beforeSend: function () {
             console.log("loading child objects for: ", objid)
-            // dropAllControls()
         },
         success: function(data){
-            console.log(data)
+            console.log("got child objects for: ", objid)
+            if (callback){
+                callback(data);
+            }
         },
         error: function(xhr, status, error) {
             console.log(xhr.status + ': ' + xhr.statusText);

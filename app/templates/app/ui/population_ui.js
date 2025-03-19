@@ -21,11 +21,11 @@ pop_control_panel = {
 }
 
 faction_control_panel = {
-    title: "These are the populations within the faction",
+    title: "Faction:",
     top:20,
     left:80,
-    width:"400px",
-    height:"100px"
+    width:"600px",
+    height:"300px"
 }
 
 actions_control_panel = {
@@ -53,6 +53,18 @@ events_control_panel = {
     left:80,
     width:"600px",
     height:"100px"
+}
+
+const excluded_values = ["objid", "id", "userguid"]
+function excludeValues(d, excluded_values) {
+    y = {}
+    for (const key in d) {
+        console.log("key: ",key)
+        if (!excluded_values.includes(key)) {
+            y[key] = d[key];
+        }
+    }
+    return y
 }
 
 var system_icon = create_icon({name:'system_icon',image:icons.system,top:getIconTop(0),tooltiptext:"return to the system"})
@@ -118,14 +130,6 @@ var piovtCamera = function(name){
     camera.radius = 100 
 }
 
-
-function popOptionsWindow(pop){
-    dropAllControls()
-    faction_control_panel.height = (100 * pop.factions.length).toString() + "px"
-    faction_control = createControlBox(faction_control_panel)
-
-}
-
 system_icon.onPointerClickObservable.add(function () {
     dropAllControls()
     plz = pleaseWaiter(dashboard)
@@ -133,11 +137,6 @@ system_icon.onPointerClickObservable.add(function () {
     console.log(dest)
     window.location.href = dest;
 });
-
-
-
-
-
 
 exit_icon.onPointerClickObservable.add(function () {
     dropAllControls()
@@ -147,7 +146,15 @@ exit_icon.onPointerClickObservable.add(function () {
     window.location.href = dest;
 });
 
-function make_faction_ui(faction){
+function make_faction_ui(n){
     faction_control = createControlBox(faction_control_panel)
     console.log("Faction window opened")
+    for (let i = 0; i < n.children["resources"].length; i++) {
+        var resource = {}
+        resource.data = n.children["resources"][i]
+        console.log(resource)
+        resource.displayed_values = ["name","type","description", "volume"]
+        resource.iter = i+1
+        addTextBlockToBox(resource,faction_control)
+    }
 }
