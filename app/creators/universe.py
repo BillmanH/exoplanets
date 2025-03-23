@@ -11,6 +11,14 @@ def make_homeworld(orbiting, data):
     p = celestials.Planet(conf=terrestrial_config, orbiting=orbiting)
     if "planet_name" in data.keys():
         p.name = data["planet_name"]
+    homeworld_resources = conf["resource_config"]["resources"]
+    # only homeworld_resources that have the key discovered_on_scan
+    homeworld_resources = {
+        k: homeworld_resources[k]
+        for k in homeworld_resources.keys()
+        if "discovered_on_scan" in homeworld_resources[k].keys()
+    }
+    p.config['resources'] = homeworld_resources
     p.isSupportsLife = True
     p.isPopulated = True
     p.isHomeworld = True
