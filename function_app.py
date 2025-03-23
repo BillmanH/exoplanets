@@ -97,7 +97,7 @@ def process_action_event_message(message):
     if message.get('action')=="consume":
         for resource in message['agent']['consumes']:
             # starving messages are generated when pops don't have resources
-            outgoing_messages += consumption.reduce_location_resource(c,t,message,resource)
+            outgoing_messages += consumption.consume(c,t,message,resource)
         logging.info(f"EXOADMIN:       -------And with that processed CONSUMPTION: {message['agent']} at UTU:{t}")
 
     # resources that automatically renew. Like organic resources. 
