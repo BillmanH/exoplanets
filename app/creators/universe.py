@@ -16,7 +16,7 @@ def make_homeworld(orbiting, data):
     homeworld_resources = {
         k: homeworld_resources[k]
         for k in homeworld_resources.keys()
-        if "discovered_on_scan" in homeworld_resources[k].keys()
+        if "genesis" in homeworld_resources[k]["discovered_on_scan"]
     }
     p.config['resources'] = homeworld_resources
     p.isSupportsLife = True
