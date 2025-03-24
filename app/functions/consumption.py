@@ -58,7 +58,7 @@ def reduce_faction_resources(c,t,message, consuming):
     logging.info(f"EXOADMIN: objid:{objid} consumes  {quantity} {consuming}")
 
     faction_resource_query = f"""
-    g.V().has('objid','{objid}').out('isIn').out('has').has('objtype','resource').has('name','{consuming}').valuemap()
+    g.V().has('objid','{objid}').out('isIn').out('has').has('objtype','resource').has('type','{consuming}').valuemap()
     """
     logging.info(f"EXOADMIN: faction_resource_query query: {faction_resource_query}")
     c.run_query(faction_resource_query)
@@ -68,23 +68,18 @@ def reduce_faction_resources(c,t,message, consuming):
     resource = c.clean_nodes(c.res)[0]
     old_volume = float(resource['volume'])
     new_volume = old_volume
-    starving_messages = []
     if float(resource['volume']) > quantity:
         new_volume = float(resource['volume']) - quantity
         logging.info(f"EXOADMIN: resources {resource['objid']} consumed by {message['agent']['objid']}: reduced by {quantity}, {resource['volume']}-> {new_volume}")
+        patch_resource_query = f"g.V().has('objid','{resource['objid']}').property('volume',{new_volume})"
+        c.run_query(patch_resource_query)
+        logging.info(f"EXOADMIN: patch_resource_query: {patch_resource_query}")
     if float(resource['volume']) <= quantity:
-        new_volume = 0
-        logging.info(f"EXOADMIN: location resources({resource['objid']}) is reduced to {new_volume}. {message['agent']['objid']} will starve.")
-        starving_messages = starve_population(c,t,message)
-    patch_resource_query = f"""
-        g.V().has('objid','{objid}')
-            .out('isIn')
-            .out('has').has('label','resource')
-            .has('name','{message['agent']['consumes'][0]}')
-            .property('volume',{new_volume})
-    """
-    logging.info(f"EXOADMIN: patch_resource_query: {patch_resource_query}")
-    c.run_query(patch_resource_query)
+        logging.info(f"EXOADMIN: location resources({resource['objid']}) is reduced to zero. {message['agent']['objid']} will starve.")
+        starve_population(c,t,message)
+        drop_resource_query = f"g.V().has('objid','{resource['objid']}').drop()"
+        c.run_query(drop_resource_query)
+        logging.info(f"EXOADMIN: resource {resource['objid']} has been dropped.")
 
 def reduce_location_resource(c,t,message, consuming):
     """
@@ -116,14 +111,8 @@ def reduce_location_resource(c,t,message, consuming):
         if float(resource['volume']) <= quantity:
             new_volume = 0
             logging.info(f"EXOADMIN: location resources({resource['objid']}) is reduced to {new_volume}. {message['agent']['objid']} will starve.")
-            starving_messages = starve_population(c,t,message)
-    patch_resource_query = f"""
-        g.V().has('objid','{objid}')
-            .out('inhabits')
-            .out('has').has('label','resource')
-            .has('name','{message['agent']['consumes'][0]}')
-            .property('volume',{new_volume})
-    """
+            starve_population(c,t,message)
+    patch_resource_query = f"g.V().has('objid','{resource['objid']}').property('volume',{new_volume})"
     logging.info(f"EXOADMIN: patch_resource_query: {patch_resource_query}")
     c.run_query(patch_resource_query)
     logging.info(f"EXOADMIN: agent: {objid} consumed resource: {resource['objid']}. {old_volume}->{new_volume}")
@@ -138,8 +127,7 @@ def consume(c,t,message, consuming):
     else:
         # reduce the resource at the location
         logging.info(f"EXOADMIN: faction does not have the resource. Local reasources will be consumed.")
-        starving_messages = reduce_location_resource(c,t,message, consuming)
-    return starving_messages
+        reduce_location_resource(c,t,message, consuming)
 
 
 
