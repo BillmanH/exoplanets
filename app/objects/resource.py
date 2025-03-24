@@ -16,13 +16,14 @@ class Resource:
             self.replenish_rate = None
     def get_data(self):
         fund = {
-            "name": self.name,
             "objid": self.objid,
             "label": self.label,
             "volume": self.volume,
-            "max_volume": self.max_volume,
-            "description": self.description
+            "max_volume": self.max_volume
         }
+        for key, value in self.conf.items():
+            if key not in fund:
+                fund[key] = value
         if (self.replenish_rate):
             fund['replenish_rate'] = self.replenish_rate
         return fund
