@@ -323,9 +323,16 @@ class CosmosdbClient():
         self.run_query(get_object_query)
         o = self.clean_nodes(self.res)[0]
         og_value = o[property]
+        # if the value is a float, convert it to a string.
+        if type(og_value) != float:
+            og_value = float(og_value)
+        if type(x) != float:
+            x = float(x)
         new_value = og_value + x
         if new_value < 0:
             new_value = 0
+        # round new_value to 2 decimal places
+        new_value = np.round_(new_value,4)
         patch_query = f"""
             g.V().has('objid','{objid}').property('{property}','{new_value}')
         """ 
