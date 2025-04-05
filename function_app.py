@@ -27,10 +27,27 @@ EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.environ.get('EVENT_HUB_FULLY_QUALIFIED_
 EVENT_HUB_CONNECTION_STR = os.environ.get('EVENT_HUB_CONNECTION_STR')
 EVENT_HUB_NAME = os.environ.get('EVENT_HUB_NAME')
 #For troubleshooting, making sure the function is the one I think it is. 
-function_version_string = "dec3.2"
+function_version_string = "Mar 8"
 
 # func start --functions [a space separated list of functions]
 # func start --functions actionResolverTimer resolveActionEvents ututimer
+
+# quick debugging in app insights: 
+
+# union traces
+# | union exceptions
+# | where timestamp > ago(1d)
+# | where message contains "this structure renews the resources of the faction"
+# | order by timestamp desc
+# | limit 100 
+
+# union traces
+# | union exceptions
+# | where timestamp > ago(30d)
+# | where operation_Id == "ef9ad9f6b1831037fb33480fd5300c1c"
+# | order by timestamp asc
+# | limit 100 
+
 
 @app.function_name(name="resolveActionEvents")
 @app.event_hub_message_trigger(arg_name="event",
@@ -41,6 +58,14 @@ def resolve_action_event(event: func.EventHubEvent):
     eh_producer = EventHubProducerClient.from_connection_string(EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
     credential = DefaultAzureCredential() 
     message = ast.literal_eval(event.get_body().decode('utf-8'))
+    # proccessing messages is removed so that I can test it locally. 
+    outgoing_messages = process_action_event_message(message)
+    if len(outgoing_messages)>0:
+        logging.info(f"EXOADMIN: produced {len(outgoing_messages)} outgoing messages")
+        jobs.send_to_eventhub(outgoing_messages, eh_producer)
+        logging.info(f"EXOADMIN: additional messages sent to EH. ")
+
+def process_action_event_message(message):
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()
@@ -72,7 +97,9 @@ def resolve_action_event(event: func.EventHubEvent):
     if message.get('action')=="consume":
         for resource in message['agent']['consumes']:
             # starving messages are generated when pops don't have resources
-            outgoing_messages += consumption.reduce_location_resource(c,t,message,resource)
+            consumption_messages = consumption.consume(c,t,message,resource)
+            if consumption_messages:
+                outgoing_messages += consumption_messages
         logging.info(f"EXOADMIN:       -------And with that processed CONSUMPTION: {message['agent']} at UTU:{t}")
 
     # resources that automatically renew. Like organic resources. 
@@ -87,17 +114,14 @@ def resolve_action_event(event: func.EventHubEvent):
 
     # individual structure updates
     if message.get('action')=="structure":
+        # structures may not have agents. Write the whole message to log. 
+        logging.info(f"EXOADMIN:       -------And with that processed STRUCTURE: {message} at UTU:{t}")
         structures.process_structure(c,message)
-        logging.info(f"EXOADMIN:       -------And with that processed STRUCTURE: {message['faction']} at UTU:{t}")
 
     # Catchall for messages that are not recognized.
     if (message.get('action') not in ["reproduce","consume","renew","update","structure"])&('job' not in message.keys()):
         logging.info(f"EXOADMIN:       ------- UNKNOWN ACTION NOT PROCESSED: {message['agent']} at UTU:{t}")
-
-    if len(outgoing_messages)>0:
-        logging.info(f"EXOADMIN: produced {len(outgoing_messages)} outgoing messages")
-        jobs.send_to_eventhub(outgoing_messages, eh_producer)
-        logging.info(f"EXOADMIN: additional messages sent to EH. ")
+    return outgoing_messages
 
 # Generates messages to be resolved asynchronously.
 @app.function_name(name="actionResolverTimer")
@@ -110,21 +134,25 @@ def action_resolver(mytimer: func.TimerRequest) -> None:
     credential = DefaultAzureCredential() 
     utc_timestamp = datetime.datetime.now(datetime.timezone.utc).replace(
         tzinfo=datetime.timezone.utc).isoformat()
+    messages = process_action_messages()
+    jobs.send_to_eventhub(messages, eh_producer)
+    logging.info('EXOADMIN: Messages Sent Successfully')
+
+def process_action_messages():
     c = cmdb_graph.CosmosdbClient()
     pop_growth_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/populations.yaml")))
     # Establish the time
     t = time.Time(c)
     t.get_current_UTU()
-
     # Different kinds of EventHub Messages:
     growth_messasges = growth.calculate_growth(c,t,pop_growth_params)
     job_messages = jobs.resolve_jobs(c,t,time.Action)
     consumption_messages = consumption.calculate_consumption(c,t)
     renewal_messages = growth.calculate_renewal(c,t,pop_growth_params)
-    messages = growth_messasges + job_messages + consumption_messages + renewal_messages
-    jobs.send_to_eventhub(messages, eh_producer)
     logging.info(f'EXOADMIN: messages: job:{len(job_messages)}, growth:{len(growth_messasges)}, consumption:{len(consumption_messages)}, renewal:{len(renewal_messages)} - at: {t}')
-    logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {t}')
+    messages = growth_messasges + job_messages + consumption_messages + renewal_messages
+    logging.info(f'EXOADMIN: Total Messages generated: {len(messages)} at: {t}')
+    return messages
 
 # Faction and building Updates
 @app.function_name(name="factionBuildingTimer")
@@ -137,16 +165,20 @@ def faction_building_resolver(mytimer: func.TimerRequest) -> None:
     credential = DefaultAzureCredential()
     utc_timestamp = datetime.datetime.now(datetime.timezone.utc).replace(
         tzinfo=datetime.timezone.utc).isoformat()
+    messages = get_structure_messages()
+    jobs.send_to_eventhub(messages, eh_producer)
+    logging.info('EXOADMIN: Messages Sent Successfully')
+    
+def get_structure_messages():
     c = cmdb_graph.CosmosdbClient()
     # Establish the time
     t = time.Time(c)
     t.get_current_UTU()
     t.building_params = yaml.safe_load(open(os.path.join(os.getenv("ABS_PATH"),"app/configurations/buildings.yaml")))
     # getting the list of structures that can take actions:
-    faction_res = structures.get_faction_pop_structures(c)
-    messages = faction_res
-    jobs.send_to_eventhub(messages, eh_producer)
-    logging.info(f'EXOADMIN: Total Messages sent to EH: {len(messages)} at: {t}')
+    messages = structures.get_faction_pop_structures(c)
+    logging.info(f'EXOADMIN: Total Messages generated: {len(messages)} at: {t}')
+    return messages
 
 # UTU is the universal time unit
 @app.function_name(name="cleanup")
@@ -167,8 +199,9 @@ def utu_timer(mytimer: func.TimerRequest) -> None:
     logging.info(f'EXOADMIN: <ututimer> deploy version: {function_version_string}')
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
-    if mytimer.past_due:
-        logging.info('EXOADMIN: The timer is past due!')
+    increment_timer()
+
+def increment_timer():
     c = cmdb_graph.CosmosdbClient()
     t = time.Time(c)
     t.get_current_UTU()

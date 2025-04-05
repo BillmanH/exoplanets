@@ -35,13 +35,6 @@ class Building(baseobjects.Baseobject):
         return fund
     
 
-def count_factions(c):
-    faction_count_query = f"""
-    g.V().has('label','faction').count()
-    """
-    c.run_query(faction_count_query)
-    return c.res[0]
-
 def get_faction_pop_structures(c):
     """
     for each structure, returns the faction and pop that owns it. Result is a list of dicts.
@@ -77,41 +70,50 @@ def augemt_faction(c, message):
         augment_query = f"""
             g.V().has('label','faction').has('objid','{faction["objid"]}').property('{item}', {new_value})
         """
+        logging.info(f"EXOADMIN: augment_query: {augment_query}")
         c.run_query(augment_query)
-        logging.info(augment_query)
     return augment  
 
 def augment_resources(c,resource,value):
-    if resource['volume'] < resource['max_volume']:
-        old_volume = resource['volume']
-        new_volume = resource['volume'] + value
+    old_volume = float(resource['volume'])
+    new_volume = float(resource['volume']) + float(value)
+    if new_volume < float(resource['max_volume']):
         if new_volume < 0:
             new_volume = 0
-        logging.info(f"EXOADMIN: resources {resource['name']}:{resource['objid']} changed by {value}, {old_volume}-> {new_volume}")
-        renew_query = f"g.V().has('objid','{resource['objid']}').property('volume','{new_volume}')"
-        logging.info(renew_query)
-        c.run_query(renew_query)
-    return resource
+    if new_volume >= float(resource['max_volume']):
+        new_volume = float(resource['max_volume'])
+    
+    logging.info(f"EXOADMIN: resources {resource['name']}:{resource['objid']} changed by {value}, {old_volume}-> {new_volume}")
+    renew_query = f"g.V().has('objid','{resource['objid']}').property('volume','{new_volume}')"
+    logging.info(f"EXOADMIN: renew_query: {renew_query}")
+    c.run_query(renew_query)
 
 def generate_new_resource(c,resource,location,value,resource_config):
     new_resource = resource_config['resource']['resources'][resource]
+    new_resource['label'] = 'resource'
     new_resource['objid'] = maths.uuid()
+    if 'max_volume' not in new_resource.keys():
+        new_resource['max_volume'] = 100
     if value < 0:
         value = 0
     new_resource['volume'] = value
-    data = {'nodes:': [new_resource], 'edges': [{'from': location['objid'], 'to': new_resource['objid'], 'label': 'has'}]}
+    data = {'nodes': [new_resource], 'edges': [{'node1': location['objid'], 'node2': new_resource['objid'], 'label': 'has'}]}
     logging.info(f"EXOADMIN: resources {new_resource['name']}:{new_resource['objid']} with volume: {value}")
-    logging.info(data)
-    logging.info(new_resource)
+    logging.info(f"EXOADMIN: Data Created : {data}")
+    c.upload_data(location['userguid'], data)
+    logging.info(f"EXOADMIN: New nodes : {len(data['nodes'])}. New edges : {len(data['edges'])}")
     return resource
 
 def process_structure(c,message):
+    popobjid = message['pop']['objid']
     logging.info(f"EXOADMIN: process_structure, structure: {message['structure']['name']}: {message['structure']['objid']}")
+    resource_config = configurations.get_resource_configurations()
     if message['structure'].get('faction_augments'):
+        logging.info(f"EXOADMIN: this structure augments a property of the faction")
         augemt_faction(c, message)
     if message['structure'].get('renews_location_resource'):
+        logging.info(f"EXOADMIN: this structure renews the resources of the location")
         resources_to_renew = yaml.safe_load(message['structure']['renews_location_resource'])
-        popobjid = message['pop']['objid']
         location_resources_query = f"g.V().has('objid','{popobjid}').out('inhabits').out('has').has('label','resource').valueMap()"
         location_query = f"g.V().has('objid','{popobjid}').out('inhabits').valueMap()"
         c.add_query(location_resources_query)
@@ -119,7 +121,7 @@ def process_structure(c,message):
         c.run_queries()
         location_resources = c.clean_nodes(c.res[location_resources_query])
         location = c.clean_nodes(c.res[location_query])[0]
-        resource_config = configurations.get_resource_configurations()
+        logging.info(f"EXOADMIN: location_resources:{location_resources}")
         for r in resources_to_renew.keys():
             # check if the resource is in the location
             resource_exists = len([i for i in location_resources if i['name']==r])>0
@@ -128,17 +130,39 @@ def process_structure(c,message):
                 value = resources_to_renew[r]
                 augment_resources(c,resource, value)
             if not resource_exists:
-                print(f"EXOADMIN: resource {r} not found in location, and will be created")
+                print(f"EXOADMIN: resource [{r}] not found in location, and will be created")
                 generate_new_resource(c,r,location,resources_to_renew[r],resource_config)
 
     if message['structure'].get('consumes_location_resource'):
-        pass
+        logging.info(f"EXOADMIN: this structure consumes the resources of the location")
+
     if message['structure'].get('renews_faction_resource'):
-        pass
+        logging.info(f"EXOADMIN: this structure renews the resources of the faction")
+        resources_to_renew = yaml.safe_load(message['structure']['renews_faction_resource'])
+        faction = message['faction']
+        logging.info(f"EXOADMIN: resources_to_renew: {resources_to_renew}. For faction: {faction}")
+        faction_resources_query = f"g.V().has('objid', '{faction['objid']}').out('has').valueMap()"
+        c.add_query(faction_resources_query)
+        c.run_queries()
+        faction_resources = c.clean_nodes(c.res[faction_resources_query])
+        logging.info(f"EXOADMIN: faction_resources: {faction_resources}")
+        faction = message['faction']
+        for r in resources_to_renew.keys():
+            resource_exists = len([i for i in faction_resources if i['name']==r])>0
+            if resource_exists:
+                resource = [i for i in faction_resources if i['name']==r][0]
+                value = resources_to_renew[r]
+                augment_resources(c,resource, value)
+            if not resource_exists:
+                print(f"EXOADMIN: resource [{r}] not found at faction, and will be created")
+                generate_new_resource(c,r,faction,resources_to_renew[r],resource_config)
+
     if message['structure'].get('each_population_augments_once'):
-        pass
+        logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction, but only one time")
+
     if message['structure'].get('each_population_augments_on_cycle'):
-        pass
+        logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction")
+
 
 def build_ship(c,message):
     pass
