@@ -46,32 +46,8 @@ planet_types:
     distance_min: 0.39
     distance_max: 1.52
     has_atmosphere: true
-    resources:
-      vegitation:
-        name: "organics"
-        type: "vegitable"
-        description: "bilogical material that can be consumed by pops"
-        mean: 1000
-        std: 100
-        replenish_rate: 10
-      minerals_common:
-        name: "common minerals"
-        type: "mineral"
-        description: "Iron and other common material used in constructuion of infrastructure" 
-        mean: 100
-        std: 10
-      minerals_rare:
-        name: "rare minerals"
-        type: "mineral"
-        description: "lithium, silver and other rare minerals used in infrastructure and technology"
-        mean: 50
-        std: 10
-      water:
-        name: "water"
-        type: "mineral"
-        description: "H2O ready to be consumed, either liquid or in ice format"
-        mean: 10000
-        std: 1000
+
+
     
 
 

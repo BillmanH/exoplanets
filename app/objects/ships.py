@@ -1,4 +1,5 @@
 import yaml
+import logging
 
 from ..objects import baseobjects
 from ..functions import configurations
@@ -50,6 +51,7 @@ class Ship(baseobjects.Baseobject):
         self.type = design['type']
         self.design = Design(design)
         self.components = [Component(component_configurations[c]) for c in design['components']]
+        self.userguid = design['userguid']
         self.stats = {}
         self.build_stats()
     
@@ -68,8 +70,10 @@ class Ship(baseobjects.Baseobject):
         data = {'nodes':[], 'edges':[]}
         data['nodes'].append(self.design.get_data())
         for i in self.components:
-            data['nodes'].append(i.get_data())
-            data['edges'].append({'source':self.objid, 'target':i.objid, 'label':'has'})
+            component = i.get_data()
+            component['userguid'] = self.userguid
+            data['nodes'].append(component)
+            data['edges'].append({'node1':self.objid, 'node2':i.objid, 'label':'has'})
         data['nodes'].append(self.get_data())
         return data
 
@@ -78,41 +82,62 @@ class Ship(baseobjects.Baseobject):
         for k,v in self.stats.items():
             fund[k] = v
         fund['type'] = self.type
-        return fund
+        fund['userguid'] = self.userguid
+        return fund 
 
 
 # Actions resolving the construction of ships. 
 def place_ship_in_shipyard(c,ship, message):
     objid = message['agent']['objid']
-    faction_shipyard = (
-        f"g.V().has('objid','{objid}').in('isIn').has('label','pop').out('owns').has('type','shipyard').valueMap()"
+    faction_shipyard_query = (
+        f"g.V().has('objid','{objid}').out('isIn').in('isIn').has('label','pop').out('owns').has('type','shipyard').valueMap()"
     )
-    c.run_query(faction_shipyard)
+    c.run_query(faction_shipyard_query)
     if len(c.res) == 0:
-        print(f"EXOADMIN: No shipyard found for faction {objid}")
+        logging.info(f"EXOADMIN: No shipyard found for faction {objid}")
         return None
     shipyard = c.clean_nodes(c.res)[0]
     edge = {
-        "node1": ship.get_data['objid'],
+        "node1": ship.get_data()['objid'],
         "node2": shipyard['objid'],
         "label": "isIn"
     }
+    logging.info(f"EXOADMIN: placing ship: {ship.objid} in shipyard: {shipyard['objid']}")
     return edge
 
 def expense_ship(c, ship, message):
+    logging.info(f"EXOADMIN: expensing a ship: not implemented")
     # TODO: Implement ship costs
     pass
 
+def get_design(message):
+    to_build = yaml.safe_load(message['action']['to_build'])
+    logging.info(f"EXOADMIN: possible ship designs: {list(ship_configurations['designs'].keys())}")
+    logging.info(f"EXOADMIN: ship design to build: {to_build['type']}")
+    design = ship_configurations['designs'][to_build['type']]
+    design['userguid'] = message['agent']['userguid']
+    return design
 
-def fabricate(c, message):
-    design = yaml.safe_load(ship_configurations[message['action']['to_build']])
+def fabricate(c, message, commit=True):
+    logging.info(f"EXOADMIN: fabricating a ship")
+    design = get_design(message)
     data = {"nodes": [], "edges": []}
     if design['label'] == "ship":
-        ship = Ship(design, ship_configurations)
+        ship = Ship(design,ship_configurations['components'])
+        logging.info(f"EXOADMIN: created a ship: {ship}")
         data = ship.get_upload_data()
         ship_in_yard = place_ship_in_shipyard(c, ship, message)
         if ship_in_yard != None:
-            data.edges.append(ship_in_yard)
-    expense_ship(c, ship, message)
-    c.upload_data(message['agent']['userguid'], data)
-    print(f"EXOADMIN: fabrication complete for ship: {ship.get_data()}")
+            data['edges'].append(ship_in_yard)
+        expense_ship(c, ship, message)
+    if len(data['nodes']) > 0:
+        if commit:
+            c.upload_data(message['agent']['userguid'], data)
+        logging.info(f"EXOADMIN: data created: {len(data['nodes'])} nodes and {len(data['edges'])} edges")
+        logging.info(f"EXOADMIN: fabrication complete for ship: {ship.get_data()}")
+    else:
+        logging.info(f"EXOADMIN: No data created created")
+    if commit == False:
+        return data
+
+

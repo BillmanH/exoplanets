@@ -70,6 +70,7 @@ def augemt_faction(c, message):
         augment_query = f"""
             g.V().has('label','faction').has('objid','{faction["objid"]}').property('{item}', {new_value})
         """
+        logging.info(f"EXOADMIN: augment_query: {augment_query}")
         c.run_query(augment_query)
     return augment  
 

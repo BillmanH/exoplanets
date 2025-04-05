@@ -1,3 +1,6 @@
+# This file contains the configuration for the resources in the game.
+# Planet resources created during the genesis process are stored in the `planet.yaml`. 
+
 explanation:
   name: name of the resource
   type: type of the resource
@@ -6,6 +9,7 @@ explanation:
   mean: used in genesis, the mean value of the resource when generated
   std: used in genesis, the standard deviation of the resource when generated
   contained_by: the type of object that contains the resources
+  discovered_on_scan: the type of object or process that can discover the resource
 
 resources:
   natural_ecosystem:
@@ -18,7 +22,8 @@ resources:
     mean: 1000
     std: 100
     replenish_rate: 10
-
+    discovered_on_scan:
+      - "genesis"
 
   grains:
     name: "grains"
@@ -27,6 +32,9 @@ resources:
     contained_by: 
       - "ship"
       - "faction"
+    discovered_on_scan:
+      - "never"
+
 
   minerals_common:
     contained_by: 
@@ -40,6 +48,8 @@ resources:
     description: "Iron and other common material used in constructuion of infrastructure" 
     mean: 100
     std: 10
+    discovered_on_scan:
+      - "genesis"
 
 
   minerals_rare:
@@ -54,6 +64,8 @@ resources:
     description: "lithium, silver and other rare minerals used in infrastructure and technology"
     mean: 50
     std: 10
+    discovered_on_scan:
+      - "genesis"
 
   fossil_fuel:
     contained_by: 
@@ -66,6 +78,8 @@ resources:
     description: "coal, oil and other fossil fuels used in energy production"
     mean: 100
     std: 10
+    discovered_on_scan:
+      - "prospector"
 
   water:
     contained_by: 
@@ -78,6 +92,8 @@ resources:
     description: "H2O ready to be consumed"
     mean: 10000
     std: 1000
+    discovered_on_scan:
+      - "genesis"
 
   ice:
     contained_by: 
@@ -91,3 +107,5 @@ resources:
     description: "H2O in solid form, requires proccesing to be consumed by pops"
     mean: 100
     std: 10
+    discovered_on_scan:
+      - "genesis"
