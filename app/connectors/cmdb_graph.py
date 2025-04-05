@@ -332,7 +332,7 @@ class CosmosdbClient():
         if new_value < 0:
             new_value = 0
         # round new_value to 2 decimal places
-        new_value = np.round(new_value,4)
+        new_value = float(np.round(new_value,4))
         patch_query = f"""
             g.V().has('objid','{objid}').property('{property}','{new_value}')
         """ 
