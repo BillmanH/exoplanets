@@ -31,7 +31,13 @@ The `dev` branch has the more current workload. Unless I get too busy with other
 * Planetary observation
     - Building the planetary observation building should enable you to scan the skies to find resources on celestial bodies. 
 * Ship Building
-    - which is complicated, but hopefully I'll have this finished in Jan. 
+    - Should be able to build ships and store ships in a shipyard
+
+## May
+* Launching ships - being able to launch ships into space
+* Tracking space voyages and destinations
+* Being able to view worlds that have been 'observed'
+
 
 ## Hopeful things to implement in 2025
 * Megastructures
