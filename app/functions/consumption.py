@@ -100,6 +100,7 @@ def reduce_location_resource(c,t,message, consuming):
 
     if len(c.res) == 0:
         logging.info(f"EXOADMIN: {objid} was not able to locate the resource {consuming}")
+        starve_population(c,t,message)
     else:
         resource = c.clean_nodes(c.res)[0]
         old_volume = float(resource['volume'])
@@ -112,10 +113,10 @@ def reduce_location_resource(c,t,message, consuming):
             new_volume = 0
             logging.info(f"EXOADMIN: location resources({resource['objid']}) is reduced to {new_volume}. {message['agent']['objid']} will starve.")
             starve_population(c,t,message)
-    patch_resource_query = f"g.V().has('objid','{resource['objid']}').property('volume',{new_volume})"
-    logging.info(f"EXOADMIN: patch_resource_query: {patch_resource_query}")
-    c.run_query(patch_resource_query)
-    logging.info(f"EXOADMIN: agent: {objid} consumed resource: {resource['objid']}. {old_volume}->{new_volume}")
+        patch_resource_query = f"g.V().has('objid','{resource['objid']}').property('volume',{new_volume})"
+        logging.info(f"EXOADMIN: patch_resource_query: {patch_resource_query}")
+        c.run_query(patch_resource_query)
+        logging.info(f"EXOADMIN: agent: {objid} consumed resource: {resource['objid']}. {old_volume}->{new_volume}")
 
 def consume(c,t,message, consuming):
     # check that the faction has the resouce to consume
@@ -134,14 +135,16 @@ def consume(c,t,message, consuming):
 def starve_population(c, t, message):
     starve_value = 0.05
     popid = message['agent']['objid']
+    logging.info(f"EXOADMIN: agnet starving {message['agent']}")
     logging.info(f"EXOADMIN: starve_population for {popid}: {starve_value}")
-    starved_pop = c.delta_property(popid,'health',.05)
-    if starved_pop['health'] < 0:
-        pop_dies(c,t,message['agent'])
+    starved_pop = c.delta_property(popid,'health',-.05)
+    logging.info(f"EXOADMIN: starved_pop: {starved_pop}")
+    if starved_pop['health'] <= 0:
+        pop_dies(c,t,starved_pop)
 
 
-def pop_dies(c,t,pop):
-    c.run_query(f"g.V().has('objid','{pop['objid']}').drop()")
-    logging.info(f"EXOADMIN: {pop['name']}:{pop['objid']} has died of starvation.")
+def pop_dies(c,t,starved_pop):
+    c.run_query(f"g.V().has('objid','{starved_pop['objid']}').drop()")
+    logging.info(f"EXOADMIN: {starved_pop['name']}:{starved_pop['objid']} has died of starvation.")
 
 

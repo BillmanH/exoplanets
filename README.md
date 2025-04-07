@@ -20,13 +20,6 @@ The `dev` branch has the more current workload. Unless I get too busy with other
 
 ## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
 
-## March
-* Consumption of faction resources before local resources. 
-    - "eat grain stores before eating organic wildlife"
-    - species will need to consume resources by resource class and not resource name
-* Actions taken when not enough of a resource is available. 
-    - Must be a generic process so that I can reuse it.
-
 ## April
 * Planetary observation
     - Building the planetary observation building should enable you to scan the skies to find resources on celestial bodies. 
@@ -39,12 +32,7 @@ The `dev` branch has the more current workload. Unless I get too busy with other
 * Being able to view worlds that have been 'observed'
 
 
-## Hopeful things to implement in 2025
-* Megastructures
-* Technology development
-* More complicated race and generation process
-* More Biomes
-* More statistical reporting for later game management
+
 
 
 
