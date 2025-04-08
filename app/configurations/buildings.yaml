@@ -177,6 +177,8 @@ buildings:
     # TODO: Arbitrarily lowering for dev purposes. Should be higher in release. 
     requires_attr: 
       industry: .1
+    has_buttons:
+      - view_storage
     effort: 5
 
 
