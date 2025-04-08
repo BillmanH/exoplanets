@@ -205,15 +205,28 @@ def build_ship(c, message):
     setIdleResp = c.run_query(setIdle)
     return job
 
+def get_stored_objects(c,message):
+    """
+    get the stored objects in the shipyard
+    """
+    query = f"g.V().has('objid','{message['agent']['objid']}').out('isIn').in('isIn').out('owns').values('type')"
+    c.run_query(query)
+    return c.clean_nodes(c.res)
 
 def building_take_action(request):
     c = CosmosdbClient()
     message = ast.literal_eval(request.GET['values'])
     check = structures.validate_building_can_take_action(c,message)
     if check['result']:
-          if message['action'] == 'build_ship':
-              job = build_ship(c,message)
-              return JsonResponse({'result':'valid: Building can take action',
-                                   'job':job})
+            if message['action'] == 'build_ship':
+                #TODO: validate that building can build a ship
+                job = build_ship(c,message)
+                return JsonResponse({'result':'valid: Building can take action',
+                                    'job':job})
+            if message['action'] == 'view_storage':
+                stored_objects = get_stored_objects(c,message)
+                return JsonResponse({'result':'valid',
+                                    'stored_objects':stored_objects})
     else:
         return JsonResponse(check)
+    
