@@ -30,6 +30,7 @@ class Building(baseobjects.Baseobject):
     def get_data(self):
         fund = self.get_fundimentals()
         fund['ownedBy'] = self.generated_by['objid']
+        fund['userguid'] = self.generated_by['userguid']
         for k in self.conf.keys():
             fund[k] = self.conf[k]
         return fund
