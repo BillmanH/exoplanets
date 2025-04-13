@@ -121,6 +121,7 @@ def get_design(message):
 def fabricate(c, message, commit=True):
     logging.info(f"EXOADMIN: fabricating a ship")
     design = get_design(message)
+    design['userguid'] = message['agent']['userguid']
     data = {"nodes": [], "edges": []}
     if design['label'] == "ship":
         ship = Ship(design,ship_configurations['components'])

@@ -184,20 +184,21 @@ def remove_building(request):
 def build_ship(c, message):
     # probe is the default ship design. It is always available. 
     if message['agent']['current_design'] == 'probe':
-        design_config = ships.ship_configurations['designs']['probe']
-        ship = ships.Ship(design_config, ships.ship_configurations['components'])
+        design = ships.ship_configurations['designs']['probe']
+        design['userguid'] = message['agent']['userguid']
+        ship = ships.Ship(design, ships.ship_configurations['components'])
     utu = t.Time(c)
     utu.get_current_UTU()
     building_owner = get_building_owner(c,message['agent'])
     action = {
         "type": "fabricating",
         "label": "action",
-        "comment": f"{building_owner['name']}:{building_owner['objid']} building a {design_config['name'].replace('_',' ')}",
+        "comment": f"{building_owner['name']}:{building_owner['objid']} building a {design['name'].replace('_',' ')}",
         "effort":ship.stats['build_effort'],
-        "building":design_config['type'],
+        "building":design['type'],
         "faction_costs": ship.stats['build_effort'],
         "created_at": utu.params['currentTime'],
-        "to_build":design_config
+        "to_build":design
     }
     setIdle = f"g.V().has('objid','{building_owner['objid']}').property('isIdle','false')"
     job = create_job(building_owner,action,utu)
