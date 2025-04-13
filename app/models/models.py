@@ -129,7 +129,7 @@ def get_local_population(objid):
         .path()
             .by(valueMap('objid','name'))
             .by(valueMap('objid','name'))
-            .by(valueMap('objid','type','name','changes','faction_augments','renews_faction_resource','renews_location_resource','planet_requirements','description','render_type','has_buttons','current_design'))
+            .by(valueMap('objid','type','name','changes','faction_augments','renews_faction_resource','renews_location_resource','planet_requirements','description','render_type','has_buttons','current_design','userguid'))
     """)
     location_query = f"g.V().has('objid','{objid}').valueMap()"
 
