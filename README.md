@@ -22,7 +22,7 @@ The `dev` branch has the more current workload. Unless I get too busy with other
 
 ## April
 * Planetary observation
-    - Building the planetary observation building should enable you to scan the skies to find resources on celestial bodies. 
+    - Building the planetary observation building should enable you to scan the skies to find new celestial bodies. 
 * Ship Building
     - Should be able to build ships and store ships in a shipyard
 
