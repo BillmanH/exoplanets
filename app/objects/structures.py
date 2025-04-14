@@ -68,11 +68,7 @@ def augemt_faction(c, message):
         if new_value < 0:
             new_value = 0
         logging.info(f"EXOADMIN: {item} has changed from {old_value} to {new_value}")
-        augment_query = f"""
-            g.V().has('label','faction').has('objid','{faction["objid"]}').property('{item}', {new_value})
-        """
-        logging.info(f"EXOADMIN: augment_query: {augment_query}")
-        c.run_query(augment_query)
+        c.patch_property(faction['objid'], item, new_value)
     return augment  
 
 def augment_resources(c,resource,value):
@@ -85,9 +81,8 @@ def augment_resources(c,resource,value):
         new_volume = float(resource['max_volume'])
     
     logging.info(f"EXOADMIN: resources {resource['name']}:{resource['objid']} changed by {value}, {old_volume}-> {new_volume}")
-    renew_query = f"g.V().has('objid','{resource['objid']}').property('volume','{new_volume}')"
-    logging.info(f"EXOADMIN: renew_query: {renew_query}")
-    c.run_query(renew_query)
+    c.patch_property(resource['objid'], 'volume', new_volume)
+
 
 def generate_new_resource(c,resource,location,value,resource_config):
     new_resource = resource_config['resource']['resources'][resource]
