@@ -226,7 +226,7 @@ def building_take_action(request):
                                     'job':job})
             if message['action'] == 'view_storage':
                 stored_objects = get_stored_objects(c,message)
-                return JsonResponse({'result':'valid',
+                return JsonResponse({'result':'valid: Building has inventory',
                                     'stored_objects':stored_objects})
     else:
         return JsonResponse(check)

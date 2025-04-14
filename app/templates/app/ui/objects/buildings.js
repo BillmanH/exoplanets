@@ -167,3 +167,32 @@ function building_controls(box){
 
     }
 }
+
+function show_inventory(building,inventory){
+    console.log("show_inventory: ", building, inventory)
+    dropAllControls()
+    generic_control = {
+        name:"inventory_window",
+        title: "Inventory: " + building['name'],
+        top:20,
+        left:80,
+        width:"400px",
+        height:"400px"
+    }
+    current_building_control = createControlBox(generic_control)
+    for (let i = 0; i < inventory.length; i++) {
+        f = {}
+        f.data = inventory[i]
+        f.gui = {buttonColor:"white",
+            depth:1}
+        f.iter = i+1
+        f.gui.text_button = true
+        f.gui.displayed_values = ["objtype","type","name","speed"]
+        f.gui.clickButton = function(f) {
+            console.log(f.data.type, " button was pushed")
+            objectDetails(f.data)
+            //TODO: take action on inventory item
+        };
+        addButtonToBox(f,current_building_control)
+    }
+}
