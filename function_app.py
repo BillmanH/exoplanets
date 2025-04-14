@@ -115,8 +115,11 @@ def process_action_event_message(message):
     # individual structure updates
     if message.get('action')=="structure":
         # structures may not have agents. Write the whole message to log. 
+        structure_messages = structures.process_structure(c,message)
+        if structure_messages:
+            outgoing_messages += structure_messages
         logging.info(f"EXOADMIN:       -------And with that processed STRUCTURE: {message} at UTU:{t}")
-        structures.process_structure(c,message)
+
 
     # Catchall for messages that are not recognized.
     if (message.get('action') not in ["reproduce","consume","renew","update","structure"])&('job' not in message.keys()):
