@@ -210,12 +210,12 @@ def get_stored_objects(c,message):
     """
     get the stored objects in the shipyard
     """
-    query = f"g.V().has('objid','{message['agent']['objid']}').out('isIn').in('isIn').out('owns').values('type')"
+    query = f"g.V().has('objid','{message['agent']['objid']}').in('isIn').valuemap()"
     c.run_query(query)
     return c.clean_nodes(c.res)
 
 def building_take_action(request):
-    c = CosmosdbClient()
+    c =  CosmosdbClient()
     message = ast.literal_eval(request.GET['values'])
     check = structures.validate_building_can_take_action(c,message)
     if check['result']:
