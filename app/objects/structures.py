@@ -35,6 +35,14 @@ class Building(baseobjects.Baseobject):
             fund[k] = self.conf[k]
         return fund
     
+def get_structure_system(c,structure):
+    structure_system_query = f"""
+    g.V().has('objid','{structure['objid']}').in('owns').out('inhabits').out('isIn').valuemap()
+    """
+    logging.info(f"EXOADMIN: structure_system_query: {structure_system_query}")
+    c.run_query(structure_system_query)
+    system_res = c.clean_nodes(c.res)[0]
+    return system_res
 
 def get_faction_pop_structures(c):
     """
@@ -191,6 +199,7 @@ def process_structure(c,message):
         for item in on_cycle:
             discovery_message = process_cycle_effect(c,message,item)
             outgoing_messages.append(discovery_message)
+            
     if message['structure'].get('each_population_augments_once'):
         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction, but only one time")
 

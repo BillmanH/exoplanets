@@ -2,13 +2,16 @@ import yaml
 import os
 
 ### The goal here is to load as little information as needed. So yaml files are broken into functions. 
+### This way, we can load only what we need at the time.
 abs_path = os.getenv("ABS_PATH",".")
 
 def get_configurations():
+    celestials_config = yaml.safe_load(open(os.path.join(abs_path,"app/configurations/celestials.yaml")))
     configuration = {
-        'planet_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/planet.yaml")))["planet_types"],
-        'moon_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/moon.yaml")))["moon_types"],
-        'star_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/star.yaml"))),
+        'planet_config':celestials_config["planets"],
+        'moon_config':celestials_config["moons"],
+        'star_config':celestials_config["stars"],
+        'asteroid_config':celestials_config["asteroids"],
         'resource_config':yaml.safe_load(open(os.path.join(abs_path,"app/configurations/resources.yaml")))
     }
     configuration = add_atmosphere_configurations(configuration)
