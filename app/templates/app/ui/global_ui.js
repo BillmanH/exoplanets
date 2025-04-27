@@ -63,6 +63,7 @@ function dropAllControls(){
     dropControlIfExists("object_actions_window")
     dropControlIfExists("object_building_window")
     dropControlIfExists("inventory_window")
+    dropControlIfExists("ship_target_window")
 }
 
 // update the text in the upper right corner

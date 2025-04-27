@@ -208,7 +208,7 @@ function launch_ship_window(building, ship){
         width:(window.innerWidth - 10) + "px",
         height:(window.innerWidth - 10) + "px"
     }
-    current_building_control = createControlBox(generic_control)
+    ship_launch_control = createControlBox(generic_control)
     // Create a text input field
     var targetsearch = new BABYLON.GUI.InputText("targetsearch");
     targetsearch.width = "200px";
@@ -243,8 +243,9 @@ function launch_ship_window(building, ship){
 
     searchButton.onPointerClickObservable.add(function() {
         console.log("Search button clicked, input value:", targetsearch.text);
+        search_for_target(targetsearch.text, ship, ship_launch_control)
     });
 
-    current_building_control.addControl(targetsearch);
-    current_building_control.addControl(searchButton);
+    ship_launch_control.addControl(targetsearch);
+    ship_launch_control.addControl(searchButton);
 }

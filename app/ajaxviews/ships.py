@@ -1,6 +1,6 @@
 from app.connectors.cmdb_graph import CosmosdbClient
 from django.http import JsonResponse
-
+import yaml
 
 def search_for_targets(request):
     """
@@ -9,9 +9,9 @@ def search_for_targets(request):
     c = CosmosdbClient()
     response = {}
     request = dict(request.GET)
-    ship = request.get('ship', '')
+    ship = yaml.safe_load(request.get('ship', '{}')[0])
     objid = ship.get('objid', '')
-    text = request.get('text', '')
+    text = request.get('text', '')[0]
     where_is_the_ship_query = f"g.V().has('objid','{objid}').outE('isIn')"
     c.run_query(where_is_the_ship_query)
     shipIsIn = c.clean_nodes(c.res)[0]
@@ -30,6 +30,6 @@ def search_for_targets(request):
             """
         )
         c.run_query(system_query)
-        system = c.clean_nodes(c.res)
+        response["possible_targets"] = c.clean_nodes(c.res)
 
-    return JsonResponse(system)
+    return JsonResponse(response)
