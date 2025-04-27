@@ -181,3 +181,4 @@ notebooks/People/syllables.p
 # Scrap notebooks that I don't need versioned.
 notebooks/scrap.ipynb
 
+.github/copilot-instructions.md
