@@ -52,5 +52,6 @@ urlpatterns = [
     path("structures/new", structures.new_structure, name="new_structure"),
 
     # Ship Functions
-    path("ajax/search-for-target", ships.search_for_targets, name="search_for_targets")
+    path("ajax/search-for-target", ships.search_for_targets, name="search_for_targets"),
+    path("ajax/calculate-prelaunch", ships.calculate_prelaunch, name="calculate_prelaunch")
 ]
