@@ -191,8 +191,60 @@ function show_inventory(building,inventory){
         f.gui.clickButton = function(f) {
             console.log(f.data.type, " button was pushed")
             objectDetails(f.data)
-            //TODO: take action on inventory item
+            launch_ship_window(building, f.data)
         };
         addButtonToBox(f,current_building_control)
     }
+}
+
+function launch_ship_window(building, ship){
+    console.log("select ship target: ", building, ship)
+    dropAllControls()
+    generic_control = {
+        name:"ship_target_window",
+        title: "Select ship target:",
+        top:10,
+        left:10,
+        width:(window.innerWidth - 10) + "px",
+        height:(window.innerWidth - 10) + "px"
+    }
+    current_building_control = createControlBox(generic_control)
+    // Create a text input field
+    var targetsearch = new BABYLON.GUI.InputText("targetsearch");
+    targetsearch.width = "200px";
+    targetsearch.height = "40px";
+    targetsearch.maxWidth = "200px";
+    targetsearch.text = "Enter height";
+    targetsearch.color = "white";
+    targetsearch.background = "black";
+    targetsearch.fontSize = 24;
+    targetsearch.left = 60;
+    targetsearch.top = 20;
+    targetsearch.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT
+    targetsearch.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    
+    // TODO: on enter key, search for the target
+    targetsearch.onPointerDownObservable.add(function() {
+        targetsearch.text = "";
+    });
+
+
+    // Create a button next to the targetsearch textbox
+    var searchButton = BABYLON.GUI.Button.CreateSimpleButton("searchButton", "Search");
+    searchButton.width = "100px";
+    searchButton.height = "40px";
+    searchButton.color = "white";
+    searchButton.background = "gray";
+    searchButton.fontSize = 24;
+    searchButton.left = 270; // Position it next to the textbox
+    searchButton.top = 20;
+    searchButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    searchButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+
+    searchButton.onPointerClickObservable.add(function() {
+        console.log("Search button clicked, input value:", targetsearch.text);
+    });
+
+    current_building_control.addControl(targetsearch);
+    current_building_control.addControl(searchButton);
 }
