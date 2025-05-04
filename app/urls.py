@@ -7,7 +7,8 @@ from .ajaxviews import (planet,
                         genesis, 
                         actions, 
                         resources, 
-                        events)
+                        events,
+                        ships)
 
 urlpatterns = [
     path("", core.index, name="index"),
@@ -48,5 +49,9 @@ urlpatterns = [
     path("ajax/overview", overview.get_overview, name="overview"),
     path("ajax/newsfeed", overview.get_newsfeed, name="newsfeed"),
 
-    path("structures/new", structures.new_structure, name="new_structure")
+    path("structures/new", structures.new_structure, name="new_structure"),
+
+    # Ship Functions
+    path("ajax/search-for-target", ships.search_for_targets, name="search_for_targets"),
+    path("ajax/calculate-prelaunch", ships.calculate_prelaunch, name="calculate_prelaunch")
 ]

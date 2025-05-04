@@ -16,7 +16,9 @@ import yaml
 from app.objects import time
 from app.objects import structures
 from app.objects import ships
+from app.objects import celestials
 from app.connectors import cmdb_graph
+from app.functions import configurations
 from app.functions import jobs
 from app.functions import growth
 from app.functions import consumption
@@ -115,12 +117,21 @@ def process_action_event_message(message):
     # individual structure updates
     if message.get('action')=="structure":
         # structures may not have agents. Write the whole message to log. 
+        structure_messages = structures.process_structure(c,message)
+        if structure_messages:
+            outgoing_messages += structure_messages
         logging.info(f"EXOADMIN:       -------And with that processed STRUCTURE: {message} at UTU:{t}")
-        structures.process_structure(c,message)
+
+    if message.get('action')=="discovery":
+        system = structures.get_structure_system(c,message['agent'])
+        logging.info(f"EXOADMIN: discovery has been made in system: {system}")
+        message['system'] = system
+        celestials.discover_new_body(c,message, configurations , logging)
+        logging.info(f"EXOADMIN:       -------And with that processed DISCOVERY: {message} at UTU:{t}")
 
     # Catchall for messages that are not recognized.
-    if (message.get('action') not in ["reproduce","consume","renew","update","structure"])&('job' not in message.keys()):
-        logging.info(f"EXOADMIN:       ------- UNKNOWN ACTION NOT PROCESSED: {message['agent']} at UTU:{t}")
+    if (message.get('action') not in ["reproduce","consume","renew","update","structure","discovery"])&('job' not in message.keys()):
+        logging.info(f"EXOADMIN:       ------- UNKNOWN ACTION NOT PROCESSED: {message} at UTU:{t}")
     return outgoing_messages
 
 # Generates messages to be resolved asynchronously.

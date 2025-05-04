@@ -62,7 +62,7 @@ def check_pop_growth(c, parent_pop):
         """
     c.run_query(query_location_pop)
     location_pop = c.res
-    over_pop = location_pop[0] > pop_cap[2]
+    over_pop = float(location_pop[0]) > float(pop_cap[2])
     if not over_pop:
         return True
     else:

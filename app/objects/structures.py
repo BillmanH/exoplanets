@@ -30,10 +30,19 @@ class Building(baseobjects.Baseobject):
     def get_data(self):
         fund = self.get_fundimentals()
         fund['ownedBy'] = self.generated_by['objid']
+        fund['userguid'] = self.generated_by['userguid']
         for k in self.conf.keys():
             fund[k] = self.conf[k]
         return fund
     
+def get_structure_system(c,structure):
+    structure_system_query = f"""
+    g.V().has('objid','{structure['objid']}').in('owns').out('inhabits').out('isIn').valuemap()
+    """
+    logging.info(f"EXOADMIN: structure_system_query: {structure_system_query}")
+    c.run_query(structure_system_query)
+    system_res = c.clean_nodes(c.res)[0]
+    return system_res
 
 def get_faction_pop_structures(c):
     """
@@ -67,11 +76,7 @@ def augemt_faction(c, message):
         if new_value < 0:
             new_value = 0
         logging.info(f"EXOADMIN: {item} has changed from {old_value} to {new_value}")
-        augment_query = f"""
-            g.V().has('label','faction').has('objid','{faction["objid"]}').property('{item}', {new_value})
-        """
-        logging.info(f"EXOADMIN: augment_query: {augment_query}")
-        c.run_query(augment_query)
+        c.patch_property(faction['objid'], item, new_value)
     return augment  
 
 def augment_resources(c,resource,value):
@@ -84,9 +89,8 @@ def augment_resources(c,resource,value):
         new_volume = float(resource['max_volume'])
     
     logging.info(f"EXOADMIN: resources {resource['name']}:{resource['objid']} changed by {value}, {old_volume}-> {new_volume}")
-    renew_query = f"g.V().has('objid','{resource['objid']}').property('volume','{new_volume}')"
-    logging.info(f"EXOADMIN: renew_query: {renew_query}")
-    c.run_query(renew_query)
+    c.patch_property(resource['objid'], 'volume', new_volume)
+
 
 def generate_new_resource(c,resource,location,value,resource_config):
     new_resource = resource_config['resource']['resources'][resource]
@@ -104,7 +108,39 @@ def generate_new_resource(c,resource,location,value,resource_config):
     logging.info(f"EXOADMIN: New nodes : {len(data['nodes'])}. New edges : {len(data['edges'])}")
     return resource
 
+def process_cycle_effect(c,message,item):
+    logging.info(f"EXOADMIN: processing cycle effect: {item}")
+    bld_objid = message['structure']['objid']
+    new_messages = []
+    if item=='scan_system':
+        query_counts_of_objects = f"""
+            g.V().has('objid','{bld_objid}').in('owns').out('inhabits').out('isIn').in().groupCount().by('objtype')
+            """
+        c.run_query(query_counts_of_objects)
+        counts_of_objects = c.res[0]
+        logging.info(f"EXOADMIN: query_counts_of_objects: {counts_of_objects}")
+        discovered_object = 'star'
+        for item in counts_of_objects.keys():
+            if item == 'planet':
+                pass
+            probability = 1/counts_of_objects[item]
+            roll = maths.np.random.uniform(0,1)
+            if roll < probability:
+                logging.info(f"EXOADMIN: found a {item} with probability {probability} and roll {roll}")
+                discovered_object = item
+                break
+        discovery_message = {
+            'action': 'discovery',
+            'agent': message['structure'],
+            'object': item
+        }
+        return discovery_message
+           
+                # add the object to the faction
+
+
 def process_structure(c,message):
+    outgoing_messages = []
     popobjid = message['pop']['objid']
     logging.info(f"EXOADMIN: process_structure, structure: {message['structure']['name']}: {message['structure']['objid']}")
     resource_config = configurations.get_resource_configurations()
@@ -157,12 +193,20 @@ def process_structure(c,message):
                 print(f"EXOADMIN: resource [{r}] not found at faction, and will be created")
                 generate_new_resource(c,r,faction,resources_to_renew[r],resource_config)
 
+    if message['structure'].get('on_cycle'):
+        on_cycle = yaml.safe_load(message['structure']['on_cycle'])
+        logging.info(f"EXOADMIN: this structure has a cyclical effect: {on_cycle}")
+        for item in on_cycle:
+            discovery_message = process_cycle_effect(c,message,item)
+            outgoing_messages.append(discovery_message)
+            
     if message['structure'].get('each_population_augments_once'):
         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction, but only one time")
 
     if message['structure'].get('each_population_augments_on_cycle'):
         logging.info(f"EXOADMIN: this structure augments an attribute of each population in this faction")
 
+    return outgoing_messages
 
 def build_ship(c,message):
     pass
