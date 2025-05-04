@@ -20,16 +20,21 @@ The `dev` branch has the more current workload. Unless I get too busy with other
 
 ## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
 
-## April
-* Planetary observation
-    - Building the planetary observation building should enable you to scan the skies to find new celestial bodies. 
-* Ship Building
-    - Should be able to build ships and store ships in a shipyard.
+[What's been completed recently is in the Pull Requests](https://github.com/BillmanH/exoplanets/pulls?q=is%3Apr+is%3Aclosed+base%3Amain)
 
 ## May
 * Launching ships - being able to launch ships into space.
+  * The full path of being able to take a ship from inventory, fill it with fuel, map a trajectory and create a `job` with a resoultion date will finish that component. 
 * Tracking space voyages and destinations.
+  * You'll need to see the voyage in the `system` view. I'm hoping for a triange, with a trajectory arc that shows where the spaceship is. 
 * Being able to view worlds that have been 'observed'.
+  * Currently the only ship is the probe, when it reaches it's destiny it should be able to `.scan_body()` on that planet to reveil what kinds of resources the planet has. 
+
+## June
+* The colony ship
+  * takes a cargo of one `pop` and launches it towards a destination.
+  * this will create a new faction, where the pop `isIn` that faction. 
+  * once it gets there the pop will starve because there is no food.
 
 
 
