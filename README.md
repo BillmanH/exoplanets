@@ -24,11 +24,11 @@ The `dev` branch has the more current workload. Unless I get too busy with other
 
 ## May
 * Launching ships - being able to launch ships into space.
-  * The full path of being able to take a ship from inventory, fill it with fuel, map a trajectory and create a `job` with a resoultion date will finish that component. 
+  * The full path of being able to take a ship from inventory, fill it with fuel, map a trajectory and create a `job` with a resolution date will finish that component. 
 * Tracking space voyages and destinations.
-  * You'll need to see the voyage in the `system` view. I'm hoping for a triange, with a trajectory arc that shows where the spaceship is. 
+  * You'll need to see the voyage in the `system` view. I'm hoping for a triangle, with a trajectory arc that shows where the spaceship is. 
 * Being able to view worlds that have been 'observed'.
-  * Currently the only ship is the probe, when it reaches it's destiny it should be able to `.scan_body()` on that planet to reveil what kinds of resources the planet has. 
+  * Currently the only ship is the probe, when it reaches it's destiny it should be able to `.scan_body()` on that planet to reveal what kinds of resources the planet has. 
 
 ## June
 * The colony ship
