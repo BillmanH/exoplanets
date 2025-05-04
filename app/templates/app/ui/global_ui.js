@@ -62,6 +62,8 @@ function dropAllControls(){
     dropControlIfExists("object_menu_line")
     dropControlIfExists("object_actions_window")
     dropControlIfExists("object_building_window")
+    dropControlIfExists("inventory_window")
+    dropControlIfExists("ship_target_window")
 }
 
 // update the text in the upper right corner
@@ -151,7 +153,7 @@ var addTextBlockToBox = function(n,box){
 
     var resourceText = new BABYLON.GUI.TextBlock("resource_text"+n.iter.toString())
         resourceText.textHorizontalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_LEFT;
-        resourceText.textVerticalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        resourceText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         resourceText.paddingTop = 5
         resourceText.paddingLeft = 5 
         resourceText.fontSize = 12;    

@@ -17,13 +17,15 @@ function building_take_action(building, action){
             console.log("results: ",data)
             if (data['result'] == false){
                 building['status'] = "unable to build: " + data['message'] 
+            } else if (data['result'] == 'valid: Building has inventory'){
+                show_inventory(building,data['stored_objects'])
             } else {
                 building['status'] = "building: " + data['job']
             }
             objectDetails(building)
         },
         error: function(data){
-            cnsl(data)
+            console.log(data)
         }
     });
 }

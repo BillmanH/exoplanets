@@ -184,20 +184,21 @@ def remove_building(request):
 def build_ship(c, message):
     # probe is the default ship design. It is always available. 
     if message['agent']['current_design'] == 'probe':
-        design_config = ships.ship_configurations['designs']['probe']
-        ship = ships.Ship(design_config, ships.ship_configurations['components'])
+        design = ships.ship_configurations['designs']['probe']
+        design['userguid'] = message['agent']['userguid']
+        ship = ships.Ship(design, ships.ship_configurations['components'])
     utu = t.Time(c)
     utu.get_current_UTU()
     building_owner = get_building_owner(c,message['agent'])
     action = {
         "type": "fabricating",
         "label": "action",
-        "comment": f"{building_owner['name']}:{building_owner['objid']} building a {design_config['name'].replace('_',' ')}",
+        "comment": f"{building_owner['name']}:{building_owner['objid']} building a {design['name'].replace('_',' ')}",
         "effort":ship.stats['build_effort'],
-        "building":design_config['type'],
+        "building":design['type'],
         "faction_costs": ship.stats['build_effort'],
         "created_at": utu.params['currentTime'],
-        "to_build":design_config
+        "to_build":design
     }
     setIdle = f"g.V().has('objid','{building_owner['objid']}').property('isIdle','false')"
     job = create_job(building_owner,action,utu)
@@ -205,15 +206,28 @@ def build_ship(c, message):
     setIdleResp = c.run_query(setIdle)
     return job
 
+def get_stored_objects(c,message):
+    """
+    get the stored objects in the shipyard
+    """
+    query = f"g.V().has('objid','{message['agent']['objid']}').in('isIn').valuemap()"
+    c.run_query(query)
+    return c.clean_nodes(c.res)
 
 def building_take_action(request):
-    c = CosmosdbClient()
+    c =  CosmosdbClient()
     message = ast.literal_eval(request.GET['values'])
     check = structures.validate_building_can_take_action(c,message)
     if check['result']:
-          if message['action'] == 'build_ship':
-              job = build_ship(c,message)
-              return JsonResponse({'result':'valid: Building can take action',
-                                   'job':job})
+            if message['action'] == 'build_ship':
+                #TODO: validate that building can build a ship
+                job = build_ship(c,message)
+                return JsonResponse({'result':'valid: Building can take action',
+                                    'job':job})
+            if message['action'] == 'view_storage':
+                stored_objects = get_stored_objects(c,message)
+                return JsonResponse({'result':'valid: Building has inventory',
+                                    'stored_objects':stored_objects})
     else:
         return JsonResponse(check)
+    

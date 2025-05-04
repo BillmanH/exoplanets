@@ -191,3 +191,50 @@ class Moon(Body):
         fund["isSupportsLife"] = self.isSupportsLife
         fund["isPopulated"] = self.isPopulated
         return fund
+
+class Asteroid(Body):
+    def __init__(self,conf):
+        self.set_defaults()
+        self.make_name(2, 1)
+        self.label = "asteroid"
+        t = self.choose_type(conf)
+        self.config = t
+        self.type = t['name']
+        self.description = t['description']
+        self.orbiting = None
+        self.orbitsDistance = maths.np.round(maths.np.random.uniform(t["distance_min"], t["distance_max"]),3)
+        self.mass = abs(maths.np.random.normal(t["mass_mean"], t["mass_std"]))
+        self.radius = abs(maths.np.random.normal(t["radius_mean"], t["radius_std"]))
+        self.isSupportsLife = False
+        self.isPopulated = False
+        self.system = None
+
+    def get_data(self):
+        fund = self.get_fundimentals()
+        fund["orbitsDistance"] = self.orbitsDistance
+        fund["mass"] = self.mass
+        fund["radius"] = self.radius
+        fund["isPopulated"] = self.isPopulated
+        fund["description"] = self.description
+        return fund
+
+
+def discover_new_body(c, message, configs,logging):
+    #TODO: All new discoveries are asteroids for now. Make some variety. 
+    conf = configs.get_configurations()
+    if message['object'] in ["star", "planet"]:
+        new_body = Asteroid(conf['asteroid_config'])
+    if message['object'] == "moon":
+        new_body = Asteroid(conf['asteroid_config'])
+    else:
+        new_body = Asteroid(conf['asteroid_config'])
+    logging.info(f"EXOADMIN: Creating {message['object']}: {new_body}")
+    nodes = [new_body.get_data()]
+    edges = [{'node1': new_body.get_data()['objid'],
+                'node2':message['system']['objid'],
+                'label':'isIn'}]
+    data = {'nodes':nodes,'edges':edges}
+    c.upload_data(message['system']['userguid'],data)
+    logging.info(f"EXOADMIN: Uploading data: {data}")
+
+

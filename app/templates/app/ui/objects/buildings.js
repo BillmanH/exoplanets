@@ -167,3 +167,85 @@ function building_controls(box){
 
     }
 }
+
+function show_inventory(building,inventory){
+    console.log("show_inventory: ", building, inventory)
+    dropAllControls()
+    generic_control = {
+        name:"inventory_window",
+        title: "Inventory: " + building['name'],
+        top:20,
+        left:80,
+        width:"400px",
+        height:"400px"
+    }
+    current_building_control = createControlBox(generic_control)
+    for (let i = 0; i < inventory.length; i++) {
+        f = {}
+        f.data = inventory[i]
+        f.gui = {buttonColor:"white",
+            depth:1}
+        f.iter = i+1
+        f.gui.text_button = true
+        f.gui.displayed_values = ["objtype","type","name","speed"]
+        f.gui.clickButton = function(f) {
+            console.log(f.data.type, " button was pushed")
+            objectDetails(f.data)
+            launch_ship_window(building, f.data)
+        };
+        addButtonToBox(f,current_building_control)
+    }
+}
+
+function launch_ship_window(building, ship){
+    console.log("select ship target: ", building, ship)
+    dropAllControls()
+    generic_control = {
+        name:"ship_target_window",
+        title: "Select ship target:",
+        top:10,
+        left:10,
+        width:(window.innerWidth - 10) + "px",
+        height:(window.innerWidth - 10) + "px"
+    }
+    ship_launch_control = createControlBox(generic_control)
+    // Create a text input field
+    var targetsearch = new BABYLON.GUI.InputText("targetsearch");
+    targetsearch.width = "200px";
+    targetsearch.height = "40px";
+    targetsearch.maxWidth = "200px";
+    targetsearch.text = "Enter height";
+    targetsearch.color = "white";
+    targetsearch.background = "black";
+    targetsearch.fontSize = 24;
+    targetsearch.left = 60;
+    targetsearch.top = 20;
+    targetsearch.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT
+    targetsearch.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    
+    // TODO: on enter key, search for the target
+    targetsearch.onPointerDownObservable.add(function() {
+        targetsearch.text = "";
+    });
+
+
+    // Create a button next to the targetsearch textbox
+    var searchButton = BABYLON.GUI.Button.CreateSimpleButton("searchButton", "Search");
+    searchButton.width = "100px";
+    searchButton.height = "40px";
+    searchButton.color = "white";
+    searchButton.background = "gray";
+    searchButton.fontSize = 24;
+    searchButton.left = 270; // Position it next to the textbox
+    searchButton.top = 20;
+    searchButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    searchButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+
+    searchButton.onPointerClickObservable.add(function() {
+        console.log("Search button clicked, input value:", targetsearch.text);
+        search_for_target(targetsearch.text, ship, ship_launch_control)
+    });
+
+    ship_launch_control.addControl(targetsearch);
+    ship_launch_control.addControl(searchButton);
+}

@@ -118,6 +118,8 @@ buildings:
       wealth: -10
     requires_attr: 
       industry: .7
+    has_buttons:
+      - study_object
     on_cycle:
       - scan_system
     effort: 5
@@ -177,6 +179,8 @@ buildings:
     # TODO: Arbitrarily lowering for dev purposes. Should be higher in release. 
     requires_attr: 
       industry: .1
+    has_buttons:
+      - view_storage
     effort: 5
 
 
