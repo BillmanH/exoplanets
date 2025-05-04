@@ -1,4 +1,5 @@
 from app.connectors.cmdb_graph import CosmosdbClient
+from app.functions import maths
 from django.http import JsonResponse
 import yaml
 
@@ -85,6 +86,40 @@ def calculate_prelaunch(request):
         # TODO: Arbitrarily dividing the distance by 100 to get a more reasonable number. I should fix this in genesis so that moons orbitdistance is calculated by AU.
         total_distance = total_distance / 100
  
+    travel_time = maths.np.ceil(total_distance/ ship['speed'])
+
+    response["travel_time"] = travel_time
     response['path'] = {'origin':origin_location['objid'],'target':target['objid']}
     response["total_distance"] = round(total_distance, 3)
     return JsonResponse(response)
+
+def create_ship_job(ship,action,utu):
+    time_to_complete = int(utu.params['currentTime']) + int(action['effort'])
+    action['created_at'] = utu.params['currentTime']
+    
+    uid = str(maths.uuid())
+    action['objid'] = uid
+    popToAction = {"node1":ship['objid'],
+                    "node2":action['objid'],
+                    "label":"takingAction",
+                    "name":"traveling",
+                    'weight':time_to_complete ,
+                    "actionType":action['type'],
+                    "created_at": utu.params['currentTime'],
+                    "status":"pending"}
+    # TODO: The edge could be irrelivatnt given how events are processed. Investigate and delete if not needed.
+    data = {"nodes": [action], "edges": [popToAction]}
+    return data
+
+def create_ship_trajectory_job(request):
+        action = {
+        "type": "construction",
+        "label": "action",
+        "comment": f"constructing a {building['name'].replace('_',' ')}",
+        "effort":building['effort'],
+        "applies_to":agent['objtype'],
+        "owned_by":building['owned_by'],
+        "building":building['type'],
+        "created_at": utu.params['currentTime'],
+        "to_build":building
+    }

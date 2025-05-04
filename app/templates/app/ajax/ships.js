@@ -25,16 +25,39 @@ function search_for_target(text, ship, ship_launch_control){
                 f.gui.text_button = true
                 f.gui.displayed_values = ["objtype","name","orbitsDistance"]
                 f.gui.clickButton = function(f ) {
-                    console.log(f.data.type, " button was pushed")
+                    console.log(f.data.name, " button was pushed")
                     objectDetails(f.data)
-                    launch_ship_window(ship, f.data)
+                    calculate_prelaunch(ship, f.data)
                 };
                 addButtonToBox(f,ship_launch_control)
             }        
-        },
+        },      
         error: function(data){
             console.log(data)
         }
     });
     
+}
+
+function calculate_prelaunch(ship, target){
+    var d = {"ship":JSON.stringify(ship), "target":JSON.stringify(target)}
+    console.log("ship: ",ship, " target: ", target)
+    $.ajax({
+        url: '/ajax/calculate-prelaunch',
+        type: 'get',
+        data: d,
+        dataType: 'json',
+        beforeSend: function () {
+            plz = pleaseWaiter(dashboard)
+        },
+        success: function(data){
+            plz = dashboard.getControlByName("loadingpleasewait")
+            plz.dispose()
+            console.log("prelaunch data: ",data)
+            objectDetails(ship)
+        },      
+        error: function(data){
+            console.log(data)
+        }
+    });
 }
