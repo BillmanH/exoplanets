@@ -1,0 +1,32 @@
+[project]
+name = "exoplanets"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "azure-eventhub>=5.15.0",
+    "azure-eventhub-checkpointstoreblob-aio>=1.1.4",
+    "azure-functions>=1.23.0",
+    "azure-identity>=1.23.1",
+    "cryptography>=45.0.5",
+    "django>=5.2.4",
+    "django-storages[azure]>=1.14.6",
+    "gremlinpython==3.5.1",
+    "ms-identity-web>=0.0.4",
+    "msal>=1.33.0",
+    "numpy>=2.3.2",
+    "openai>=1.98.0",
+    "pandas>=2.3.1",
+    "pip>=25.2",
+    "psycopg2-binary>=2.9.10",
+    "pyopenssl>=25.1.0",
+    "pyyaml>=6.0.2",
+    "requests>=2.32.4",
+    "scikit-learn>=1.7.1",
+]
+
+[dependency-groups]
+dev = [
+    "django-debug-toolbar>=6.0.0",
+]

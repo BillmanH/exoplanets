@@ -7,7 +7,7 @@ scikit-learn
 pyyaml
 pandas
 openai
-psycopg2-binary==2.9.2
+psycopg2-binary
 cryptography
 azure-functions
 azure-eventhub
@@ -15,9 +15,10 @@ azure-identity
 azure-eventhub-checkpointstoreblob-aio
 
 # TODO: Migrate to .env files
-django==3.2.7
+django
 django-storages[azure]
 
 # MS AUTH
-git+https://github.com/azure-samples/ms-identity-python-utilities@main
+# git+https://github.com/azure-samples/ms-identity-python-utilities@main
+ms_identity_web 
 
