@@ -127,8 +127,6 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs documentation
-/site
 
 # mypy
 .mypy_cache/
@@ -138,15 +136,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.vscode/*
-az-functions/.vscode/*
-# host.json
-
-
 # Excel files
 data/~$*.xlsx
 data/examplesystem.json
-
 
 # ARM Template Parameter Files
 infra/ARM/*parameters.json

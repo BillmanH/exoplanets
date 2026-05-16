@@ -6,36 +6,10 @@
 
 ![Alt text](/docs/img/3dscene.png?raw=true "solar system")
 
-## [Play the open beta game here](https://exodestiny.azurewebsites.net/)
+## The Game is  no longer online. 
+I'm no longer actively working on this project. Not that I've lost interest. I've pivoted to building games in Godot and working on a Steam release of a new concept in the future. I'll probably come back to this concept in the future but even when I do, I'll likely make different design choices. This has been a lot of fun to work on and has helped me to develop very strong skills as an Azure Architect and Developer. I'd recommend this for anyone who wants to "get good" at dev work. 
 
-The process will guide you through creating an account. 
-
-The game is now in **OPEN BETA**, meaning I've still got a long way to go, but the game is playable enough where I can start opening it up to users. [How to create an account](docs/creating_a_new_account.md)
-
-The **STAGING Environment** is [here](exodestiny-stage-guepbuc0bmcudnbh.westus2-01.azurewebsites.net). This should mirror the production site but be one step ahead so that I can test things. You log into both tenants in the same way. 
-
-# What is left to do, and when to do it:
-The `dev` branch has the more current workload. Unless I get too busy with other things, I'll pull those changes into `main` every month (depending on how much time I have to spend on it). 
-
-
-## **BETA - RELEASE** - Should be playable, but will still have a lot to go.
-
-[What's been completed recently is in the Pull Requests](https://github.com/BillmanH/exoplanets/pulls?q=is%3Apr+is%3Aclosed+base%3Amain)
-
-## May
-* Launching ships - being able to launch ships into space.
-  * The full path of being able to take a ship from inventory, fill it with fuel, map a trajectory and create a `job` with a resolution date will finish that component. 
-* Tracking space voyages and destinations.
-  * You'll need to see the voyage in the `system` view. I'm hoping for a triangle, with a trajectory arc that shows where the spaceship is. 
-* Being able to view worlds that have been 'observed'.
-  * Currently the only ship is the probe, when it reaches it's destiny it should be able to `.scan_body()` on that planet to reveal what kinds of resources the planet has. 
-
-## June
-* The colony ship
-  * takes a cargo of one `pop` and launches it towards a destination.
-  * this will create a new faction, where the pop `isIn` that faction. 
-  * once it gets there the pop will starve because there is no food.
-
+Feel free to fork or do whatever you like with it. Cheers!
 
 
 Exoplanets is a real-time, multiplayer, online game where you manage a civilization and its people. Starting at the moment where your technology makes it possible to launch an individual into outer space, you must make choices that guide your people on their journey to the stars. This game was built at a very slow pace over the course of several years.
